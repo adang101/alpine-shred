@@ -44,7 +44,8 @@ jobs:
 
       # Data generation first: tags, recipes, loot and lang feed the jars and the game tests.
       - name: Generate data (Fabric datagen into common/src/main/generated)
-        run: ./gradlew :fabric:runDatagen $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/1-datagen.log"
+        timeout-minutes: 20
+        run: .github/scripts/run-datagen.sh "$RUNNER_TEMP/ci-logs/1-datagen.log" $GRADLE_ARGS
 
       - name: Compile all modules, run unit tests, build jars
         if: success() || failure()

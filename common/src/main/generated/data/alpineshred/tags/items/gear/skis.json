@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "alpineshred:skis",
+    "alpineshred:carving_skis",
+    "alpineshred:powder_skis",
+    "alpineshred:park_skis",
+    "alpineshred:pro_skis"
+  ]
+}

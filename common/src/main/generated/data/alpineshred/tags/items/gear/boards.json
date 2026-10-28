@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "alpineshred:snowboard",
+    "alpineshred:park_snowboard",
+    "alpineshred:freeride_snowboard",
+    "alpineshred:pro_snowboard"
+  ]
+}
