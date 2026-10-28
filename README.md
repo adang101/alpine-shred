@@ -4,8 +4,11 @@ Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1
 NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
 truth; this README covers how to build the code and where it stands against that document.
 
-**Status:** Phase 1 (foundations and gear) code complete, plus the phase 2 movement model as pure,
-unit-tested code. In-game riding (the slide controller) is the next milestone.
+**Status:** Phase 1 (foundations and gear) is complete and green in CI on Forge and Fabric: all
+modules compile, 83 unit tests pass, and 11 game tests pass on each loader's headless dedicated
+server. The phase 2 movement model exists as pure, unit-tested code; wiring it into the game (the
+slide controller) is the next milestone. Still to check by hand for the phase 1 exit gate: gear
+rendering in third person, and the jar on a NeoForge 1.20.1 server.
 
 ## Build and test
 
@@ -15,14 +18,20 @@ Java 17 toolchain, which Gradle downloads if none is installed.
 | Task | Command |
 | --- | --- |
 | Build all jars, run unit tests | `./gradlew build` |
-| Regenerate lang, recipes, tags, loot | `./gradlew :fabric:runDatagen` (writes `common/src/main/generated`, commit the result) |
+| Regenerate lang, recipes, tags, loot | `.github/scripts/run-datagen.sh datagen.log` (writes `common/src/main/generated`; commit the result) |
 | Game tests, Fabric dedicated server | `./gradlew :fabric:runGametest` |
 | Game tests, Forge game-test server | `./gradlew :forge:runGameTestServer` |
 | Play-test | `./gradlew :fabric:runClient` or `./gradlew :forge:runClient` |
 | Regenerate placeholder art | `python3 art/placeholder/generate_textures.py && python3 art/placeholder/generate_models.py` |
 
 CI (`.github/workflows/build.yml`) runs all of the above except the clients, fails if committed
-generated data is stale, and uploads jars, test reports and server logs.
+generated data is stale, uploads the jars, and force-pushes logs, test reports and generated data to
+the `ci-logs` branch so they can be read with plain git.
+
+Known issue: `./gradlew :fabric:runDatagen` writes every file and then the JVM does not exit
+(the thread dump shows only daemon threads plus a process reaper). The script above waits for
+datagen's final "Caching: total files" line, stops the process, and judges success from the log.
+Running the Gradle task directly works too; stop it with Ctrl+C after that line appears.
 
 Jars: `forge/build/libs/alpineshred-forge-*.jar` (tag it for both Forge and NeoForge when
 publishing) and `fabric/build/libs/alpineshred-fabric-*.jar`.
@@ -112,7 +121,9 @@ covered by a test or noted in code.
 7. **Armor texture name** is `alpineshred_alpine` in the `minecraft` namespace. A namespaced
    material name breaks vanilla's armor layer on Fabric.
 8. **Trinkets data paths** are `data/trinkets/slots/<group>/<slot>.json`, and Trinkets ships no
-   slots, so `head/face` and `hand/glove` are declared here too.
+   slots, so `head/face` and `hand/glove` are declared here too. Trinkets 3.7 (the 1.20.1 line)
+   also has no global equip events, so `onGearChanged` registers this mod's gear as Trinkets to get
+   per-item equip callbacks; other items are caught by the 10-tick fallback rebuild.
 9. **State naming.** Section 6 says `STRAPPED_IDLE`; section 7's state list says `IDLE`. Code uses `IDLE`.
 10. **Default keys** `X` and `C` overlap vanilla's creative hotbar save/load activators.
 11. **Risk table phases** for R7 (lifts) and R8 (Create) point at phases 7 and 8; the roadmap
