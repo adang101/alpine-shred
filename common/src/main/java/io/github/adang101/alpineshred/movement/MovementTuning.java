@@ -79,6 +79,10 @@ public final class MovementTuning {
         s.put("airFlipMax", new Spec(24.0, 0.0, 90.0, "ext: max flip rate, degrees per tick"));
         s.put("airRampTicks", new Spec(4, 1, 20, "ext: ticks for rotation to ramp from 0 to max"));
         s.put("airGrabRotationMul", new Spec(0.8, 0.0, 1.0, "ext: rotation rate multiplier while grabbing"));
+        // ext (phase 2): getting moving on flat ground
+        s.put("skateMaxSpeed", new Spec(0.14, 0.0, 1.0, "ext: W skates on flat snow up to this speed"));
+        s.put("skateAccel", new Spec(0.006, 0.0, 0.1, "ext: skating acceleration per tick"));
+        s.put("scrapeSlideMinSpeed", new Spec(0.25, 0.0, 3.0, "ext: below this speed on non-snow ground the rider walks"));
         SPECS = Collections.unmodifiableMap(s);
     }
 
@@ -132,6 +136,9 @@ public final class MovementTuning {
     public final double airFlipMax;
     public final int airRampTicks;
     public final double airGrabRotationMul;
+    public final double skateMaxSpeed;
+    public final double skateAccel;
+    public final double scrapeSlideMinSpeed;
 
     private final Map<String, Double> values;
 
@@ -190,6 +197,9 @@ public final class MovementTuning {
         airFlipMax = get("airFlipMax");
         airRampTicks = (int) Math.round(get("airRampTicks"));
         airGrabRotationMul = get("airGrabRotationMul");
+        skateMaxSpeed = get("skateMaxSpeed");
+        skateAccel = get("skateAccel");
+        scrapeSlideMinSpeed = get("scrapeSlideMinSpeed");
     }
 
     /** Value by key; throws for unknown keys so typos fail loudly in tests. */

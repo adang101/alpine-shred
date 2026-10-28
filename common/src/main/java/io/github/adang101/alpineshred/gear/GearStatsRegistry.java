@@ -5,9 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Current board and ski stats, replaced atomically when {@code data/alpineshred/gear/} reloads.
- * Keyed by item id path (namespace {@code alpineshred}). Until data loads, and on clients
- * connected to a dedicated server before the phase 2 tuning sync, the built-in defaults apply.
+ * Current board and ski stats, replaced atomically when {@code data/alpineshred/gear/} reloads on
+ * the server, and on clients when {@code s2c/tuning_sync} arrives. Keyed by item id path
+ * (namespace {@code alpineshred}). Until either happens, the built-in defaults apply.
  */
 public final class GearStatsRegistry {
     private static volatile Map<String, GearStats> current = GearStats.DEFAULTS;

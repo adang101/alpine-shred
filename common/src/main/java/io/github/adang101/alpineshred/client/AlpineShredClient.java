@@ -46,6 +46,9 @@ public final class AlpineShredClient {
                 AlpineShred.id("lens"), (stack, level, entity, seed) -> GogglesItem.lens(stack).modelValue()));
 
         ClientPlatformHooks.registerPlayerRenderLayer(SnowGearLayer::new);
+        ClientNetwork.register();
+        RideDriver.INSTANCE.register();
+        RideDebugOverlay.register();
         ClientTickEvent.CLIENT_POST.register(AlpineShredClient::clientTick);
     }
 
@@ -69,7 +72,7 @@ public final class AlpineShredClient {
             player.displayClientMessage(Component.translatable("message.alpineshred.stance." + next), true);
         }
 
-        RideState state = Riders.state(player);
+        RideState state = RideDriver.INSTANCE.localState(player);
         if (state != lastLocalState) {
             onLocalStateChange(player, lastLocalState, state);
             lastLocalState = state;
@@ -77,8 +80,8 @@ public final class AlpineShredClient {
     }
 
     private static void onLocalStateChange(LocalPlayer player, RideState from, RideState to) {
-        // The steering hint waits for the first real slide, which the phase 2 controller produces.
-        if (to.isControllerDriven() && to != RideState.WIPEOUT) showHintOnce(player, HINT_STEER);
+        // The steering hint waits for the first real slide.
+        if (to == RideState.GLIDE || to == RideState.CARVE) showHintOnce(player, HINT_STEER);
     }
 
     private static void showHintOnce(LocalPlayer player, String hint) {

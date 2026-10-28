@@ -4,8 +4,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Current movement tuning and surface profiles, replaced atomically on data reload. The world-side
- * surface matcher (phase 2) walks {@link #surfaces()} in priority order.
+ * Current movement tuning and surface profiles, replaced atomically on data reload on the server and
+ * on {@code s2c/tuning_sync} on clients. {@link SurfaceResolver} walks {@link #surfaces()} in
+ * priority order.
  */
 public final class TuningData {
     private static volatile MovementTuning tuning = MovementTuning.DEFAULT;

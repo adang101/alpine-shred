@@ -87,12 +87,16 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("message.alpineshred.tuner.no_gear", "Hold a board or skis in your off hand");
         t.add("message.alpineshred.tuner.sharp", "Edges are already sharp");
         t.add("message.alpineshred.tuner.done", "Edges sharpened");
+        t.add("message.alpineshred.ride.corrected", "Position corrected by the server");
+        t.add("message.alpineshred.protocol_mismatch", "Alpine Shred on this server speaks protocol %s, this client %s: riding is off until versions match");
 
         // ---- commands ----
         t.add("commands.alpineshred.strap.done", "Changed strap state for %s player(s)");
         t.add("commands.alpineshred.strap.failed", "Could not strap in: %s");
         t.add("commands.alpineshred.config.reloaded", "Alpine Shred config reloaded (%s warning(s), see log)");
         t.add("commands.alpineshred.tuning.reloaded", "Alpine Shred tuning, surfaces and gear stats reloaded");
+        t.add("commands.alpineshred.debug.ride.on", "Ride debug overlay on");
+        t.add("commands.alpineshred.debug.ride.off", "Ride debug overlay off");
 
         // ---- key bindings ----
         t.add("key.categories.alpineshred", "Alpine Shred");

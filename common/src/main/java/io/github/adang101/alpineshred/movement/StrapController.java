@@ -24,8 +24,10 @@ import java.util.UUID;
  * {@code c2s/strap_toggle}; the server checks {@link StrapCheck}, writes the synced ride state, and
  * auto-unstraps on fluid, vehicles, death, dimension change, gear removal, spectator and elytra.
  *
- * <p>Until the phase 2 slide controller exists, a strapped rider is always "off a slideable surface",
- * so the -35% walk modifier applies everywhere and sprinting is blocked (see {@code LivingEntityMixin}).
+ * <p>While strapped, the -35% walk modifier stays on and sprinting is blocked (see
+ * {@code LivingEntityMixin}). The modifier only matters when vanilla moves the rider, which is when
+ * the slide controller is walking (off snow, or sinking in powder); while sliding, the controller
+ * ignores the movement-speed attribute. Riding itself is validated by {@link RideServer}.
  */
 public final class StrapController {
     /** Stable id so the modifier can be found and removed, and never stacks. */
@@ -82,6 +84,7 @@ public final class StrapController {
                 .withMode(gear.kind().rideMode())
                 .withMotion(0, player.getYRot(), 0);
         Riders.set(player, snapshot);
+        RideServer.reset(player);
         applyWalkModifier(player, true);
         player.setSprinting(false);
         playSound(player, true);
@@ -92,6 +95,7 @@ public final class StrapController {
     public static void unstrap(Player player, UnstrapReason reason) {
         if (!Riders.isStrapped(player)) return;
         Riders.set(player, RideSnapshot.OFF);
+        RideServer.reset(player);
         applyWalkModifier(player, false);
         if (reason != UnstrapReason.DEATH) {
             playSound(player, false);
@@ -115,6 +119,7 @@ public final class StrapController {
         }
         applyWalkModifier(player, true);
         if (player.isSprinting()) player.setSprinting(false);
+        RideServer.tick(player);
     }
 
     /** The first auto-unstrap condition that holds, or null to stay strapped. */

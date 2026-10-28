@@ -26,8 +26,8 @@ import java.util.Map;
 /**
  * Server data reload listeners (design doc section 18, "Data files"): {@code movement/tuning},
  * {@code surface_profiles} and {@code gear}. {@code box_materials} and {@code design_templates}
- * join in phases 4 and 6. Syncing these to clients is the phase 2 {@code s2c/tuning_sync} packet,
- * which must include gear stats too: the client-side slide controller reads them.
+ * join in phases 4 and 6. Clients receive all three through {@code s2c/tuning_sync}
+ * ({@code ModNetwork}) at login and after every reload: the client-side slide controller reads them.
  */
 public final class AlpineDataLoaders {
     private static final Gson GSON = new GsonBuilder().create();

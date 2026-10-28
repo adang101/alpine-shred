@@ -5,6 +5,7 @@ import io.github.adang101.alpineshred.command.AlpineCommands;
 import io.github.adang101.alpineshred.config.AlpineConfig;
 import io.github.adang101.alpineshred.data.AlpineDataLoaders;
 import io.github.adang101.alpineshred.gear.GearProfiles;
+import io.github.adang101.alpineshred.movement.RideServer;
 import io.github.adang101.alpineshred.movement.StrapController;
 import io.github.adang101.alpineshred.network.ModNetwork;
 import io.github.adang101.alpineshred.registry.ModBlocks;
@@ -43,6 +44,7 @@ public final class AlpineShred {
         ModNetwork.registerCommon();
         GearProfiles.register();
         StrapController.register();
+        RideServer.register();
         AlpineCommands.register();
 
         LOGGER.info("Alpine Shred initialized on {}", Platform.isForge() ? "Forge" : "Fabric");

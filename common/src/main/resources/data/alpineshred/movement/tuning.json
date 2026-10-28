@@ -46,5 +46,8 @@
   "airSpinMaxSkis": 28.0,
   "airFlipMax": 24.0,
   "airRampTicks": 4.0,
-  "airGrabRotationMul": 0.8
+  "airGrabRotationMul": 0.8,
+  "skateMaxSpeed": 0.14,
+  "skateAccel": 0.006,
+  "scrapeSlideMinSpeed": 0.25
 }

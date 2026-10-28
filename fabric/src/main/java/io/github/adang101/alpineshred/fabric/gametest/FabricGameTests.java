@@ -1,6 +1,7 @@
 package io.github.adang101.alpineshred.fabric.gametest;
 
 import io.github.adang101.alpineshred.gametest.AlpineGameTests;
+import io.github.adang101.alpineshred.gametest.RideGameTests;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -11,6 +12,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
  */
 public final class FabricGameTests implements FabricGameTest {
     private static final String TEMPLATE = "alpineshred:" + AlpineGameTests.TEMPLATE;
+    private static final String LARGE = "alpineshred:" + RideGameTests.LARGE;
 
     @GameTest(template = TEMPLATE)
     public void dataFilesLoad(GameTestHelper helper) {
@@ -65,5 +67,77 @@ public final class FabricGameTests implements FabricGameTest {
     @GameTest(template = TEMPLATE)
     public void gearProfileReadsEverything(GameTestHelper helper) {
         AlpineGameTests.gearProfileReadsEverything(helper);
+    }
+
+    // ---- phase 2: riding ----
+
+    @GameTest(template = TEMPLATE)
+    public void surfaceProfilesMatchBlocksAndTags(GameTestHelper helper) {
+        RideGameTests.surfaceProfilesMatchBlocksAndTags(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void bodyFindsTheSurfaceUnderfoot(GameTestHelper helper) {
+        RideGameTests.bodyFindsTheSurfaceUnderfoot(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void stepHeightAndPowderHooksFollowTheController(GameTestHelper helper) {
+        RideGameTests.stepHeightAndPowderHooksFollowTheController(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void staircaseDescentNeverFlickersToAir(GameTestHelper helper) {
+        RideGameTests.staircaseDescentNeverFlickersToAir(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void kickerLaunchesAndLands(GameTestHelper helper) {
+        RideGameTests.kickerLaunchesAndLands(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void wallHitWipesOutAndLocksInput(GameTestHelper helper) {
+        RideGameTests.wallHitWipesOutAndLocksInput(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void ridersStepUpOneBlockAtSpeedOnly(GameTestHelper helper) {
+        RideGameTests.ridersStepUpOneBlockAtSpeedOnly(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void powderCarriesFastRidersOnly(GameTestHelper helper) {
+        RideGameTests.powderCarriesFastRidersOnly(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public void rideStateClaimsFollowTheTransitionTable(GameTestHelper helper) {
+        RideGameTests.rideStateClaimsFollowTheTransitionTable(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void wipeoutDamageUsesObservedSpeedAndHelmets(GameTestHelper helper) {
+        RideGameTests.wipeoutDamageUsesObservedSpeedAndHelmets(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void serverWearsWaxEdgesAndBoards(GameTestHelper helper) {
+        RideGameTests.serverWearsWaxEdgesAndBoards(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void validatorCorrectsAnImpossibleRide(GameTestHelper helper) {
+        RideGameTests.validatorCorrectsAnImpossibleRide(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void vanillaAcceptsARideAtTheSpeedCap(GameTestHelper helper) {
+        RideGameTests.vanillaAcceptsARideAtTheSpeedCap(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void vanillaAcceptsKickerAir(GameTestHelper helper) {
+        RideGameTests.vanillaAcceptsKickerAir(helper);
     }
 }

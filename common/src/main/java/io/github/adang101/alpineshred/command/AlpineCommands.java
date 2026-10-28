@@ -8,9 +8,11 @@ import dev.architectury.platform.Platform;
 import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.config.AlpineConfig;
 import io.github.adang101.alpineshred.data.AlpineDataLoaders;
+import io.github.adang101.alpineshred.movement.RideServer;
 import io.github.adang101.alpineshred.movement.Riders;
 import io.github.adang101.alpineshred.movement.StrapCheck;
 import io.github.adang101.alpineshred.movement.StrapController;
+import io.github.adang101.alpineshred.network.ModNetwork;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -22,9 +24,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * {@code /alpineshred} (design doc section 18, "Commands"). Phase 1 ships {@code strap},
- * {@code config reload} and {@code tuning reload}; {@code stats}, {@code lift}, {@code debug} and
- * {@code design} arrive with their systems.
+ * {@code /alpineshred} (design doc section 18, "Commands"): {@code strap}, {@code config reload},
+ * {@code tuning reload} (both resync clients) and {@code debug ride on|off}. {@code stats},
+ * {@code lift}, the other {@code debug} targets and {@code design} arrive with their systems.
  */
 public final class AlpineCommands {
     private AlpineCommands() {
@@ -47,7 +49,21 @@ public final class AlpineCommands {
                         .then(Commands.literal("reload").executes(AlpineCommands::reloadConfig)))
                 .then(Commands.literal("tuning")
                         .requires(source -> source.hasPermission(2))
-                        .then(Commands.literal("reload").executes(AlpineCommands::reloadTuning))));
+                        .then(Commands.literal("reload").executes(AlpineCommands::reloadTuning)))
+                .then(Commands.literal("debug")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("ride")
+                                .then(Commands.literal("on").executes(ctx -> debugRide(ctx, true)))
+                                .then(Commands.literal("off").executes(ctx -> debugRide(ctx, false))))));
+    }
+
+    /** Client overlay of state, speed, grade and surface, plus this server's validator read-out. */
+    private static int debugRide(CommandContext<CommandSourceStack> ctx, boolean on) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        RideServer.setDebug(player, on);
+        ModNetwork.sendDebugToggle(player, on);
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.debug.ride." + (on ? "on" : "off")), false);
+        return 1;
     }
 
     private enum Mode {ON, OFF, TOGGLE}
@@ -87,12 +103,14 @@ public final class AlpineCommands {
             warnings.add(warning);
             AlpineShred.LOGGER.warn(warning);
         });
+        ModNetwork.resyncAll(ctx.getSource().getServer(), true, false);
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.config.reloaded", warnings.size()), true);
         return 1;
     }
 
     private static int reloadTuning(CommandContext<CommandSourceStack> ctx) {
         AlpineDataLoaders.reloadNow(ctx.getSource().getServer().getResourceManager());
+        ModNetwork.resyncAll(ctx.getSource().getServer(), false, true);
         ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.tuning.reloaded"), true);
         return 1;
     }
