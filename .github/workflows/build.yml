@@ -63,6 +63,10 @@ jobs:
           mkdir -p forge/build/gametest && echo "eula=true" > forge/build/gametest/eula.txt
           ./gradlew :forge:runGameTestServer $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/4-forge-gametest.log"
 
+      - name: Probe API signatures (when .github/api-probe.txt exists)
+        if: (success() || failure()) && hashFiles('.github/api-probe.txt') != ''
+        run: .github/scripts/api-probe.sh "$RUNNER_TEMP/ci-logs/api" .github/api-probe.txt
+
       - name: Committed generated data is up to date
         if: success() || failure()
         run: |
