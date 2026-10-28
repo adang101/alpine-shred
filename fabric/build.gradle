@@ -7,6 +7,11 @@ architectury {
     fabric()
 }
 
+// Resolved up front: inside Loom's run closures, rootProject/project resolve against the run config.
+def modId = rootProject.mod_id
+def generatedDir = project(':common').file('src/main/generated')
+def gametestReport = file('build/gametest/junit.xml')
+
 loom {
     runs {
         // Data generation writes into common so both loaders ship the same files (section 4).
@@ -14,8 +19,8 @@ loom {
             inherit server
             name 'Data Generation'
             vmArg '-Dfabric-api.datagen'
-            vmArg "-Dfabric-api.datagen.output-dir=${project(':common').file('src/main/generated')}"
-            vmArg "-Dfabric-api.datagen.modid=${rootProject.mod_id}"
+            vmArg "-Dfabric-api.datagen.output-dir=${generatedDir}"
+            vmArg "-Dfabric-api.datagen.modid=${modId}"
             runDir 'build/datagen'
         }
         // Headless dedicated-server game tests; the process exits non-zero if a required test fails.
@@ -23,7 +28,7 @@ loom {
             inherit server
             name 'Game Test'
             vmArg '-Dfabric-api.gametest'
-            vmArg "-Dfabric-api.gametest.report-file=${project.file('build/gametest/junit.xml')}"
+            vmArg "-Dfabric-api.gametest.report-file=${gametestReport}"
             runDir 'build/gametest'
         }
     }

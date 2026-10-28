@@ -7,6 +7,9 @@ architectury {
     forge()
 }
 
+// Resolved up front: inside Loom's run closures, rootProject resolves against the run config.
+def modId = rootProject.mod_id
+
 loom {
     forge {
         mixinConfig 'alpineshred.mixins.json'
@@ -18,7 +21,7 @@ loom {
             environment 'server'
             forgeTemplate 'gameTestServer'
             name 'Game Test Server'
-            property 'forge.enabledGameTestNamespaces', rootProject.mod_id
+            property 'forge.enabledGameTestNamespaces', modId
             runDir 'build/gametest'
         }
     }
