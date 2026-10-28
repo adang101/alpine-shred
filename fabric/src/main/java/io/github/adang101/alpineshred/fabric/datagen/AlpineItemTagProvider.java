@@ -10,7 +10,10 @@ import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
 
-/** Item tags (design doc section 18, "Tags"). Curios and Trinkets slot tags live in each loader module. */
+/**
+ * Item tags (design doc section 18, "Tags"). Curios and Trinkets slot tags live in each loader module.
+ * Vanilla tags are referenced with {@code forceAddTag}: datagen only knows tags it generates itself.
+ */
 public final class AlpineItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public AlpineItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
@@ -25,7 +28,7 @@ public final class AlpineItemTagProvider extends FabricTagProvider.ItemTagProvid
         getOrCreateTagBuilder(ModTags.Items.POLES).add(ModItems.SKI_POLES.get(), ModItems.CARBON_SKI_POLES.get());
         getOrCreateTagBuilder(ModTags.Items.BINDING_BOARD).add(ModItems.SNOWBOARD_BOOTS.get());
         getOrCreateTagBuilder(ModTags.Items.BINDING_SKI).add(ModItems.SKI_BOOTS.get());
-        getOrCreateTagBuilder(ModTags.Items.REPAIR_SOFT_GEAR).addTag(ItemTags.WOOL).add(Items.LEATHER);
+        getOrCreateTagBuilder(ModTags.Items.REPAIR_SOFT_GEAR).forceAddTag(ItemTags.WOOL).add(Items.LEATHER);
         getOrCreateTagBuilder(ModTags.Items.DESIGN_COST).add(
                 Items.WHITE_DYE, Items.ORANGE_DYE, Items.MAGENTA_DYE, Items.LIGHT_BLUE_DYE,
                 Items.YELLOW_DYE, Items.LIME_DYE, Items.PINK_DYE, Items.GRAY_DYE,

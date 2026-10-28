@@ -24,8 +24,8 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
 
         // Custom box blocks join in phase 4; slabs in the tag work as low boxes.
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_BOXES)
-                .addTag(BlockTags.PLANKS)
-                .addTag(BlockTags.WOODEN_SLABS)
+                .forceAddTag(BlockTags.PLANKS)
+                .forceAddTag(BlockTags.WOODEN_SLABS)
                 .add(Blocks.SMOOTH_STONE, Blocks.SMOOTH_STONE_SLAB,
                         Blocks.QUARTZ_BLOCK, Blocks.QUARTZ_SLAB, Blocks.SMOOTH_QUARTZ, Blocks.SMOOTH_QUARTZ_SLAB,
                         Blocks.IRON_BLOCK,
@@ -38,7 +38,7 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
 
         // Rail blocks join in phase 4; the tag exists now so datapacks can extend it.
         getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE);
-        getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE_VANILLA).addTag(BlockTags.FENCES).addTag(BlockTags.WALLS);
+        getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE_VANILLA).forceAddTag(BlockTags.FENCES).forceAddTag(BlockTags.WALLS);
 
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.GROOMED_SNOW.get());
     }
