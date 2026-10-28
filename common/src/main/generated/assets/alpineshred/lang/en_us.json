@@ -1,6 +1,8 @@
 {
   "block.alpineshred.groomed_snow": "Groomed Snow",
   "commands.alpineshred.config.reloaded": "Alpine Shred config reloaded (%s warning(s), see log)",
+  "commands.alpineshred.debug.ride.off": "Ride debug overlay off",
+  "commands.alpineshred.debug.ride.on": "Ride debug overlay on",
   "commands.alpineshred.strap.done": "Changed strap state for %s player(s)",
   "commands.alpineshred.strap.failed": "Could not strap in: %s",
   "commands.alpineshred.tuning.reloaded": "Alpine Shred tuning, surfaces and gear stats reloaded",
@@ -40,6 +42,8 @@
   "lens.alpineshred.blue_mirror": "Blue Mirror",
   "lens.alpineshred.clear": "Clear",
   "message.alpineshred.hint.steer": "Look to steer, A or D to dig an edge, sneak to brake",
+  "message.alpineshred.protocol_mismatch": "Alpine Shred on this server speaks protocol %s, this client %s: riding is off until versions match",
+  "message.alpineshred.ride.corrected": "Position corrected by the server",
   "message.alpineshred.stance.goofy": "Stance: goofy",
   "message.alpineshred.stance.regular": "Stance: regular",
   "message.alpineshred.strap.boots_board": "Snowboards need snowboard boots",

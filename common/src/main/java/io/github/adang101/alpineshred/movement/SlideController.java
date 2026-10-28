@@ -214,15 +214,17 @@ public final class SlideController {
             return;
         }
         double horizontal = moved.horizontal();
-        recordClimb(moved.dy() > 0 && horizontal > 1.0e-6 ? moved.dy() / horizontal : 0);
+        double thisClimb = moved.dy() > 0 && horizontal > 1.0e-6 ? moved.dy() / horizontal : 0;
+        double recentClimb = Math.max(Math.max(climb[0], climb[1]), thisClimb);
+        recordClimb(thisClimb);
 
         if (moved.onGround()) {
             grounded = true;
             vy = 0;
         } else {
             double gap = gapBelow(body, GroundContact.snapDistance(t, motion.speed) + CAST_MARGIN);
-            GroundContact.Result contact = GroundContact.resolve(t, true, false, moved.dy(), gap,
-                    Math.max(climb[0], climb[1]), motion.speed);
+            double upGrade = gap > 1.0e-4 ? Math.max(recentClimb, gradeBehindLip(body, moved)) : recentClimb;
+            GroundContact.Result contact = GroundContact.resolve(t, true, false, moved.dy(), gap, upGrade, motion.speed);
             switch (contact.kind()) {
                 case GROUNDED -> grounded = true;
                 case SNAP -> {
@@ -338,6 +340,24 @@ public final class SlideController {
                 body.groundTop(x + rx, z + rz, fromY, toY),
                 1.0);
         slope = slopeFilter.update(raw, smoothing);
+    }
+
+    /**
+     * The terrain grade leading up to the point where the rider left the ground this tick: rise over
+     * run from one and from two blocks back to the lip, the steeper of the two. Unlike the per-tick
+     * climb history, this does not depend on where the tick boundaries fall: a ramp of snow layers
+     * climbs in steps, and the last tick or two before the lip may have crossed no step at all.
+     */
+    private double gradeBehindLip(Body body, Moved moved) {
+        double lipX = body.x() - moved.dx(), lipY = body.y() - moved.dy(), lipZ = body.z() - moved.dz();
+        double backX = -SlideModel.dirX(motion.travelYaw), backZ = -SlideModel.dirZ(motion.travelYaw);
+        double fromY = lipY + SlopeMath.CAST_UP, toY = lipY - SlopeMath.CAST_DOWN;
+        double best = 0;
+        for (int d = 1; d <= 2; d++) {
+            double h = body.groundTop(lipX + backX * d, lipZ + backZ * d, fromY, toY);
+            if (!Double.isNaN(h)) best = Math.max(best, (lipY - h) / d);
+        }
+        return best;
     }
 
     private double gapBelow(Body body, double reach) {

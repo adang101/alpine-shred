@@ -8,3 +8,4 @@ dev.architectury.event.events.common.PlayerEvent$PlayerRespawn
 dev.architectury.event.events.common.PlayerEvent$PlayerQuit
 dev.architectury.event.events.client.ClientPlayerEvent$ClientPlayerRespawn
 dev.architectury.event.events.client.ClientPlayerEvent$ClientPlayerQuit
+net.minecraft.network.Connection

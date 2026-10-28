@@ -21,12 +21,15 @@ import net.minecraft.world.phys.Vec3;
  * lane five blocks wide (x 2 to 6) running along +z; {@link #column} sets the surface height of one
  * z slice, with snow layers for the eighths, so ramps and kickers can be built without custom blocks.
  * Riders stand on the lane center line, x = 4.5.
+ *
+ * <p>The structure's own stone floor is at relative y = 1 ({@link #BASE_Y}); columns start there and
+ * replace it under the lane.
  */
 final class Course {
     static final int LANE_MIN_X = 2;
     static final int LANE_MAX_X = 6;
     static final double CENTER_X = 4.5;
-    /** Lowest block of every column; the structure's own floor is below it. */
+    /** Lowest block of every column: the level of the structure's own floor. */
     static final int BASE_Y = 1;
 
     private final GameTestHelper helper;

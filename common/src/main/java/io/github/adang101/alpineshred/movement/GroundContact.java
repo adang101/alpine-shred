@@ -8,11 +8,12 @@ package io.github.adang101.alpineshred.movement;
  * <p>Two clarifications of the doc, both covered by tests:
  * <ul>
  *   <li><b>Launch grade source.</b> The caller supplies the grade. Park ramps report their exact
- *       slope; other terrain uses the steepest per-tick climb over the last two grounded ticks.
- *       Averaging over two ticks would understate a one-block 45 degree kicker (the rider is only
- *       on it for about one tick at speed), and the section 19 apex targets assume the ramp's
- *       true grade. The grade is capped at {@link #MAX_LAUNCH_GRADE} so a single block step
- *       cannot fling a rider.</li>
+ *       slope; other terrain uses the steeper of the rider's per-tick climb over the last few
+ *       grounded ticks and the terrain grade measured back from the lip (one and two blocks).
+ *       Averaging over ticks would understate a one-block 45 degree kicker (the rider is only on
+ *       it for about one tick at speed), while a ramp of snow layers climbs in steps the last
+ *       ticks may not have crossed; the section 19 apex targets assume the ramp's true grade. The
+ *       grade is capped at {@link #MAX_LAUNCH_GRADE} so a single block step cannot fling a rider.</li>
  *   <li><b>Snap distance.</b> The doc's fixed 1.0 block snap leaves a rider at the 1.4 speed cap
  *       on a 45 degree voxel slope dropping up to 2 blocks in one tick (1.4 of slope plus one
  *       voxel step), which would flicker into {@code AIR}. Snap distance is

@@ -28,11 +28,18 @@ import io.github.adang101.alpineshred.network.SyncCodec;
 import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.registry.ModItems;
 import io.github.adang101.alpineshred.trick.GrabType;
+import com.mojang.authlib.GameProfile;
+import io.netty.channel.embedded.EmbeddedChannel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.Connection;
+import net.minecraft.network.ConnectionProtocol;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ServerboundAcceptTeleportationPacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
@@ -48,6 +55,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 /**
  * Phase 2 game tests (design doc section 19): the slide controller on real collision, the mixins,
@@ -101,9 +109,10 @@ public final class RideGameTests {
         standAt(player, course.at(6.5, 2.375, 2.5));
         expectSurface("snow_layer", body.surfaceUnderFeet());
 
-        // Center over air, box still on the block: the supporting block counts.
-        course.set(2, 1, 6, Blocks.BLUE_ICE.defaultBlockState());
-        Vec3 edge = course.at(3.2, 2.0, 6.5);
+        // Center over air, box still on the block: the supporting block counts. One block above
+        // the structure's floor, so there is air under the center.
+        course.set(2, 2, 6, Blocks.BLUE_ICE.defaultBlockState());
+        Vec3 edge = course.at(3.2, 3.0, 6.5);
         player.setPos(edge.x, edge.y, edge.z);
         player.move(net.minecraft.world.entity.MoverType.SELF, new Vec3(0, -0.1, 0));
         check(player.onGround(), "rider on the ice edge should be on the ground");
@@ -204,11 +213,14 @@ public final class RideGameTests {
         }
         check(wipeoutAt >= 0, "no wipeout at the wall: " + ride.describe());
         check(ride.c().speed() < 0.05, "still moving after the wall: " + ride.describe());
+        // The hit tick counts as the first of wipeoutTicks; input pushing forward must do nothing.
         RideInput pushing = new RideInput(1, 1, 30, false, false, GrabType.NONE);
-        for (int tick = 1; tick < t.wipeoutTicks; tick++) {
+        for (int tick = 1; tick < t.wipeoutTicks - 1; tick++) {
             ride.tick(pushing);
             check(ride.c().state() == RideState.WIPEOUT, "wipeout ended early at " + tick);
+            check(ride.c().speed() < 0.01, "input moved a wiped-out rider at " + tick + " " + ride.describe());
         }
+        ride.tick(pushing);
         ride.tick(pushing);
         check(ride.c().state() != RideState.WIPEOUT, "wipeout did not end after " + t.wipeoutTicks + " ticks");
         helper.succeed();
@@ -514,9 +526,26 @@ public final class RideGameTests {
 
     // ---- helpers ------------------------------------------------------------------------------------
 
+    /**
+     * A logged-in server player on an in-memory connection. Vanilla's
+     * {@code makeMockServerPlayerInLevel} gives its connection no channel, which Forge's
+     * {@code placeNewPlayer} cannot handle (it installs packet filters on the channel pipeline);
+     * an {@link EmbeddedChannel} works on both loaders and simply collects what the server sends.
+     */
+    private static ServerPlayer newServerPlayer(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        MinecraftServer server = level.getServer();
+        ServerPlayer player = new ServerPlayer(server, level, new GameProfile(UUID.randomUUID(), "alpine-rider"));
+        Connection connection = new Connection(PacketFlow.SERVERBOUND);
+        new EmbeddedChannel(connection); // registers and activates the connection on the channel
+        connection.setProtocol(ConnectionProtocol.PLAY);
+        server.getPlayerList().placeNewPlayer(connection, player);
+        return player;
+    }
+
     /** A strapped survival server player at {@code pos}, with every pending teleport answered. */
     private static ServerPlayer serverRider(GameTestHelper helper, Vec3 pos) {
-        ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        ServerPlayer player = newServerPlayer(helper);
         player.setGameMode(GameType.SURVIVAL);
         acceptTeleport(player);
         player.connection.teleport(pos.x, pos.y, pos.z, 0, 0);
@@ -535,7 +564,8 @@ public final class RideGameTests {
     }
 
     private static void removeServerPlayer(ServerPlayer player) {
-        if (player != null) player.getServer().getPlayerList().remove(player);
+        if (player == null) return;
+        player.getServer().getPlayerList().remove(player);
     }
 
     private static List<String> tail(List<String> trace) {

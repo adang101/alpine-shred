@@ -101,6 +101,33 @@ class SlideControllerTest {
     }
 
     @Test
+    void aSteppedRampLaunchesWhateverTheTickPhaseAndSpeed() {
+        // Four blocks rising 3/8 each (grade 0.375, just above launchGrade), then a drop: a kicker
+        // built from snow layers. The last tick or two before the lip often crosses no step.
+        VoxelBody.Terrain ramp = VoxelBody.Terrain.of((x, z) -> z >= 20 && z < 24 ? 0.375 * (z - 19) : 0.0,
+                (x, z) -> SurfaceProfile.GROOMED);
+        for (double speed = 0.65; speed <= 1.4 + 1e-9; speed += 0.15) { // slower riders drop under launchMinSpeed on the ramp
+            for (int phase = 0; phase < 10; phase++) {
+                VoxelBody body = new VoxelBody(ramp, 0.5, 10.5 + phase * 0.1);
+                SlideController c = riding(body, speed);
+                List<SlideController.Event> events = run(c, body, BOARD, RideInput.coast(0), 40);
+                double s = speed;
+                int p = phase;
+                assertTrue(events.stream().anyMatch(e -> e instanceof SlideController.Launched),
+                        () -> String.format("no launch at speed %.2f phase %d", s, p));
+            }
+        }
+    }
+
+    @Test
+    void ridingOffAFlatLedgeDoesNotLaunch() {
+        VoxelBody body = new VoxelBody(VoxelBody.Terrain.of((x, z) -> z < 20 ? 0 : -1, SurfaceProfile.GROOMED), 0.5, 10.5);
+        SlideController c = riding(body, 1.2);
+        List<SlideController.Event> events = run(c, body, BOARD, RideInput.coast(0), 20);
+        assertFalse(events.stream().anyMatch(e -> e instanceof SlideController.Launched), "launched off a flat ledge");
+    }
+
+    @Test
     void headOnWallAtSpeedWipesOutForThirtyTicks() {
         VoxelBody body = new VoxelBody(VoxelBody.Terrain.of((x, z) -> z < 10 ? 0 : 5, SurfaceProfile.GROOMED), 0.5, 0.5);
         SlideController c = riding(body, 0.9);
