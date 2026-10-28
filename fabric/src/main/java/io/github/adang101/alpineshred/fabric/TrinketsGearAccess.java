@@ -1,10 +1,11 @@
 package io.github.adang101.alpineshred.fabric;
 
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.Trinket;
 import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
-import dev.emi.trinkets.api.event.TrinketEquipCallback;
-import dev.emi.trinkets.api.event.TrinketUnequipCallback;
 import io.github.adang101.alpineshred.gear.GearAccess;
+import io.github.adang101.alpineshred.registry.ModItems;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -67,8 +68,23 @@ public final class TrinketsGearAccess implements GearAccess {
         listeners.add(listener);
         if (!subscribed) {
             subscribed = true;
-            TrinketEquipCallback.EVENT.register((stack, slotReference, entity) -> onChange(entity));
-            TrinketUnequipCallback.EVENT.register((stack, slotReference, entity) -> onChange(entity));
+            // Trinkets 3.7 (1.20.1) has no global equip events; those arrived in later versions.
+            // Registering our items as Trinkets gives per-item equip/unequip callbacks instead.
+            // Datapack-tagged boards from other mods are caught by the GearProfiles fallback rebuild.
+            Trinket notifier = new Trinket() {
+                @Override
+                public void onEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
+                    onChange(entity);
+                }
+
+                @Override
+                public void onUnequip(ItemStack stack, SlotReference slot, LivingEntity entity) {
+                    onChange(entity);
+                }
+            };
+            ModItems.boardsAndSkis().forEach(item -> TrinketsApi.registerTrinket(item.get(), notifier));
+            TrinketsApi.registerTrinket(ModItems.GOGGLES.get(), notifier);
+            TrinketsApi.registerTrinket(ModItems.MITTS.get(), notifier);
         }
     }
 

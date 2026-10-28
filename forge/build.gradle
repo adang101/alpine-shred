@@ -17,10 +17,13 @@ loom {
     }
     runs {
         // Headless game tests on Forge's game-test server; exits non-zero if a required test fails.
+        // A dedicated server switched into Forge's game-test mode: forge.gameTestServer makes it start
+        // GameTestServer, run every enabled test and exit with the failure count.
         gameTestServer {
-            environment 'server'
-            forgeTemplate 'gameTestServer'
+            server()
             name 'Game Test Server'
+            property 'forge.enableGameTest', 'true'
+            property 'forge.gameTestServer', 'true'
             property 'forge.enabledGameTestNamespaces', modId
             runDir 'build/gametest'
         }
