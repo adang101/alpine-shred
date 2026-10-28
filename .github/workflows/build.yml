@@ -2,13 +2,16 @@ name: build
 
 on:
   push:
-    branches: ['**']
+    branches: ['**', '!ci-logs']
   pull_request:
   workflow_dispatch:
 
 concurrency:
   group: build-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -32,19 +35,24 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
+      - name: Prepare log folder
+        run: mkdir -p "$RUNNER_TEMP/ci-logs"
+
       # Data generation first: tags, recipes, loot and lang feed the jars and the game tests.
       - name: Generate data (Fabric datagen into common/src/main/generated)
-        run: ./gradlew :fabric:runDatagen $GRADLE_ARGS
+        run: ./gradlew :fabric:runDatagen $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/1-datagen.log"
 
       - name: Compile all modules, run unit tests, build jars
-        run: ./gradlew build $GRADLE_ARGS
+        if: success() || failure()
+        run: ./gradlew build $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/2-build.log"
 
       - name: Fabric game tests (headless dedicated server)
-        run: ./gradlew :fabric:runGametest $GRADLE_ARGS
+        if: success() || failure()
+        run: ./gradlew :fabric:runGametest $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/3-fabric-gametest.log"
 
       - name: Forge game tests (headless game-test server)
         if: success() || failure()
-        run: ./gradlew :forge:runGameTestServer $GRADLE_ARGS
+        run: ./gradlew :forge:runGameTestServer $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/4-forge-gametest.log"
 
       - name: Committed generated data is up to date
         if: success() || failure()
@@ -52,17 +60,36 @@ jobs:
           git add -N common/src/main/generated
           if ! git diff --quiet -- common/src/main/generated; then
             echo "::error::Generated data differs from the committed copy. Run ./gradlew :fabric:runDatagen and commit common/src/main/generated."
-            git diff --stat -- common/src/main/generated
+            git diff --stat -- common/src/main/generated | tee "$RUNNER_TEMP/ci-logs/5-generated-diff.log"
             exit 1
           fi
 
-      - name: Upload generated data
+      # Logs, reports and generated data also go to the ci-logs branch, readable with plain git
+      # from environments that cannot download Actions artifacts.
+      - name: Publish logs to the ci-logs branch
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: generated-data
-          path: common/src/main/generated
-          if-no-files-found: ignore
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          L="$RUNNER_TEMP/ci-logs"
+          copy() { if [ -e "$1" ]; then mkdir -p "$L/$2" && cp -r "$1" "$L/$2/" ; fi; }
+          copy common/src/main/generated generated
+          copy common/build/test-results test-results
+          copy common/build/reports/tests reports
+          copy fabric/build/gametest/logs fabric-gametest
+          copy fabric/build/gametest/crash-reports fabric-gametest
+          copy fabric/build/gametest/junit.xml fabric-gametest
+          copy fabric/build/datagen/logs fabric-datagen
+          copy forge/build/gametest/logs forge-gametest
+          copy forge/build/gametest/crash-reports forge-gametest
+          echo "run ${{ github.run_id }} for ${{ github.sha }} (${{ job.status }})" > "$L/RUN.txt"
+          cd "$L"
+          git init -q -b ci-logs
+          git config user.name "ci-logs"
+          git config user.email "ci-logs@users.noreply.github.com"
+          git add -A
+          git commit -qm "Logs for run ${{ github.run_id }} on ${{ github.sha }}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" HEAD:ci-logs
 
       - name: Upload jars
         if: always()
@@ -72,19 +99,4 @@ jobs:
           path: |
             fabric/build/libs/*.jar
             forge/build/libs/*.jar
-          if-no-files-found: ignore
-
-      - name: Upload test reports and run logs
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: reports
-          path: |
-            common/build/reports/tests
-            fabric/build/gametest/junit.xml
-            fabric/build/gametest/logs
-            fabric/build/datagen/logs
-            forge/build/gametest/logs
-            forge/build/gametest/crash-reports
-            fabric/build/gametest/crash-reports
           if-no-files-found: ignore
