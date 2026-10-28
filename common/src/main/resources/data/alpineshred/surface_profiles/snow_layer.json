@@ -1,0 +1,9 @@
+{
+  "category": "snow",
+  "friction": 0.0014,
+  "grip": 1.0,
+  "priority": 10,
+  "blocks": [
+    "minecraft:snow"
+  ]
+}

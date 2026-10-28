@@ -1,0 +1,99 @@
+package io.github.adang101.alpineshred.command;
+
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import dev.architectury.event.events.common.CommandRegistrationEvent;
+import dev.architectury.platform.Platform;
+import io.github.adang101.alpineshred.AlpineShred;
+import io.github.adang101.alpineshred.config.AlpineConfig;
+import io.github.adang101.alpineshred.data.AlpineDataLoaders;
+import io.github.adang101.alpineshred.movement.Riders;
+import io.github.adang101.alpineshred.movement.StrapCheck;
+import io.github.adang101.alpineshred.movement.StrapController;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * {@code /alpineshred} (design doc section 18, "Commands"). Phase 1 ships {@code strap},
+ * {@code config reload} and {@code tuning reload}; {@code stats}, {@code lift}, {@code debug} and
+ * {@code design} arrive with their systems.
+ */
+public final class AlpineCommands {
+    private AlpineCommands() {
+    }
+
+    public static void register() {
+        CommandRegistrationEvent.EVENT.register((dispatcher, registry, selection) -> register(dispatcher));
+    }
+
+    private static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal(AlpineShred.MOD_ID)
+                .then(Commands.literal("strap")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.argument("targets", EntityArgument.players())
+                                .executes(ctx -> strap(ctx, Mode.TOGGLE))
+                                .then(Commands.literal("on").executes(ctx -> strap(ctx, Mode.ON)))
+                                .then(Commands.literal("off").executes(ctx -> strap(ctx, Mode.OFF)))))
+                .then(Commands.literal("config")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("reload").executes(AlpineCommands::reloadConfig)))
+                .then(Commands.literal("tuning")
+                        .requires(source -> source.hasPermission(2))
+                        .then(Commands.literal("reload").executes(AlpineCommands::reloadTuning))));
+    }
+
+    private enum Mode {ON, OFF, TOGGLE}
+
+    private static int strap(CommandContext<CommandSourceStack> ctx, Mode mode) throws CommandSyntaxException {
+        Collection<ServerPlayer> targets = EntityArgument.getPlayers(ctx, "targets");
+        int changed = 0;
+        List<String> failures = new ArrayList<>();
+        for (ServerPlayer player : targets) {
+            boolean strapped = Riders.isStrapped(player);
+            boolean want = switch (mode) {
+                case ON -> true;
+                case OFF -> false;
+                case TOGGLE -> !strapped;
+            };
+            if (want == strapped) continue;
+            if (want) {
+                StrapCheck.Result result = StrapController.tryStrap(player);
+                if (result.ok()) changed++;
+                else failures.add(player.getGameProfile().getName() + " (" + result.name().toLowerCase(java.util.Locale.ROOT) + ")");
+            } else {
+                StrapController.unstrap(player, StrapController.UnstrapReason.COMMAND);
+                changed++;
+            }
+        }
+        int done = changed;
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.strap.done", done), true);
+        if (!failures.isEmpty()) {
+            ctx.getSource().sendFailure(Component.translatable("commands.alpineshred.strap.failed", String.join(", ", failures)));
+        }
+        return changed;
+    }
+
+    private static int reloadConfig(CommandContext<CommandSourceStack> ctx) {
+        List<String> warnings = new ArrayList<>();
+        AlpineConfig.loadCommon(Platform.getConfigFolder(), warning -> {
+            warnings.add(warning);
+            AlpineShred.LOGGER.warn(warning);
+        });
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.config.reloaded", warnings.size()), true);
+        return 1;
+    }
+
+    private static int reloadTuning(CommandContext<CommandSourceStack> ctx) {
+        AlpineDataLoaders.reloadNow(ctx.getSource().getServer().getResourceManager());
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.tuning.reloaded"), true);
+        return 1;
+    }
+}

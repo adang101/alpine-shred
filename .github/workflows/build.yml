@@ -1,0 +1,90 @@
+name: build
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      # Gradle runs on 21 (Architectury Loom 1.11 needs it); the mod compiles, tests and runs on 17.
+      GRADLE_ARGS: >-
+        --stacktrace --no-daemon
+        -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64
+        -Porg.gradle.java.installations.auto-download=false
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Data generation first: tags, recipes, loot and lang feed the jars and the game tests.
+      - name: Generate data (Fabric datagen into common/src/main/generated)
+        run: ./gradlew :fabric:runDatagen $GRADLE_ARGS
+
+      - name: Compile all modules, run unit tests, build jars
+        run: ./gradlew build $GRADLE_ARGS
+
+      - name: Fabric game tests (headless dedicated server)
+        run: ./gradlew :fabric:runGametest $GRADLE_ARGS
+
+      - name: Forge game tests (headless game-test server)
+        if: success() || failure()
+        run: ./gradlew :forge:runGameTestServer $GRADLE_ARGS
+
+      - name: Committed generated data is up to date
+        if: success() || failure()
+        run: |
+          git add -N common/src/main/generated
+          if ! git diff --quiet -- common/src/main/generated; then
+            echo "::error::Generated data differs from the committed copy. Run ./gradlew :fabric:runDatagen and commit common/src/main/generated."
+            git diff --stat -- common/src/main/generated
+            exit 1
+          fi
+
+      - name: Upload generated data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-data
+          path: common/src/main/generated
+          if-no-files-found: ignore
+
+      - name: Upload jars
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jars
+          path: |
+            fabric/build/libs/*.jar
+            forge/build/libs/*.jar
+          if-no-files-found: ignore
+
+      - name: Upload test reports and run logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports
+          path: |
+            common/build/reports/tests
+            fabric/build/gametest/junit.xml
+            fabric/build/gametest/logs
+            fabric/build/datagen/logs
+            forge/build/gametest/logs
+            forge/build/gametest/crash-reports
+            fabric/build/gametest/crash-reports
+          if-no-files-found: ignore

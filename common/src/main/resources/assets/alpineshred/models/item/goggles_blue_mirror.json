@@ -1,0 +1,6 @@
+{
+  "parent": "alpineshred:item/template_goggles",
+  "textures": {
+    "lens": "alpineshred:item/gear/lens_blue_mirror"
+  }
+}

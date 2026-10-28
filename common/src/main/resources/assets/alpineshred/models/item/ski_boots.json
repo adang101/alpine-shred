@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "alpineshred:item/ski_boots",
+    "layer1": "alpineshred:item/ski_boots_overlay"
+  }
+}

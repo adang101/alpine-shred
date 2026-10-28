@@ -1,0 +1,10 @@
+{
+  "category": "snow",
+  "friction": 0.0011,
+  "grip": 1.0,
+  "priority": 0,
+  "blocks": [
+    "minecraft:snow_block",
+    "#alpineshred:slide/snow"
+  ]
+}

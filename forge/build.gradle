@@ -1,0 +1,76 @@
+plugins {
+    id 'com.gradleup.shadow'
+}
+
+architectury {
+    platformSetupLoomIde()
+    forge()
+}
+
+loom {
+    forge {
+        mixinConfig 'alpineshred.mixins.json'
+        mixinConfig 'alpineshred.client.mixins.json'
+    }
+    runs {
+        // Headless game tests on Forge's game-test server; exits non-zero if a required test fails.
+        gameTestServer {
+            environment 'server'
+            forgeTemplate 'gameTestServer'
+            name 'Game Test Server'
+            property 'forge.enabledGameTestNamespaces', rootProject.mod_id
+            runDir 'build/gametest'
+        }
+    }
+}
+
+configurations {
+    common {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentForge.extendsFrom common
+
+    shadowBundle {
+        canBeResolved = true
+        canBeConsumed = false
+    }
+}
+
+dependencies {
+    forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+    modImplementation "dev.architectury:architectury-forge:${rootProject.architectury_api_version}"
+
+    modImplementation "dev.kosmx.player-anim:player-animation-lib-forge:${rootProject.player_anim_version}"
+    modCompileOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}:api"
+    modRuntimeOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}"
+
+    common(project(path: ':common', configuration: 'namedElements')) { transitive false }
+    shadowBundle project(path: ':common', configuration: 'transformProductionForge')
+}
+
+processResources {
+    def props = [
+            version    : project.version,
+            mod_id     : rootProject.mod_id,
+            mod_name   : rootProject.mod_name,
+            mod_license: rootProject.mod_license,
+            mod_authors: rootProject.mod_authors,
+            arch_api   : rootProject.architectury_api_version,
+    ]
+    inputs.properties props
+    filesMatching('META-INF/mods.toml') {
+        expand props
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.shadowBundle]
+    archiveClassifier = 'dev-shadow'
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+}

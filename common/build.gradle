@@ -1,0 +1,20 @@
+architectury {
+    common rootProject.enabled_platforms.split(',')
+}
+
+sourceSets {
+    main {
+        resources {
+            // Written by :fabric:runDatagen (section 4). Both loaders package it through this module.
+            srcDir 'src/main/generated'
+            exclude '.cache/**'
+        }
+    }
+}
+
+dependencies {
+    // Fabric Loader is on the common classpath only for its mixin and annotation dependencies.
+    // Common code must not import net.fabricmc classes.
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "dev.architectury:architectury:${rootProject.architectury_api_version}"
+}

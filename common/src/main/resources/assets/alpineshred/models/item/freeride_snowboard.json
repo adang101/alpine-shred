@@ -1,0 +1,6 @@
+{
+  "parent": "alpineshred:item/template_snowboard",
+  "textures": {
+    "board": "alpineshred:item/gear/freeride_snowboard"
+  }
+}

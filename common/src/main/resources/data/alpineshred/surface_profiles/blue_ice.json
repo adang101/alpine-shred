@@ -1,0 +1,9 @@
+{
+  "category": "ice",
+  "friction": 1.7E-4,
+  "grip": 0.5,
+  "priority": 10,
+  "blocks": [
+    "minecraft:blue_ice"
+  ]
+}

@@ -1,0 +1,91 @@
+plugins {
+    // Architectury Loom 1.11 runs on Java 21; the mod itself compiles and runs on a Java 17 toolchain.
+    id 'dev.architectury.loom' version '1.11.458' apply false
+    id 'architectury-plugin' version '3.4.162'
+    id 'com.gradleup.shadow' version '8.3.6' apply false
+}
+
+architectury {
+    minecraft = project.minecraft_version
+}
+
+allprojects {
+    group = rootProject.maven_group
+    version = "${rootProject.mod_version}+mc${rootProject.minecraft_version}"
+}
+
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
+    apply plugin: 'maven-publish'
+
+    base {
+        archivesName = "${rootProject.archives_name}-${project.name}"
+    }
+
+    repositories {
+        maven { name = 'ParchmentMC'; url = 'https://maven.parchmentmc.org' }
+        maven { name = 'Architectury'; url = 'https://maven.architectury.dev/' }
+        maven { name = 'KosmX (PlayerAnimator)'; url = 'https://maven.kosmx.dev/' }
+        maven { name = 'Illusive Soulworks (Curios)'; url = 'https://maven.theillusivec4.top/' }
+        maven {
+            name = 'Ladysnake (Trinkets, Cardinal Components)'
+            url = 'https://maven.ladysnake.org/releases'
+        }
+        maven {
+            name = 'TerraformersMC (Trinkets mirror)'
+            url = 'https://maven.terraformersmc.com/releases'
+        }
+        exclusiveContent {
+            forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
+            filter { includeGroup 'maven.modrinth' }
+        }
+        mavenCentral()
+    }
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "net.minecraft:minecraft:${rootProject.minecraft_version}"
+        mappings loom.layered {
+            officialMojangMappings()
+            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
+        }
+
+        testImplementation platform("org.junit:junit-bom:${rootProject.junit_version}")
+        testImplementation 'org.junit.jupiter:junit-jupiter'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(rootProject.java_version as int)
+        }
+        withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = rootProject.java_version as int
+    }
+
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+        testLogging {
+            events 'failed', 'skipped'
+            exceptionFormat 'full'
+            showStandardStreams = false
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                artifactId = base.archivesName.get()
+                from components.java
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "alpineshred:item/template_skis",
+  "textures": {
+    "board": "alpineshred:item/gear/skis"
+  }
+}

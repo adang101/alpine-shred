@@ -1,0 +1,8 @@
+{
+  "kind": "skis",
+  "speed": 1.2,
+  "grip": 1.25,
+  "pop": 0.75,
+  "powder_float": 0.9,
+  "landing_forgiveness": 0.9
+}

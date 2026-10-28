@@ -1,0 +1,9 @@
+{
+  "category": "snow",
+  "friction": 6.0E-4,
+  "grip": 1.1,
+  "priority": 20,
+  "blocks": [
+    "alpineshred:groomed_snow"
+  ]
+}

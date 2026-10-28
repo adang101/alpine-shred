@@ -1,0 +1,8 @@
+{
+  "kind": "board",
+  "speed": 1.12,
+  "grip": 1.1,
+  "pop": 0.9,
+  "powder_float": 1.35,
+  "landing_forgiveness": 0.9
+}

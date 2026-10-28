@@ -1,0 +1,10 @@
+{
+  "category": "powder",
+  "friction": 0.004,
+  "grip": 0.8,
+  "priority": 10,
+  "blocks": [
+    "minecraft:powder_snow",
+    "#alpineshred:slide/powder"
+  ]
+}

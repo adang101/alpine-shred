@@ -1,0 +1,10 @@
+{
+  "category": "ice",
+  "friction": 4.0E-4,
+  "grip": 0.55,
+  "priority": 0,
+  "blocks": [
+    "minecraft:ice",
+    "#alpineshred:slide/ice"
+  ]
+}

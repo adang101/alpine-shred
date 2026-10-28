@@ -1,0 +1,4 @@
+{
+  "entities": ["player"],
+  "slots": ["snow_gear", "goggles", "hands"]
+}

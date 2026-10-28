@@ -1,0 +1,26 @@
+{
+  "parent": "alpineshred:item/template_goggles",
+  "textures": {
+    "lens": "alpineshred:item/gear/lens_clear"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "alpineshred:lens": 0.25
+      },
+      "model": "alpineshred:item/goggles_amber"
+    },
+    {
+      "predicate": {
+        "alpineshred:lens": 0.5
+      },
+      "model": "alpineshred:item/goggles_blue_mirror"
+    },
+    {
+      "predicate": {
+        "alpineshred:lens": 0.75
+      },
+      "model": "alpineshred:item/goggles_black"
+    }
+  ]
+}

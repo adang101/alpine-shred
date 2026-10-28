@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "Snowboards, skis, park features, groomed runs and ski lifts. Ride natural slopes, hit rails and kickers for trick scores, and take the lift back to the top.",
+  "authors": ["${mod_authors}"],
+  "license": "${mod_license}",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["io.github.adang101.alpineshred.fabric.AlpineShredFabric"],
+    "client": ["io.github.adang101.alpineshred.fabric.client.AlpineShredFabricClient"],
+    "fabric-datagen": ["io.github.adang101.alpineshred.fabric.datagen.AlpineShredDataGen"],
+    "fabric-gametest": ["io.github.adang101.alpineshred.fabric.gametest.FabricGameTests"]
+  },
+  "mixins": [
+    "alpineshred.mixins.json",
+    {"config": "alpineshred.client.mixins.json", "environment": "client"}
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.20.1",
+    "java": ">=17",
+    "fabric-api": "*",
+    "architectury": ">=${arch_api}",
+    "trinkets": ">=3.7.0",
+    "player-animator": "*"
+  },
+  "suggests": {
+    "create": "*"
+  }
+}
