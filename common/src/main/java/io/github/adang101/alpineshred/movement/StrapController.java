@@ -7,9 +7,9 @@ import dev.architectury.event.events.common.TickEvent;
 import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.gear.GearProfile;
 import io.github.adang101.alpineshred.gear.GearProfiles;
+import io.github.adang101.alpineshred.registry.ModSounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -154,6 +154,6 @@ public final class StrapController {
     private static void playSound(Player player, boolean in) {
         if (player.level().isClientSide) return;
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
-                SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.8f, in ? 1.25f : 0.9f);
+                (in ? ModSounds.STRAP_IN : ModSounds.STRAP_OUT).get(), SoundSource.PLAYERS, 0.9f, 1.0f);
     }
 }

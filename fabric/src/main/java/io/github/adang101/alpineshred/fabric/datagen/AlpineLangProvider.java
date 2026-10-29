@@ -98,6 +98,24 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("commands.alpineshred.debug.ride.on", "Ride debug overlay on");
         t.add("commands.alpineshred.debug.ride.off", "Ride debug overlay off");
 
+        // ---- HUD ----
+        t.add("hud.alpineshred.gear", "Wax %s  Edge %s");
+
+        // ---- subtitles ----
+        t.add("subtitles.alpineshred.ride.glide", "Snow hisses");
+        t.add("subtitles.alpineshred.ride.scrape", "Board scrapes");
+        t.add("subtitles.alpineshred.ride.carve", "Edge carves");
+        t.add("subtitles.alpineshred.ride.brake", "Rider skids");
+        t.add("subtitles.alpineshred.ride.pop", "Rider pops");
+        t.add("subtitles.alpineshred.ride.land", "Rider lands");
+        t.add("subtitles.alpineshred.ride.spin", "Rider spins");
+        t.add("subtitles.alpineshred.ride.wipeout", "Rider wipes out");
+        t.add("subtitles.alpineshred.ride.pole_push", "Pole plants");
+        t.add("subtitles.alpineshred.gear.strap_in", "Bindings click");
+        t.add("subtitles.alpineshred.gear.strap_out", "Bindings release");
+        t.add("subtitles.alpineshred.gear.wax_apply", "Wax rubs on");
+        t.add("subtitles.alpineshred.gear.tune", "Edge file scrapes");
+
         // ---- key bindings ----
         t.add("key.categories.alpineshred", "Alpine Shred");
         t.add("key.alpineshred.strap", "Strap In / Out");

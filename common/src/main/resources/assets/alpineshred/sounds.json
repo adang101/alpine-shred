@@ -1,0 +1,130 @@
+{
+  "ride.glide.snow": {
+    "subtitle": "subtitles.alpineshred.ride.glide",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/glide_snow"
+      }
+    ]
+  },
+  "ride.glide.ice": {
+    "subtitle": "subtitles.alpineshred.ride.glide",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/glide_ice"
+      }
+    ]
+  },
+  "ride.glide.powder": {
+    "subtitle": "subtitles.alpineshred.ride.glide",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/glide_powder"
+      }
+    ]
+  },
+  "ride.scrape": {
+    "subtitle": "subtitles.alpineshred.ride.scrape",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/scrape"
+      }
+    ]
+  },
+  "ride.carve": {
+    "subtitle": "subtitles.alpineshred.ride.carve",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/carve"
+      }
+    ]
+  },
+  "ride.brake": {
+    "subtitle": "subtitles.alpineshred.ride.brake",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/brake"
+      }
+    ]
+  },
+  "ride.pop": {
+    "subtitle": "subtitles.alpineshred.ride.pop",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/pop"
+      }
+    ]
+  },
+  "ride.land.soft": {
+    "subtitle": "subtitles.alpineshred.ride.land",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/land_soft"
+      }
+    ]
+  },
+  "ride.land.hard": {
+    "subtitle": "subtitles.alpineshred.ride.land",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/land_hard"
+      }
+    ]
+  },
+  "ride.spin_whoosh": {
+    "subtitle": "subtitles.alpineshred.ride.spin",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/spin_whoosh"
+      }
+    ]
+  },
+  "ride.wipeout": {
+    "subtitle": "subtitles.alpineshred.ride.wipeout",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/wipeout"
+      }
+    ]
+  },
+  "ride.pole_push": {
+    "subtitle": "subtitles.alpineshred.ride.pole_push",
+    "sounds": [
+      {
+        "name": "alpineshred:ride/pole_push"
+      }
+    ]
+  },
+  "gear.strap_in": {
+    "subtitle": "subtitles.alpineshred.gear.strap_in",
+    "sounds": [
+      {
+        "name": "alpineshred:gear/strap_in"
+      }
+    ]
+  },
+  "gear.strap_out": {
+    "subtitle": "subtitles.alpineshred.gear.strap_out",
+    "sounds": [
+      {
+        "name": "alpineshred:gear/strap_out"
+      }
+    ]
+  },
+  "gear.wax_apply": {
+    "subtitle": "subtitles.alpineshred.gear.wax_apply",
+    "sounds": [
+      {
+        "name": "alpineshred:gear/wax_apply"
+      }
+    ]
+  },
+  "gear.tune": {
+    "subtitle": "subtitles.alpineshred.gear.tune",
+    "sounds": [
+      {
+        "name": "alpineshred:gear/tune"
+      }
+    ]
+  }
+}

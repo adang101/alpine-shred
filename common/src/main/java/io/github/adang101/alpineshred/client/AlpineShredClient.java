@@ -6,6 +6,9 @@ import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.rendering.ColorHandlerRegistry;
 import dev.architectury.registry.item.ItemPropertiesRegistry;
 import io.github.adang101.alpineshred.AlpineShred;
+import io.github.adang101.alpineshred.client.feel.RideEffects;
+import io.github.adang101.alpineshred.client.feel.RiderTracker;
+import io.github.adang101.alpineshred.client.particle.SnowParticles;
 import io.github.adang101.alpineshred.client.platform.ClientPlatformHooks;
 import io.github.adang101.alpineshred.config.AlpineConfig;
 import io.github.adang101.alpineshred.gear.GogglesItem;
@@ -49,6 +52,9 @@ public final class AlpineShredClient {
         ClientNetwork.register();
         RideDriver.INSTANCE.register();
         RideDebugOverlay.register();
+        SnowParticles.register();
+        RiderTracker.register();
+        RideEffects.register();
         ClientTickEvent.CLIENT_POST.register(AlpineShredClient::clientTick);
     }
 

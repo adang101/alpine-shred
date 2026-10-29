@@ -1,0 +1,148 @@
+{
+ "version": 3,
+ "name": "snowplow_skis",
+ "author": "Alpine Shred placeholder",
+ "description": "Snowplow",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 16,
+  "stopTick": 17,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 10,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": 18
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": -18
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -4,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -4,
+     "yaw": 0,
+     "roll": -10
+    }
+   },
+   {
+    "tick": 8,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.2,
+     "z": 0,
+     "pitch": 11,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.2,
+     "z": 0,
+     "pitch": -22,
+     "yaw": 0,
+     "roll": 19
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.2,
+     "z": 0,
+     "pitch": -22,
+     "yaw": 0,
+     "roll": -19
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -4,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -4,
+     "yaw": 0,
+     "roll": -10
+    }
+   },
+   {
+    "tick": 16,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 10,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": 18
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": -18
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -4,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -4,
+     "yaw": 0,
+     "roll": -10
+    }
+   }
+  ]
+ }
+}

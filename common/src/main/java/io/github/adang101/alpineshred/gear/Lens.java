@@ -4,17 +4,30 @@ import net.minecraft.world.item.DyeColor;
 
 /** Goggles lens tints (design doc section 5). {@link #modelValue} drives the item model override. */
 public enum Lens {
-    CLEAR("clear", 0.0f),
-    AMBER("amber", 0.25f),
-    BLUE_MIRROR("blue_mirror", 0.5f),
-    BLACK("black", 0.75f);
+    CLEAR("clear", 0.0f, 0x000000, 0),
+    AMBER("amber", 0.25f, 0xFFA020, 30),
+    BLUE_MIRROR("blue_mirror", 0.5f, 0x3070FF, 26),
+    BLACK("black", 0.75f, 0x101018, 70);
 
     private final String id;
     private final float modelValue;
+    private final int tint;
+    private final int tintAlpha;
 
-    Lens(String id, float modelValue) {
+    /**
+     * @param tint      first-person overlay color (RGB)
+     * @param tintAlpha overlay opacity out of 255; 0 draws no tint (section 17, "Goggle lens")
+     */
+    Lens(String id, float modelValue, int tint, int tintAlpha) {
         this.id = id;
         this.modelValue = modelValue;
+        this.tint = tint;
+        this.tintAlpha = tintAlpha;
+    }
+
+    /** ARGB of the first-person lens tint. */
+    public int overlayArgb() {
+        return (tintAlpha << 24) | tint;
     }
 
     public String id() {

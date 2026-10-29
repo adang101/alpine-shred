@@ -1,0 +1,76 @@
+{
+ "version": 3,
+ "name": "pole_carry",
+ "author": "Alpine Shred placeholder",
+ "description": "Carrying poles",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 40,
+  "stopTick": 41,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "rightArm": {
+     "x": -5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -35,
+     "yaw": 0,
+     "roll": 8
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -35,
+     "yaw": 0,
+     "roll": -8
+    }
+   },
+   {
+    "tick": 20,
+    "easing": "INOUTSINE",
+    "rightArm": {
+     "x": -5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -37,
+     "yaw": 0,
+     "roll": 8
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -37,
+     "yaw": 0,
+     "roll": -8
+    }
+   },
+   {
+    "tick": 40,
+    "easing": "INOUTSINE",
+    "rightArm": {
+     "x": -5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -35,
+     "yaw": 0,
+     "roll": 8
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -35,
+     "yaw": 0,
+     "roll": -8
+    }
+   }
+  ]
+ }
+}

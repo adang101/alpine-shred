@@ -1,0 +1,148 @@
+{
+ "version": 3,
+ "name": "air_skis",
+ "author": "Alpine Shred placeholder",
+ "description": "Neutral air pose on skis",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 20,
+  "stopTick": 21,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 15,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 45
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -45
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 3
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": -3
+    }
+   },
+   {
+    "tick": 10,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.2,
+     "z": 0,
+     "pitch": 16,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.2,
+     "z": 0,
+     "pitch": -32,
+     "yaw": 0,
+     "roll": 47
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.2,
+     "z": 0,
+     "pitch": -32,
+     "yaw": 0,
+     "roll": -47
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 3
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": -3
+    }
+   },
+   {
+    "tick": 20,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 15,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 45
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -45
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 3
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": -3
+    }
+   }
+  ]
+ }
+}

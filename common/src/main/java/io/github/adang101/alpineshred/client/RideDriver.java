@@ -15,6 +15,7 @@ import io.github.adang101.alpineshred.movement.Riders;
 import io.github.adang101.alpineshred.movement.SlideController;
 import io.github.adang101.alpineshred.movement.SlideModel;
 import io.github.adang101.alpineshred.movement.StateSendThrottle;
+import io.github.adang101.alpineshred.movement.StrapController;
 import io.github.adang101.alpineshred.movement.TuningData;
 import io.github.adang101.alpineshred.network.ModNetwork;
 import io.github.adang101.alpineshred.network.RideAction;
@@ -26,6 +27,9 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Drives the local player's {@link SlideController} (design doc section 7): reads input in
@@ -40,6 +44,7 @@ public final class RideDriver implements RideHooks.ClientDriver {
     public static final RideDriver INSTANCE = new RideDriver();
 
     private final StateSendThrottle throttle = new StateSendThrottle();
+    private final List<SlideController.Event> pendingEvents = new ArrayList<>();
     @Nullable
     private RideRunner runner;
     @Nullable
@@ -82,6 +87,10 @@ public final class RideDriver implements RideHooks.ClientDriver {
         lastContext = ctx;
         boolean moved = r.tick(input(local), ctx);
         if (moved) reportEvents(r.controller());
+        pendingEvents.addAll(r.controller().events());
+        // The -35% strapped modifier only matters for walking; while sliding, drop it locally so it
+        // does not narrow the field of view (the server keeps it, and resyncs only when it changes).
+        StrapController.applyWalkModifier(local, !moved);
         return moved;
     }
 
@@ -149,8 +158,21 @@ public final class RideDriver implements RideHooks.ClientDriver {
         if (throttle.shouldSend(ticks, bits)) ModNetwork.sendRideState(bits);
     }
 
+    /** Controller events since the last call, for sounds and particles. */
+    public List<SlideController.Event> drainEvents() {
+        if (pendingEvents.isEmpty()) return List.of();
+        List<SlideController.Event> out = List.copyOf(pendingEvents);
+        pendingEvents.clear();
+        return out;
+    }
+
     /** Stops driving the local player, back to vanilla movement. */
     public void release() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (runner != null && player != null && runner.player() == player && Riders.isStrapped(player)) {
+            StrapController.applyWalkModifier(player, true);
+        }
+        pendingEvents.clear();
         if (runner != null) runner.release();
         runner = null;
         lastContext = null;
@@ -193,6 +215,12 @@ public final class RideDriver implements RideHooks.ClientDriver {
         RideRunner r = runner;
         if (r != null && r.player() == player && Riders.isStrapped(player)) return r.controller().state();
         return Riders.state(player);
+    }
+
+    /** True while the controller (not vanilla walking) moves the local player. */
+    public boolean sliding() {
+        RideRunner r = runner;
+        return r != null && r.controller().mode() == SlideController.Mode.RIDE;
     }
 
     @Nullable

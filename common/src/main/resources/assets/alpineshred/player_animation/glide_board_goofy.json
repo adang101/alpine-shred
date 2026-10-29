@@ -1,0 +1,148 @@
+{
+ "version": 3,
+ "name": "glide_board_goofy",
+ "author": "Alpine Shred placeholder",
+ "description": "Gliding, goofy stance",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 40,
+  "stopTick": 41,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 1.5,
+     "z": 0,
+     "pitch": 12,
+     "yaw": 0,
+     "roll": 0
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -10,
+     "yaw": 0,
+     "roll": -24
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 38
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -12
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 12
+    }
+   },
+   {
+    "tick": 20,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 1.8,
+     "z": 0,
+     "pitch": 13,
+     "yaw": 0,
+     "roll": 0
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 3.8,
+     "z": 0,
+     "pitch": -12,
+     "yaw": 0,
+     "roll": -22
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 3.8,
+     "z": 0,
+     "pitch": -17,
+     "yaw": 0,
+     "roll": 41
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -12
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 12
+    }
+   },
+   {
+    "tick": 40,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 1.5,
+     "z": 0,
+     "pitch": 12,
+     "yaw": 0,
+     "roll": 0
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -10,
+     "yaw": 0,
+     "roll": -24
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 38
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -12
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 12
+    }
+   }
+  ]
+ }
+}

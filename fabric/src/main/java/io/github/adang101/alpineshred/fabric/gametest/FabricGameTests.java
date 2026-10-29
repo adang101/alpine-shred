@@ -140,4 +140,11 @@ public final class FabricGameTests implements FabricGameTest {
     public void vanillaAcceptsKickerAir(GameTestHelper helper) {
         RideGameTests.vanillaAcceptsKickerAir(helper);
     }
+
+    // ---- phase 3: feel ----
+
+    @GameTest(template = TEMPLATE)
+    public void soundsAndParticlesAreRegistered(GameTestHelper helper) {
+        AlpineGameTests.soundsAndParticlesAreRegistered(helper);
+    }
 }

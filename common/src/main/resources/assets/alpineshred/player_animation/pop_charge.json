@@ -1,0 +1,104 @@
+{
+ "version": 3,
+ "name": "pop_charge",
+ "author": "Alpine Shred placeholder",
+ "description": "Crouched, charging a pop",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 4,
+  "stopTick": 5,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "OUTQUAD",
+    "torso": {
+     "x": 0,
+     "y": 3.5,
+     "z": 0,
+     "pitch": 25,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": 25,
+     "yaw": 0,
+     "roll": 12
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": 25,
+     "yaw": 0,
+     "roll": -12
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 14
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -14
+    }
+   },
+   {
+    "tick": 4,
+    "easing": "LINEAR",
+    "torso": {
+     "x": 0,
+     "y": 3.5,
+     "z": 0,
+     "pitch": 25,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": 25,
+     "yaw": 0,
+     "roll": 12
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": 25,
+     "yaw": 0,
+     "roll": -12
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 14
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -14
+    }
+   }
+  ]
+ }
+}

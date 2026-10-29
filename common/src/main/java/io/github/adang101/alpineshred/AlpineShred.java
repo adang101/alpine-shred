@@ -10,7 +10,9 @@ import io.github.adang101.alpineshred.movement.StrapController;
 import io.github.adang101.alpineshred.network.ModNetwork;
 import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.registry.ModItems;
+import io.github.adang101.alpineshred.registry.ModParticles;
 import io.github.adang101.alpineshred.registry.ModRecipes;
+import io.github.adang101.alpineshred.registry.ModSounds;
 import io.github.adang101.alpineshred.registry.ModTabs;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -39,6 +41,8 @@ public final class AlpineShred {
         ModItems.register();
         ModTabs.register();
         ModRecipes.register();
+        ModSounds.register();
+        ModParticles.register();
 
         AlpineDataLoaders.register();
         ModNetwork.registerCommon();

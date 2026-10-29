@@ -1,8 +1,8 @@
 package io.github.adang101.alpineshred.gear;
 
+import io.github.adang101.alpineshred.registry.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -45,7 +45,7 @@ public class EdgeTunerItem extends Item {
             GearNbt.setEdge(gear, GearWear.MAX_EDGE);
             tuner.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(hand));
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                    SoundEvents.GRINDSTONE_USE, SoundSource.PLAYERS, 0.6f, 1.4f);
+                    ModSounds.TUNE.get(), SoundSource.PLAYERS, 0.8f, 1.0f);
             player.displayClientMessage(Component.translatable("message.alpineshred.tuner.done"), true);
         }
         player.getCooldowns().addCooldown(this, 10);

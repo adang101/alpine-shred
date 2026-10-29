@@ -17,4 +17,8 @@ dependencies {
     // Common code must not import net.fabricmc classes.
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modImplementation "dev.architectury:architectury:${rootProject.architectury_api_version}"
+    // Rider animation (client only; each loader ships the matching PlayerAnimator jar as a dependency).
+    modCompileOnly "dev.kosmx.player-anim:player-animation-lib:${rootProject.player_anim_version}"
+    // The pure keyframe core, so unit tests can parse and play the clip files.
+    testImplementation "dev.kosmx.player-anim:anim-core:${rootProject.player_anim_version}"
 }

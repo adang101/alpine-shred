@@ -1,0 +1,276 @@
+{
+ "version": 3,
+ "name": "wipeout_back",
+ "author": "Alpine Shred placeholder",
+ "description": "Wipeout",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 30,
+  "stopTick": 31,
+  "isLoop": false,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "OUTQUAD",
+    "torso": {
+     "x": 0,
+     "y": 1.5,
+     "z": 0,
+     "pitch": 12,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -10,
+     "yaw": 0,
+     "roll": 24
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 3.5,
+     "z": 0,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": -38
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 12
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -12
+    },
+    "body": {
+     "x": 0,
+     "y": 0,
+     "z": 0,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 0
+    }
+   },
+   {
+    "tick": 6,
+    "easing": "OUTBOUNCE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": -50,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": 150,
+     "yaw": 0,
+     "roll": 20
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": 150,
+     "yaw": 0,
+     "roll": -20
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": 8
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -10,
+     "yaw": 0,
+     "roll": -8
+    },
+    "body": {
+     "x": 0,
+     "y": -0.35,
+     "z": 0,
+     "pitch": 70,
+     "yaw": 0,
+     "roll": 0
+    }
+   },
+   {
+    "tick": 18,
+    "easing": "LINEAR",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": -50,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": 150,
+     "yaw": 0,
+     "roll": 20
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": 150,
+     "yaw": 0,
+     "roll": -20
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": 8
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -10,
+     "yaw": 0,
+     "roll": -8
+    },
+    "body": {
+     "x": 0,
+     "y": -0.35,
+     "z": 0,
+     "pitch": 80,
+     "yaw": 0,
+     "roll": 0
+    }
+   },
+   {
+    "tick": 26,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 15,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 30
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -30
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 12
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -12
+    },
+    "body": {
+     "x": 0,
+     "y": 0,
+     "z": 0,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 0
+    }
+   },
+   {
+    "tick": 30,
+    "easing": "LINEAR",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 15,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 30
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -30
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 12
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -12
+    },
+    "body": {
+     "x": 0,
+     "y": 0,
+     "z": 0,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 0
+    }
+   }
+  ]
+ }
+}

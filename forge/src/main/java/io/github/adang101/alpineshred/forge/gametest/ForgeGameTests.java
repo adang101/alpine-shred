@@ -141,4 +141,11 @@ public final class ForgeGameTests {
     public static void vanillaAcceptsKickerAir(GameTestHelper helper) {
         RideGameTests.vanillaAcceptsKickerAir(helper);
     }
+
+    // ---- phase 3: feel ----
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void soundsAndParticlesAreRegistered(GameTestHelper helper) {
+        AlpineGameTests.soundsAndParticlesAreRegistered(helper);
+    }
 }

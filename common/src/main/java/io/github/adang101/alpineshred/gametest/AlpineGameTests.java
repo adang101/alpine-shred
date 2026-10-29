@@ -1,5 +1,6 @@
 package io.github.adang101.alpineshred.gametest;
 
+import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.gear.GearAccess;
 import io.github.adang101.alpineshred.gear.GearNbt;
 import io.github.adang101.alpineshred.gear.GearProfile;
@@ -19,7 +20,9 @@ import io.github.adang101.alpineshred.movement.StrapCheck;
 import io.github.adang101.alpineshred.movement.StrapController;
 import io.github.adang101.alpineshred.movement.TuningData;
 import io.github.adang101.alpineshred.registry.ModItems;
+import io.github.adang101.alpineshred.registry.ModSounds;
 import io.github.adang101.alpineshred.registry.ModTags;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestAssertException;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -64,6 +67,25 @@ public final class AlpineGameTests {
         check(new ItemStack(ModItems.SKI_BOOTS.get()).is(ModTags.Items.BINDING_SKI), "ski_boots not in #binding/ski");
         check(new ItemStack(ModItems.CARBON_SKI_POLES.get()).is(ModTags.Items.POLES), "carbon poles not in #gear/poles");
         check(new ItemStack(Items.WHITE_WOOL).is(ModTags.Items.REPAIR_SOFT_GEAR), "wool cannot repair soft gear");
+        helper.succeed();
+    }
+
+    /** Phase 3: every sound event and particle type is registered and has its client assets in the jar. */
+    public static void soundsAndParticlesAreRegistered(GameTestHelper helper) {
+        for (String id : ModSounds.ids()) {
+            check(BuiltInRegistries.SOUND_EVENT.containsKey(AlpineShred.id(id)), "sound event not registered: " + id);
+        }
+        check(ModSounds.ids().size() >= 16, "sound events: " + ModSounds.ids().size());
+        for (String id : java.util.List.of("snow_spray", "snow_poof", "snow_trail")) {
+            check(BuiltInRegistries.PARTICLE_TYPE.containsKey(AlpineShred.id(id)), "particle type not registered: " + id);
+        }
+        try (var in = AlpineGameTests.class.getResourceAsStream("/assets/alpineshred/sounds.json")) {
+            check(in != null, "sounds.json is not in the jar");
+            String json = new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+            for (String id : ModSounds.ids()) check(json.contains("\"" + id + "\""), "sounds.json has no entry for " + id);
+        } catch (java.io.IOException e) {
+            throw new GameTestAssertException("cannot read sounds.json: " + e);
+        }
         helper.succeed();
     }
 
