@@ -50,6 +50,7 @@ final class RiderSoundManager {
                 sound = new LoopSound(view.player, event(loop));
                 loops.put(loop, sound);
                 Minecraft.getInstance().getSoundManager().play(sound);
+                FeelStats.loopsStarted++;
             }
             sound.target = target;
             sound.targetPitch = MIX.pitch(loop);
@@ -76,6 +77,7 @@ final class RiderSoundManager {
     }
 
     private static void oneShot(RiderView view, RegistrySupplier<SoundEvent> sound, float volume, float pitch) {
+        FeelStats.oneShotsPlayed++;
         view.player.level().playLocalSound(view.player.getX(), view.player.getY(), view.player.getZ(), sound.get(),
                 SoundSource.PLAYERS, volume, pitch, false);
     }

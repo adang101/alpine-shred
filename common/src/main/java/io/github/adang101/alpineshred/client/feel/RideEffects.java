@@ -72,6 +72,8 @@ public final class RideEffects {
         CAMERA.tick(riding, state == RideState.WIPEOUT, view == null ? 0 : view.lean, speed,
                 AlpineConfig.CLIENT_FOV_EFFECT.value(), reduceMotion);
         SCREEN.tick(state, speed, inSnowfall(player), goggles(player).isPresent(), AlpineConfig.CLIENT_FLASH_SAFE.on(), reduceMotion);
+        FeelStats.maxFovAdded = Math.max(FeelStats.maxFovAdded, (float) CAMERA.fov(1));
+        FeelStats.maxRoll = Math.max(FeelStats.maxRoll, (float) Math.abs(CAMERA.roll(1)));
         lineFrame++;
     }
 

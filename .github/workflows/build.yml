@@ -63,6 +63,24 @@ jobs:
           mkdir -p forge/build/gametest && echo "eula=true" > forge/build/gametest/eula.txt
           ./gradlew :forge:runGameTestServer $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/4-forge-gametest.log"
 
+      # The real Fabric client on a virtual display (Mesa software GL): starts, creates a flat world,
+      # rides a generated run with simulated keys, takes screenshots and quits (ClientSmoke).
+      - name: Client smoke test (Fabric client, virtual display)
+        if: success() || failure()
+        timeout-minutes: 20
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1-mesa-dri > /dev/null
+          mkdir -p fabric/build/smoke
+          printf '%s\n' onboardAccessibility:false skipMultiplayerWarning:true tutorialStep:none \
+            pauseOnLostFocus:false renderDistance:6 simulationDistance:6 narrator:0 maxFps:30 \
+            joinedFirstServer:true soundCategory_master:0.0 > fabric/build/smoke/options.txt
+          xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew :fabric:runSmokeClient $GRADLE_ARGS 2>&1 \
+            | tee "$RUNNER_TEMP/ci-logs/6-client-smoke.log"
+          cat fabric/build/smoke/alpineshred-smoke.txt
+          grep -q "^RESULT PASS" fabric/build/smoke/alpineshred-smoke.txt
+
       - name: Probe API signatures (when .github/api-probe.txt exists)
         if: (success() || failure()) && hashFiles('.github/api-probe.txt') != ''
         run: .github/scripts/api-probe.sh "$RUNNER_TEMP/ci-logs/api" .github/api-probe.txt
@@ -93,6 +111,10 @@ jobs:
           copy fabric/build/gametest/crash-reports fabric-gametest
           copy fabric/build/gametest/junit.xml fabric-gametest
           copy fabric/build/datagen/logs fabric-datagen
+          copy fabric/build/smoke/logs client-smoke
+          copy fabric/build/smoke/crash-reports client-smoke
+          copy fabric/build/smoke/screenshots client-smoke
+          copy fabric/build/smoke/alpineshred-smoke.txt client-smoke
           copy forge/build/gametest/logs forge-gametest
           copy forge/build/gametest/crash-reports forge-gametest
           USERDEV=$(find ~/.gradle/caches -name "forge-*-userdev.jar" 2>/dev/null | head -1)

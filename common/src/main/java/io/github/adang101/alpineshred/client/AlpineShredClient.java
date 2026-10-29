@@ -55,6 +55,7 @@ public final class AlpineShredClient {
         SnowParticles.register();
         RiderTracker.register();
         RideEffects.register();
+        ClientSmoke.register();
         ClientTickEvent.CLIENT_POST.register(AlpineShredClient::clientTick);
     }
 

@@ -127,6 +127,7 @@ final class RiderAnimator {
 
     private static void play(ModifierLayer<IAnimation> layer, @Nullable String clip) {
         IAnimation next = clip == null ? null : player(clip);
+        if (next != null) FeelStats.clipsPlayed++;
         layer.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(FADE_TICKS, Ease.INOUTSINE), next);
     }
 

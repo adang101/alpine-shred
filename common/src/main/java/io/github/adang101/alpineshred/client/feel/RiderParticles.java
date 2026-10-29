@@ -44,6 +44,7 @@ final class RiderParticles {
                     double px = x + ox * 0.35 + fx * spread + (random.nextDouble() - 0.5) * 0.2;
                     double pz = z + oz * 0.35 + fz * spread + (random.nextDouble() - 0.5) * 0.2;
                     double out = 0.08 + random.nextDouble() * 0.12 + view.speed * 0.1;
+                    FeelStats.particlesSpawned++;
                     level.addParticle(particle, px, y + 0.1, pz,
                             ox * out + fx * view.speed * 0.25, 0.08 + random.nextDouble() * 0.14, oz * out + fz * view.speed * 0.25);
                 }
@@ -51,6 +52,7 @@ final class RiderParticles {
             if (snowy && AlpineConfig.CLIENT_CARVE_TRAILS.on() && ParticleRules.leavesTrail(view.state, view.speed, view.lean)) {
                 double side = view.lean > 0 ? 1 : -1; // the inside edge cuts the trail
                 // Direction rides in the velocity arguments; the trail particle does not move.
+                FeelStats.particlesSpawned++;
                 level.addParticle(ModParticles.SNOW_TRAIL.get(), x + rx * side * 0.15, y + 0.02, z + rz * side * 0.15, fx, 0, fz);
             }
         }
@@ -59,6 +61,7 @@ final class RiderParticles {
             for (int i = 0; i < count; i++) {
                 double a = random.nextDouble() * Math.PI * 2;
                 double r = 0.05 + random.nextDouble() * 0.15;
+                FeelStats.particlesSpawned++;
                 level.addParticle(ModParticles.SNOW_POOF.get(), x + Math.cos(a) * 0.3, y + 0.1, z + Math.sin(a) * 0.3,
                         Math.cos(a) * r, 0.05 + random.nextDouble() * 0.1, Math.sin(a) * r);
             }

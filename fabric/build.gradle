@@ -23,6 +23,13 @@ loom {
             vmArg "-Dfabric-api.datagen.modid=${modId}"
             runDir 'build/datagen'
         }
+        // The real client on a virtual display, riding a generated run with simulated keys (CI only).
+        smokeClient {
+            inherit client
+            name 'Client Smoke Test'
+            vmArg '-Dalpineshred.smoke=true'
+            runDir 'build/smoke'
+        }
         // Headless dedicated-server game tests; the process exits non-zero if a required test fails.
         gametest {
             inherit server
