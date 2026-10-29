@@ -5,9 +5,9 @@ NeoForge (via the Forge jar) and Fabric from one codebase. The design document i
 truth; this README covers how to build the code and where it stands against that document.
 
 **Status:** Phase 4 (park blocks and grinding) is built: rails in every shape with smart placement,
-grinding, boxes, ramps, quarter pipes, the park wrench and wax. Its exit gate, a 10-piece rail
-chain, a box slide and a pipe ride passing game tests, runs in CI on both loaders, along with a
-scripted Forge client riding a park line (CI step 8). A short hand check of building and riding a
+grinding, boxes, ramps, quarter pipes, the park wrench and wax. Its exit gate passes: the 10-piece
+rail chain, box slide and pipe ride game tests are green on both loaders (42 game tests per loader
+and 181 unit tests in all), and a scripted Forge client rides a park line in CI step 8. A short hand check of building and riding a
 park is in [docs/playtest-phase4.md](docs/playtest-phase4.md). Phases 1 to 3 are complete except
 phase 3's exit gate, five outside testers riding for 10 minutes each
 ([docs/playtest-phase3.md](docs/playtest-phase3.md)). Still to check by hand from earlier phases:
