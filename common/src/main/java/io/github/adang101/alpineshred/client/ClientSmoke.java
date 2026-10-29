@@ -145,6 +145,9 @@ public final class ClientSmoke {
     private static int violationsSeen;
     private static int dumps;
     private static double lastY = Double.NaN;
+    /** High snowy points near the slopes, highest first: the start, then restarts after getting stuck. */
+    private static final List<BlockPos> mountainStarts = Collections.synchronizedList(new ArrayList<>());
+    private static int restarts;
 
     // ---- gallery ----
     private static List<Pose> gallery = List.of();
@@ -365,7 +368,8 @@ public final class ClientSmoke {
         level.setDayTime(6000);
         level.setWeatherParameters(6000, 0, false, false);
         long started = System.currentTimeMillis();
-        Pair<BlockPos, Holder<Biome>> found = level.findClosestBiome3d(b -> b.is(Biomes.SNOWY_SLOPES), player.blockPosition(),
+        // From a fixed point, not the player's randomized spawn, so every run rides the same slope.
+        Pair<BlockPos, Holder<Biome>> found = level.findClosestBiome3d(b -> b.is(Biomes.SNOWY_SLOPES), new BlockPos(0, 100, 0),
                 6400, 32, 64);
         if (found == null) {
             failures.add("no snowy slopes within 6400 blocks");
@@ -376,14 +380,17 @@ public final class ClientSmoke {
         for (int dx = -4; dx <= 4; dx++) {
             for (int dz = -4; dz <= 4; dz++) level.getChunk(cx + dx, cz + dz);
         }
-        BlockPos start = null;
+        List<BlockPos> starts = new ArrayList<>();
         for (int dx = -24; dx <= 24; dx += 3) {
             for (int dz = -24; dz <= 24; dz += 3) {
                 int x = at.getX() + dx, z = at.getZ() + dz;
                 int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
-                if (snowy(level, x, y, z) && (start == null || y > start.getY())) start = new BlockPos(x, y, z);
+                if (snowy(level, x, y, z)) starts.add(new BlockPos(x, y, z));
             }
         }
+        starts.sort((a, b) -> Integer.compare(b.getY(), a.getY()));
+        mountainStarts.addAll(starts);
+        BlockPos start = starts.isEmpty() ? null : starts.get(0);
         if (start == null) {
             failures.add("no snow near the snowy slopes at " + at);
             return;
@@ -510,12 +517,25 @@ public final class ClientSmoke {
         if (rideTicks > 500 && rideTicks < 600) view(mc, "mountain_first_person", CameraType.FIRST_PERSON);
 
         boolean stuck = rideTicks > 100 && stuckTicks > 100;
+        if (stuck && restarts < 3 && rideTicks < MOUNTAIN_RIDE_TICKS - 200) {
+            // Stuck (deep powder sinks a slow rider, as in vanilla): start again from the next high point.
+            restarts++;
+            BlockPos next = mountainStarts.get(Math.min(mountainStarts.size() - 1, restarts * Math.max(1, mountainStarts.size() / 4)));
+            note("stuck at " + player.blockPosition() + "; restarting at " + next);
+            onServer(mc, sp2 -> {
+                float yaw = steepestDescent(sp2.serverLevel(), next.getX() + 0.5, next.getZ() + 0.5, 12);
+                sp2.teleportTo(sp2.serverLevel(), next.getX() + 0.5, next.getY() + 0.1, next.getZ() + 0.5, yaw, 20f);
+            });
+            stuckTicks = 0;
+            lastX = Double.NaN;
+            return false;
+        }
         if (!stuck && rideTicks < MOUNTAIN_RIDE_TICKS) return false;
 
         hold(mc.options.keyUp, false);
         if (stuck) note("stopped: no speed for 5 seconds at " + player.blockPosition());
-        note(String.format(Locale.ROOT, "mountain: %d ticks, %.0f blocks, max speed %.3f, states %s, wipeouts %d",
-                rideTicks, distance, maxSpeed, states, wipeouts));
+        note(String.format(Locale.ROOT, "mountain: %d ticks, %.0f blocks, max speed %.3f, states %s, wipeouts %d, restarts %d",
+                rideTicks, distance, maxSpeed, states, wipeouts, restarts));
         note("air episodes (ticks=count): " + airEpisodes);
         note("surfaces: " + surfaces);
         if (sp != null) note("server violations " + violations + ", last reason: " + RideServer.lastReason(sp));
