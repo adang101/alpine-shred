@@ -395,6 +395,38 @@ public final class RideGameTests {
     }
 
     /**
+     * Risk R4, found riding real terrain: each server tick runs the player's own physics step and
+     * then resets the position to the client's, and the validator samples in between. A rider
+     * gliding over powder (solid only for the client's floating controller) must not sink there,
+     * or the reset reads as a rise with no ground. Drives the real connection tick.
+     */
+    public static void serverTickLeavesRidersWhereTheClientPutThem(GameTestHelper helper) {
+        Course course = new Course(helper);
+        course.flat(0, 3, 3, Blocks.SNOW_BLOCK).flat(4, 40, 2, Blocks.SNOW_BLOCK);
+        for (int z = 4; z <= 40; z++) {
+            for (int x = Course.LANE_MIN_X; x <= Course.LANE_MAX_X; x++) course.set(x, 2, z, Blocks.POWDER_SNOW.defaultBlockState());
+        }
+        ServerPlayer player = null;
+        try {
+            player = serverRider(helper, course.at(Course.CENTER_X, 3, 1.5));
+            Vec3 start = player.position();
+            check(RideServer.handleState(player, Riders.get(player).withState(RideState.GLIDE).withMotion(0.4, 0, 0).pack()),
+                    "GLIDE refused");
+            int before = RideServer.violations(player);
+            for (int i = 1; i <= 60; i++) {
+                double z = start.z + 0.4 * i;
+                player.connection.handleMovePlayer(new ServerboundMovePlayerPacket.PosRot(start.x, start.y, z, 0, 0, true));
+                player.connection.tick();
+                check(RideServer.violations(player) == before, "violation at tick " + i + " (z " + String.format(Locale.ROOT, "%.1f", z - start.z)
+                        + "): " + RideServer.lastReason(player));
+            }
+            helper.succeed();
+        } finally {
+            removeServerPlayer(player);
+        }
+    }
+
+    /**
      * Risk R2, part one: the vanilla move-packet checks of a dedicated server must accept a rider at
      * the speed cap through a pop, a one-block step-up taken at speed, a voxel staircase, and braking
      * (sneaking) off a ledge. See {@link #replayOnServer} for how the client is simulated.

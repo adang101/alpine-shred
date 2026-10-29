@@ -118,6 +118,11 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = RideGameTests.LARGE)
+    public static void serverTickLeavesRidersWhereTheClientPutThem(GameTestHelper helper) {
+        RideGameTests.serverTickLeavesRidersWhereTheClientPutThem(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
     public static void wipeoutDamageUsesObservedSpeedAndHelmets(GameTestHelper helper) {
         RideGameTests.wipeoutDamageUsesObservedSpeedAndHelmets(helper);
     }

@@ -18,6 +18,11 @@ import net.minecraft.world.entity.player.Player;
  *       only climb walls the client stopped at.</li>
  *   <li>Powder: walkable only for the controller that floats. The replay of a floating rider has no
  *       downward component left, so it never enters the powder either way.</li>
+ *   <li>Physics step: none for riders. Every server tick runs the player's own {@code travel}
+ *       inside {@code doTick}, then resets the position to the client's; the validator samples in
+ *       between ({@code PLAYER_POST}). Vanilla gravity there sank riders into powder, which is not
+ *       solid on the server, and the next sample read the reset as a rise (risk R4, found by the
+ *       mountain smoke test).</li>
  * </ul>
  * The game test {@code vanillaAcceptsARideAtTheSpeedCap} drives the real packet handler to keep
  * these true.
@@ -44,10 +49,14 @@ public final class RideHooks {
         client = driver;
     }
 
-    /** Player.travel HEAD. Only the local player on its own client is ever driven. */
+    /**
+     * Player.travel HEAD: true cancels vanilla's travel. Only the local player on its own client is
+     * ever driven; on the server a rider's travel is skipped (see the class comment).
+     */
     public static boolean travel(Player player) {
+        if (!player.level().isClientSide) return Riders.state(player).isControllerDriven();
         ClientDriver driver = client;
-        return driver != null && player.level().isClientSide && driver.isLocal(player) && driver.travel(player);
+        return driver != null && driver.isLocal(player) && driver.travel(player);
     }
 
     private static RideStateHolder holder(Player player) {

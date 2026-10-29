@@ -117,6 +117,11 @@ public final class FabricGameTests implements FabricGameTest {
     }
 
     @GameTest(template = LARGE)
+    public void serverTickLeavesRidersWhereTheClientPutThem(GameTestHelper helper) {
+        RideGameTests.serverTickLeavesRidersWhereTheClientPutThem(helper);
+    }
+
+    @GameTest(template = LARGE)
     public void wipeoutDamageUsesObservedSpeedAndHelmets(GameTestHelper helper) {
         RideGameTests.wipeoutDamageUsesObservedSpeedAndHelmets(helper);
     }
