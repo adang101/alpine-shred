@@ -4,6 +4,7 @@
 #   multiplayer-smoke.sh <log dir> [gradle args...]
 set -uo pipefail
 LOGS="$1"; shift
+exec > >(tee "$LOGS/9-multi.log") 2>&1
 B=forge/build
 mkdir -p "$B/smoke-server"
 echo "eula=true" > "$B/smoke-server/eula.txt"

@@ -111,7 +111,12 @@ public final class ServerSmoke {
                 note(String.format(Locale.ROOT, "t%d gt%d %s at z %.1f", ticks, server.overworld().getGameTime(), state, rider.getZ() - base.getZ()));
                 lastState = state;
             }
-            violations = RideServer.violations(rider);
+            int now = RideServer.violations(rider);
+            if (now > violations) {
+                note(String.format(Locale.ROOT, "t%d gt%d violation %d at z %.1f y %.2f: %s", ticks, server.overworld().getGameTime(), now,
+                        rider.getZ() - base.getZ(), rider.getY() - base.getY(), RideServer.lastReason(rider)));
+            }
+            violations = now;
             lastReason = RideServer.lastReason(rider);
         }
         boolean everyoneLeft = riderSeen && server.getPlayerList().getPlayerCount() == 0;

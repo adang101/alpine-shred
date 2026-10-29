@@ -271,7 +271,9 @@ public final class ClientSmoke {
                 int online = mc.getConnection() == null ? 0 : mc.getConnection().getOnlinePlayers().size();
                 if (WATCHER) {
                     if (stageTicks > 20) next(Stage.WATCH);
-                } else if (mc.player != null && Riders.isStrapped(mc.player) && online >= 3 && stageTicks > 60) {
+                } else if (mc.player != null && Riders.isStrapped(mc.player) && online >= 3 && ++allOnlineTicks > 300) {
+                    // Ten seconds after the last watcher appears in the player list: time for them to
+                    // load in, be moved to their spots and start watching.
                     origin = mc.player.blockPosition().offset(0, -TOP, -1);
                     note("strapped in at " + mc.player.blockPosition() + " with " + online + " players online");
                     startRun();
@@ -579,6 +581,7 @@ public final class ClientSmoke {
     private static double riderStartZ = Double.NaN, riderMaxZ = Double.NaN;
     private static int stillTicks;
     private static boolean riderWasHere;
+    private static int allOnlineTicks;
 
     /**
      * A watcher's tick: look at the rider, record the state this client was sent for them, and
@@ -612,7 +615,7 @@ public final class ClientSmoke {
         if (state.isStrapped() && Double.isNaN(riderStartZ)) riderStartZ = z;
         if (!Double.isNaN(riderStartZ)) riderMaxZ = Double.isNaN(riderMaxZ) ? z : Math.max(riderMaxZ, z);
         long gt = mc.level.getGameTime();
-        if (state != lastState || gt % 10 == 0) {
+        if (state != lastState || gt % 5 == 0) {
             note(String.format(Locale.ROOT, "watch gt%d %s %.2f %.2f %.2f clip %s", gt, state, rider.getX(), rider.getY(), rider.getZ(),
                     RiderTracker.clipOf(rider)));
         }

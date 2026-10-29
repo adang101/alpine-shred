@@ -182,6 +182,20 @@ public final class RideServer {
         }
     }
 
+    /**
+     * The rider clock for an action packet: one tick before the move packet it followed. Actions are
+     * handled between server ticks, and on a real connection several move packets can arrive in one
+     * server tick before the action that followed the last of them; stamping it with the clock as of
+     * the last server tick would start a launch's allowance early by those packets.
+     */
+    private static long actionClock(Player player, Rider r) {
+        int pending = 1;
+        if (player instanceof ServerPlayer sp && sp.connection != null && r.lastReceived >= 0) {
+            pending = Math.max(0, ((ServerGamePacketListenerAccessor) sp.connection).alpineshred$receivedMovePackets() - r.lastReceived);
+        }
+        return r.clientClock + pending - 1;
+    }
+
     private static void advanceClock(Player player, Rider r) {
         int packets = 1;
         if (player instanceof ServerPlayer sp && sp.connection != null) {
@@ -278,24 +292,25 @@ public final class RideServer {
         RideValidator.Limits limits = limits(player);
         if (ParkChecks.nearPipe(player)) limits = limits.onPipe(); // a pipe's top launches at up to the speed cap
         MovementTuning t = TuningData.tuning();
+        long at = actionClock(player, r);
         switch (action) {
             case POP -> {
                 int charge = Math.max(0, Math.min(value, t.popChargeTicks));
-                r.validator.noteLaunch(r.clientClock, SlideModel.popVelocity(t, GearProfiles.get(player).stats(), charge), limits);
+                r.validator.noteLaunch(at, SlideModel.popVelocity(t, GearProfiles.get(player).stats(), charge), limits);
             }
-            case LAUNCH -> r.validator.noteRampLaunch(r.clientClock, Math.max(0, value) / 1000.0, limits);
+            case LAUNCH -> r.validator.noteRampLaunch(at, Math.max(0, value) / 1000.0, limits);
             case POLE_PUSH -> {
                 GearProfile gear = GearProfiles.get(player);
                 if (gear.kind() != GearKind.SKIS || !gear.poles()) {
-                    handleVerdict(player, r, r.validator.flag(r.clientClock, "pole push without skis and poles", limits));
+                    handleVerdict(player, r, r.validator.flag(at, "pole push without skis and poles", limits));
                     return;
                 }
                 // One tick of slack for packet timing.
-                if (r.clientClock - r.lastPoleClock < t.poleCooldownTicks - 1) {
-                    handleVerdict(player, r, r.validator.flag(r.clientClock, "pole push cooldown", limits));
+                if (at - r.lastPoleClock < t.poleCooldownTicks - 1) {
+                    handleVerdict(player, r, r.validator.flag(at, "pole push cooldown", limits));
                     return;
                 }
-                r.lastPoleClock = r.clientClock;
+                r.lastPoleClock = at;
                 ItemStack poles = player.getMainHandItem();
                 if (player instanceof ServerPlayer && !player.getAbilities().instabuild) {
                     poles.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
