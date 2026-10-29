@@ -51,6 +51,12 @@ public final class RiderTracker {
         previewClip = clip;
     }
 
+    /** The clip this client plays for {@code player} now, or "-" (the multiplayer smoke test logs it). */
+    public static String clipOf(net.minecraft.world.entity.player.Player player) {
+        RiderView view = player instanceof AbstractClientPlayer p ? VIEWS.get(p) : null;
+        return view == null || view.clip == null ? "-" : view.clip;
+    }
+
     @Nullable
     static RiderView localView() {
         LocalPlayer player = Minecraft.getInstance().player;

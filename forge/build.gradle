@@ -42,6 +42,41 @@ loom {
             property 'alpineshred.smoke.scenario', 'mountain'
             runDir 'build/smoke-mountain'
         }
+        // Multiplayer (phase 2's exit gate, three clients see correct state): a dedicated server
+        // that builds the run and stages the players, and three clients joining it by quick play.
+        smokeServer {
+            server()
+            name 'Multiplayer Smoke Server'
+            property 'alpineshred.smoke.server', 'true'
+            runDir 'build/smoke-server'
+        }
+        multiRider {
+            client()
+            name 'Multiplayer Smoke Rider'
+            property 'alpineshred.smoke', 'true'
+            property 'alpineshred.smoke.scenario', 'multi'
+            property 'alpineshred.smoke.role', 'rider'
+            programArgs '--username', 'rider', '--quickPlayMultiplayer', 'localhost:25565'
+            runDir 'build/smoke-rider'
+        }
+        multiWatcher1 {
+            client()
+            name 'Multiplayer Smoke Watcher 1'
+            property 'alpineshred.smoke', 'true'
+            property 'alpineshred.smoke.scenario', 'multi'
+            property 'alpineshred.smoke.role', 'watcher'
+            programArgs '--username', 'watcher1', '--quickPlayMultiplayer', 'localhost:25565'
+            runDir 'build/smoke-watcher1'
+        }
+        multiWatcher2 {
+            client()
+            name 'Multiplayer Smoke Watcher 2'
+            property 'alpineshred.smoke', 'true'
+            property 'alpineshred.smoke.scenario', 'multi'
+            property 'alpineshred.smoke.role', 'watcher'
+            programArgs '--username', 'watcher2', '--quickPlayMultiplayer', 'localhost:25565'
+            runDir 'build/smoke-watcher2'
+        }
         // A park line: rail, boxes, quarter pipe, then the wrench overlay and rail ghost (phase 4).
         parkClient {
             client()

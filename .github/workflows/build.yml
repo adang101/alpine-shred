@@ -115,6 +115,15 @@ jobs:
           cat forge/build/smoke-park/alpineshred-smoke.txt
           grep -q "^RESULT PASS" forge/build/smoke-park/alpineshred-smoke.txt
 
+      # Phase 2's exit gate: a dedicated server and three clients (a rider, two watchers) on one
+      # machine; the watchers must see the rider's state, track and animation.
+      - name: Multiplayer (Forge dedicated server, three clients)
+        if: success() || failure()
+        timeout-minutes: 25
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: .github/scripts/multiplayer-smoke.sh "$RUNNER_TEMP/ci-logs" $GRADLE_ARGS
+
       - name: Probe API signatures (when .github/api-probe.txt exists)
         if: (success() || failure()) && hashFiles('.github/api-probe.txt') != ''
         run: .github/scripts/api-probe.sh "$RUNNER_TEMP/ci-logs/api" .github/api-probe.txt
@@ -157,6 +166,13 @@ jobs:
           copy forge/build/smoke-park/crash-reports client-park
           copy forge/build/smoke-park/screenshots client-park
           copy forge/build/smoke-park/alpineshred-smoke.txt client-park
+          for r in server rider watcher1 watcher2; do
+            copy forge/build/smoke-$r/logs multi/$r
+            copy forge/build/smoke-$r/crash-reports multi/$r
+            copy forge/build/smoke-$r/screenshots multi/$r
+            copy forge/build/smoke-$r/alpineshred-smoke.txt multi/$r
+            copy forge/build/smoke-$r/alpineshred-server-smoke.txt multi/$r
+          done
           copy forge/build/gametest/logs forge-gametest
           copy forge/build/gametest/crash-reports forge-gametest
           USERDEV=$(find ~/.gradle/caches -name "forge-*-userdev.jar" 2>/dev/null | head -1)

@@ -22,6 +22,7 @@ import io.github.adang101.alpineshred.park.block.PipeBlock;
 import io.github.adang101.alpineshred.park.block.RailBlock;
 import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.registry.ModItems;
+import io.github.adang101.alpineshred.smoke.SmokeCourse;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -95,14 +96,17 @@ public final class ClientSmoke {
     private static final boolean ENABLED = Boolean.getBoolean("alpineshred.smoke");
     private static final boolean MOUNTAIN = "mountain".equals(System.getProperty("alpineshred.smoke.scenario"));
     private static final boolean PARK = "park".equals(System.getProperty("alpineshred.smoke.scenario"));
+    /** Multiplayer (phase 2's exit gate): this client joins a dedicated server as the rider or a watcher. */
+    private static final boolean MULTI = "multi".equals(System.getProperty("alpineshred.smoke.scenario"));
+    private static final boolean WATCHER = "watcher".equals(System.getProperty("alpineshred.smoke.role"));
     /** Park layout (phase 4), in blocks along +z: slope in, rail line with a rise, low box row, quarter pipe. */
     private static final int PARK_TOP = 7, PARK_SLOPE_END = 21, RAIL_DECK = 24, RAIL_FROM = 32, RAIL_RISE = 37, RAIL_TO = 41,
             STEP_TO = 44, BOX_FROM = 54, BOX_TO = 61, PIPE_AT = 74, PARK_LENGTH = 82;
     private static final int MOUNTAIN_RIDE_TICKS = 20 * 60;
     private static final int TIMEOUT_TICKS = 20 * 300;
     /** Course layout, in blocks along +z from the start. */
-    private static final int SLOPE_START = 3, SLOPE_END = 48, KICKER = 60, POWDER_FROM = 84, POWDER_TO = 92, LENGTH = 130;
-    private static final int TOP = 16;
+    private static final int SLOPE_START = SmokeCourse.SLOPE_START, POWDER_FROM = SmokeCourse.POWDER_FROM,
+            POWDER_TO = SmokeCourse.POWDER_TO, LENGTH = SmokeCourse.LENGTH, TOP = SmokeCourse.TOP;
     /**
      * Orbit yaw that looks at a regular snowboarder's chest (their body faces 90 degrees right of
      * the travel direction) and at a skier's left side.
@@ -111,7 +115,7 @@ public final class ClientSmoke {
     private static final float OFFSIDE = 90f;
 
     private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS,
-        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, DONE}
+        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, DONE}
 
     private record Shot(String name, int frame) {
     }
@@ -187,6 +191,17 @@ public final class ClientSmoke {
         }
         switch (stage) {
             case MENU -> {
+                if (MULTI) {
+                    // Quick play (--quickPlayMultiplayer) joins the server on its own.
+                    if (mc.player != null && mc.level != null && mc.player.tickCount > 40) {
+                        playerId = mc.player.getUUID();
+                        mc.options.setCameraType(WATCHER ? CameraType.FIRST_PERSON : CameraType.THIRD_PERSON_BACK);
+                        RideDebugOverlay.setEnabled(!WATCHER);
+                        note("joined as " + mc.player.getName().getString());
+                        next(Stage.MULTI_WAIT);
+                    }
+                    return;
+                }
                 if (mc.getOverlay() == null && mc.level == null && stageTicks > 40) {
                     createWorld(mc);
                     next(Stage.LOADING);
@@ -252,6 +267,26 @@ public final class ClientSmoke {
             case RIDE_MOUNTAIN -> {
                 if (rideMountain(mc)) finish(mc);
             }
+            case MULTI_WAIT -> {
+                int online = mc.getConnection() == null ? 0 : mc.getConnection().getOnlinePlayers().size();
+                if (WATCHER) {
+                    if (stageTicks > 20) next(Stage.WATCH);
+                } else if (mc.player != null && Riders.isStrapped(mc.player) && online >= 3 && stageTicks > 60) {
+                    origin = mc.player.blockPosition().offset(0, -TOP, -1);
+                    note("strapped in at " + mc.player.blockPosition() + " with " + online + " players online");
+                    startRun();
+                    next(Stage.RIDE_MULTI);
+                } else if (stageTicks > 20 * 200) {
+                    failures.add("never strapped in with 3 players online (" + online + ")");
+                    finish(mc);
+                }
+            }
+            case RIDE_MULTI -> {
+                if (ride(mc, false)) finish(mc);
+            }
+            case WATCH -> {
+                if (watch(mc)) finish(mc);
+            }
             case RIDE_PARK -> {
                 if (ridePark(mc)) next(Stage.PARK_TOOLS);
             }
@@ -302,24 +337,7 @@ public final class ClientSmoke {
         level.setDayTime(6000);
         level.setWeatherParameters(6000, 0, false, false);
         BlockPos base = player.blockPosition();
-        Block groomed = ModBlocks.GROOMED_SNOW.get();
-        for (int dz = 0; dz < LENGTH; dz++) {
-            double h = height(dz);
-            for (int dx = -4; dx <= 4; dx++) {
-                for (int dy = 0; dy < (int) Math.floor(h); dy++) {
-                    level.setBlock(base.offset(dx, dy, dz), groomed.defaultBlockState(), 2);
-                }
-                double frac = h - Math.floor(h);
-                if (frac > 1.0e-6) {
-                    int layers = (int) Math.round(frac * 8) + 1;
-                    level.setBlock(base.offset(dx, (int) Math.floor(h), dz),
-                            Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, Math.min(8, layers)), 2);
-                }
-                if (dz >= POWDER_FROM && dz < POWDER_TO) {
-                    level.setBlock(base.offset(dx, (int) Math.floor(h) - 1, dz), Blocks.POWDER_SNOW.defaultBlockState(), 2);
-                }
-            }
-        }
+        SmokeCourse.build(level, base);
         dressForBoard(player);
         origin = base;
         toTop(player);
@@ -329,27 +347,13 @@ public final class ClientSmoke {
     }
 
     private static void dressForBoard(ServerPlayer player) {
-        GearAccess.current().set(player, GearAccess.Slot.BOARD, new ItemStack(ModItems.SNOWBOARD.get()));
-        GearAccess.current().set(player, GearAccess.Slot.GOGGLES, GogglesItem.withLens(new ItemStack(ModItems.GOGGLES.get()), Lens.AMBER));
-        GearAccess.current().set(player, GearAccess.Slot.MITTS, new ItemStack(ModItems.MITTS.get()));
-        player.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModItems.SNOWBOARD_BOOTS.get()));
-        player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.SKI_HELMET.get()));
-        player.getAbilities().flying = false;
-        player.onUpdateAbilities();
+        SmokeCourse.dressForBoard(player);
         RideServer.setDebug(player, true);
         serverPlayer = player;
     }
 
     private static void toTop(ServerPlayer player) {
-        player.teleportTo(player.serverLevel(), origin.getX() + 0.5, origin.getY() + TOP, origin.getZ() + 1.5, 0f, 15f);
-    }
-
-    /** Column height of the run at {@code dz}: platform, 1-in-3 staircase, flat, kicker, flat. */
-    private static double height(int dz) {
-        if (dz < SLOPE_START) return TOP;
-        if (dz <= SLOPE_END) return Math.max(1, TOP - Math.floor((dz - SLOPE_START) / 3.0) - 1);
-        if (dz >= KICKER && dz < KICKER + 4) return 1 + 0.375 * (dz - KICKER + 1);
-        return 1;
+        SmokeCourse.toTop(player, origin);
     }
 
     /** Off the board, onto skis with poles in hand, back to the top, strapped in again. */
@@ -566,6 +570,69 @@ public final class ClientSmoke {
                 + (sp == null ? "" : RideServer.lastReason(sp)));
         check(distance > 60, String.format(Locale.ROOT, "rode only %.0f blocks", distance));
         check(states.contains(RideState.GLIDE) || states.contains(RideState.CARVE), "never glided: " + states);
+        return true;
+    }
+
+    // ---- multiplayer (phase 2's exit gate) -------------------------------------------------------------
+
+    private static final Set<RideState> seen = EnumSet.noneOf(RideState.class);
+    private static double riderStartZ = Double.NaN, riderMaxZ = Double.NaN;
+    private static int stillTicks;
+    private static boolean riderWasHere;
+
+    /**
+     * A watcher's tick: look at the rider, record the state this client was sent for them, and
+     * picture them carving and in the air. Over when the rider has finished (stopped, or gone).
+     */
+    private static boolean watch(Minecraft mc) {
+        LocalPlayer self = mc.player;
+        if (self == null || mc.level == null) return true;
+        net.minecraft.world.entity.player.Player rider = null;
+        for (var p : mc.level.players()) {
+            if (p.getName().getString().equals("rider")) rider = p;
+        }
+        String who = self.getName().getString();
+        if (rider == null) {
+            if (riderWasHere && stageTicks > 200) {
+                note("the rider left");
+                return endWatch(who);
+            }
+            if (stageTicks > 20 * 240) {
+                failures.add(who + ": never saw the rider");
+                return true;
+            }
+            return false;
+        }
+        riderWasHere = true;
+        RideSnapshot snap = Riders.get(rider);
+        RideState state = snap.state();
+        seen.add(state);
+        self.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, rider.position().add(0, 1.0, 0));
+        double z = rider.getZ();
+        if (state.isStrapped() && Double.isNaN(riderStartZ)) riderStartZ = z;
+        if (!Double.isNaN(riderStartZ)) riderMaxZ = Double.isNaN(riderMaxZ) ? z : Math.max(riderMaxZ, z);
+        long gt = mc.level.getGameTime();
+        if (state != lastState || gt % 10 == 0) {
+            note(String.format(Locale.ROOT, "watch gt%d %s %.2f %.2f %.2f clip %s", gt, state, rider.getX(), rider.getY(), rider.getZ(),
+                    RiderTracker.clipOf(rider)));
+        }
+        lastState = state;
+        if (state == RideState.CARVE) view(mc, who + "_sees_carve", CameraType.FIRST_PERSON);
+        if (state == RideState.AIR) view(mc, who + "_sees_air", CameraType.FIRST_PERSON);
+        if (state == RideState.GLIDE && seen.contains(RideState.AIR)) view(mc, who + "_sees_glide", CameraType.FIRST_PERSON);
+        double speed = Math.hypot(rider.getX() - rider.xo, rider.getZ() - rider.zo);
+        stillTicks = seen.contains(RideState.BRAKE) && speed < 0.01 ? stillTicks + 1 : 0;
+        if (stillTicks > 60 || stageTicks > 20 * 240) return endWatch(who);
+        return false;
+    }
+
+    private static boolean endWatch(String who) {
+        double travelled = Double.isNaN(riderMaxZ) ? 0 : riderMaxZ - riderStartZ;
+        note(String.format(Locale.ROOT, "%s saw the rider in %s, %.0f blocks down the run, %s", who, seen, travelled, FeelStats.summary()));
+        check(seen.containsAll(EnumSet.of(RideState.GLIDE, RideState.CARVE, RideState.AIR, RideState.BRAKE)), who + " saw only " + seen);
+        check(travelled > 80, String.format(Locale.ROOT, "%s saw the rider go only %.0f blocks", who, travelled));
+        check(FeelStats.clipsPlayed > 3, who + ": the rider's animation barely changed: " + FeelStats.summary());
+        check(FeelStats.loopsStarted > 0, who + ": no riding sounds from the rider");
         return true;
     }
 
@@ -805,6 +872,10 @@ public final class ClientSmoke {
         if (rideTicks % 10 == 0) {
             note(String.format(Locale.ROOT, "t%d z%.1f y%.2f %s speed %.3f lean %.2f frames %d %s", rideTicks, z,
                     player.getY() - origin.getY(), state, speed, c == null ? 0 : c.lean(), frames, FeelStats.summary()));
+        }
+        if (MULTI && mc.level != null) {
+            // Where the rider really is, by game time, for the watchers' transcripts to be checked against.
+            note(String.format(Locale.ROOT, "self gt%d %s %.2f %.2f %.2f", mc.level.getGameTime(), state, player.getX(), player.getY(), player.getZ()));
         }
 
         // Screenshots: one at a time, so later windows wait for earlier ones.
