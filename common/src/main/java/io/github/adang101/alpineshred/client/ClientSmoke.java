@@ -105,7 +105,7 @@ public final class ClientSmoke {
     private static final int MOUNTAIN_RIDE_TICKS = 20 * 60;
     private static final int TIMEOUT_TICKS = 20 * 300;
     /** Course layout, in blocks along +z from the start. */
-    private static final int SLOPE_START = SmokeCourse.SLOPE_START, POWDER_FROM = SmokeCourse.POWDER_FROM,
+    private static final int SLOPE_START = SmokeCourse.SLOPE_START, KICKER = SmokeCourse.KICKER, POWDER_FROM = SmokeCourse.POWDER_FROM,
             POWDER_TO = SmokeCourse.POWDER_TO, LENGTH = SmokeCourse.LENGTH, TOP = SmokeCourse.TOP;
     /**
      * Orbit yaw that looks at a regular snowboarder's chest (their body faces 90 degrees right of
@@ -242,7 +242,10 @@ public final class ClientSmoke {
                 }
             }
             case GALLERY_BOARD -> {
-                if (gallery(mc)) next(Stage.SWAP);
+                if (gallery(mc)) {
+                    checkTricks();
+                    next(Stage.SWAP);
+                }
             }
             case SWAP -> swap(mc);
             case RIDE_SKIS -> {
@@ -855,7 +858,9 @@ public final class ClientSmoke {
         boolean jump = z > 50 && z < 52.5;
         boolean brake = z > 104;
         hold(mc.options.keyUp, skate);
-        hold(mc.options.keyRight, right);
+        // Off the kicker on the board: a 360 (hold D until the board has come round), for the trick checks.
+        boolean spin = !skis && state == RideState.AIR && z > KICKER && c != null && Math.abs(c.spinAngle()) < 340;
+        hold(mc.options.keyRight, right || spin);
         hold(mc.options.keyLeft, left);
         hold(mc.options.keyJump, jump);
         hold(mc.options.keyShift, brake);
@@ -926,6 +931,22 @@ public final class ClientSmoke {
         return true;
     }
 
+    /**
+     * Phase 5's exit gate, "server scores match the client HUD": the 360 off the kicker reached the
+     * popup, and the combo the popup banked is the one the server banked.
+     */
+    private static void checkTricks() {
+        var received = io.github.adang101.alpineshred.client.trick.TrickHud.received();
+        note("tricks received: " + received);
+        boolean spun = received.stream().anyMatch(r -> r.lines().stream().anyMatch(l -> l.id().equals("spin_360")));
+        check(spun, "board: the 360 off the kicker never reached the popup");
+        ServerPlayer sp = serverPlayer;
+        int server = sp == null ? -1 : io.github.adang101.alpineshred.trick.TrickServer.lastBanked(sp);
+        int hud = io.github.adang101.alpineshred.client.trick.TrickHud.lastBankedTotal();
+        note("banked: server " + server + ", popup " + hud);
+        check(server > 0 && server == hud, "board: server banked " + server + ", the popup showed " + hud);
+    }
+
     private static void hold(KeyMapping key, boolean down) {
         KeyMapping.set(key.getDefaultKey(), down);
         key.setDown(down);
@@ -939,7 +960,8 @@ public final class ClientSmoke {
                 {RiderClips.TUCK_BOARD, "8"}, {RiderClips.BRAKE_BOARD, "8"}, {RiderClips.POP_CHARGE, "6"},
                 {RiderClips.POP_LAUNCH, "2"}, {RiderClips.AIR_BOARD, "8"}, {RiderClips.LAND_SKETCHY, "3"},
                 {RiderClips.WIPEOUT_FRONT, "12"}, {RiderClips.WIPEOUT_BACK, "12"}, {RiderClips.GRIND_5050, "6"},
-                {RiderClips.GRIND_NOSE, "6"}, {RiderClips.GRIND_TAIL, "6"}, {RiderClips.BOARDSLIDE, "6"}}) {
+                {RiderClips.GRIND_NOSE, "6"}, {RiderClips.GRIND_TAIL, "6"}, {RiderClips.BOARDSLIDE, "6"},
+                {"grab_indy", "6"}, {"grab_mute", "6"}, {"grab_nose", "6"}, {"grab_tail", "6"}, {"grab_method", "6"}}) {
             int delay = Integer.parseInt(clip[1]);
             out.add(new Pose("pose_board_" + clip[0] + "_side", clip[0], delay, SIDE));
             out.add(new Pose("pose_board_" + clip[0] + "_quarter", clip[0], delay, -35f));
@@ -951,7 +973,7 @@ public final class ClientSmoke {
         List<Pose> out = new ArrayList<>();
         for (String[] clip : new String[][]{{RiderClips.IDLE_SKIS, "8"}, {RiderClips.GLIDE_SKIS, "8"},
                 {RiderClips.TUCK_SKIS, "8"}, {RiderClips.SNOWPLOW_SKIS, "8"}, {RiderClips.AIR_SKIS, "8"},
-                {RiderClips.WIPEOUT_FRONT, "12"}, {RiderClips.SLIDE_SKIS, "6"}}) {
+                {RiderClips.WIPEOUT_FRONT, "12"}, {RiderClips.SLIDE_SKIS, "6"}, {"grab_indy_skis", "6"}, {"grab_method_skis", "6"}}) {
             int delay = Integer.parseInt(clip[1]);
             out.add(new Pose("pose_skis_" + clip[0] + "_side", clip[0], delay, SIDE));
             out.add(new Pose("pose_skis_" + clip[0] + "_front", clip[0], delay, 150f));

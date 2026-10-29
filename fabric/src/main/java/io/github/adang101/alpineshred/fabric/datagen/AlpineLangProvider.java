@@ -128,7 +128,60 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("slope.alpineshred.full", "full (45°)");
         t.add("message.alpineshred.protocol_mismatch", "Alpine Shred on this server speaks protocol %s, this client %s: riding is off until versions match");
 
+        // ---- tricks (section 8) ----
+        t.add("trick.alpineshred.spin", "%s");
+        t.add("trick.alpineshred.flip_front", "Front flip");
+        t.add("trick.alpineshred.flip_back", "Back flip");
+        t.add("trick.alpineshred.flip_front_n", "%sx front flip");
+        t.add("trick.alpineshred.flip_back_n", "%sx back flip");
+        t.add("trick.alpineshred.grab_indy", "Indy");
+        t.add("trick.alpineshred.grab_mute", "Mute");
+        t.add("trick.alpineshred.grab_nose", "Nose grab");
+        t.add("trick.alpineshred.grab_tail", "Tail grab");
+        t.add("trick.alpineshred.grab_method", "Method");
+        t.add("trick.alpineshred.grind_5050", "50-50");
+        t.add("trick.alpineshred.grind_nose", "Nose grind");
+        t.add("trick.alpineshred.grind_tail", "Tail grind");
+        t.add("trick.alpineshred.grind_boardslide", "Boardslide");
+        t.add("trick.alpineshred.slide", "%s (box)");
+        t.add("trick.alpineshred.switch", "Switch %s");
+        t.add("trick.alpineshred.switch_up", "Switch-up");
+        t.add("trick.alpineshred.spin_in", "Spin in");
+        t.add("trick.alpineshred.spin_out", "Spin out");
+        t.add("trick.alpineshred.air", "Air time");
+        t.add("trick.alpineshred.height", "Height");
+        t.add("trick.alpineshred.popup.bank", "%s banked");
+        t.add("trick.alpineshred.popup.bail", "Bail!");
+        t.add("trick.alpineshred.quality.perfect", "Perfect landing");
+        t.add("trick.alpineshred.quality.clean", "Clean");
+        t.add("trick.alpineshred.quality.sketchy", "Sketchy landing");
+        t.add("trick.alpineshred.quality.bail", "Bail!");
+
+        // ---- statistics ----
+        t.add("stat.alpineshred.trick_score", "Trick Score");
+        t.add("stat.alpineshred.tricks_landed", "Tricks Landed");
+        t.add("stat.alpineshred.air_time", "Time in the Air");
+        t.add("stat.alpineshred.grind_distance", "Distance Ground on Rails and Boxes");
+        t.add("stat.alpineshred.lift_rides", "Lift Rides");
+        t.add("stat.alpineshred.ride_distance", "Distance Ridden Strapped In");
+        t.add("stat.alpineshred.best_combo", "Best Combo");
+
+        // ---- advancements ----
+        t.add("advancements.alpineshred.root.title", "Alpine Shred");
+        t.add("advancements.alpineshred.root.description", "Get your hands on a snowboard or a pair of skis");
+        t.add("advancements.alpineshred.first_run.title", "First Run");
+        t.add("advancements.alpineshred.first_run.description", "Slide 100 blocks strapped in");
+        t.add("advancements.alpineshred.waxed_up.title", "Waxed Up");
+        t.add("advancements.alpineshred.waxed_up.description", "Wax a board or skis");
+        t.add("advancements.alpineshred.first_grind.title", "Rail Rider");
+        t.add("advancements.alpineshred.first_grind.description", "Grind 5 blocks of rail or box");
+        t.add("advancements.alpineshred.first_air.title", "Catching Air");
+        t.add("advancements.alpineshred.first_air.description", "Land a trick worth 100 points");
+        t.add("advancements.alpineshred.spin_cycle.title", "Spin Cycle");
+        t.add("advancements.alpineshred.spin_cycle.description", "Land a 360");
+
         // ---- commands ----
+        t.add("commands.alpineshred.stats", "%s: best combo %s, total score %s, tricks landed %s, %s s in the air, %s blocks ground, %s blocks ridden, %s lift rides");
         t.add("commands.alpineshred.strap.done", "Changed strap state for %s player(s)");
         t.add("commands.alpineshred.strap.failed", "Could not strap in: %s");
         t.add("commands.alpineshred.config.reloaded", "Alpine Shred config reloaded (%s warning(s), see log)");
@@ -155,6 +208,8 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("subtitles.alpineshred.grind.box_metal", "Board slides on metal");
         t.add("subtitles.alpineshred.grind.box_plastic", "Board slides on plastic");
         t.add("subtitles.alpineshred.grind.catch", "Rail catches");
+        t.add("subtitles.alpineshred.trick.combo_bank", "Combo banked");
+        t.add("subtitles.alpineshred.trick.bail", "Rider bails");
         t.add("subtitles.alpineshred.gear.strap_in", "Bindings click");
         t.add("subtitles.alpineshred.gear.strap_out", "Bindings release");
         t.add("subtitles.alpineshred.gear.wax_apply", "Wax rubs on");

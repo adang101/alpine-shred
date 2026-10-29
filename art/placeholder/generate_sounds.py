@@ -164,6 +164,27 @@ def park_sounds():
     return s
 
 
+def trick_sounds():
+    """Combo bank chime and bail thud (phase 5), from their own generator like the park sounds."""
+    global rng
+    saved, rng = rng, np.random.default_rng(20261106)
+    s = {}
+    sec = 0.7
+    n = int(RATE * sec)
+    chime = sum(tone(sec, f, None, d) * a for f, a, d in ((880, 0.5, 0.35), (1320, 0.35, 0.3), (1760, 0.25, 0.25)))
+    # A second, higher note a beat later: a rising "ding-ding".
+    late = np.zeros(n)
+    k = int(RATE * 0.09)
+    late[k:] = sum(tone(sec, f, None, d) * a for f, a, d in ((1175, 0.45, 0.3), (1760, 0.3, 0.25)))[: n - k]
+    s["trick/combo_bank"] = normalize(chime + late, 0.6)
+    sec = 0.6
+    n = int(RATE * sec)
+    s["trick/bail"] = normalize(tone(sec, 60, 35, 0.12) + band_noise(sec, 150, 1800, tilt=-3) * envelope(n, 0.003, 0.12) * 0.8
+                                + band_noise(sec, 800, 5000) * envelope(n, 0.05, 0.15, hold=0.05) * 0.25, 0.9)
+    rng = saved
+    return s
+
+
 def write_ogg(path, samples):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     pcm = (np.clip(samples, -1, 1) * 32767).astype(np.int16)
@@ -203,13 +224,15 @@ EVENTS = {
     "grind.box.metal": (["grind/box_metal"], "grind.box_metal"),
     "grind.box.plastic": (["grind/box_plastic"], "grind.box_plastic"),
     "grind.catch": (["grind/catch"], "grind.catch"),
+    "trick.combo_bank": (["trick/combo_bank"], "trick.combo_bank"),
+    "trick.bail": (["trick/bail"], "trick.bail"),
 }
 
 
 def main():
     if not os.path.isdir(ROOT):
         sys.exit("run from the repository root")
-    audio = {**loops(), **one_shots(), **park_sounds()}
+    audio = {**loops(), **one_shots(), **park_sounds(), **trick_sounds()}
     for name, samples in audio.items():
         write_ogg(os.path.join(SOUNDS, name + ".ogg"), samples)
     sounds_json = {}

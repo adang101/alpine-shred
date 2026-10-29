@@ -3,6 +3,7 @@ package io.github.adang101.alpineshred.forge.gametest;
 import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.gametest.AlpineGameTests;
 import io.github.adang101.alpineshred.gametest.ParkGameTests;
+import io.github.adang101.alpineshred.gametest.TrickGameTests;
 import io.github.adang101.alpineshred.gametest.RideGameTests;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -230,5 +231,32 @@ public final class ForgeGameTests {
     @GameTest(template = RideGameTests.LARGE)
     public static void lipRampLaunchesWithAssist(GameTestHelper helper) {
         ParkGameTests.lipRampLaunchesWithAssist(helper);
+    }
+
+    // ---- phase 5: tricks ----
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void forgedAirReportsAreRejected(GameTestHelper helper) {
+        TrickGameTests.forgedAirReportsAreRejected(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void combosChainBankAndCount(GameTestHelper helper) {
+        TrickGameTests.combosChainBankAndCount(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void aBailLosesTheCombo(GameTestHelper helper) {
+        TrickGameTests.aBailLosesTheCombo(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void grindReportsNeedARail(GameTestHelper helper) {
+        TrickGameTests.grindReportsNeedARail(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void trickAdvancementsFire(GameTestHelper helper) {
+        TrickGameTests.trickAdvancementsFire(helper);
     }
 }

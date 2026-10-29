@@ -3,6 +3,8 @@ package io.github.adang101.alpineshred.feel;
 import io.github.adang101.alpineshred.movement.RideMode;
 import io.github.adang101.alpineshred.movement.RideState;
 import io.github.adang101.alpineshred.park.GrindPhysics;
+import io.github.adang101.alpineshred.trick.GrabType;
+import io.github.adang101.alpineshred.trick.LandingQuality;
 
 import java.util.List;
 
@@ -12,8 +14,8 @@ import java.util.List;
  * state it was in before. Clip files live in {@code assets/alpineshred/player_animation/}; the
  * animator falls back to {@link #FALLBACK} if one is missing.
  *
- * <p>Grind and slide clips arrived with phase 4; grab, landing-quality and lift clips join with
- * phases 5 and 8.
+ * <p>Grind and slide clips arrived with phase 4, grab and graded landing clips with phase 5; lift
+ * clips join with phase 8.
  */
 public final class RiderClips {
     public static final String IDLE_BOARD = "idle_board";
@@ -50,7 +52,23 @@ public final class RiderClips {
     public static final List<String> ALL = List.of(IDLE_BOARD, IDLE_SKIS, WALK_STRAPPED, GLIDE_BOARD_REGULAR,
             GLIDE_BOARD_GOOFY, GLIDE_SKIS, TUCK_BOARD, TUCK_SKIS, BRAKE_BOARD, SNOWPLOW_SKIS, POP_CHARGE, POP_LAUNCH,
             AIR_BOARD, AIR_SKIS, LAND_PERFECT, LAND_CLEAN, LAND_SKETCHY, WIPEOUT_FRONT, WIPEOUT_BACK,
-            POLE_PUSH_LEFT, POLE_PUSH_RIGHT, POLE_CARRY, GRIND_5050, GRIND_NOSE, GRIND_TAIL, BOARDSLIDE, SLIDE_SKIS);
+            POLE_PUSH_LEFT, POLE_PUSH_RIGHT, POLE_CARRY, GRIND_5050, GRIND_NOSE, GRIND_TAIL, BOARDSLIDE, SLIDE_SKIS,
+            "grab_indy", "grab_mute", "grab_nose", "grab_tail", "grab_method",
+            "grab_indy_skis", "grab_mute_skis", "grab_nose_skis", "grab_tail_skis", "grab_method_skis");
+
+    /** Section 9's grab clips, one set each for board and skis: {@code grab_indy}, {@code grab_indy_skis}. */
+    public static String grab(GrabType grab, boolean skis) {
+        return "grab_" + grab.name().toLowerCase(java.util.Locale.ROOT) + (skis ? "_skis" : "");
+    }
+
+    /** The landing clip for a graded landing (section 9: quality picks the clip). */
+    public static String landing(LandingQuality quality) {
+        return switch (quality) {
+            case PERFECT -> LAND_PERFECT;
+            case SKETCHY -> LAND_SKETCHY;
+            default -> LAND_CLEAN;
+        };
+    }
 
     /** One-shot lengths in ticks; the clip files are this long. */
     public static final int POP_LAUNCH_TICKS = 5;
@@ -129,6 +147,23 @@ public final class RiderClips {
 
         /** @param variant the grind or slide variant on a rail or box, else null */
         public String tick(RideState state, RideMode mode, boolean goofy, double speed, double charge, GrindPhysics.Variant variant) {
+            return tick(state, mode, goofy, speed, charge, variant, GrabType.NONE);
+        }
+
+        /**
+         * A graded landing (the local rider knows its own): the landing clip just started becomes the
+         * one for that quality. A bail is a wipeout, which the state already plays.
+         */
+        public void landed(LandingQuality quality) {
+            if (quality != LandingQuality.BAIL && oneShotTicks > 0 && LAND_CLEAN.equals(oneShot)) {
+                oneShot = landing(quality);
+                oneShotTicks = quality == LandingQuality.SKETCHY ? LAND_TICKS + 2 : LAND_TICKS;
+            }
+        }
+
+        /** @param grab the grab held in the air, else NONE */
+        public String tick(RideState state, RideMode mode, boolean goofy, double speed, double charge, GrindPhysics.Variant variant,
+                           GrabType grab) {
             if (state != last) {
                 if (state == RideState.AIR && (last.isGroundRiding() || last.isOnFeature())) {
                     start(POP_LAUNCH, POP_LAUNCH_TICKS);
@@ -147,6 +182,7 @@ public final class RiderClips {
                 return oneShot;
             }
             if (charge > 0 && state.isGroundRiding()) return POP_CHARGE;
+            if (state == RideState.AIR && grab != null && grab != GrabType.NONE) return RiderClips.grab(grab, mode == RideMode.SKIS);
             return base(state, mode, goofy, walking, tucked, variant);
         }
 

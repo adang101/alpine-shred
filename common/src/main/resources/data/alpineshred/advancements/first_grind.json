@@ -1,0 +1,26 @@
+{
+  "parent": "alpineshred:first_run",
+  "display": {
+    "icon": {
+      "item": "alpineshred:pipe_rail"
+    },
+    "title": {
+      "translate": "advancements.alpineshred.first_grind.title"
+    },
+    "description": {
+      "translate": "advancements.alpineshred.first_grind.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "grind": {
+      "trigger": "alpineshred:grind_completed",
+      "conditions": {
+        "min_blocks": 5
+      }
+    }
+  }
+}

@@ -100,6 +100,84 @@ class SlideControllerTest {
         assertTrue(body.z > 20, "carried on after landing: z=" + body.z);
     }
 
+    // ---- tricks (section 8) ------------------------------------------------------------------------
+
+    /** Rides off the kicker; in the air, {@code air} picks the input each tick from the controller. */
+    private static SlideController.TrickLanded airOffTheKicker(VoxelBody body, SlideController c,
+                                                                 java.util.function.Function<SlideController, RideInput> air) {
+        for (int tick = 0; tick < 120; tick++) {
+            RideInput in = c.state() == RideState.AIR ? air.apply(c) : RideInput.coast(0);
+            c.tick(body, in, BOARD);
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.TrickLanded landed) return landed;
+            }
+        }
+        throw new AssertionError("never landed: " + c.state() + " z " + body.z);
+    }
+
+    private static VoxelBody kicker() {
+        return new VoxelBody(VoxelBody.Terrain.of((x, z) -> z < 10 ? 0 : z < 11 ? 1 : -4, SurfaceProfile.GROOMED), 0.5, 0.5);
+    }
+
+    @Test
+    void aSpinInTheAirTurnsTheBoardAndLandsScored() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        SlideController.TrickLanded landed = airOffTheKicker(body, c,
+                ctl -> Math.abs(ctl.spinAngle()) < 335 ? new RideInput(1, 0, 0, false, false, GrabType.NONE) : RideInput.coast(0));
+        assertTrue(Math.abs(landed.report().yawAccum()) > 330 && Math.abs(landed.report().yawAccum()) < 380,
+                "spun " + landed.report().yawAccum());
+        assertTrue(landed.report().airTicks() >= 15, "air " + landed.report().airTicks());
+        assertTrue(landed.quality() == io.github.adang101.alpineshred.trick.LandingQuality.CLEAN
+                || landed.quality() == io.github.adang101.alpineshred.trick.LandingQuality.PERFECT, "landing " + landed.quality());
+        assertFalse(landed.report().switchLanding(), "a 360 lands forward");
+        assertTrue(c.state() != RideState.WIPEOUT);
+    }
+
+    @Test
+    void aHalfSpinLandsSwitch() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        SlideController.TrickLanded landed = airOffTheKicker(body, c,
+                ctl -> Math.abs(ctl.spinAngle()) < 165 ? new RideInput(-1, 0, 0, false, false, GrabType.NONE) : RideInput.coast(0));
+        assertTrue(landed.report().switchLanding(), "a 180 lands backward");
+        assertTrue(landed.report().yawAccum() < 0, "A spins left");
+        assertTrue(landed.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "landing " + landed.quality());
+    }
+
+    @Test
+    void anUnfinishedFlipBails() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        SlideController.TrickLanded landed = airOffTheKicker(body, c, ctl -> new RideInput(0, 1, 0, false, false, GrabType.NONE));
+        double residual = io.github.adang101.alpineshred.trick.TrickAngles.residual(landed.report().pitchAccum(), 360);
+        if (residual > 45) {
+            assertEquals(io.github.adang101.alpineshred.trick.LandingQuality.BAIL, landed.quality());
+            assertEquals(RideState.WIPEOUT, c.state(), "a bail wipes out");
+        }
+        assertTrue(landed.report().pitchAccum() > 300, "flipped " + landed.report().pitchAccum());
+    }
+
+    @Test
+    void grabsAreCountedAndSlowTheSpin() {
+        VoxelBody a = kicker(), b = kicker();
+        SlideController spin = riding(a, 0.8), grabbed = riding(b, 0.8);
+        RideInput spinning = new RideInput(1, 0, 0, false, false, GrabType.NONE);
+        RideInput spinGrab = new RideInput(1, 0, 0, false, false, GrabType.INDY);
+        SlideController.TrickLanded plain = airOffTheKicker(a, spin, ctl -> spinning);
+        SlideController.TrickLanded indy = airOffTheKicker(b, grabbed, ctl -> spinGrab);
+        assertEquals(indy.report().airTicks(), indy.report().grab(GrabType.INDY), "held the whole air");
+        assertTrue(Math.abs(indy.report().yawAccum()) < Math.abs(plain.report().yawAccum()) * 0.85, "grabbing slows the spin");
+    }
+
+    @Test
+    void sneakInTheAirIsAMethodGrab() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        SlideController.TrickLanded landed = airOffTheKicker(body, c, ctl -> new RideInput(0, 0, 0, true, false, GrabType.NONE));
+        assertTrue(landed.report().grab(GrabType.METHOD) > 10, "method ticks " + landed.report().grab(GrabType.METHOD));
+    }
+
     @Test
     void aSteppedRampLaunchesWhateverTheTickPhaseAndSpeed() {
         // Four blocks rising 3/8 each (grade 0.375, just above launchGrade), then a drop: a kicker

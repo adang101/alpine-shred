@@ -7,12 +7,12 @@ truth; this README covers how to build the code and where it stands against that
 **Status:** Phase 4 (park blocks and grinding) is built: rails in every shape with smart placement,
 grinding, boxes, ramps, quarter pipes, the park wrench and wax. Its exit gate passes: the 10-piece
 rail chain, box slide and pipe ride game tests are green on both loaders (42 game tests per loader
-and 181 unit tests in all), and a scripted Forge client rides a park line in CI step 8. A short hand check of building and riding a
-park is in [docs/playtest-phase4.md](docs/playtest-phase4.md). Phases 1 to 3 are complete except
-phase 3's exit gate, five outside testers riding for 10 minutes each
-([docs/playtest-phase3.md](docs/playtest-phase3.md)). Still to check by hand from earlier phases:
-three clients on one dedicated server (multiplayer script step 1) and the jar on a NeoForge 1.20.1
-server.
+and 181 unit tests in all), and a scripted Forge client rides a park line in CI step 8. A short
+hand check of building and riding a park is in [docs/playtest-phase4.md](docs/playtest-phase4.md).
+Phases 1 to 3 are complete except phase 3's exit gate, five outside testers riding for 10 minutes
+each ([docs/playtest-phase3.md](docs/playtest-phase3.md)). Phase 2's last open item, three clients
+seeing correct state, now runs in CI step 9 on a real dedicated server (see below). Still to check
+by hand: the jar on a NeoForge 1.20.1 server.
 
 ## Build and test
 
@@ -26,6 +26,7 @@ Java 17 toolchain, which Gradle downloads if none is installed.
 | Game tests, Fabric dedicated server | `./gradlew :fabric:runGametest` |
 | Game tests, Forge game-test server | `./gradlew :forge:runGameTestServer` |
 | Client smoke test (Forge, needs a display or `xvfb-run`) | `./gradlew :forge:runSmokeClient`; real terrain: `:forge:runMountainClient`; park: `:forge:runParkClient` |
+| Multiplayer smoke (dedicated server and three clients) | `.github/scripts/multiplayer-smoke.sh <log dir>` |
 | Play-test | `./gradlew :forge:runClient` (see the note on the Fabric dev client below) |
 | Regenerate placeholder art | `python3 art/placeholder/generate_textures.py && python3 art/placeholder/generate_models.py` |
 | Regenerate placeholder clips, sounds, particles, overlays | `python3 art/placeholder/generate_animations.py`, `generate_sounds.py` (needs ffmpeg), `generate_effects.py` |
@@ -230,6 +231,18 @@ No relaxation of vanilla's checks was needed. What the server replay needs inste
 `RideHooks`: no edge back-off for strapped riders (sneaking brakes, and back-off would land the
 replay short of the client), and vanilla step height (a client step-up arrives as an upward delta,
 which the replay follows without stepping).
+
+### Three clients see correct state (CI step 9)
+
+`.github/scripts/multiplayer-smoke.sh` starts a Forge dedicated server (`:forge:runSmokeServer`,
+`ServerSmoke` builds the run beside spawn and stages the players) and three Forge clients that
+join it by quick play: `rider` rides the smoke run with simulated keys while `watcher1` and
+`watcher2` hover beside the slope and the kicker, look at the rider and log the state and position
+their client was sent for it. It passes when the server's validator saw nothing wrong, both
+watchers saw the rider glide, carve, jump and brake and travel the run with its animation
+changing, and `multiplayer-check.py` finds every watched position within a block of the rider's own
+track (allowing for the few ticks a remote player is drawn behind) and every watched state one the
+rider was in. Watcher screenshots are on the `ci-logs` branch under `multi/`.
 
 ## What phase 1 delivers
 

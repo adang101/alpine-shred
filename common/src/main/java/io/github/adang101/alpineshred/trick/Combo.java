@@ -60,6 +60,11 @@ public final class Combo {
         return groundTicks > WINDOW_TICKS || speed < MIN_SPEED;
     }
 
+    /** A landing that scored nothing still keeps the combo going: the ground clock restarts. */
+    public void tickGroundReset() {
+        groundTicks = 0;
+    }
+
     /** {@code 1 + 0.2 * (distinct categories - 1)} over spin, flip, grab and grind or slide. */
     public double variety() {
         return 1 + 0.2 * Math.max(0, categories.size() - 1);

@@ -21,6 +21,8 @@ import io.github.adang101.alpineshred.park.V3;
 import io.github.adang101.alpineshred.park.block.BoxMaterials;
 import io.github.adang101.alpineshred.park.block.GrindPaths;
 import io.github.adang101.alpineshred.registry.ModTags;
+import io.github.adang101.alpineshred.trick.GrabType;
+import io.github.adang101.alpineshred.trick.LandingQuality;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -75,9 +77,21 @@ final class RiderView {
     private int materialAge;
     /** How far a press (sneak on a rail, section 10 step 6) crouches, as a share of a full pop charge. */
     private static final double PRESS_CROUCH = 0.7;
+    /** Degrees per tick a remote rider's flip turns while its flip flag is set (section 8's maximum). */
+    private static final double REMOTE_FLIP_RATE = 24;
     /** The grind or slide variant on a rail or box, else null. */
     @Nullable
     GrindPhysics.Variant variant;
+    /** The grab held in the air, and degrees flipped so far (section 8). */
+    GrabType grab = GrabType.NONE;
+    double flip;
+    /** A spin began this tick (the whoosh). */
+    boolean spinStarted;
+    private boolean spinning;
+    private double lastSpin;
+    /** The local rider's graded landing this tick, else null. */
+    @Nullable
+    LandingQuality landedQuality;
 
     double bodyYaw;
     boolean bodyYawSet;
@@ -109,6 +123,8 @@ final class RiderView {
         polePushed = false;
         caught = false;
         pressing = false;
+        landedQuality = null;
+        spinStarted = false;
         landedImpact = Double.NaN;
         double prevVy = verticalVelocity;
         verticalVelocity = dy;
@@ -139,9 +155,18 @@ final class RiderView {
                     polePushed = true;
                 } else if (e instanceof SlideController.Caught) {
                     caught = true;
+                } else if (e instanceof SlideController.TrickLanded landed && !landed.report().endsOnRail()) {
+                    landedQuality = landed.quality();
                 }
             }
             pressing = c.pressing();
+            grab = c.grab();
+            flip = c.flipAngle();
+            double spin = c.spinAngle();
+            boolean spinNow = state == RideState.AIR && Math.abs(spin - lastSpin) > 1;
+            lastSpin = spin;
+            spinStarted = spinNow && !spinning;
+            spinning = spinNow;
         } else {
             state = snap.state();
             speed = Math.hypot(dx, dz);
@@ -164,6 +189,14 @@ final class RiderView {
                 if (state == RideState.GRIND) caught = true;
             }
             pressing = state == RideState.GRIND && player.isCrouching();
+            // Remote riders: grab from the synced state; the flip integrates the synced flip flags.
+            grab = state == RideState.AIR && snap.grabActive() ? snap.grab() : GrabType.NONE;
+            int f = snap.flags();
+            boolean front = (f & RideSnapshot.FLAG_FLIP_FRONT) != 0, back = (f & RideSnapshot.FLAG_FLIP_BACK) != 0;
+            flip = state == RideState.AIR ? flip + (front ? REMOTE_FLIP_RATE : back ? -REMOTE_FLIP_RATE : 0) : 0;
+            boolean spinNow = state == RideState.AIR && (f & (RideSnapshot.FLAG_SPIN_LEFT | RideSnapshot.FLAG_SPIN_RIGHT)) != 0;
+            spinStarted = spinNow && !spinning;
+            spinning = spinNow;
             // A pole push swings the arm (the client that pushed sends the swing to everyone).
             boolean swinging = player.swinging;
             if (swinging && !wasSwinging && holdingPoles && mode == RideMode.SKIS && state.isGroundRiding()) polePushed = true;
@@ -177,7 +210,11 @@ final class RiderView {
         material = materialNow(c);
         variant = variantNow(c, dx, dz);
 
-        clip = director.tick(state, mode, goofy, speed, charge, variant);
+        clip = director.tick(state, mode, goofy, speed, charge, variant, grab);
+        if (landedQuality != null) {
+            director.landed(landedQuality);
+            if (landedQuality != LandingQuality.BAIL) clip = RiderClips.landing(landedQuality);
+        }
         LeanRig.Pose target = state.isStrapped() && state != RideState.WIPEOUT
                 ? LeanRig.pose(mode, goofy, switchStance, lean, speed, pressing ? Math.max(charge, PRESS_CROUCH) : charge, grounded)
                 : LeanRig.Pose.NEUTRAL;

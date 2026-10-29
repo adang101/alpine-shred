@@ -1,0 +1,46 @@
+{
+  "display": {
+    "icon": {
+      "item": "alpineshred:snowboard"
+    },
+    "title": {
+      "translate": "advancements.alpineshred.root.title"
+    },
+    "description": {
+      "translate": "advancements.alpineshred.root.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false,
+    "background": "minecraft:textures/block/snow.png"
+  },
+  "criteria": {
+    "board": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "alpineshred:gear/boards"
+          }
+        ]
+      }
+    },
+    "skis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "alpineshred:gear/skis"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "board",
+      "skis"
+    ]
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "parent": "alpineshred:root",
+  "display": {
+    "icon": {
+      "item": "alpineshred:board_wax"
+    },
+    "title": {
+      "translate": "advancements.alpineshred.waxed_up.title"
+    },
+    "description": {
+      "translate": "advancements.alpineshred.waxed_up.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "wax": {
+      "trigger": "minecraft:recipe_crafted",
+      "conditions": {
+        "recipe_id": "alpineshred:wax_apply"
+      }
+    }
+  }
+}

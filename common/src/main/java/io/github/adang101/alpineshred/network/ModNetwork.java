@@ -10,6 +10,11 @@ import io.github.adang101.alpineshred.movement.StrapCheck;
 import io.github.adang101.alpineshred.movement.StrapController;
 import io.github.adang101.alpineshred.movement.TuningData;
 import io.github.adang101.alpineshred.platform.PlatformHooks;
+import io.github.adang101.alpineshred.trick.AirReport;
+import io.github.adang101.alpineshred.trick.GrindReport;
+import io.github.adang101.alpineshred.trick.TrickCodec;
+import io.github.adang101.alpineshred.trick.TrickResult;
+import io.github.adang101.alpineshred.trick.TrickServer;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -29,7 +34,11 @@ public final class ModNetwork {
     public static final ResourceLocation STRAP_TOGGLE = AlpineShred.id("c2s/strap_toggle");
     public static final ResourceLocation RIDE_STATE = AlpineShred.id("c2s/ride_state");
     public static final ResourceLocation RIDE_ACTION = AlpineShred.id("c2s/ride_action");
+    public static final ResourceLocation AIR_REPORT = AlpineShred.id("c2s/air_report");
+    public static final ResourceLocation GRIND_REPORT = AlpineShred.id("c2s/grind_report");
     public static final ResourceLocation RIDE_CORRECT = AlpineShred.id("s2c/ride_correct");
+    /** A landing, grind entry, bank or bail (section 8); the rider's entity id first. */
+    public static final ResourceLocation TRICK_RESULT = AlpineShred.id("s2c/trick_result");
     public static final ResourceLocation TUNING_SYNC = AlpineShred.id("s2c/tuning_sync");
     public static final ResourceLocation CONFIG_SYNC = AlpineShred.id("s2c/config_sync");
     /** {@code /alpineshred debug ride}: overlay on or off. */
@@ -44,6 +53,8 @@ public final class ModNetwork {
     private static final PacketRateLimiter STRAP_LIMIT = new PacketRateLimiter(4, 4);
     private static final PacketRateLimiter STATE_LIMIT = new PacketRateLimiter(10, 10);
     private static final PacketRateLimiter ACTION_LIMIT = new PacketRateLimiter(20, 20);
+    /** Reports are once per landing or grind end: a few per second at the very most. */
+    private static final PacketRateLimiter REPORT_LIMIT = new PacketRateLimiter(5, 8);
 
     private ModNetwork() {
     }
@@ -81,6 +92,37 @@ public final class ModNetwork {
             });
         });
 
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, AIR_REPORT, (buf, context) -> {
+            AirReport report = read(buf, TrickCodec::readAir);
+            context.queue(() -> {
+                if (!(context.getPlayer() instanceof ServerPlayer player)) return;
+                if (report == null) {
+                    RideServer.flagReport(player, "unreadable air report");
+                    return;
+                }
+                if (!REPORT_LIMIT.tryAcquire(player)) {
+                    if (REPORT_LIMIT.dropShouldCount(player)) RideServer.flagDroppedPacket(player, "air_report");
+                    return;
+                }
+                TrickServer.handleAir(player, report);
+            });
+        });
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, GRIND_REPORT, (buf, context) -> {
+            GrindReport report = read(buf, TrickCodec::readGrind);
+            context.queue(() -> {
+                if (!(context.getPlayer() instanceof ServerPlayer player)) return;
+                if (report == null) {
+                    RideServer.flagReport(player, "unreadable grind report");
+                    return;
+                }
+                if (!REPORT_LIMIT.tryAcquire(player)) {
+                    if (REPORT_LIMIT.dropShouldCount(player)) RideServer.flagDroppedPacket(player, "grind_report");
+                    return;
+                }
+                TrickServer.handleGrind(player, report);
+            });
+        });
+
         // Login and datapack reload: config first, then tuning (section 15, "Sync lifecycle").
         PlatformHooks.onDatapackSync(player -> {
             sendConfigSync(player);
@@ -90,6 +132,54 @@ public final class ModNetwork {
 
     private static FriendlyByteBuf buffer() {
         return new FriendlyByteBuf(Unpooled.buffer());
+    }
+
+    @FunctionalInterface
+    public interface Reader<T> {
+        T read(java.io.DataInput in) throws java.io.IOException;
+    }
+
+    @FunctionalInterface
+    private interface Writer {
+        void write(java.io.DataOutput out) throws java.io.IOException;
+    }
+
+    /** Reads a {@link TrickCodec} payload, or null when it is malformed. */
+    @org.jetbrains.annotations.Nullable
+    public static <T> T read(FriendlyByteBuf buf, Reader<T> reader) {
+        try {
+            return reader.read(new io.netty.buffer.ByteBufInputStream(buf));
+        } catch (java.io.IOException | RuntimeException e) {
+            return null;
+        }
+    }
+
+    private static FriendlyByteBuf write(Writer writer) {
+        FriendlyByteBuf buf = buffer();
+        try {
+            writer.write(new io.netty.buffer.ByteBufOutputStream(buf));
+        } catch (java.io.IOException e) {
+            throw new IllegalStateException(e);
+        }
+        return buf;
+    }
+
+    /** Client side: what the last air session was (once per landing). */
+    public static void sendAirReport(AirReport report) {
+        NetworkManager.sendToServer(AIR_REPORT, write(out -> TrickCodec.writeAir(out, report)));
+    }
+
+    /** Client side: what the last rail or box was (once per grind end). */
+    public static void sendGrindReport(GrindReport report) {
+        NetworkManager.sendToServer(GRIND_REPORT, write(out -> TrickCodec.writeGrind(out, report)));
+    }
+
+    public static void sendTrickResult(ServerPlayer to, ServerPlayer rider, TrickResult result) {
+        FriendlyByteBuf buf = write(out -> TrickCodec.writeResult(out, result));
+        FriendlyByteBuf framed = buffer();
+        framed.writeVarInt(rider.getId());
+        framed.writeBytes(buf);
+        NetworkManager.sendToPlayer(to, TRICK_RESULT, framed);
     }
 
     // ---- client to server -------------------------------------------------------------------------

@@ -8,7 +8,12 @@ import io.github.adang101.alpineshred.park.ParkView;
 import io.github.adang101.alpineshred.park.PipeArc;
 import io.github.adang101.alpineshred.park.PipeSection;
 import io.github.adang101.alpineshred.park.V3;
+import io.github.adang101.alpineshred.trick.AirReport;
+import io.github.adang101.alpineshred.trick.AirRotation;
 import io.github.adang101.alpineshred.trick.GrabType;
+import io.github.adang101.alpineshred.trick.GrindReport;
+import io.github.adang101.alpineshred.trick.LandingQuality;
+import io.github.adang101.alpineshred.trick.TrickAngles;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +99,18 @@ public final class SlideController {
     public enum Mode {WALK, RIDE}
 
     /** Things that happened this tick, for packets, sounds and the validator. */
-    public sealed interface Event permits Popped, Launched, Landed, WipedOut, Pushed, Caught {
+    public sealed interface Event permits Popped, Launched, Landed, WipedOut, Pushed, Caught, TrickLanded, GrindEnded {
+    }
+
+    /**
+     * An air session ended (section 8): on the ground with its landing quality, or on a rail or box
+     * ({@code report.endsOnRail()}, quality CLEAN: the grind's entry grades that landing).
+     */
+    public record TrickLanded(AirReport report, LandingQuality quality) implements Event {
+    }
+
+    /** Left a rail or box (section 8): what was ridden, for the grind report. */
+    public record GrindEnded(GrindReport report) implements Event {
     }
 
     /** Caught a rail (section 10, grind assist: "a spark and sound cue confirm the catch"). */
@@ -159,6 +175,18 @@ public final class SlideController {
     /** Ticks since a launch off a lip ramp, or -1. */
     private int lipTicks = -1;
 
+    // ---- tricks (section 8) ----
+    private final AirRotation rotation = new AirRotation();
+    private final int[] grabTicks = new int[GrabType.values().length];
+    private GrabType grab = GrabType.NONE;
+    private double takeoffRelative;
+    private double apexY = Double.NaN;
+    private boolean airFromRail;
+    /** The rail or box being ridden, for its report: entry block, variant, angles, time and distance. */
+    private int featureX, featureY, featureZ, featureVariant, featureTicks, featureSwitchUps;
+    private double featureAxis, featureLength;
+    private boolean featureSwitch, featureBox, featureOpen;
+
     // ---- per tick ---------------------------------------------------------------------------------
 
     /**
@@ -179,7 +207,7 @@ public final class SlideController {
             pipeTick(body, in, ctx);
         } else if (state != RideState.WIPEOUT && tryGrind(body, in, ctx)) {
             grindTick(body, in, ctx);
-        } else if (state != RideState.WIPEOUT && tryPipe(body)) {
+        } else if (state != RideState.WIPEOUT && tryPipe(body, ctx)) {
             pipeTick(body, in, ctx);
         } else if (grounded) {
             groundTick(body, in, ctx);
@@ -187,6 +215,7 @@ public final class SlideController {
             airTick(body, in, ctx);
         }
         strafeWasHeld = in.strafe() != 0;
+        trackBox(body);
         if (state == RideState.WIPEOUT && mode == Mode.RIDE) {
             motion.speed *= 1 - ctx.tuning().wipeoutSpeedBleed;
             if (--wipeoutTicks <= 0) {
@@ -352,6 +381,7 @@ public final class SlideController {
                 lipTicks = -1;
             }
         }
+        airInputs(body, in, ctx);
         double speedBefore = motion.speed;
         double vyBefore = vy;
         Moved moved = body.move(SlideModel.dirX(motion.travelYaw) * speedBefore, vy,
@@ -367,7 +397,9 @@ public final class SlideController {
             clearTerrain();
             surface = body.surfaceUnderFeet();
             events.add(new Landed(airTicks, vyBefore));
+            LandingQuality quality = endAir(body, vyBefore, false, ctx);
             airTicks = 0;
+            if (quality == LandingQuality.BAIL && state == RideState.WIPEOUT) return;
             if (surface != null && !canRide(surface, motion.speed, ctx) && state != RideState.WIPEOUT) {
                 stopRiding();
                 return;
@@ -414,15 +446,113 @@ public final class SlideController {
         airTicks = 0;
         chargeTicks = 0;
         lipTicks = -1;
+        // Section 8: an air session starts on any transition into AIR.
+        airFromRail = state == RideState.GRIND || state == RideState.SLIDE;
+        rotation.reset();
+        java.util.Arrays.fill(grabTicks, 0);
+        grab = GrabType.NONE;
+        takeoffRelative = SlideModel.wrapDegrees(motion.heading - motion.travelYaw);
+        apexY = Double.NaN;
         if (state != RideState.WIPEOUT) state = RideState.AIR;
     }
 
+    /**
+     * Section 8, "Inputs in the air": A and D spin, W and S flip, the grab keys (or sneak, for a
+     * Method) grab. The board turns with the spin; the flip only counts, and shows in the animation.
+     */
+    private void airInputs(Body body, RideInput in, RideContext ctx) {
+        apexY = Double.isNaN(apexY) ? body.y() : Math.max(apexY, body.y());
+        if (state == RideState.WIPEOUT) {
+            grab = GrabType.NONE;
+            return;
+        }
+        int spin = in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
+        grab = in.grab() != GrabType.NONE ? in.grab() : in.sneak() ? GrabType.METHOD : GrabType.NONE;
+        double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE);
+        motion.heading = SlideModel.wrapDegrees(motion.heading + spun);
+        if (grab != GrabType.NONE) grabTicks[grab.ordinal()]++;
+    }
+
+    /**
+     * Ends the air session: grades the landing (section 8, "Landing evaluation") from where the
+     * board points against the way it travels, the flip left over and the descent against the
+     * slope landed on, and applies it: a sketchy landing loses 40% of the speed, a bail wipes out.
+     * Onto a rail or box there is nothing to grade here. Returns the quality.
+     */
+    private LandingQuality endAir(Body body, double vyBefore, boolean onRail, RideContext ctx) {
+        double rel = SlideModel.wrapDegrees(motion.heading - motion.travelYaw);
+        double headingError = TrickAngles.residual(rel, 180);
+        double flipResidual = TrickAngles.residual(rotation.pitchAccum, 360);
+        double slopeError = onRail ? 0 : slopeError(body, vyBefore);
+        LandingQuality quality = onRail ? LandingQuality.CLEAN
+                : LandingQuality.evaluate(headingError, flipResidual, slopeError, ctx.gear().landingForgiveness());
+        double apex = Double.isNaN(apexY) ? 0 : Math.max(0, apexY - body.y());
+        AirReport report = new AirReport(rotation.yawAccum, rotation.pitchAccum, grabTicks, apex, airTicks, takeoffRelative,
+                headingError, flipResidual, Math.abs(rel) > 90, airFromRail, onRail);
+        events.add(new TrickLanded(report, quality));
+        rotation.reset();
+        grab = GrabType.NONE;
+        if (!onRail && airTicks >= 2) {
+            if (quality == LandingQuality.SKETCHY) motion.speed *= 1 - quality.speedLoss;
+            if (quality == LandingQuality.BAIL && state != RideState.WIPEOUT) startWipeout(motion.speed, ctx.tuning());
+        }
+        return quality;
+    }
+
+    /** Degrees between the descent and the ground landed on, along the way of travel. */
+    private double slopeError(Body body, double vyBefore) {
+        double descent = Math.toDegrees(Math.atan2(Math.max(0, -vyBefore), Math.max(1.0e-6, motion.speed)));
+        double dx = SlideModel.dirX(motion.travelYaw) * 0.5, dz = SlideModel.dirZ(motion.travelYaw) * 0.5;
+        double behind = body.groundTop(body.x() - dx, body.z() - dz, body.y() + 1.0, body.y() - 2.0);
+        double ahead = body.groundTop(body.x() + dx, body.z() + dz, body.y() + 1.0, body.y() - 2.0);
+        double downhill = Double.isNaN(behind) || Double.isNaN(ahead) ? 0 : Math.toDegrees(Math.atan2(behind - ahead, 1.0));
+        return Math.abs(descent - downhill);
+    }
+
+    /** A rail or box report, if one is open: emitted when the rider leaves it. */
+    private void endFeature() {
+        if (!featureOpen) return;
+        featureOpen = false;
+        events.add(new GrindEnded(new GrindReport(featureX, featureY, featureZ, featureBox, featureVariant, featureAxis,
+                featureSwitch, featureLength, featureTicks, featureSwitchUps)));
+    }
+
+    private void openFeature(Body body, boolean box, double relative) {
+        endFeature();
+        featureOpen = true;
+        featureBox = box;
+        featureX = (int) Math.floor(body.x());
+        featureY = (int) Math.floor(body.y() - (box ? 0.01 : 0.3));
+        featureZ = (int) Math.floor(body.z());
+        double a = Math.abs(SlideModel.wrapDegrees(relative));
+        featureAxis = a > 90 ? 180 - a : a;
+        featureSwitch = a > 90;
+        featureVariant = GrindPhysics.variant(relative).ordinal();
+        featureTicks = 0;
+        featureLength = 0;
+        featureSwitchUps = 0;
+    }
+
+    /** Box slides: a session from the tick SLIDE starts to the tick it ends. */
+    private void trackBox(Body body) {
+        if (state == RideState.SLIDE) {
+            if (!featureOpen || !featureBox) openFeature(body, true, SlideModel.wrapDegrees(motion.heading - motion.travelYaw));
+            featureTicks++;
+            featureLength += motion.speed;
+        } else if (featureOpen && featureBox) {
+            endFeature();
+        }
+    }
+
     private void stopRiding() {
+        endFeature();
         mode = Mode.WALK;
         state = RideState.IDLE;
         lean = 0;
         grind = null;
         pipe = null;
+        rotation.reset();
+        grab = GrabType.NONE;
     }
 
     private RideState groundState(RideInput in) {
@@ -524,9 +654,14 @@ public final class SlideController {
             caught = GrindPhysics.capture(lookup.near(ahead), ahead, velocity, motion.heading);
         }
         if (caught == null) return false;
-        if (!grounded) events.add(new Landed(airTicks, vyNow));
+        if (!grounded) {
+            events.add(new Landed(airTicks, vyNow));
+            endAir(body, vyNow, true, ctx);
+        }
+        endFeature(); // straight off a box onto a rail
         events.add(new Caught(caught.path().material()));
         grind = caught;
+        openFeature(body, false, caught.relativeHeading());
         grounded = true;
         vy = 0;
         chargeTicks = 0;
@@ -562,12 +697,14 @@ public final class SlideController {
             double relative = SlideModel.wrapDegrees(g.relativeHeading() + 90 * Math.signum(in.strafe()));
             g = new GrindPhysics.Grind(g.path(), g.s(), g.direction(), g.speed(), relative, GrindPhysics.variant(relative));
             switchUpCooldown = SWITCH_UP_TICKS;
+            featureSwitchUps++;
         }
         if (in.jump() && !jumpWasHeld) {
             // Section 10, step 6: a pop that inherits the rail's velocity.
             jumpWasHeld = true;
             double pop = SlideModel.popVelocity(t, ctx.gear(), 0);
             V3 v = g.travel().scale(g.speed());
+            endFeature();
             grind = null;
             motion.speed = v.horizontalLength();
             if (motion.speed > 1.0e-4) motion.travelYaw = SlideModel.yawOf(v.x(), v.z());
@@ -585,6 +722,8 @@ public final class SlideController {
         GrindPhysics.Step step = GrindPhysics.advance(g.withSpeed(g.speed()), lookup, t, waxMul);
         grind = step.grind();
         travelled += step.distance();
+        featureTicks++;
+        featureLength += step.distance();
         V3 p = step.position();
         body.placeAt(p.x(), p.y(), p.z());
         motion.heading = grind.heading();
@@ -605,6 +744,7 @@ public final class SlideController {
 
     /** Leaves the rail with {@code velocity}: onto the ground below if there is some, otherwise into the air. */
     private void leaveGrind(Body body, V3 velocity, RideState forced) {
+        endFeature();
         grind = null;
         pressing = false;
         motion.speed = velocity.horizontalLength();
@@ -628,7 +768,7 @@ public final class SlideController {
      * Enters the arc of a quarter pipe the rider's front edge has reached: from the ground at the
      * transition (moving toward the wall), or from the air coming down onto it.
      */
-    private boolean tryPipe(Body body) {
+    private boolean tryPipe(Body body, RideContext ctx) {
         V3 feet = new V3(body.x(), body.y(), body.z());
         double vx = SlideModel.dirX(motion.travelYaw) * motion.speed, vz = SlideModel.dirZ(motion.travelYaw) * motion.speed;
         V3 next = grounded ? feet.add(vx, 0, vz) : feet.add(vx, vy, vz);
@@ -653,7 +793,10 @@ public final class SlideController {
         pipeSpeed = speedAlong;
         pipeAcross = section.across(next);
         pipeAcrossSpeed = vx * l.x() + vz * l.z();
-        if (!grounded) events.add(new Landed(airTicks, vy));
+        if (!grounded) {
+            events.add(new Landed(airTicks, vy));
+            endAir(body, vy, false, ctx);
+        }
         grounded = true;
         vy = 0;
         airTicks = 0;
@@ -837,8 +980,31 @@ public final class SlideController {
 
     /** The snapshot this rider should sync, given its mode and stance. */
     public RideSnapshot snapshot(RideMode rideMode, boolean goofy) {
-        return new RideSnapshot(state, rideMode, goofy, false, GrabType.NONE,
-                0, RideSnapshot.leanToLevel(lean), RideSnapshot.speedToLevel(motion.speed),
+        int flags = 0;
+        if (state == RideState.AIR) {
+            if (rotation.spinRate() < 0) flags |= RideSnapshot.FLAG_SPIN_LEFT;
+            if (rotation.spinRate() > 0) flags |= RideSnapshot.FLAG_SPIN_RIGHT;
+            if (rotation.flipRate() > 0) flags |= RideSnapshot.FLAG_FLIP_FRONT;
+            if (rotation.flipRate() < 0) flags |= RideSnapshot.FLAG_FLIP_BACK;
+        }
+        boolean grabbing = state == RideState.AIR && grab != GrabType.NONE;
+        return new RideSnapshot(state, rideMode, goofy, grabbing, grabbing ? grab : GrabType.NONE,
+                flags, RideSnapshot.leanToLevel(lean), RideSnapshot.speedToLevel(motion.speed),
                 RideSnapshot.headingToStep(motion.heading));
+    }
+
+    /** The grab held in the air now, or NONE. */
+    public GrabType grab() {
+        return state == RideState.AIR ? grab : GrabType.NONE;
+    }
+
+    /** Degrees flipped so far this air session (positive: front), for the body's pitch. */
+    public double flipAngle() {
+        return state == RideState.AIR ? rotation.pitchAccum : 0;
+    }
+
+    /** Degrees spun so far this air session. */
+    public double spinAngle() {
+        return state == RideState.AIR ? rotation.yawAccum : 0;
     }
 }

@@ -19,6 +19,11 @@ final class LeanLayer implements IAnimation {
     private LeanRig.Pose to = LeanRig.Pose.NEUTRAL;
     private boolean active;
     private float tickDelta;
+    /** Degrees flipped (section 8: flips turn the body root procedurally), last tick and this. */
+    private float flipFrom, flipTo;
+    /** Snowboarders stand sideways, so their flips roll the body; skiers' pitch it. */
+    private boolean flipRolls;
+    private float flipSign = 1;
 
     LeanLayer(AbstractClientPlayer player, IAnimation base) {
         this.player = player;
@@ -29,6 +34,13 @@ final class LeanLayer implements IAnimation {
         from = to;
         to = pose;
         active = on;
+    }
+
+    void flip(double degrees, boolean board, boolean goofy) {
+        flipFrom = Math.abs(degrees - flipTo) > 90 ? (float) degrees : flipTo; // a reset snaps, no swing back
+        flipTo = (float) degrees;
+        flipRolls = board;
+        flipSign = board && goofy ? -1 : 1;
     }
 
     @Override
@@ -54,7 +66,9 @@ final class LeanLayer implements IAnimation {
                     return new Vec3f(v.getX() + (float) p.rootX(), v.getY() + (float) p.rootY() + lift, v.getZ() + (float) p.rootZ());
                 }
                 if (type == TransformType.ROTATION) {
-                    return new Vec3f(v.getX() + (float) p.rootPitch(), v.getY(), v.getZ() + (float) p.rootRoll());
+                    float flip = (float) Math.toRadians(flipFrom + (flipTo - flipFrom) * tickDelta) * flipSign;
+                    return new Vec3f(v.getX() + (float) p.rootPitch() + (flipRolls ? 0 : flip), v.getY(),
+                            v.getZ() + (float) p.rootRoll() + (flipRolls ? -flip : 0));
                 }
             }
             case "torso" -> {

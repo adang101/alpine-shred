@@ -11,6 +11,7 @@ import io.github.adang101.alpineshred.gear.GearProfiles;
 import io.github.adang101.alpineshred.gear.GearWear;
 import io.github.adang101.alpineshred.mixin.ServerGamePacketListenerAccessor;
 import io.github.adang101.alpineshred.network.ModNetwork;
+import io.github.adang101.alpineshred.registry.ModStats;
 import io.github.adang101.alpineshred.park.block.ParkChecks;
 import io.github.adang101.alpineshred.network.RideAction;
 import io.github.adang101.alpineshred.trick.GrabType;
@@ -176,6 +177,12 @@ public final class RideServer {
         r.lastClockAtSample = r.clientClock;
         r.hasLast = true;
 
+        if (player instanceof ServerPlayer sp) {
+            io.github.adang101.alpineshred.trick.TrickServer.tick(sp, state);
+            if (r.hasLast && verdict.kind() != RideValidator.Kind.CORRECT && state.isGroundRiding()) {
+                ModStats.award(sp, ModStats.RIDE_DISTANCE, (int) Math.round(horizontal * 100));
+            }
+        }
         if (r.debug && player instanceof ServerPlayer sp && --r.debugCountdown <= 0) {
             r.debugCountdown = DEBUG_INTERVAL_TICKS;
             ModNetwork.sendDebugStats(sp, r.validator.recentViolations(), r.corrections, r.recentSpeed(), r.lastReason);
@@ -320,6 +327,15 @@ public final class RideServer {
     }
 
     /** A rate-limited packet was dropped (section 15). The limiter calls this at most once per second. */
+    /**
+     * A trick report the server rejects (section 8, "Server validation"): counted like any other
+     * implausible claim, so a client that forges reports also ends up corrected.
+     */
+    public static void flagReport(Player player, String reason) {
+        Rider r = rider(player);
+        handleVerdict(player, r, r.validator.flag(r.clientClock, reason, limits(player)));
+    }
+
     public static void flagDroppedPacket(Player player, String packet) {
         Rider r = rider(player);
         if (!Riders.state(player).isControllerDriven()) return;

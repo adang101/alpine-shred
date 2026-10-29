@@ -50,6 +50,18 @@ public final class ClientNetwork {
             });
         });
 
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.TRICK_RESULT, (buf, context) -> {
+            int riderId = buf.readVarInt();
+            io.github.adang101.alpineshred.trick.TrickResult result = ModNetwork.read(buf, io.github.adang101.alpineshred.trick.TrickCodec::readResult);
+            context.queue(() -> {
+                var player = net.minecraft.client.Minecraft.getInstance().player;
+                // Other riders' results arrive when trick.broadcast shares them; the popup is our own.
+                if (result != null && player != null && player.getId() == riderId) {
+                    io.github.adang101.alpineshred.client.trick.TrickHud.accept(result);
+                }
+            });
+        });
+
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.RIDE_CORRECT, (buf, context) -> {
             buf.readDouble();
             buf.readDouble();

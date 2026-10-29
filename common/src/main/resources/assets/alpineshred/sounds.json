@@ -174,5 +174,21 @@
         "name": "alpineshred:grind/catch"
       }
     ]
+  },
+  "trick.combo_bank": {
+    "subtitle": "subtitles.alpineshred.trick.combo_bank",
+    "sounds": [
+      {
+        "name": "alpineshred:trick/combo_bank"
+      }
+    ]
+  },
+  "trick.bail": {
+    "subtitle": "subtitles.alpineshred.trick.bail",
+    "sounds": [
+      {
+        "name": "alpineshred:trick/bail"
+      }
+    ]
   }
 }

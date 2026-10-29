@@ -42,6 +42,8 @@ public final class ModSounds {
     public static final RegistrySupplier<SoundEvent> GRIND_BOX_METAL = sound("grind.box.metal");
     public static final RegistrySupplier<SoundEvent> GRIND_BOX_PLASTIC = sound("grind.box.plastic");
     public static final RegistrySupplier<SoundEvent> GRIND_CATCH = sound("grind.catch");
+    public static final RegistrySupplier<SoundEvent> COMBO_BANK = sound("trick.combo_bank");
+    public static final RegistrySupplier<SoundEvent> BAIL = sound("trick.bail");
 
     private ModSounds() {
     }

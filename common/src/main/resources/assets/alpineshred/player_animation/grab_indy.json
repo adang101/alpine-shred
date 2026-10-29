@@ -1,0 +1,148 @@
+{
+ "version": 3,
+ "name": "grab_indy",
+ "author": "Alpine Shred placeholder",
+ "description": "Indy: rear hand on the toe edge between the feet",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 10,
+  "stopTick": 11,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0.0,
+     "y": 3.5,
+     "z": 0,
+     "pitch": 32,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": 15,
+     "yaw": 0,
+     "roll": 5
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": -35,
+     "yaw": 0,
+     "roll": -70
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 18
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -18
+    }
+   },
+   {
+    "tick": 5,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0.0,
+     "y": 3.5,
+     "z": 0,
+     "pitch": 34,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": 15,
+     "yaw": 0,
+     "roll": 5
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": -35,
+     "yaw": 0,
+     "roll": -70
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 18
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -18
+    }
+   },
+   {
+    "tick": 10,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0.0,
+     "y": 3.5,
+     "z": 0,
+     "pitch": 32,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": 15,
+     "yaw": 0,
+     "roll": 5
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 5.5,
+     "z": 0,
+     "pitch": -35,
+     "yaw": 0,
+     "roll": -70
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 18
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -18
+    }
+   }
+  ]
+ }
+}

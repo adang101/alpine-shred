@@ -59,8 +59,11 @@ final class RiderSoundManager {
         if (!audible) return;
 
         if (view.popped) oneShot(view, ModSounds.POP, 0.8f, (float) RideSoundRules.popPitch(view.popCharge));
+        if (view.spinStarted) oneShot(view, ModSounds.SPIN_WHOOSH, 0.5f, 0.9f + view.player.getRandom().nextFloat() * 0.2f);
         if (!Double.isNaN(view.landedImpact)) {
-            boolean hard = RideSoundRules.hardLanding(view.landedImpact);
+            // Section 17: soft for perfect and clean landings, hard for sketchy (or a hard impact).
+            boolean hard = RideSoundRules.hardLanding(view.landedImpact)
+                    || view.landedQuality == io.github.adang101.alpineshred.trick.LandingQuality.SKETCHY;
             oneShot(view, hard ? ModSounds.LAND_HARD : ModSounds.LAND_SOFT, hard ? 0.9f : 0.6f, 0.95f + view.player.getRandom().nextFloat() * 0.1f);
         }
         if (view.wipedOut) oneShot(view, ModSounds.WIPEOUT, 1.0f, 0.95f);

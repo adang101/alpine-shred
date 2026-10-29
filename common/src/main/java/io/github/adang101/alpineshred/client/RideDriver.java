@@ -133,7 +133,16 @@ public final class RideDriver implements RideHooks.ClientDriver {
         Input in = player.input;
         double strafe = in.leftImpulse > 0 ? -1 : in.leftImpulse < 0 ? 1 : 0;
         int forward = in.forwardImpulse > 0 ? 1 : in.forwardImpulse < 0 ? -1 : 0;
-        return new RideInput(strafe, forward, player.getYRot(), in.shiftKeyDown, in.jumping, GrabType.NONE);
+        return new RideInput(strafe, forward, player.getYRot(), in.shiftKeyDown, in.jumping, heldGrab());
+    }
+
+    /** The grab key held (section 8: Z Indy, X Mute, C Nose, V Tail); sneak's Method is the controller's. */
+    private static GrabType heldGrab() {
+        if (KeyBinds.GRAB_INDY.isDown()) return GrabType.INDY;
+        if (KeyBinds.GRAB_MUTE.isDown()) return GrabType.MUTE;
+        if (KeyBinds.GRAB_NOSE.isDown()) return GrabType.NOSE;
+        if (KeyBinds.GRAB_TAIL.isDown()) return GrabType.TAIL;
+        return GrabType.NONE;
     }
 
     private static void reportEvents(SlideController controller) {
@@ -142,6 +151,10 @@ public final class RideDriver implements RideHooks.ClientDriver {
                 ModNetwork.sendRideAction(RideAction.POP, pop.chargeTicks());
             } else if (event instanceof SlideController.Launched launch) {
                 ModNetwork.sendRideAction(RideAction.LAUNCH, (int) Math.round(launch.velocity() * 1000));
+            } else if (event instanceof SlideController.TrickLanded landed) {
+                ModNetwork.sendAirReport(landed.report());
+            } else if (event instanceof SlideController.GrindEnded ended) {
+                ModNetwork.sendGrindReport(ended.report());
             }
         }
     }

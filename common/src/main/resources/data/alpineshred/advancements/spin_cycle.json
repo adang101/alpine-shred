@@ -1,0 +1,26 @@
+{
+  "parent": "alpineshred:first_air",
+  "display": {
+    "icon": {
+      "item": "alpineshred:pro_snowboard"
+    },
+    "title": {
+      "translate": "advancements.alpineshred.spin_cycle.title"
+    },
+    "description": {
+      "translate": "advancements.alpineshred.spin_cycle.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "spin": {
+      "trigger": "alpineshred:trick_landed",
+      "conditions": {
+        "min_spin": 360
+      }
+    }
+  }
+}

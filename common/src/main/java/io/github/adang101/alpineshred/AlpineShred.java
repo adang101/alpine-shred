@@ -13,6 +13,7 @@ import io.github.adang101.alpineshred.registry.ModItems;
 import io.github.adang101.alpineshred.registry.ModParticles;
 import io.github.adang101.alpineshred.registry.ModRecipes;
 import io.github.adang101.alpineshred.registry.ModSounds;
+import io.github.adang101.alpineshred.registry.ModStats;
 import io.github.adang101.alpineshred.registry.ModTabs;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
@@ -43,6 +44,9 @@ public final class AlpineShred {
         ModRecipes.register();
         ModSounds.register();
         ModParticles.register();
+        ModStats.register();
+        io.github.adang101.alpineshred.trick.advancement.ModTriggers.register();
+        dev.architectury.event.events.common.LifecycleEvent.SETUP.register(ModStats::bindFormatters);
 
         AlpineDataLoaders.register();
         ModNetwork.registerCommon();

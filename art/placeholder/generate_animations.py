@@ -209,6 +209,38 @@ def build():
     balance("boardslide", board_stance(2.2, 6, (-8, 78), (-8, 78), legs=14), 4, 20, "Boardslide: board across the rail")
     balance("slide_skis", ski_stance(2.4, 12, -18, 42, -8, leg_roll=7), 3, 20, "Skis across a rail or box")
 
+    # ---- grabs (phase 5): held while the grab key is, additive feel over the air pose ----
+    def grab_pair(name, a, b, description):
+        clips.append(breathing(name, a, b, 10, description))
+
+    def board_grab(name, crouch, torso_pitch, lead_arm, rear_arm, leg_pitch, description, torso_x=0.0):
+        a = board_stance(crouch, torso_pitch, lead_arm, rear_arm, legs=18, leg_pitch=leg_pitch)
+        a["torso"]["x"] = torso_x
+        b = copy.deepcopy(a)
+        b["torso"]["pitch"] += 2
+        grab_pair(name, a, b, description)
+
+    # Regular stance: the left (+x) side leads, so the left arm is the front hand.
+    board_grab("grab_indy", 3.5, 32, (-35, 70), (15, 5), -30, "Indy: rear hand on the toe edge between the feet")
+    board_grab("grab_mute", 3.5, 32, (15, 5), (-35, 70), -30, "Mute: front hand on the toe edge")
+    board_grab("grab_nose", 3.0, 25, (10, 40), (-30, 80), -20, "Nose: front hand reaches for the nose", torso_x=1.0)
+    board_grab("grab_tail", 3.0, 25, (-30, 80), (10, 40), -20, "Tail: rear hand reaches for the tail", torso_x=-1.0)
+    board_grab("grab_method", 2.0, -15, (45, 20), (-120, 40), 35, "Method: knees back, front hand on the heel edge")
+
+    def ski_grab(name, crouch, torso_pitch, rarm, larm, leg_pitch, description):
+        a = ski_stance(crouch, torso_pitch, -30, 30, leg_pitch)
+        a["rightArm"].update(rarm)
+        a["leftArm"].update(larm)
+        b = copy.deepcopy(a)
+        b["torso"]["pitch"] += 2
+        grab_pair(name, a, b, description)
+
+    ski_grab("grab_indy_skis", 3.5, 35, dict(pitch=20, roll=10), dict(pitch=-40, roll=-60), -35, "Indy on skis: right hand to the right ski")
+    ski_grab("grab_mute_skis", 3.5, 35, dict(pitch=-40, roll=60), dict(pitch=20, roll=-10), -35, "Mute on skis: left hand to the left ski")
+    ski_grab("grab_nose_skis", 3.0, 40, dict(pitch=35, roll=5), dict(pitch=35, roll=-5), -45, "Nose on skis: both hands to the tips")
+    ski_grab("grab_tail_skis", 2.5, -10, dict(pitch=60, roll=20), dict(pitch=-60, roll=-40), 40, "Tail on skis: legs back, hand to a tail")
+    ski_grab("grab_method_skis", 2.0, -20, dict(pitch=70, roll=10), dict(pitch=-110, roll=-30), 45, "Method on skis: arched back")
+
     # ---- poles (the hands layer: arms only) ----
     carry = pose(1.5, rarm=dict(pitch=-35, roll=8), larm=dict(pitch=-35, roll=-8), arms_only=True)
     clips.append(breathing("pole_carry", carry, pose(1.5, rarm=dict(pitch=-37, roll=8), larm=dict(pitch=-37, roll=-8), arms_only=True),

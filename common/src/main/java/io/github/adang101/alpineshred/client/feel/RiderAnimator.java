@@ -71,6 +71,7 @@ final class RiderAnimator {
             play(rig.base, view.clip);
         }
         rig.lean.update(view.leanPose, view.state.isStrapped());
+        rig.lean.flip(view.flip, view.mode == io.github.adang101.alpineshred.movement.RideMode.BOARD, view.goofy);
 
         String hands = null;
         if (rig.handsOneShot > 0) {

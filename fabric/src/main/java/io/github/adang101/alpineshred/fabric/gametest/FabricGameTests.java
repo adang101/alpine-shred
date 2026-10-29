@@ -2,6 +2,7 @@ package io.github.adang101.alpineshred.fabric.gametest;
 
 import io.github.adang101.alpineshred.gametest.AlpineGameTests;
 import io.github.adang101.alpineshred.gametest.ParkGameTests;
+import io.github.adang101.alpineshred.gametest.TrickGameTests;
 import io.github.adang101.alpineshred.gametest.RideGameTests;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.gametest.framework.GameTest;
@@ -229,5 +230,32 @@ public final class FabricGameTests implements FabricGameTest {
     @GameTest(template = LARGE)
     public static void lipRampLaunchesWithAssist(GameTestHelper helper) {
         ParkGameTests.lipRampLaunchesWithAssist(helper);
+    }
+
+    // ---- phase 5: tricks ----
+
+    @GameTest(template = LARGE)
+    public static void forgedAirReportsAreRejected(GameTestHelper helper) {
+        TrickGameTests.forgedAirReportsAreRejected(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public static void combosChainBankAndCount(GameTestHelper helper) {
+        TrickGameTests.combosChainBankAndCount(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public static void aBailLosesTheCombo(GameTestHelper helper) {
+        TrickGameTests.aBailLosesTheCombo(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public static void grindReportsNeedARail(GameTestHelper helper) {
+        TrickGameTests.grindReportsNeedARail(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public static void trickAdvancementsFire(GameTestHelper helper) {
+        TrickGameTests.trickAdvancementsFire(helper);
     }
 }

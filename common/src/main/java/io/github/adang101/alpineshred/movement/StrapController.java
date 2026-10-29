@@ -94,6 +94,7 @@ public final class StrapController {
 
     public static void unstrap(Player player, UnstrapReason reason) {
         if (!Riders.isStrapped(player)) return;
+        if (player instanceof net.minecraft.server.level.ServerPlayer sp) io.github.adang101.alpineshred.trick.TrickServer.end(sp);
         Riders.set(player, RideSnapshot.OFF);
         RideServer.reset(player);
         applyWalkModifier(player, false);

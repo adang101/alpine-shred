@@ -1,0 +1,148 @@
+{
+ "version": 3,
+ "name": "grab_method_skis",
+ "author": "Alpine Shred placeholder",
+ "description": "Method on skis: arched back",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 10,
+  "stopTick": 11,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": 70,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -110,
+     "yaw": 0,
+     "roll": -30
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 45,
+     "yaw": 0,
+     "roll": 3
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 45,
+     "yaw": 0,
+     "roll": -3
+    }
+   },
+   {
+    "tick": 5,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": 70,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -110,
+     "yaw": 0,
+     "roll": -30
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 45,
+     "yaw": 0,
+     "roll": 3
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 45,
+     "yaw": 0,
+     "roll": -3
+    }
+   },
+   {
+    "tick": 10,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": 70,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -110,
+     "yaw": 0,
+     "roll": -30
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 45,
+     "yaw": 0,
+     "roll": 3
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 45,
+     "yaw": 0,
+     "roll": -3
+    }
+   }
+  ]
+ }
+}
