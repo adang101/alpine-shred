@@ -226,4 +226,9 @@ public final class ForgeGameTests {
     public static void parkClaimsNeedTheFeature(GameTestHelper helper) {
         ParkGameTests.parkClaimsNeedTheFeature(helper);
     }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void lipRampLaunchesWithAssist(GameTestHelper helper) {
+        ParkGameTests.lipRampLaunchesWithAssist(helper);
+    }
 }

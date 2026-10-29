@@ -20,6 +20,8 @@ public final class GrindPhysics {
     public static final double MIN_SPEED = 0.08;
     public static final double ENTRY_LOSS = 0.05;
     public static final double MIN_ENTRY_SPEED = 0.05;
+    /** How near a path's end counts as at it, for leaving rather than catching. */
+    static final double END_SLACK = 0.02;
     /** Continuing onto the next piece: its end within this distance, its tangent within {@link #JOIN_ANGLE}. */
     public static final double JOIN_DISTANCE = 0.15;
     public static final double JOIN_ANGLE = 60;
@@ -105,6 +107,10 @@ public final class GrindPhysics {
             double radius = approach <= ASSIST_ANGLE ? ASSIST_RADIUS : CAPTURE_RADIUS;
             if (c.horizontal() > radius) continue;
             int direction = cos > 0 ? 1 : -1;
+            // At a path's end, moving out past it: nothing left to ride (a rider just off the end
+            // of a line would otherwise be caught again, and again, at the end point).
+            double length = candidate.path().length();
+            if ((direction > 0 && c.s() >= length - END_SLACK) || (direction < 0 && c.s() <= END_SLACK)) continue;
             double along = Math.abs(velocity.dot(tangent)) * (1 - ENTRY_LOSS);
             if (along < MIN_ENTRY_SPEED) continue;
             if (c.horizontal() < bestDistance) {

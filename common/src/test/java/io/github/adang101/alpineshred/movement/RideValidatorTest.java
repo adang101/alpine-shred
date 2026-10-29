@@ -88,6 +88,26 @@ class RideValidatorTest {
     }
 
     /**
+     * A quarter pipe's top launches the rider straight up while the server still counts it on the
+     * arc (supported): the launch's air budget must outlast the launch window anyway.
+     */
+    @Test
+    void aPipeTopLaunchKeepsItsAirBudget() {
+        RideValidator v = new RideValidator();
+        RideValidator.Limits pipe = LIMITS.onPipe();
+        double y = 64;
+        v.observe(0, 0, y, 0, true, pipe);
+        double vy = 0.475;
+        v.noteRampLaunch(0, vy, pipe); // reported in the tick it left, decided after that tick's move
+        assertEquals(RideValidator.Kind.OK, v.observe(1, 0, y, 0, true, pipe).kind(), "the launch tick, still on the arc");
+        for (int tick = 2; tick < 14; tick++) {
+            y += vy;
+            vy = Ballistics.nextVerticalVelocity(vy);
+            assertEquals(RideValidator.Kind.OK, v.observe(tick, 0, y, 0, tick == 2, pipe).kind(), "tick " + tick + " at y " + y);
+        }
+    }
+
+    /**
      * The controller and the validator together, in the server's order: each tick the move packet
      * arrives, then the tick's ride_action (handled while the rider clock still reads the previous
      * tick), then the per-tick check.

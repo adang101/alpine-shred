@@ -283,9 +283,10 @@ def rail_bar(shape, half_width, height, tex):
 
 
 def rail_legs(shape):
-    pts = resample(rail_points(shape), 4)
+    """One leg under the middle of the piece: a line of them reads as a rail on stands, not a fence."""
+    pts = resample(rail_points(shape), 2)
     els = []
-    for p in (pts[1], pts[3]):
+    for p in (pts[1],):
         bottom = p[1] - 2
         if bottom < 1.5:
             continue

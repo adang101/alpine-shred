@@ -681,7 +681,7 @@ public final class ClientSmoke {
         lastState = state;
         if (state == RideState.GRIND && featureRun >= 3) back(mc, "park_grind");
         if (state == RideState.GRIND && featureRun >= 6) orbit(mc, "park_grind_side", SIDE);
-        if (state == RideState.GRIND && featureRun >= 9) view(mc, "park_grind_front", CameraType.THIRD_PERSON_FRONT);
+        if (state == RideState.GRIND && featureRun >= 9) orbit(mc, "park_grind_offside", OFFSIDE);
         if (state == RideState.SLIDE && featureRun >= 2) back(mc, "park_box");
         if (state == RideState.SLIDE && featureRun >= 5) orbit(mc, "park_box_side", SIDE);
         if (inPipe && featureRun >= 4) orbit(mc, "park_pipe_side", SIDE);

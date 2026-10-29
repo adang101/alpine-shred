@@ -340,6 +340,50 @@ public final class ParkGameTests {
         helper.succeed();
     }
 
+    /**
+     * Section 11: a two-block half ramp launches a rider off its top (the generic ramp-launch rule),
+     * and with the lip marked, jump just after leaving it adds the lip assist's extra pop.
+     */
+    public static void lipRampLaunchesWithAssist(GameTestHelper helper) {
+        Course course = new Course(helper);
+        course.flat(0, 60, 2, Blocks.SNOW_BLOCK);
+        Player builder = helper.makeMockSurvivalPlayer();
+        for (int z = 20; z <= 21; z++) place(helper, builder, ModBlocks.PARK_RAMP.get().asItem(), new BlockPos(X, 1, z), false);
+        for (int x : new int[]{X - 1, X + 1}) {
+            for (int z = 20; z <= 21; z++) course.set(x, 2, z, at(helper, X, 2, z));
+        }
+        wrench(helper, builder, helper.absolutePos(new BlockPos(X, 2, 21)), true);
+        check(at(helper, X, 2, 21).getValue(ParkStates.LIP), "lip not set");
+        Player rider = Course.boarder(helper);
+        course.place(rider, 2, 6.5, 0.6);
+        Ride ride = new Ride(rider);
+        boolean launched = false, assisted = false;
+        int airTicks = 0, sinceLaunch = -1;
+        List<String> trace = new ArrayList<>();
+        for (int tick = 0; tick < 90 && !(launched && ride.c().state().isGroundRiding()); tick++) {
+            boolean jump = sinceLaunch >= 1 && sinceLaunch <= 2;
+            ride.tick(jump ? RideInput.coast(0).withJump(true) : RideInput.coast(0));
+            SlideController c = ride.c();
+            Vec3 rel = course.relative(rider);
+            trace.add(String.format(Locale.ROOT, "t%d z%.2f y%.3f %s v%.3f vy%.3f", tick, rel.z, rel.y, c.state(), c.speed(), c.verticalVelocity()));
+            check(c.state() != RideState.WIPEOUT, "wiped out\n" + String.join("\n", RideGameTests.tail(trace)));
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.Launched) {
+                    launched = true;
+                    sinceLaunch = 0;
+                }
+                if (e instanceof SlideController.Popped pop && launched) assisted = pop.velocity() > 0;
+            }
+            if (sinceLaunch >= 0) sinceLaunch++;
+            if (c.state() == RideState.AIR) airTicks++;
+        }
+        String log = "\n" + String.join("\n", RideGameTests.tail(trace));
+        check(launched, "the ramp did not launch" + log);
+        check(assisted, "no lip assist pop after the lip" + log);
+        check(airTicks >= 6, "only " + airTicks + " ticks in the air" + log);
+        helper.succeed();
+    }
+
     private static void wrench(GameTestHelper helper, Player player, BlockPos abs, boolean sneak) {
         player.setShiftKeyDown(sneak);
         player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.PARK_WRENCH.get()));

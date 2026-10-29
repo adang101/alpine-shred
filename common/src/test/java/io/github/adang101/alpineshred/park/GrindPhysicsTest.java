@@ -90,6 +90,20 @@ class GrindPhysicsTest {
     }
 
     @Test
+    void aRiderLeavingTheEndIsNotCaughtAgain() {
+        Line line = flatLine(2); // pieces at z 0 and -1: the line ends at z -1 (north) and z 1 (south)
+        V3 north = new V3(0, 0, -0.4);
+        V3 offEnd = new V3(0.5, 0.5, -1.0); // exactly at the north end
+        assertNull(GrindPhysics.capture(line.near(offEnd), offEnd, north, 180), "caught again leaving the north end");
+        assertNull(GrindPhysics.capture(line.near(new V3(0.5, 0.5, -1.2)), new V3(0.5, 0.5, -1.2), north, 180), "caught past the end");
+        GrindPhysics.Grind back = GrindPhysics.capture(line.near(offEnd), offEnd, new V3(0, 0, 0.4), 0);
+        assertNotNull(back, "riding back into the line from its end should catch");
+        assertEquals(-1, back.direction());
+        V3 start = new V3(0.5, 0.5, 1.0); // the south end, heading in
+        assertNotNull(GrindPhysics.capture(line.near(start), start, north, 180), "entering at an end should catch");
+    }
+
+    @Test
     void variantsFollowTheBoardAngleToTheRail() {
         assertEquals(GrindPhysics.Variant.FIFTY_FIFTY, GrindPhysics.variant(10));
         assertEquals(GrindPhysics.Variant.FIFTY_FIFTY, GrindPhysics.variant(-170), "switch 50-50");

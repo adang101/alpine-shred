@@ -225,4 +225,9 @@ public final class FabricGameTests implements FabricGameTest {
     public static void parkClaimsNeedTheFeature(GameTestHelper helper) {
         ParkGameTests.parkClaimsNeedTheFeature(helper);
     }
+
+    @GameTest(template = LARGE)
+    public static void lipRampLaunchesWithAssist(GameTestHelper helper) {
+        ParkGameTests.lipRampLaunchesWithAssist(helper);
+    }
 }

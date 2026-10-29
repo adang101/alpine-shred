@@ -162,7 +162,10 @@ public final class RideValidator {
             reason = String.format(java.util.Locale.ROOT, "rise %.3f > %.3f (ground %b, before %b, %d ticks)", rise, allowed,
                     onGround, groundedLast, dt);
         }
-        airBudget = onGround ? 0 : budget;
+        // Standing ends the air budget, except in a launch's own window: a pipe's top launches while
+        // the server still counts the rider as on the arc.
+        boolean launching = tick - lastLaunchTick <= limits.launchGraceTicks();
+        airBudget = onGround && !launching ? 0 : budget;
 
         remember(tick, x, y, z, onGround);
         if (reason == null) {
