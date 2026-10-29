@@ -84,6 +84,22 @@ jobs:
           cat forge/build/smoke/alpineshred-smoke.txt
           grep -q "^RESULT PASS" forge/build/smoke/alpineshred-smoke.txt
 
+      # Risk R4: the same client rides a minute down the nearest snowy slopes of a default world,
+      # steering down the fall line; any server validator violation fails it.
+      - name: Mountain ride (Forge client, real terrain)
+        if: success() || failure()
+        timeout-minutes: 20
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          mkdir -p forge/build/smoke-mountain/config
+          cp forge/build/smoke/options.txt forge/build/smoke-mountain/options.txt
+          printf 'earlyWindowControl = false\n' > forge/build/smoke-mountain/config/fml.toml
+          xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew :forge:runMountainClient $GRADLE_ARGS 2>&1 \
+            | tee "$RUNNER_TEMP/ci-logs/7-mountain.log"
+          cat forge/build/smoke-mountain/alpineshred-smoke.txt
+          grep -q "^RESULT PASS" forge/build/smoke-mountain/alpineshred-smoke.txt
+
       - name: Probe API signatures (when .github/api-probe.txt exists)
         if: (success() || failure()) && hashFiles('.github/api-probe.txt') != ''
         run: .github/scripts/api-probe.sh "$RUNNER_TEMP/ci-logs/api" .github/api-probe.txt
@@ -118,6 +134,10 @@ jobs:
           copy forge/build/smoke/crash-reports client-smoke
           copy forge/build/smoke/screenshots client-smoke
           copy forge/build/smoke/alpineshred-smoke.txt client-smoke
+          copy forge/build/smoke-mountain/logs client-mountain
+          copy forge/build/smoke-mountain/crash-reports client-mountain
+          copy forge/build/smoke-mountain/screenshots client-mountain
+          copy forge/build/smoke-mountain/alpineshred-smoke.txt client-mountain
           copy forge/build/gametest/logs forge-gametest
           copy forge/build/gametest/crash-reports forge-gametest
           USERDEV=$(find ~/.gradle/caches -name "forge-*-userdev.jar" 2>/dev/null | head -1)

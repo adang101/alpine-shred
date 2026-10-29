@@ -10,6 +10,7 @@ import io.github.adang101.alpineshred.gear.GearAccess;
 import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.gear.Lens;
 import io.github.adang101.alpineshred.movement.RideMode;
+import io.github.adang101.alpineshred.movement.RideServer;
 import io.github.adang101.alpineshred.movement.RideSnapshot;
 import io.github.adang101.alpineshred.movement.RideState;
 import io.github.adang101.alpineshred.movement.Riders;
@@ -23,11 +24,15 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.player.LocalPlayer;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -36,9 +41,13 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.LevelSettings;
 import net.minecraft.world.level.WorldDataConfiguration;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.WorldOptions;
 import net.minecraft.world.level.levelgen.presets.WorldPresets;
 import org.jetbrains.annotations.Nullable;
@@ -52,6 +61,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -67,9 +78,16 @@ import java.util.function.Consumer;
  * {@link CameraOrbit}), from the front and in first person go to {@code screenshots/}; what it saw
  * goes to {@code alpineshred-smoke.txt}; then it quits. A client mixin that fails to apply, a crash
  * in the feel systems, or a rider that never slides, launches or makes sound fails it.
+ *
+ * <p>With {@code -Dalpineshred.smoke.scenario=mountain} ({@code ./gradlew :forge:runMountainClient})
+ * it rides real terrain instead (risk R4): a default world, the nearest snowy slopes, and a minute
+ * steering down the fall line around whatever is in the way. Any server validator violation fails
+ * it; air time, wipeouts and surfaces go in the transcript.
  */
 public final class ClientSmoke {
     private static final boolean ENABLED = Boolean.getBoolean("alpineshred.smoke");
+    private static final boolean MOUNTAIN = "mountain".equals(System.getProperty("alpineshred.smoke.scenario"));
+    private static final int MOUNTAIN_RIDE_TICKS = 20 * 60;
     private static final int TIMEOUT_TICKS = 20 * 300;
     /** Course layout, in blocks along +z from the start. */
     private static final int SLOPE_START = 3, SLOPE_END = 48, KICKER = 60, POWDER_FROM = 84, POWDER_TO = 92, LENGTH = 130;
@@ -81,7 +99,8 @@ public final class ClientSmoke {
     private static final float SIDE = -90f;
     private static final float OFFSIDE = 90f;
 
-    private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS, DONE}
+    private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS,
+        FINDING, RIDE_MOUNTAIN, DONE}
 
     private record Shot(String name, int frame) {
     }
@@ -96,6 +115,8 @@ public final class ClientSmoke {
     private static int frames;
     private static BlockPos origin;
     private static UUID playerId;
+    @Nullable
+    private static volatile ServerPlayer serverPlayer;
     private static final List<String> lines = new ArrayList<>();
     private static final List<String> failures = Collections.synchronizedList(new ArrayList<>());
     private static final Set<String> shots = new HashSet<>();
@@ -110,6 +131,15 @@ public final class ClientSmoke {
     private static int airTicks;
     private static int landings;
     private static int landedAt = -1;
+
+    // ---- mountain ----
+    private static double distance;
+    private static double lastX = Double.NaN, lastZ;
+    private static int stuckTicks;
+    private static int wipeouts;
+    private static RideState lastState = RideState.OFF;
+    private static final Map<Integer, Integer> airEpisodes = new TreeMap<>();
+    private static final Set<String> surfaces = new java.util.TreeSet<>();
 
     // ---- gallery ----
     private static List<Pose> gallery = List.of();
@@ -149,8 +179,13 @@ public final class ClientSmoke {
                     mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
                     RideDebugOverlay.setEnabled(true);
                     playerId = mc.player.getUUID();
-                    onServer(mc, ClientSmoke::build);
-                    next(Stage.BUILDING);
+                    if (MOUNTAIN) {
+                        onServer(mc, ClientSmoke::findMountain);
+                        next(Stage.FINDING);
+                    } else {
+                        onServer(mc, ClientSmoke::build);
+                        next(Stage.BUILDING);
+                    }
                 }
             }
             case BUILDING -> {
@@ -181,6 +216,19 @@ public final class ClientSmoke {
             }
             case GALLERY_SKIS -> {
                 if (gallery(mc)) finish(mc);
+            }
+            case FINDING -> {
+                if (mc.player != null && origin != null && Riders.isStrapped(mc.player) && stageTicks > 40) {
+                    note("strapped in at " + mc.player.blockPosition());
+                    startRun();
+                    next(Stage.RIDE_MOUNTAIN);
+                } else if (stageTicks > 20 * 180) {
+                    failures.add("never reached the mountain");
+                    finish(mc);
+                }
+            }
+            case RIDE_MOUNTAIN -> {
+                if (rideMountain(mc)) finish(mc);
             }
             default -> {
             }
@@ -216,7 +264,8 @@ public final class ClientSmoke {
                 true, new GameRules(), WorldDataConfiguration.DEFAULT);
         WorldOptions options = new WorldOptions(20261029L, false, false);
         mc.createWorldOpenFlows().createFreshLevel("alpineshred-smoke-" + System.currentTimeMillis(), settings, options,
-                access -> access.registryOrThrow(Registries.WORLD_PRESET).getHolderOrThrow(WorldPresets.FLAT).value().createWorldDimensions());
+                access -> access.registryOrThrow(Registries.WORLD_PRESET)
+                        .getHolderOrThrow(MOUNTAIN ? WorldPresets.NORMAL : WorldPresets.FLAT).value().createWorldDimensions());
     }
 
     /** Server thread: build the run, dress the player for snowboarding, put them at the top and strap in. */
@@ -243,6 +292,15 @@ public final class ClientSmoke {
                 }
             }
         }
+        dressForBoard(player);
+        origin = base;
+        toTop(player);
+        StrapCheck.Result result = StrapController.tryStrap(player);
+        note("built the run at " + base + "; strap " + result);
+        if (!result.ok()) failures.add("strap failed: " + result);
+    }
+
+    private static void dressForBoard(ServerPlayer player) {
         GearAccess.current().set(player, GearAccess.Slot.BOARD, new ItemStack(ModItems.SNOWBOARD.get()));
         GearAccess.current().set(player, GearAccess.Slot.GOGGLES, GogglesItem.withLens(new ItemStack(ModItems.GOGGLES.get()), Lens.AMBER));
         GearAccess.current().set(player, GearAccess.Slot.MITTS, new ItemStack(ModItems.MITTS.get()));
@@ -250,11 +308,8 @@ public final class ClientSmoke {
         player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.SKI_HELMET.get()));
         player.getAbilities().flying = false;
         player.onUpdateAbilities();
-        origin = base;
-        toTop(player);
-        StrapCheck.Result result = StrapController.tryStrap(player);
-        note("built the run at " + base + "; strap " + result);
-        if (!result.ok()) failures.add("strap failed: " + result);
+        RideServer.setDebug(player, true);
+        serverPlayer = player;
     }
 
     private static void toTop(ServerPlayer player) {
@@ -295,6 +350,157 @@ public final class ClientSmoke {
                 finish(mc);
             }
         }
+    }
+
+    // ---- mountain (risk R4) ------------------------------------------------------------------------
+
+    /** Server thread: find snowy slopes, generate around them, start at a high snowy point facing downhill. */
+    private static void findMountain(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
+        level.setDayTime(6000);
+        level.setWeatherParameters(6000, 0, false, false);
+        long started = System.currentTimeMillis();
+        Pair<BlockPos, Holder<Biome>> found = level.findClosestBiome3d(b -> b.is(Biomes.SNOWY_SLOPES), player.blockPosition(),
+                6400, 32, 64);
+        if (found == null) {
+            failures.add("no snowy slopes within 6400 blocks");
+            return;
+        }
+        BlockPos at = found.getFirst();
+        int cx = at.getX() >> 4, cz = at.getZ() >> 4;
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dz = -4; dz <= 4; dz++) level.getChunk(cx + dx, cz + dz);
+        }
+        BlockPos start = null;
+        for (int dx = -24; dx <= 24; dx += 3) {
+            for (int dz = -24; dz <= 24; dz += 3) {
+                int x = at.getX() + dx, z = at.getZ() + dz;
+                int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z);
+                if (snowy(level, x, y, z) && (start == null || y > start.getY())) start = new BlockPos(x, y, z);
+            }
+        }
+        if (start == null) {
+            failures.add("no snow near the snowy slopes at " + at);
+            return;
+        }
+        float yaw = steepestDescent(level, start.getX() + 0.5, start.getZ() + 0.5, 12);
+        note(String.format(Locale.ROOT, "snowy slopes at %s; start %s facing %.0f (%d ms to find and generate)",
+                at, start, yaw, System.currentTimeMillis() - started));
+        dressForBoard(player);
+        player.teleportTo(level, start.getX() + 0.5, start.getY() + 0.1, start.getZ() + 0.5, yaw, 20f);
+        origin = start;
+        StrapCheck.Result result = StrapController.tryStrap(player);
+        note("strap " + result);
+        if (!result.ok()) failures.add("strap failed: " + result);
+    }
+
+    private static boolean snowy(net.minecraft.world.level.LevelReader level, int x, int surfaceY, int z) {
+        BlockState below = level.getBlockState(new BlockPos(x, surfaceY - 1, z));
+        BlockState at = level.getBlockState(new BlockPos(x, surfaceY, z));
+        return below.is(BlockTags.SNOW) || at.is(Blocks.SNOW);
+    }
+
+    /** The yaw, in 10 degree steps, whose ground {@code reach} blocks away is lowest. */
+    private static float steepestDescent(net.minecraft.world.level.LevelReader level, double x, double z, int reach) {
+        float best = 0;
+        int lowest = Integer.MAX_VALUE;
+        for (int yaw = 0; yaw < 360; yaw += 10) {
+            double r = Math.toRadians(yaw);
+            int h = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(x - Math.sin(r) * reach), Mth.floor(z + Math.cos(r) * reach));
+            if (h < lowest) {
+                lowest = h;
+                best = yaw;
+            }
+        }
+        return best;
+    }
+
+    /**
+     * Steering for real terrain: of the directions within 60 degrees of the current one, the one
+     * whose ground 3, 6 and 10 blocks ahead is lowest, with a small cost for turning; trees and
+     * rocks stand high in the heightmap, so the line goes round them.
+     */
+    private static float steer(net.minecraft.world.level.LevelReader level, LocalPlayer player) {
+        float yaw = player.getYRot();
+        float best = yaw;
+        double bestScore = Double.MAX_VALUE;
+        for (int a = -60; a <= 60; a += 10) {
+            double r = Math.toRadians(yaw + a);
+            double score = Math.abs(a) * 0.03;
+            for (int d : new int[]{3, 6, 10}) {
+                score += level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(player.getX() - Math.sin(r) * d),
+                        Mth.floor(player.getZ() + Math.cos(r) * d));
+            }
+            if (score < bestScore) {
+                bestScore = score;
+                best = yaw + a;
+            }
+        }
+        return best;
+    }
+
+    /** One tick of the mountain ride; true when it is over and checked. */
+    private static boolean rideMountain(Minecraft mc) {
+        LocalPlayer player = mc.player;
+        if (player == null || mc.level == null) {
+            failures.add("player vanished");
+            return true;
+        }
+        rideTicks++;
+        SlideController c = RideDriver.INSTANCE.controller();
+        RideState state = RideDriver.INSTANCE.localState(player);
+        states.add(state);
+        double speed = c == null ? 0 : c.speed();
+        maxSpeed = Math.max(maxSpeed, speed);
+        if (c != null && c.surface() != null) surfaces.add(c.surface().id().toString());
+        if (!Double.isNaN(lastX)) distance += Math.hypot(player.getX() - lastX, player.getZ() - lastZ);
+        lastX = player.getX();
+        lastZ = player.getZ();
+
+        float turn = Mth.clamp(Mth.wrapDegrees(steer(mc.level, player) - player.getYRot()), -5f, 5f);
+        player.setYRot(player.getYRot() + turn);
+        hold(mc.options.keyUp, speed < 0.08);
+
+        boolean air = state == RideState.AIR;
+        if (air) {
+            airTicks++;
+        } else if (airTicks > 0) {
+            airEpisodes.merge(airTicks, 1, Integer::sum);
+            airTicks = 0;
+        }
+        if (state == RideState.WIPEOUT && lastState != RideState.WIPEOUT) {
+            wipeouts++;
+            note(String.format(Locale.ROOT, "wipeout at %s, speed %.3f", player.blockPosition(), speed));
+        }
+        lastState = state;
+        stuckTicks = speed < 0.03 ? stuckTicks + 1 : 0;
+
+        ServerPlayer sp = serverPlayer;
+        int violations = sp == null ? 0 : RideServer.violations(sp);
+        if (rideTicks % 20 == 0) {
+            note(String.format(Locale.ROOT, "t%d %s %s speed %.3f grade %.1f surface %s distance %.0f violations %d",
+                    rideTicks, player.blockPosition(), state, speed, c == null ? 0 : c.slope().degrees(),
+                    c == null || c.surface() == null ? "none" : c.surface().id(), distance, violations));
+        }
+        if (rideTicks % 200 == 60) back(mc, "mountain_" + rideTicks);
+        if (rideTicks > 300 && rideTicks < 400) orbit(mc, "mountain_side", SIDE);
+        if (rideTicks > 500 && rideTicks < 600) view(mc, "mountain_first_person", CameraType.FIRST_PERSON);
+
+        boolean stuck = rideTicks > 100 && stuckTicks > 100;
+        if (!stuck && rideTicks < MOUNTAIN_RIDE_TICKS) return false;
+
+        hold(mc.options.keyUp, false);
+        if (stuck) note("stopped: no speed for 5 seconds at " + player.blockPosition());
+        note(String.format(Locale.ROOT, "mountain: %d ticks, %.0f blocks, max speed %.3f, states %s, wipeouts %d",
+                rideTicks, distance, maxSpeed, states, wipeouts));
+        note("air episodes (ticks=count): " + airEpisodes);
+        note("surfaces: " + surfaces);
+        if (sp != null) note("server violations " + violations + ", last reason: " + RideServer.lastReason(sp));
+        check(violations == 0, "server validator flagged real-terrain riding " + violations + " times: "
+                + (sp == null ? "" : RideServer.lastReason(sp)));
+        check(distance > 60, String.format(Locale.ROOT, "rode only %.0f blocks", distance));
+        check(states.contains(RideState.GLIDE) || states.contains(RideState.CARVE), "never glided: " + states);
+        return true;
     }
 
     // ---- riding ------------------------------------------------------------------------------------

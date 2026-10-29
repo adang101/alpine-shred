@@ -34,6 +34,14 @@ loom {
             property 'alpineshred.smoke', 'true'
             runDir 'build/smoke'
         }
+        // The same client riding real terrain: the nearest snowy slopes of a default world (risk R4).
+        mountainClient {
+            client()
+            name 'Mountain Smoke Test'
+            property 'alpineshred.smoke', 'true'
+            property 'alpineshred.smoke.scenario', 'mountain'
+            runDir 'build/smoke-mountain'
+        }
     }
 }
 
