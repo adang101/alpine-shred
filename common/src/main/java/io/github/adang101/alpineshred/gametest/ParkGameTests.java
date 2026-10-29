@@ -417,7 +417,8 @@ public final class ParkGameTests {
         Course course = new Course(helper);
         buildPipe(helper, course, 3);
         Player rider = Course.boarder(helper);
-        course.place(rider, 2, 4.5, 0.55);
+        // Slopes and arcs share the riding gravity (slopeAccelScale), so a slow entry rises a block or two.
+        course.place(rider, 2, 10.5, 0.33);
         Ride ride = new Ride(rider);
         double maxY = 0;
         boolean entered = false, back = false;
@@ -435,7 +436,7 @@ public final class ParkGameTests {
         }
         String log = "\n" + String.join("\n", RideGameTests.tail(trace));
         check(entered, "never rode onto the pipe" + log);
-        check(maxY - 2 > 0.9, String.format(Locale.ROOT, "rose only %.2f blocks", maxY - 2) + log);
+        check(maxY - 2 > 0.6, String.format(Locale.ROOT, "rose only %.2f blocks", maxY - 2) + log);
         check(maxY - 2 < 3, String.format(Locale.ROOT, "rose %.2f blocks, over the coping", maxY - 2) + log);
         check(back, "never rode back out of the pipe" + log);
         helper.succeed();

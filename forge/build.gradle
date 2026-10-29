@@ -42,6 +42,14 @@ loom {
             property 'alpineshred.smoke.scenario', 'mountain'
             runDir 'build/smoke-mountain'
         }
+        // A park line: rail, boxes, quarter pipe, then the wrench overlay and rail ghost (phase 4).
+        parkClient {
+            client()
+            name 'Park Smoke Test'
+            property 'alpineshred.smoke', 'true'
+            property 'alpineshred.smoke.scenario', 'park'
+            runDir 'build/smoke-park'
+        }
     }
 }
 

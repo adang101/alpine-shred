@@ -116,7 +116,7 @@ public class RailBlock extends Block {
     @Override
     @SuppressWarnings("deprecation")
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return ParkShapes.railBar(shape(state), facing(state));
+        return ParkCollision.fromAbove(ParkShapes.railBar(shape(state), facing(state)), pos, context);
     }
 
     // ---- placement and upkeep -------------------------------------------------------------------
@@ -194,7 +194,7 @@ public class RailBlock extends Block {
     }
 
     /** Rises connect diagonally, beyond the six neighbours vanilla updates: refresh every rail around. */
-    static void refreshAround(Level level, BlockPos pos) {
+    public static void refreshAround(Level level, BlockPos pos) {
         if (level.isClientSide) return;
         for (BlockPos p : BlockPos.betweenClosed(pos.offset(-1, -1, -1), pos.offset(1, 1, 1))) {
             if (p.equals(pos)) continue;

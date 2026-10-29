@@ -11,6 +11,7 @@ import io.github.adang101.alpineshred.gear.GearProfiles;
 import io.github.adang101.alpineshred.gear.GearWear;
 import io.github.adang101.alpineshred.mixin.ServerGamePacketListenerAccessor;
 import io.github.adang101.alpineshred.network.ModNetwork;
+import io.github.adang101.alpineshred.park.block.ParkChecks;
 import io.github.adang101.alpineshred.network.RideAction;
 import io.github.adang101.alpineshred.trick.GrabType;
 import net.minecraft.server.MinecraftServer;
@@ -61,6 +62,8 @@ public final class RideServer {
         long serverClock;
         long clientClock;
         int lastReceived = -1;
+        /** The connection's teleport counter when last sampled: any change is a server teleport. */
+        int lastTeleport = Integer.MIN_VALUE;
         boolean hasLast;
         double lastX, lastY, lastZ;
         long lastClockAtSample;
@@ -101,6 +104,7 @@ public final class RideServer {
         if (old != null) {
             fresh.debug = old.debug;
             fresh.lastReceived = old.lastReceived;
+            fresh.lastTeleport = old.lastTeleport;
         }
         RIDERS.put(player, fresh);
     }
@@ -129,19 +133,29 @@ public final class RideServer {
             r.validator.reset();
             return;
         }
-        if (awaitingTeleport(player)) {
-            // A server teleport (command, ender pearl, our own correction) is not rider movement.
+        if (teleported(player, r)) {
+            // A server teleport (command, ender pearl, our own correction) is not rider movement,
+            // including one the client already answered this tick (an integrated server's is quick).
             r.hasLast = false;
             r.validator.reset();
             return;
         }
         RideValidator.Limits limits = limits(player);
-        if (io.github.adang101.alpineshred.park.block.ParkChecks.nearPipe(player)) limits = limits.onPipe();
+        boolean onPipe = ParkChecks.nearPipe(player);
+        if (onPipe) limits = limits.onPipe();
+        // Rails, boxes and pipe arcs carry a rider the server's own collision does not see standing
+        // (the controller rides their paths): while one is really there, the rider is supported.
+        boolean supported = player.onGround() || switch (state) {
+            case GRIND -> ParkChecks.grindableNear(player);
+            case SLIDE -> ParkChecks.slideableUnder(player);
+            case AIR, WIPEOUT -> false;
+            default -> onPipe;
+        };
         double x = player.getX(), y = player.getY(), z = player.getZ();
         long clockDelta = r.hasLast ? r.clientClock - r.lastClockAtSample : 1;
         double horizontal = r.hasLast ? Math.hypot(x - r.lastX, z - r.lastZ) : 0;
 
-        RideValidator.Verdict verdict = r.validator.observe(r.clientClock, x, y, z, player.onGround(), limits);
+        RideValidator.Verdict verdict = r.validator.observe(r.clientClock, x, y, z, supported, limits);
         handleVerdict(player, r, verdict);
         String airReason = r.validator.checkAirClaim(state == RideState.AIR, player.onGround());
         if (airReason != null && verdict.kind() != RideValidator.Kind.CORRECT) {
@@ -179,9 +193,13 @@ public final class RideServer {
         r.clientClock = Math.min(r.clientClock + packets, r.serverClock + CLOCK_BURST_TICKS);
     }
 
-    private static boolean awaitingTeleport(Player player) {
-        return player instanceof ServerPlayer sp && sp.connection != null
-                && ((ServerGamePacketListenerAccessor) sp.connection).alpineshred$awaitingPosition() != null;
+    private static boolean teleported(Player player, Rider r) {
+        if (!(player instanceof ServerPlayer sp) || sp.connection == null) return false;
+        var listener = (ServerGamePacketListenerAccessor) sp.connection;
+        int id = listener.alpineshred$awaitingTeleport();
+        boolean changed = r.lastTeleport != Integer.MIN_VALUE && id != r.lastTeleport;
+        r.lastTeleport = id;
+        return changed || listener.alpineshred$awaitingPosition() != null;
     }
 
     private static void handleVerdict(Player player, Rider r, RideValidator.Verdict verdict) {
@@ -237,7 +255,7 @@ public final class RideServer {
             return false;
         }
         if (RideTransitions.needsWorldCheck(wanted.state()) && wanted.state() != current.state()
-                && !io.github.adang101.alpineshred.park.block.ParkChecks.supports(player, wanted.state())) {
+                && !ParkChecks.supports(player, wanted.state())) {
             handleVerdict(player, r, r.validator.flag(r.clientClock,
                     wanted.state() + " claimed with no " + (wanted.state() == RideState.GRIND ? "rail" : "box") + " there", limits(player)));
             return false;
@@ -258,6 +276,7 @@ public final class RideServer {
         RideState state = Riders.state(player);
         if (!state.isControllerDriven()) return;
         RideValidator.Limits limits = limits(player);
+        if (ParkChecks.nearPipe(player)) limits = limits.onPipe(); // a pipe's top launches at up to the speed cap
         MovementTuning t = TuningData.tuning();
         switch (action) {
             case POP -> {

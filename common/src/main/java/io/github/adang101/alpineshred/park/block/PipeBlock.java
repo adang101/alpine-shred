@@ -1,7 +1,5 @@
 package io.github.adang101.alpineshred.park.block;
 
-import io.github.adang101.alpineshred.movement.RideStateHolder;
-import io.github.adang101.alpineshred.movement.Riders;
 import io.github.adang101.alpineshred.park.Facing;
 import io.github.adang101.alpineshred.park.PipeArc;
 import net.minecraft.core.BlockPos;
@@ -77,16 +75,9 @@ public class PipeBlock extends Block {
         return getShape(state, level, pos, context);
     }
 
-    /**
-     * Riders the controller moves ride the arc, not the columns: where the controller runs (the
-     * rider's own client, a game test) its flag says so at once; elsewhere (the server, other
-     * clients) the synced state does, for any ridden state but standing still.
-     */
+    /** Riders the controller moves ride the arc, not the columns (see {@link ParkCollision#isRider}). */
     public static boolean ridesThrough(Entity entity) {
-        if (!(entity instanceof Player player)) return false;
-        if (((RideStateHolder) player).alpineshred$isControlled()) return true;
-        var state = Riders.state(player);
-        return state.isControllerDriven() && state != io.github.adang101.alpineshred.movement.RideState.IDLE;
+        return ParkCollision.isRider(entity);
     }
 
     @Override

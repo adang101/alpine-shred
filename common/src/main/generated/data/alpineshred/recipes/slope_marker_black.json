@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:black_dye"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "D",
+    "S",
+    "S"
+  ],
+  "result": {
+    "count": 3,
+    "item": "alpineshred:slope_marker_black"
+  },
+  "show_notification": true
+}

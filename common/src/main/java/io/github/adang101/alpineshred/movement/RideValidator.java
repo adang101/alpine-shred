@@ -42,10 +42,12 @@ public final class RideValidator {
 
         /**
          * On a quarter pipe the rider climbs the arc on the ground at up to its speed, more than a
-         * step: the server allows a rise of the speed cap per tick while one is in reach.
+         * step, and leaves the top of the wall going straight up at what speed is left: the server
+         * allows a rise, and a launch, of up to the speed cap per tick while one is in reach.
          */
         public Limits onPipe() {
-            return new Limits(speedCap, Math.max(groundRise, speedCap), maxLaunchVy, launchGraceTicks, windowTicks, violationsToCorrect, speedWindow);
+            return new Limits(speedCap, Math.max(groundRise, speedCap), Math.max(maxLaunchVy, speedCap), launchGraceTicks, windowTicks,
+                    violationsToCorrect, speedWindow);
         }
     }
 

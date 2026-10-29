@@ -17,6 +17,9 @@ import io.github.adang101.alpineshred.movement.Riders;
 import io.github.adang101.alpineshred.movement.SlideController;
 import io.github.adang101.alpineshred.movement.StrapCheck;
 import io.github.adang101.alpineshred.movement.StrapController;
+import io.github.adang101.alpineshred.park.block.ParkStates;
+import io.github.adang101.alpineshred.park.block.PipeBlock;
+import io.github.adang101.alpineshred.park.block.RailBlock;
 import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.registry.ModItems;
 import net.minecraft.client.CameraType;
@@ -79,6 +82,10 @@ import java.util.function.Consumer;
  * goes to {@code alpineshred-smoke.txt}; then it quits. A client mixin that fails to apply, a crash
  * in the feel systems, or a rider that never slides, launches or makes sound fails it.
  *
+ * <p>With {@code -Dalpineshred.smoke.scenario=park} ({@code ./gradlew :forge:runParkClient}) it rides a
+ * park line instead (phase 4): a rail with a rise, a box row and a quarter pipe, then pictures the
+ * wrench overlay and the rail ghost.
+ *
  * <p>With {@code -Dalpineshred.smoke.scenario=mountain} ({@code ./gradlew :forge:runMountainClient})
  * it rides real terrain instead (risk R4): a default world, the nearest snowy slopes, and a minute
  * steering down the fall line around whatever is in the way. Any server validator violation fails
@@ -87,6 +94,10 @@ import java.util.function.Consumer;
 public final class ClientSmoke {
     private static final boolean ENABLED = Boolean.getBoolean("alpineshred.smoke");
     private static final boolean MOUNTAIN = "mountain".equals(System.getProperty("alpineshred.smoke.scenario"));
+    private static final boolean PARK = "park".equals(System.getProperty("alpineshred.smoke.scenario"));
+    /** Park layout (phase 4), in blocks along +z: slope in, rail line with a rise, low box row, quarter pipe. */
+    private static final int PARK_TOP = 7, PARK_SLOPE_END = 21, RAIL_DECK = 24, RAIL_FROM = 32, RAIL_RISE = 37, RAIL_TO = 41,
+            STEP_TO = 44, BOX_FROM = 54, BOX_TO = 61, PIPE_AT = 74, PARK_LENGTH = 82;
     private static final int MOUNTAIN_RIDE_TICKS = 20 * 60;
     private static final int TIMEOUT_TICKS = 20 * 300;
     /** Course layout, in blocks along +z from the start. */
@@ -100,7 +111,7 @@ public final class ClientSmoke {
     private static final float OFFSIDE = 90f;
 
     private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS,
-        FINDING, RIDE_MOUNTAIN, DONE}
+        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, DONE}
 
     private record Shot(String name, int frame) {
     }
@@ -190,6 +201,9 @@ public final class ClientSmoke {
                     if (MOUNTAIN) {
                         onServer(mc, ClientSmoke::findMountain);
                         next(Stage.FINDING);
+                    } else if (PARK) {
+                        onServer(mc, ClientSmoke::buildPark);
+                        next(Stage.BUILDING);
                     } else {
                         onServer(mc, ClientSmoke::build);
                         next(Stage.BUILDING);
@@ -200,7 +214,7 @@ public final class ClientSmoke {
                 if (mc.player != null && origin != null && Riders.isStrapped(mc.player) && stageTicks > 20) {
                     note("strapped in at " + mc.player.blockPosition());
                     startRun();
-                    next(Stage.RIDE_BOARD);
+                    next(PARK ? Stage.RIDE_PARK : Stage.RIDE_BOARD);
                 } else if (stageTicks > 400) {
                     failures.add("never strapped in");
                     finish(mc);
@@ -237,6 +251,12 @@ public final class ClientSmoke {
             }
             case RIDE_MOUNTAIN -> {
                 if (rideMountain(mc)) finish(mc);
+            }
+            case RIDE_PARK -> {
+                if (ridePark(mc)) next(Stage.PARK_TOOLS);
+            }
+            case PARK_TOOLS -> {
+                if (parkTools(mc)) finish(mc);
             }
             default -> {
             }
@@ -547,6 +567,188 @@ public final class ClientSmoke {
         check(distance > 60, String.format(Locale.ROOT, "rode only %.0f blocks", distance));
         check(states.contains(RideState.GLIDE) || states.contains(RideState.CARVE), "never glided: " + states);
         return true;
+    }
+
+    // ---- park (phase 4) -----------------------------------------------------------------------------
+
+    private static int grindTicks, slideTicks, pipeTicks, featureRun;
+    private static RideState featureState = RideState.OFF;
+
+    /** Column height of the park at {@code dz}: platform, 1-in-3 staircase, floor, the rail's run-in deck. */
+    private static double parkHeight(int dz) {
+        if (dz < SLOPE_START) return PARK_TOP;
+        if (dz <= PARK_SLOPE_END) return Math.max(1, PARK_TOP - Math.floor((dz - SLOPE_START) / 3.0) - 1);
+        if (dz >= RAIL_DECK && dz < RAIL_FROM) return 1.5;
+        return 1;
+    }
+
+    /**
+     * Server thread: the park run. Pieces go in as placement would leave them: the rail as five flat
+     * pieces, the two halves of a rise onto a one-block step and three more flat pieces (then every
+     * piece recomputes its ends and legs), a row of low metal boxes, and a radius 3 quarter pipe
+     * across the lane.
+     */
+    private static void buildPark(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
+        level.setDayTime(6000);
+        level.setWeatherParameters(6000, 0, false, false);
+        BlockPos base = player.blockPosition();
+        Block groomed = ModBlocks.GROOMED_SNOW.get();
+        for (int dz = 0; dz < PARK_LENGTH; dz++) {
+            double h = parkHeight(dz);
+            for (int dx = -4; dx <= 4; dx++) {
+                for (int dy = 0; dy < (int) Math.floor(h); dy++) level.setBlock(base.offset(dx, dy, dz), groomed.defaultBlockState(), 2);
+                double frac = h - Math.floor(h);
+                if (frac > 1.0e-6) {
+                    level.setBlock(base.offset(dx, (int) Math.floor(h), dz),
+                            Blocks.SNOW.defaultBlockState().setValue(SnowLayerBlock.LAYERS, (int) Math.round(frac * 8) + 1), 2);
+                }
+            }
+        }
+        for (int dz = RAIL_RISE + 1; dz <= STEP_TO; dz++) {
+            for (int dx = -1; dx <= 1; dx++) level.setBlock(base.offset(dx, 1, dz), groomed.defaultBlockState(), 2);
+        }
+        List<BlockPos> settle = new ArrayList<>();
+        BlockState rail = ModBlocks.PIPE_RAIL.get().defaultBlockState().setValue(RailBlock.FACING, net.minecraft.core.Direction.SOUTH);
+        for (int dz = RAIL_FROM; dz <= RAIL_TO; dz++) {
+            ParkStates.RailShapeProp shape = dz == RAIL_RISE ? ParkStates.RailShapeProp.RISE_A
+                    : dz == RAIL_RISE + 1 ? ParkStates.RailShapeProp.RISE_B : ParkStates.RailShapeProp.FLAT;
+            BlockPos p = base.offset(0, dz <= RAIL_RISE ? 1 : 2, dz);
+            level.setBlock(p, rail.setValue(ParkStates.RAIL_SHAPE, shape), 3);
+            settle.add(p);
+        }
+        for (int dz = BOX_FROM; dz <= BOX_TO; dz++) {
+            for (int dx = -1; dx <= 1; dx++) {
+                BlockPos p = base.offset(dx, 1, dz);
+                level.setBlock(p, ModBlocks.METAL_BOX.get().defaultBlockState().setValue(ParkStates.BOX_HALF, ParkStates.BoxHalf.LOW), 3);
+                settle.add(p);
+            }
+        }
+        for (BlockPos p : settle) level.setBlock(p, Block.updateFromNeighbourShapes(level.getBlockState(p), level, p), 3);
+        List<io.github.adang101.alpineshred.park.PipeArc.Cell> cells = io.github.adang101.alpineshred.park.PipeArc.cells(3);
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int k = 0; k < cells.size(); k++) {
+                var c = cells.get(k);
+                level.setBlock(base.offset(dx, 1 + c.j(), PIPE_AT + c.i()), ModBlocks.QUARTER_PIPE.get().defaultBlockState()
+                        .setValue(PipeBlock.FACING, net.minecraft.core.Direction.SOUTH).setValue(ParkStates.PIPE_INDEX, k), 3);
+            }
+        }
+        StringBuilder line = new StringBuilder("rail:");
+        for (int dz = RAIL_FROM; dz <= RAIL_TO; dz++) {
+            BlockState s = level.getBlockState(base.offset(0, dz <= RAIL_RISE ? 1 : 2, dz));
+            line.append(' ').append(s.getValue(ParkStates.RAIL_SHAPE).getSerializedName())
+                    .append(s.getValue(ParkStates.CONNECTED_A) ? "<" : "|").append(s.getValue(ParkStates.CONNECTED_B) ? ">" : "|");
+        }
+        note(line.toString());
+        dressForBoard(player);
+        origin = base;
+        player.teleportTo(level, base.getX() + 0.5, base.getY() + PARK_TOP, base.getZ() + 1.5, 0f, 15f);
+        StrapCheck.Result result = StrapController.tryStrap(player);
+        note("built the park at " + base + "; strap " + result);
+        if (!result.ok()) failures.add("strap failed: " + result);
+    }
+
+    /** One tick of the park run: straight down the line, no steering; brake once back out of the pipe. */
+    private static boolean ridePark(Minecraft mc) {
+        LocalPlayer player = mc.player;
+        if (player == null) {
+            failures.add("player vanished");
+            return true;
+        }
+        rideTicks++;
+        SlideController c = RideDriver.INSTANCE.controller();
+        RideState state = RideDriver.INSTANCE.localState(player);
+        states.add(state);
+        double speed = c == null ? 0 : c.speed();
+        maxSpeed = Math.max(maxSpeed, speed);
+        double z = player.getZ() - origin.getZ();
+        boolean inPipe = c != null && c.inPipe();
+        if (state == RideState.GRIND) grindTicks++;
+        if (state == RideState.SLIDE) slideTicks++;
+        if (inPipe) pipeTicks++;
+        RideState feature = inPipe ? RideState.LIFT : state; // LIFT stands in for "on the pipe" here
+        featureRun = feature == featureState ? featureRun + 1 : 1;
+        featureState = feature;
+        boolean returning = pipeTicks > 0 && !inPipe && c != null
+                && Math.abs(io.github.adang101.alpineshred.movement.SlideModel.wrapDegrees(c.travelYaw() - 180)) < 60;
+        hold(mc.options.keyUp, rideTicks < 30);
+        hold(mc.options.keyShift, returning && z < PIPE_AT - 3);
+
+        if (rideTicks % 10 == 0 || (state != lastState)) {
+            note(String.format(Locale.ROOT, "t%d z%.2f y%.2f %s speed %.3f pipe %b %s", rideTicks, z, player.getY() - origin.getY(),
+                    state, speed, inPipe, FeelStats.summary()));
+        }
+        lastState = state;
+        if (state == RideState.GRIND && featureRun >= 3) back(mc, "park_grind");
+        if (state == RideState.GRIND && featureRun >= 6) orbit(mc, "park_grind_side", SIDE);
+        if (state == RideState.GRIND && featureRun >= 9) view(mc, "park_grind_front", CameraType.THIRD_PERSON_FRONT);
+        if (state == RideState.SLIDE && featureRun >= 2) back(mc, "park_box");
+        if (state == RideState.SLIDE && featureRun >= 5) orbit(mc, "park_box_side", SIDE);
+        if (inPipe && featureRun >= 4) orbit(mc, "park_pipe_side", SIDE);
+        if (inPipe && featureRun >= 8) back(mc, "park_pipe");
+        if (returning && z < PIPE_AT - 2) back(mc, "park_pipe_return");
+
+        ServerPlayer sp = serverPlayer;
+        int violations = sp == null ? 0 : RideServer.violations(sp);
+        if (violations > violationsSeen) {
+            note("server violation " + violations + ": " + (sp == null ? "" : RideServer.lastReason(sp)));
+            violationsSeen = violations;
+        }
+        boolean stopped = returning && speed < 0.05;
+        if (!stopped && rideTicks < 20 * 45) return false;
+
+        hold(mc.options.keyShift, false);
+        hold(mc.options.keyUp, false);
+        note(String.format(Locale.ROOT, "park: states %s, grind %d ticks, slide %d, pipe %d, max speed %.3f, %s",
+                states, grindTicks, slideTicks, pipeTicks, maxSpeed, FeelStats.summary()));
+        check(states.contains(RideState.GRIND) && grindTicks >= 10, "park: grinds " + grindTicks + " ticks, states " + states);
+        check(states.contains(RideState.SLIDE) && slideTicks >= 6, "park: box slide " + slideTicks + " ticks, states " + states);
+        check(pipeTicks >= 6, "park: on the pipe " + pipeTicks + " ticks");
+        check(pipeRunBack(), "park: never rode back out of the pipe");
+        check(!states.contains(RideState.WIPEOUT), "park: wiped out: " + states);
+        check(violations == 0, "park: server validator flagged the run " + violations + " times: " + (sp == null ? "" : RideServer.lastReason(sp)));
+        check(FeelStats.loopsStarted > 0 && FeelStats.particlesSpawned > 0, "park: no sound or particles: " + FeelStats.summary());
+        return true;
+    }
+
+    private static boolean pipeRunBack() {
+        return shots.contains("park_pipe_return") || states.contains(RideState.BRAKE);
+    }
+
+    /** The tools: the wrench's path overlay over the rail, then the rail ghost at the line's open end. */
+    private static boolean parkTools(Minecraft mc) {
+        LocalPlayer player = mc.player;
+        if (player == null) return true;
+        if (stageTicks == 1) {
+            onServer(mc, sp -> {
+                StrapController.unstrap(sp, StrapController.UnstrapReason.COMMAND);
+                sp.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.PARK_WRENCH.get()));
+                sp.teleportTo(sp.serverLevel(), origin.getX() + 2.5, origin.getY() + 2, origin.getZ() + RAIL_FROM - 2.5, -20f, 35f);
+            });
+        } else if (stageTicks == 40) {
+            view(mc, "park_wrench_overlay", CameraType.FIRST_PERSON);
+        } else if (stageTicks == 60) {
+            onServer(mc, sp -> {
+                sp.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModBlocks.PIPE_RAIL.get()));
+                sp.teleportTo(sp.serverLevel(), origin.getX() + 0.5, origin.getY() + 2, origin.getZ() + STEP_TO + 0.5, 180f, 39f);
+            });
+        } else if (stageTicks == 100) {
+            String ghost = "none";
+            if (mc.hitResult instanceof net.minecraft.world.phys.BlockHitResult hit && mc.hitResult.getType() == net.minecraft.world.phys.HitResult.Type.BLOCK) {
+                var ctx = new net.minecraft.world.item.context.BlockPlaceContext(player, InteractionHand.MAIN_HAND, player.getMainHandItem(), hit);
+                BlockState s = ModBlocks.PIPE_RAIL.get().getStateForPlacement(ctx);
+                ghost = ctx.getClickedPos().subtract(origin) + " " + s;
+                check(s != null && (s.getValue(ParkStates.CONNECTED_A) || s.getValue(ParkStates.CONNECTED_B)),
+                        "park: the ghost at the rail's open end does not connect: " + ghost);
+            } else {
+                failures.add("park: not looking at a block for the ghost: " + mc.hitResult);
+            }
+            note("ghost: " + ghost);
+            view(mc, "park_ghost", CameraType.FIRST_PERSON);
+        } else if (stageTicks > 130) {
+            return true;
+        }
+        return false;
     }
 
     // ---- riding ------------------------------------------------------------------------------------

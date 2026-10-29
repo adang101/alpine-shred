@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:snow_block"
+    }
+  },
+  "pattern": [
+    "  P",
+    " PP",
+    "SSS"
+  ],
+  "result": {
+    "count": 6,
+    "item": "alpineshred:park_ramp"
+  },
+  "show_notification": true
+}

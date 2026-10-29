@@ -90,7 +90,10 @@ public class ParkWrenchItem extends Item {
             return InteractionResult.PASS;
         }
         if (!level.isClientSide) {
+            // Ends, connections and legs follow the new shape; rails also tell their diagonal neighbours.
+            changed = Block.updateFromNeighbourShapes(changed, level, pos);
             level.setBlock(pos, changed, Block.UPDATE_ALL);
+            if (changed.getBlock() instanceof RailBlock) RailBlock.refreshAround(level, pos);
             level.playSound(null, pos, SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 0.8f, 1.2f);
         }
         if (message != null) say(player, level, message);

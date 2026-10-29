@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "block": "alpineshred:plastic_box",
+              "function": "minecraft:copy_state",
+              "properties": [
+                "color"
+              ]
+            }
+          ],
+          "name": "alpineshred:plastic_box"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}

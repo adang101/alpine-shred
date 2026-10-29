@@ -1,6 +1,9 @@
 {
   "replace": false,
   "values": [
+    "alpineshred:wood_box",
+    "alpineshred:metal_box",
+    "alpineshred:plastic_box",
     "#minecraft:planks",
     "#minecraft:wooden_slabs",
     "minecraft:smooth_stone",
