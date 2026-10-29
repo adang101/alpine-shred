@@ -84,6 +84,7 @@ final class RiderAnimator {
             rig.leftNext = !rig.leftNext;
             rig.handsOneShot = RiderClips.POLE_PUSH_TICKS;
             rig.handsClip = null; // force a restart even if the same side repeats
+            FeelStats.polePushes++;
         }
         if (!Objects.equals(hands, rig.handsClip)) {
             rig.handsClip = hands;

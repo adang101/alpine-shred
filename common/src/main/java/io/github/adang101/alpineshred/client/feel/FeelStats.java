@@ -9,6 +9,7 @@ public final class FeelStats {
     public static int loopsStarted;
     public static int oneShotsPlayed;
     public static int particlesSpawned;
+    public static int polePushes;
     public static float maxFovAdded;
     public static float maxRoll;
 
@@ -17,6 +18,6 @@ public final class FeelStats {
 
     public static String summary() {
         return "clips=" + clipsPlayed + " loops=" + loopsStarted + " oneShots=" + oneShotsPlayed
-                + " particles=" + particlesSpawned + " maxFov=" + maxFovAdded + " maxRoll=" + maxRoll;
+                 + " particles=" + particlesSpawned + " polePushes=" + polePushes + " maxFov=" + maxFovAdded + " maxRoll=" + maxRoll;
     }
 }

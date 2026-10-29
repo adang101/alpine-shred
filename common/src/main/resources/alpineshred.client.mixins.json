@@ -4,6 +4,7 @@
   "package": "io.github.adang101.alpineshred.mixin.client",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "CameraMixin",
     "GameRendererMixin",
     "ItemInHandRendererMixin",
     "LocalPlayerMixin"

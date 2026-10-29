@@ -30,6 +30,8 @@ public final class RiderTracker {
     private static final Map<AbstractClientPlayer, RiderView> VIEWS = new WeakHashMap<>();
     @Nullable
     private static ClientLevel trackedLevel;
+    @Nullable
+    private static String previewClip;
 
     private RiderTracker() {
     }
@@ -38,6 +40,15 @@ public final class RiderTracker {
         ClientTickEvent.CLIENT_POST.register(RiderTracker::tick);
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> clear());
         ClientPlayerEvent.CLIENT_PLAYER_RESPAWN.register((oldPlayer, newPlayer) -> clear());
+    }
+
+    /**
+     * Plays {@code clip} on the local rider in place of the one the ride state picks, or goes back
+     * to the ride state with null. For the smoke test's pose gallery; clip ids are {@link
+     * io.github.adang101.alpineshred.feel.RiderClips} names.
+     */
+    public static void previewClip(@Nullable String clip) {
+        previewClip = clip;
     }
 
     @Nullable
@@ -71,6 +82,7 @@ public final class RiderTracker {
                 continue;
             }
             view.observe();
+            if (player == local && previewClip != null) view.clip = previewClip;
             RiderAnimator.update(view);
             faceBody(view);
             RiderSoundManager.update(view, distanceSq);
