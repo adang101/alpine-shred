@@ -4,11 +4,12 @@ Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1
 NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
 truth; this README covers how to build the code and where it stands against that document.
 
-**Status:** Phase 1 (foundations and gear) is complete and green in CI on Forge and Fabric: all
-modules compile, 83 unit tests pass, and 11 game tests pass on each loader's headless dedicated
-server. The phase 2 movement model exists as pure, unit-tested code; wiring it into the game (the
-slide controller) is the next milestone. Still to check by hand for the phase 1 exit gate: gear
-rendering in third person, and the jar on a NeoForge 1.20.1 server.
+**Status:** Phase 2 (movement core) is complete and green in CI on Forge and Fabric: 125 unit
+tests pass, and 25 game tests pass on each loader's headless dedicated server, including the risk
+R2 replay (below). Phase 1 (foundations and gear) is complete. Still to check by hand: for phase 2,
+three clients on one dedicated server (multiplayer script step 1) and riding real vanilla mountains
+with the debug overlay on (risk R4); left over from phase 1, gear rendering in third person and the
+jar on a NeoForge 1.20.1 server.
 
 ## Build and test
 
@@ -53,21 +54,70 @@ publishing) and `fabric/build/libs/alpineshred-fabric-*.jar`.
 
 ```text
 common/   all game logic (Architectury); client code only under client/
-  movement/   RideState, RideSnapshot (packed synced int), SlideModel, SlopeMath,
-              GroundContact, Ballistics, MovementTuning, SurfaceProfile  <- pure, unit-tested
-              Riders, StrapCheck, StrapController, TuningData             <- game side
+  movement/   pure, unit-tested: RideState, RideSnapshot (packed synced int), SlideModel,
+              SlopeMath, GroundContact, Ballistics, MovementTuning, SurfaceProfile,
+              SlideController (the riding controller, written against a Body interface),
+              RideInput, RideContext, RideValidator, RideTransitions, StateSendThrottle
+              game side: PlayerBody, RideRunner, RideHooks (what the mixins ask), RideServer
+              (claims, validation, wear, wipeout damage), SurfaceResolver, Riders,
+              StrapCheck, StrapController, TuningData
   gear/       items, armor material, GearStats (pure), GearWear (pure), GearAccess,
               GearProfile(s), wax and lens recipes
   trick/      GrabType, AirRotation (pure)
   config/     ConfigSpec + AlpineConfig: both JSON files, every key from the doc
   data/       reload listeners for tuning, surface profiles and gear stats
-  network/    c2s/strap_toggle, per-player rate limiter
-  gametest/   game tests shared by both loaders
-  mixin/      PlayerMixin (synced ride state), LivingEntityMixin (no sprint when strapped)
+  network/    ModNetwork (packets), SyncCodec (pure payloads), RideAction, PacketRateLimiter
+  client/     RideDriver (runs the local player's controller), ClientNetwork, RideDebugOverlay,
+              key binds, gear render layer
+  gametest/   game tests shared by both loaders; Course builds riding courses
+  mixin/      PlayerMixin (synced state, travel, edge back-off, jump, footsteps), EntityMixin
+              (step height, descending), PowderSnowBlockMixin, LivingEntityMixin (no sprint),
+              ServerGamePacketListenerAccessor; client/LocalPlayerMixin (no auto-jump)
 forge/    entry point, CuriosGearAccess, Curios slot data, platform hooks, game-test holder
 fabric/   entry points, TrinketsGearAccess, Trinkets slot data, datagen, game-test holder
 art/      placeholder texture and model generators
 ```
+
+## What phase 2 delivers
+
+- **Riding.** While strapped, the local player's movement goes to `SlideController` (a mixin at
+  the head of `Player.travel`): slope sampling with smoothing, ground snap, step-up on snow at
+  speed, ramp launches, pop (charge on jump, release to pop), wall wipeouts that lock input for 30
+  ticks, powder floating above the float speed, skating on flat snow, pole pushes on skis, and
+  braking. Off snow below `scrapeSlideMinSpeed`, or sinking in powder, the rider walks with the
+  -35% strapped modifier.
+- **Sync.** The client sends its state with `c2s/ride_state` (on change, at most 10 per second);
+  the server checks it against the transition table and writes it into the synced data every client
+  animates from. `c2s/ride_action` reports pops, launches and pole pushes. At login and after every
+  datapack or tuning reload the server sends `s2c/config_sync` (with a protocol version: on a
+  mismatch the client turns riding off and says why) and `s2c/tuning_sync` (tuning, surface
+  profiles and gear stats, compressed).
+- **Server validation** (`RideServer`, `RideValidator`): horizontal speed over a window, rise
+  (step-up on the ground, launch allowance after a reported pop or launch, a ballistic budget in
+  the air), AIR claims while standing, refused transitions, and dropped packets each count as a
+  violation; three within 40 ticks send the rider back to its last valid position in WIPEOUT with
+  `s2c/ride_correct`, in strict mode (`movement.validation.strict`, on by default for dedicated
+  servers). Without strict mode the server logs what it would have corrected.
+- **Server-side wear and damage.** Distance comes from accepted positions: wax per block on snow,
+  edges while carving, durability by surface (scraping is fast), and a broken board leaves the slot.
+  Wipeout damage is `(impact - 0.5) * 8` from the speed the server observed, 40% less with a helmet.
+- **`/alpineshred debug ride on|off`** (level 2): an overlay of the controller's state and mode,
+  speed, heading and lean, slope grade and downhill direction, surface, ground contact and charge,
+  next to the state the server echoed and the server validator's counts.
+
+### Risk R2: closed
+
+Two game tests (`vanillaAcceptsARideAtTheSpeedCap`, `vanillaAcceptsKickerAir`) run the real
+controller on a test player as the "client" and send every tick's position through the dedicated
+server's real `handleMovePlayer`, then the client's `ride_action` and `ride_state`, then the
+server's per-tick checks. The courses cover the 28 b/s cap, a pop, a one-block step-up taken at
+speed, a voxel staircase, braking (sneaking) off a ledge, and a kicker launch with 14+ ticks of air. Any
+rubber-band (a pending teleport or a position mismatch), a floating kick, a validator violation or
+a wipeout fails the test; a final move through a wall proves the harness sees rubber-banding at all.
+No relaxation of vanilla's checks was needed. What the server replay needs instead is in
+`RideHooks`: no edge back-off for strapped riders (sneaking brakes, and back-off would land the
+replay short of the client), and vanilla step height (a client step-up arrives as an upward delta,
+which the replay follows without stepping).
 
 ## What phase 1 delivers
 
@@ -84,7 +134,8 @@ art/      placeholder texture and model generators
 - `SnowGearLayer` draws goggles, mitts, and the board or skis (under the feet when strapped,
   on the back otherwise) for both loaders.
 - `/alpineshred strap`, `config reload`, `tuning reload`. Both config files with every key.
-- 83 unit tests (all section 19 feel targets among them) and 11 game tests per loader.
+- 83 unit tests (all section 19 feel targets among them) and 11 game tests per loader at the end
+  of phase 1.
 
 ### Section 19 feel targets, measured on the default tuning
 
@@ -106,13 +157,16 @@ covered by a test or noted in code.
 1. **Durability is not data-driven.** Item max damage is fixed at registration and 1.20.1 Fabric
    has no per-stack hook, so the `gear/*.json` files carry the five multipliers only; durability
    comes from the section 5 table, and `gear.durabilityMul` tunes wear.
-2. **Gear stats must sync to clients.** The client-side slide controller reads them, so the
-   phase 2 `tuning_sync` packet needs to carry gear stats along with tuning and surfaces.
+2. **Gear stats sync to clients.** The client-side slide controller reads them, so
+   `tuning_sync` carries gear stats along with tuning and surfaces.
 3. **Ground snap distance** is `snapDown + speed`. A fixed 1.0 cannot follow a 45 degree voxel
    slope at the speed cap (up to 2 blocks of drop per tick) without flickering into AIR.
-4. **Ramp launch grade** uses the ramp's declared slope (park ramps) or the steepest per-tick
-   climb, capped at 45 degrees. Averaging over two ticks understates a one-block kicker and misses
-   the section 19 apex targets.
+4. **Ramp launch grade** uses the ramp's declared slope (park ramps) or, on terrain, the steeper
+   of the rider's per-tick climb and the terrain grade at the lip, capped at 45 degrees. Averaging
+   over ticks understates a one-block kicker; a ramp of snow layers climbs in steps the last ticks
+   may not cross. The lip is the highest recent ground sample, cast back one and two blocks: vanilla
+   collision resolves the vertical part of a move first, so at speed a rider ends a tick hovering
+   past a step edge while reported on the ground, and that position must not read as a ramp top.
 5. **Switch riding.** Step 4's slip formula, taken literally, brakes a rider who travels
    tail-first. Steering, grip and slip use whichever end leads, with 10 degrees of stance
    hysteresis, and looking more than 135 degrees behind is treated as looking over a shoulder.
@@ -133,6 +187,38 @@ covered by a test or noted in code.
     `DesignedGearRenderer` (section 22) provides.
 13. **Lift boarding** is capped at 3.5 b/s but the fast speed level is 4.0 b/s, so nobody can board
     a fast lift by hand. To settle in phase 8.
+14. **Walking while strapped.** The controller rides on snow, ice and fast powder, and slides on
+    other ground only above `scrapeSlideMinSpeed` (0.25); below it, or with scraping disabled,
+    vanilla movement runs with the strapped modifier. Holding W on flat snow skates up to
+    `skateMaxSpeed` (0.14) so a stopped rider can get moving. Both are new tuning keys.
+15. **Client-authoritative movement.** The client simulates and the server validates results
+    (rules 1 to 5) instead of simulating, as section 7 intends. The client never writes its own
+    synced state; it waits for the server's echo, and local code reads the controller.
+16. **The validator runs on client time.** One tick per move packet (the vanilla packet counter),
+    allowed to run at most 40 ticks ahead of server time. Judged per server tick, a second of
+    packets delivered at once after a lag spike, or a server below 20 TPS, looks like speeding.
+    The rise allowance scales with the ticks covered.
+17. **Rate limiting** uses wall-clock time (clients send at their own 20 ticks per second, so game
+    time would make every client flood a lagging server), and a burst of drops counts as one
+    violation per second, not one per packet. The client throttles `ride_state` to 10 per second
+    for every change, state changes included: tapping A and D flips GLIDE and CARVE faster.
+18. **Rule 3 for AIR** is read as "AIR while the server sees the rider standing": a violation after
+    4 ticks on the ground in AIR. "No ground within 0.6 blocks for 2 ticks" would flag every pop
+    (the first ticks of any jump are within 0.6 blocks of the ground).
+19. **Ramp launches rise the tick after they are reported**, unlike pops, so the validator starts
+    their allowance one tick later.
+20. **Wall impact speed** is the part of the velocity the wall stopped, not the distance lost in the
+    tick: a head-on hit at 0.8 is an 0.8 impact even when the rider started the tick 0.7 blocks
+    short of the wall, and glancing along a wall is not a crash.
+21. **Fall damage** is still vanilla's. Section 7 replaces it with landing-quality damage, which
+    needs the phase 5 landing evaluation.
+22. **`/alpineshred debug ride`** toggles the overlay for the player who runs it.
+23. **Test server players.** Vanilla's `makeMockServerPlayerInLevel` gives its connection no
+    channel, which Forge's `placeNewPlayer` cannot handle, so the tests log players in on a Netty
+    `EmbeddedChannel` instead.
+
+Not in phase 2, by design: rider animation, camera roll and FOV, and sliding sounds (phase 3).
+Until then other players see a strapped rider glide in the vanilla standing pose with walking legs.
 
 ## License
 
