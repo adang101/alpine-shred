@@ -39,6 +39,14 @@ final class VoxelBody implements SlideController.Body {
     double vx, vz;
     boolean onGround = true;
     double stepUp = 1.0;
+    /**
+     * Resolve the vertical part of a move before the horizontal part, as vanilla
+     * {@code Entity.move} does: a downward move that meets ground at the start position counts as
+     * landed even if the horizontal part then carries the body out over a drop, so the body ends
+     * the tick hovering past the edge, reported on the ground.
+     */
+    boolean verticalFirst;
+    private double supportX, supportZ;
 
     VoxelBody(Terrain terrain, double x, double z) {
         this.terrain = terrain;
@@ -83,6 +91,7 @@ final class VoxelBody implements SlideController.Body {
 
     @Override
     public SlideController.Moved move(double dx, double dy, double dz) {
+        if (verticalFirst) return moveVerticalFirst(dx, dy, dz);
         double sx = x, sy = y, sz = z;
         boolean wall = false;
         int steps = Math.max(1, (int) Math.ceil(Math.hypot(dx, dz) / 0.1));
@@ -117,6 +126,51 @@ final class VoxelBody implements SlideController.Body {
         return new SlideController.Moved(x - sx, y - sy, z - sz, landed, wall);
     }
 
+    private SlideController.Moved moveVerticalFirst(double dx, double dy, double dz) {
+        double sx = x, sy = y, sz = z;
+        boolean landed = false;
+        double startGround = top(x, z);
+        supportX = x;
+        supportZ = z;
+        if (dy < 0 && y + dy <= startGround + 1.0e-9) {
+            y = Math.max(y + dy, startGround);
+            landed = true;
+        } else {
+            y += dy;
+        }
+        boolean wall = false;
+        int steps = Math.max(1, (int) Math.ceil(Math.hypot(dx, dz) / 0.1));
+        double px = x, pz = z;
+        for (int i = 1; i <= steps; i++) {
+            double cx = x + dx * i / steps, cz = z + dz * i / steps;
+            double t = top(cx, cz);
+            if (t > y + 1.0e-9) {
+                if ((landed || onGround) && t <= y + stepUp + 1.0e-9) {
+                    y = t;
+                } else {
+                    wall = true;
+                    break;
+                }
+            }
+            px = cx;
+            pz = cz;
+            if (Math.abs(top(cx, cz) - y) <= 0.01) {
+                supportX = cx; // the last column along the path the body actually rests on
+                supportZ = cz;
+            }
+        }
+        x = px;
+        z = pz;
+        if (!landed && y <= top(x, z) && dy <= 0) {
+            y = top(x, z);
+            landed = true;
+        }
+        onGround = landed;
+        vx = x - sx;
+        vz = z - sz;
+        return new SlideController.Moved(x - sx, y - sy, z - sz, landed, wall);
+    }
+
     @Override
     public void snapDown(double dy) {
         y -= dy;
@@ -131,7 +185,12 @@ final class VoxelBody implements SlideController.Body {
 
     @Override
     public SurfaceProfile surfaceUnderFeet() {
-        if (y - top(x, z) > 0.01) return null;
-        return terrain.surface((int) Math.floor(x), (int) Math.floor(z));
+        if (y - top(x, z) <= 0.01) return terrain.surface((int) Math.floor(x), (int) Math.floor(z));
+        // Hovering past an edge but reported on the ground: like vanilla's mainSupportingBlockPos,
+        // the support is the last block along the move that the body rested on.
+        if (verticalFirst && onGround && Math.abs(y - top(supportX, supportZ)) <= 0.01) {
+            return terrain.surface((int) Math.floor(supportX), (int) Math.floor(supportZ));
+        }
+        return null;
     }
 }

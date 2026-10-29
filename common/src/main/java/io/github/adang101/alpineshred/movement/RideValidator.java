@@ -61,12 +61,24 @@ public final class RideValidator {
     private boolean hasValid;
     private int airClaimGroundTicks;
 
-    /** A pop ({@code c2s/ride_action}) or ramp launch (state changed to AIR) the client reported. */
+    /** A pop ({@code c2s/ride_action}) the client reported; it rises in this same tick. */
     public void noteLaunch(long tick, double reportedVelocity, Limits limits) {
         double v = Math.max(0, Math.min(reportedVelocity, limits.maxLaunchVy()));
         lastLaunchTick = tick;
         launchVelocity = v;
         airBudget = Math.max(airBudget, v);
+    }
+
+    /**
+     * A ramp launch the client reported. Unlike a pop, which rises in the tick it is reported, a
+     * ramp launch is decided after that tick's move, so the rise at {@code reportedVelocity} begins
+     * the tick after: the allowance window and the air budget start one tick later.
+     */
+    public void noteRampLaunch(long tick, double reportedVelocity, Limits limits) {
+        double v = Math.max(0, Math.min(reportedVelocity, limits.maxLaunchVy()));
+        lastLaunchTick = tick + 1;
+        launchVelocity = v;
+        airBudget = Math.max(airBudget, Ballistics.previousVerticalVelocity(v));
     }
 
     /** Forget history, e.g. after a teleport, respawn or strap-in. */

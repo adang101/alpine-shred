@@ -13,6 +13,11 @@ public final class Ballistics {
         return (vy - SlideModel.VANILLA_GRAVITY) * SlideModel.VANILLA_VERTICAL_DRAG;
     }
 
+    /** The velocity one tick earlier: the inverse of {@link #nextVerticalVelocity}. */
+    public static double previousVerticalVelocity(double vy) {
+        return vy / SlideModel.VANILLA_VERTICAL_DRAG + SlideModel.VANILLA_GRAVITY;
+    }
+
     /** Height gained before the apex for a launch at {@code vy0}. */
     public static double apexHeight(double vy0) {
         double y = 0;

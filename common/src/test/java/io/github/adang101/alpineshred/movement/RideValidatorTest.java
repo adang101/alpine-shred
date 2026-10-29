@@ -87,6 +87,66 @@ class RideValidatorTest {
         }
     }
 
+    /**
+     * The controller and the validator together, in the server's order: each tick the move packet
+     * arrives, then the tick's ride_action (handled while the rider clock still reads the previous
+     * tick), then the per-tick check.
+     */
+    private static void rideAndValidate(VoxelBody body, double speed, RideInput input, int ticks, String label) {
+        body.vz = speed;
+        SlideController c = new SlideController();
+        RideContext ctx = RideContext.defaults(GearStats.DEFAULTS.get("snowboard"));
+        RideValidator v = new RideValidator();
+        long clock = 0;
+        v.observe(clock, body.x, body.y, body.z, true, LIMITS);
+        boolean launched = false;
+        for (int tick = 0; tick < ticks; tick++) {
+            c.tick(body, input, ctx);
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.Popped pop) v.noteLaunch(clock, pop.velocity(), LIMITS);
+                if (e instanceof SlideController.Launched launch) {
+                    v.noteRampLaunch(clock, launch.velocity(), LIMITS);
+                    launched = true;
+                }
+            }
+            clock++;
+            RideValidator.Verdict verdict = v.observe(clock, body.x, body.y, body.z, body.onGround(), LIMITS);
+            assertEquals(RideValidator.Kind.OK, verdict.kind(), label + " tick " + tick + ": " + verdict.reason());
+        }
+        assertTrue(launched || label.contains("pop"), label + ": never launched");
+    }
+
+    @Test
+    void rampLaunchesAtEverySpeedPassTheValidator() {
+        VoxelBody.Terrain kicker = VoxelBody.Terrain.of((x, z) -> z >= 20 && z < 22 ? 1.0 * (z - 19) : 0.0,
+                (x, z) -> SurfaceProfile.GROOMED);
+        for (double speed = 0.7; speed <= 1.45; speed += 0.25) {
+            rideAndValidate(new VoxelBody(kicker, 0.5, 10.5), speed, RideInput.coast(0), 60, "kicker at " + speed);
+        }
+    }
+
+    @Test
+    void popsPassTheValidator() {
+        VoxelBody body = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        RideInput hold = new RideInput(0, 0, 0, false, true, io.github.adang101.alpineshred.trick.GrabType.NONE);
+        body.vz = 1.2;
+        SlideController c = new SlideController();
+        RideContext ctx = RideContext.defaults(GearStats.DEFAULTS.get("snowboard"));
+        RideValidator v = new RideValidator();
+        long clock = 0;
+        v.observe(clock, body.x, body.y, body.z, true, LIMITS);
+        for (int tick = 0; tick < 60; tick++) {
+            boolean jump = tick % 25 < 12; // charge fully, release, land, repeat
+            c.tick(body, jump ? hold : RideInput.coast(0), ctx);
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.Popped pop) v.noteLaunch(clock, pop.velocity(), LIMITS);
+            }
+            clock++;
+            RideValidator.Verdict verdict = v.observe(clock, body.x, body.y, body.z, body.onGround(), LIMITS);
+            assertEquals(RideValidator.Kind.OK, verdict.kind(), "tick " + tick + ": " + verdict.reason());
+        }
+    }
+
     @Test
     void reportedLaunchesAreCappedAtThePhysicalMaximum() {
         RideValidator v = new RideValidator();

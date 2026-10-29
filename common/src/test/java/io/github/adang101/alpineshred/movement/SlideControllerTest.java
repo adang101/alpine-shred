@@ -120,6 +120,48 @@ class SlideControllerTest {
     }
 
     @Test
+    void vanillaStyleHoverPastEdgesNeitherLaunchesNorFlickers() {
+        // Vertical-first collision leaves the rider hovering a tick past every step edge.
+        VoxelBody.Terrain staircase = VoxelBody.Terrain.of((x, z) -> -(int) Math.floor(z / 3.0), SurfaceProfile.SNOW_BLOCK);
+        for (double speed = 0.4; speed <= 1.45; speed += 0.15) {
+            VoxelBody body = new VoxelBody(staircase, 0.5, 0.5);
+            body.verticalFirst = true;
+            SlideController c = riding(body, speed);
+            for (int tick = 0; tick < 60; tick++) {
+                c.tick(body, RideInput.coast(0), BOARD);
+                assertFalse(c.events().stream().anyMatch(e -> e instanceof SlideController.Launched),
+                        "launched down a staircase at " + speed + ", tick " + tick);
+                assertTrue(c.state() != RideState.AIR, "AIR on a staircase at " + speed + ", tick " + tick);
+            }
+        }
+        // A plateau after a step up, then a step down: still no launch.
+        VoxelBody.Terrain plateau = VoxelBody.Terrain.of((x, z) -> z < 20 ? 0 : z < 28 ? 1 : z < 31 ? 0 : -1, SurfaceProfile.GROOMED);
+        VoxelBody body = new VoxelBody(plateau, 0.5, 10.5);
+        body.verticalFirst = true;
+        SlideController c = riding(body, 1.35);
+        List<SlideController.Event> events = run(c, body, BOARD, RideInput.coast(0), 25);
+        assertFalse(events.stream().anyMatch(e -> e instanceof SlideController.Launched), "launched off a plateau edge: " + events);
+    }
+
+    @Test
+    void steppedRampsLaunchWithVanillaStyleCollisionToo() {
+        VoxelBody.Terrain ramp = VoxelBody.Terrain.of((x, z) -> z >= 20 && z < 24 ? 0.375 * (z - 19) : 0.0,
+                (x, z) -> SurfaceProfile.GROOMED);
+        for (double speed = 0.65; speed <= 1.4 + 1e-9; speed += 0.15) {
+            for (int phase = 0; phase < 10; phase++) {
+                VoxelBody body = new VoxelBody(ramp, 0.5, 10.5 + phase * 0.1);
+                body.verticalFirst = true;
+                SlideController c = riding(body, speed);
+                List<SlideController.Event> events = run(c, body, BOARD, RideInput.coast(0), 40);
+                double s = speed;
+                int p = phase;
+                assertTrue(events.stream().anyMatch(e -> e instanceof SlideController.Launched),
+                        () -> String.format("no launch at speed %.2f phase %d", s, p));
+            }
+        }
+    }
+
+    @Test
     void ridingOffAFlatLedgeDoesNotLaunch() {
         VoxelBody body = new VoxelBody(VoxelBody.Terrain.of((x, z) -> z < 20 ? 0 : -1, SurfaceProfile.GROOMED), 0.5, 10.5);
         SlideController c = riding(body, 1.2);

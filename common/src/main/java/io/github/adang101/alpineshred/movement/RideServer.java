@@ -257,7 +257,7 @@ public final class RideServer {
                 int charge = Math.max(0, Math.min(value, t.popChargeTicks));
                 r.validator.noteLaunch(r.clientClock, SlideModel.popVelocity(t, GearProfiles.get(player).stats(), charge), limits);
             }
-            case LAUNCH -> r.validator.noteLaunch(r.clientClock, Math.max(0, value) / 1000.0, limits);
+            case LAUNCH -> r.validator.noteRampLaunch(r.clientClock, Math.max(0, value) / 1000.0, limits);
             case POLE_PUSH -> {
                 GearProfile gear = GearProfiles.get(player);
                 if (gear.kind() != GearKind.SKIS || !gear.poles()) {

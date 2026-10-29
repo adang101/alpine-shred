@@ -86,7 +86,18 @@ public final class SlideController {
     public record Pushed() implements Event {
     }
 
+    private static final int TERRAIN_SAMPLES = 8;
+    private static final double TERRAIN_WINDOW = 3.0;
+
     private final SlideModel.State motion = new SlideModel.State();
+    private final double[] terrainX = new double[TERRAIN_SAMPLES];
+    private final double[] terrainZ = new double[TERRAIN_SAMPLES];
+    private final double[] terrainDist = new double[TERRAIN_SAMPLES];
+    private final double[] terrainHeight = new double[TERRAIN_SAMPLES];
+    private int terrainCount;
+    private int terrainNext;
+    /** Horizontal distance ridden on the ground since the last takeover or landing. */
+    private double travelled;
     private final SlopeMath.Filter slopeFilter = new SlopeMath.Filter();
     private final double[] climb = new double[2];
     private final List<Event> events = new ArrayList<>();
@@ -145,6 +156,8 @@ public final class SlideController {
         motion.travelYaw = speed > 0.01 ? SlideModel.yawOf(body.velocityX(), body.velocityZ()) : motion.heading;
         motion.switchStance = false;
         slopeFilter.reset();
+        clearTerrain();
+        travelled = 0;
         climb[0] = climb[1] = 0;
         chargeTicks = 0;
         jumpWasHeld = input.jump();
@@ -214,6 +227,7 @@ public final class SlideController {
             return;
         }
         double horizontal = moved.horizontal();
+        travelled += horizontal;
         double thisClimb = moved.dy() > 0 && horizontal > 1.0e-6 ? moved.dy() / horizontal : 0;
         double recentClimb = Math.max(Math.max(climb[0], climb[1]), thisClimb);
         recordClimb(thisClimb);
@@ -223,7 +237,7 @@ public final class SlideController {
             vy = 0;
         } else {
             double gap = gapBelow(body, GroundContact.snapDistance(t, motion.speed) + CAST_MARGIN);
-            double upGrade = gap > 1.0e-4 ? Math.max(recentClimb, gradeBehindLip(body, moved)) : recentClimb;
+            double upGrade = gap > 1.0e-4 ? Math.max(recentClimb, terrainClimbGrade(body)) : recentClimb;
             GroundContact.Result contact = GroundContact.resolve(t, true, false, moved.dy(), gap, upGrade, motion.speed);
             switch (contact.kind()) {
                 case GROUNDED -> grounded = true;
@@ -265,6 +279,7 @@ public final class SlideController {
             chargeTicks = 0;
             climb[0] = climb[1] = 0;
             slopeFilter.reset();
+            clearTerrain();
             surface = body.surfaceUnderFeet();
             events.add(new Landed(airTicks, vyBefore));
             airTicks = 0;
@@ -332,8 +347,10 @@ public final class SlideController {
         double yaw = motion.travelYaw;
         double fx = SlideModel.dirX(yaw), fz = SlideModel.dirZ(yaw);
         double rx = SlideModel.dirX(yaw + 90), rz = SlideModel.dirZ(yaw + 90);
+        double center = body.groundTop(x, z, fromY, toY);
+        recordTerrain(x, z, center);
         SlopeMath.Slope raw = SlopeMath.fromHeights(yaw,
-                body.groundTop(x, z, fromY, toY),
+                center,
                 body.groundTop(x + fx, z + fz, fromY, toY),
                 body.groundTop(x - fx, z - fz, fromY, toY),
                 body.groundTop(x - rx, z - rz, fromY, toY),
@@ -343,21 +360,49 @@ public final class SlideController {
     }
 
     /**
-     * The terrain grade leading up to the point where the rider left the ground this tick: rise over
-     * run from one and from two blocks back to the lip, the steeper of the two. Unlike the per-tick
-     * climb history, this does not depend on where the tick boundaries fall: a ramp of snow layers
-     * climbs in steps, and the last tick or two before the lip may have crossed no step at all.
+     * The grade of the terrain leading up to the lip: the lip is the highest recent ground sample
+     * (the terrain under the rider's center at the start of each grounded tick, within the last
+     * {@value #TERRAIN_WINDOW} blocks), and the grade is its rise over the ground one and two blocks
+     * further back, the steeper of the two.
+     *
+     * <p>Why not the rider's own climb: a ramp of snow layers climbs in steps the last ticks before
+     * the lip may not cross. Why not the terrain behind the rider's last position: vanilla collision
+     * checks the ground before moving forward, so at speed a rider can end a tick hovering past an
+     * edge, and that position is not the top of a ramp. The highest sample is.
      */
-    private double gradeBehindLip(Body body, Moved moved) {
-        double lipX = body.x() - moved.dx(), lipY = body.y() - moved.dy(), lipZ = body.z() - moved.dz();
+    private double terrainClimbGrade(Body body) {
+        if (terrainCount == 0) return 0;
+        int newest = (terrainNext - 1 + TERRAIN_SAMPLES) % TERRAIN_SAMPLES;
+        int lip = -1;
+        for (int a = 0; a < terrainCount; a++) {
+            int i = (terrainNext - 1 - a + TERRAIN_SAMPLES) % TERRAIN_SAMPLES;
+            if (terrainDist[newest] - terrainDist[i] > TERRAIN_WINDOW) break;
+            if (lip < 0 || terrainHeight[i] > terrainHeight[lip] + 1.0e-6) lip = i;
+        }
         double backX = -SlideModel.dirX(motion.travelYaw), backZ = -SlideModel.dirZ(motion.travelYaw);
-        double fromY = lipY + SlopeMath.CAST_UP, toY = lipY - SlopeMath.CAST_DOWN;
+        double h = terrainHeight[lip];
+        double fromY = h + SlopeMath.CAST_UP, toY = h - SlopeMath.CAST_DOWN;
         double best = 0;
         for (int d = 1; d <= 2; d++) {
-            double h = body.groundTop(lipX + backX * d, lipZ + backZ * d, fromY, toY);
-            if (!Double.isNaN(h)) best = Math.max(best, (lipY - h) / d);
+            double behind = body.groundTop(terrainX[lip] + backX * d, terrainZ[lip] + backZ * d, fromY, toY);
+            if (!Double.isNaN(behind)) best = Math.max(best, (h - behind) / d);
         }
         return best;
+    }
+
+    private void recordTerrain(double x, double z, double height) {
+        if (Double.isNaN(height)) return;
+        terrainX[terrainNext] = x;
+        terrainZ[terrainNext] = z;
+        terrainDist[terrainNext] = travelled;
+        terrainHeight[terrainNext] = height;
+        terrainNext = (terrainNext + 1) % TERRAIN_SAMPLES;
+        terrainCount = Math.min(terrainCount + 1, TERRAIN_SAMPLES);
+    }
+
+    private void clearTerrain() {
+        terrainCount = 0;
+        terrainNext = 0;
     }
 
     private double gapBelow(Body body, double reach) {
