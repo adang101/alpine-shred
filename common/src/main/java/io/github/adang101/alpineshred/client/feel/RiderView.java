@@ -73,6 +73,8 @@ final class RiderView {
     /** Whether the rider is on a rail or a box this tick, and the board is pressed (sneak on a rail). */
     boolean pressing;
     private int materialAge;
+    /** How far a press (sneak on a rail, section 10 step 6) crouches, as a share of a full pop charge. */
+    private static final double PRESS_CROUCH = 0.7;
     /** The grind or slide variant on a rail or box, else null. */
     @Nullable
     GrindPhysics.Variant variant;
@@ -177,7 +179,7 @@ final class RiderView {
 
         clip = director.tick(state, mode, goofy, speed, charge, variant);
         LeanRig.Pose target = state.isStrapped() && state != RideState.WIPEOUT
-                ? LeanRig.pose(mode, goofy, switchStance, lean, speed, charge, grounded)
+                ? LeanRig.pose(mode, goofy, switchStance, lean, speed, pressing ? Math.max(charge, PRESS_CROUCH) : charge, grounded)
                 : LeanRig.Pose.NEUTRAL;
         leanPose = LeanRig.Pose.lerp(leanPose, target, local ? 0.5 : 0.35);
     }

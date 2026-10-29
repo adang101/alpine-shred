@@ -313,9 +313,13 @@ public final class SlideController {
                     grounded = false;
                     vy = contact.launchVy();
                     events.add(new Launched(contact.launchVy()));
-                    boolean lip = speedBefore >= ctx.tuning().lipAssistMinSpeed
-                            && body.park().lipNear(new V3(body.x() - SlideModel.dirX(motion.travelYaw) * 0.5, body.y() - 0.5,
-                            body.z() - SlideModel.dirZ(motion.travelYaw) * 0.5));
+                    // The launch is decided up to a block and a half past the ramp's edge (the rider
+                    // leaves the top between samples), so look back along the way it came.
+                    boolean lip = false;
+                    for (double back = 0.3; speedBefore >= ctx.tuning().lipAssistMinSpeed && back <= 1.9 && !lip; back += 0.4) {
+                        lip = body.park().lipNear(new V3(body.x() - SlideModel.dirX(motion.travelYaw) * back, body.y() - 0.5,
+                                body.z() - SlideModel.dirZ(motion.travelYaw) * back));
+                    }
                     enterAir();
                     lipTicks = lip ? 0 : -1;
                     jumpWasHeld = in.jump();

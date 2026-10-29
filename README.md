@@ -4,14 +4,15 @@ Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1
 NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
 truth; this README covers how to build the code and where it stands against that document.
 
-**Status:** Phase 3 (feel) is built and green in CI: rider animation, camera roll and speed field
-of view, sliding and impact sounds, snow particles, and the basic HUD. 148 unit tests and 26 game
-tests per loader pass, and a scripted Forge client rides a test run on a snowboard and on skis
-under a virtual display, with screenshots. What remains of phase 3 is its exit gate, five outside
-testers riding for 10 minutes each ([docs/playtest-phase3.md](docs/playtest-phase3.md)). Phases 1
-and 2 are complete. Still to check by hand from earlier phases: three clients on one dedicated
-server (multiplayer script step 1), riding real vanilla mountains with the debug overlay on (risk
-R4), and the jar on a NeoForge 1.20.1 server.
+**Status:** Phase 4 (park blocks and grinding) is built: rails in every shape with smart placement,
+grinding, boxes, ramps, quarter pipes, the park wrench and wax. Its exit gate, a 10-piece rail
+chain, a box slide and a pipe ride passing game tests, runs in CI on both loaders, along with a
+scripted Forge client riding a park line (CI step 8). A short hand check of building and riding a
+park is in [docs/playtest-phase4.md](docs/playtest-phase4.md). Phases 1 to 3 are complete except
+phase 3's exit gate, five outside testers riding for 10 minutes each
+([docs/playtest-phase3.md](docs/playtest-phase3.md)). Still to check by hand from earlier phases:
+three clients on one dedicated server (multiplayer script step 1) and the jar on a NeoForge 1.20.1
+server.
 
 ## Build and test
 
@@ -24,10 +25,11 @@ Java 17 toolchain, which Gradle downloads if none is installed.
 | Regenerate lang, recipes, tags, loot | `.github/scripts/run-datagen.sh datagen.log` (writes `common/src/main/generated`; commit the result) |
 | Game tests, Fabric dedicated server | `./gradlew :fabric:runGametest` |
 | Game tests, Forge game-test server | `./gradlew :forge:runGameTestServer` |
-| Client smoke test (Forge, needs a display or `xvfb-run`) | `./gradlew :forge:runSmokeClient` |
+| Client smoke test (Forge, needs a display or `xvfb-run`) | `./gradlew :forge:runSmokeClient`; real terrain: `:forge:runMountainClient`; park: `:forge:runParkClient` |
 | Play-test | `./gradlew :forge:runClient` (see the note on the Fabric dev client below) |
 | Regenerate placeholder art | `python3 art/placeholder/generate_textures.py && python3 art/placeholder/generate_models.py` |
 | Regenerate placeholder clips, sounds, particles, overlays | `python3 art/placeholder/generate_animations.py`, `generate_sounds.py` (needs ffmpeg), `generate_effects.py` |
+| Regenerate park blockstates, models and textures | `python3 art/placeholder/generate_park.py` |
 
 CI (`.github/workflows/build.yml`) runs all of the above except the play-test client, fails if
 committed generated data is stale, uploads the jars, and force-pushes logs, test reports, generated
@@ -76,6 +78,13 @@ common/   all game logic (Architectury); client code only under client/
   feel/       pure, unit-tested: RiderClips (which clip for which state, one-shot director),
               LeanRig (procedural lean pose), RideSoundRules, CameraEffects, ScreenEffects,
               ParticleRules
+  park/       pure, unit-tested: V3, Facing, RailShape, RailPath, RailPlacement (smart
+              placement), GrindPath, GrindPhysics (catch, ride, join, leave), RampSlope, PipeArc,
+              PipeSection, BoxMaterial, ParkView (what the controller asks the world)
+    block/    RailBlock, CopperRailBlock, RailPostBlock, BoxBlock, PlasticBoxBlock, RampBlock,
+              PipeBlock, PipeCopingBlock, ParkDecorBlock, ParkStates, ParkShapes, ParkCollision,
+              GrindPaths (the GrindPathProvider registry), BoxMaterials, LevelParkView, ParkChecks
+    item/     PipeItem (a whole pipe), ParkWrenchItem
   trick/      GrabType, AirRotation (pure)
   config/     ConfigSpec + AlpineConfig: both JSON files, every key from the doc
   data/       reload listeners for tuning, surface profiles and gear stats
@@ -86,18 +95,68 @@ common/   all game logic (Architectury); client code only under client/
               from the controller or the synced state), RiderAnimator (the only PlayerAnimator
               code), LeanLayer, RiderSoundManager, RiderParticles, RideEffects (camera, HUD),
               FeelStats
-    particle/ snow spray, poof and trail particles
+    particle/ snow spray, poof and trail particles, rail sparks
+    park/     ParkOverlay: the rail ghost preview and the wrench's path overlay
   gametest/   game tests shared by both loaders; Course builds riding courses
   mixin/      PlayerMixin (synced state, travel, edge back-off, jump, footsteps), EntityMixin
               (step height, descending), PowderSnowBlockMixin, LivingEntityMixin (no sprint),
               ServerGamePacketListenerAccessor; client/LocalPlayerMixin (no auto-jump),
               GameRendererMixin (camera roll, FOV, screen effects under the GUI),
               ItemInHandRendererMixin (no first-person arms while sliding), ItemInHandLayerMixin
-              (poles drawn by the gear layer), CameraMixin (CameraOrbit)
+              (poles drawn by the gear layer), CameraMixin (CameraOrbit), LevelRendererMixin
+              (park overlays after the world)
 forge/    entry point, CuriosGearAccess, Curios slot data, platform hooks, game-test holder
 fabric/   entry points, TrinketsGearAccess, Trinkets slot data, datagen, game-test holder
-art/      placeholder generators: textures, models, rider clips, sounds, particles, overlays
+art/      placeholder generators: textures, models, rider clips, sounds, particles, overlays,
+          park blockstates and models
 ```
+
+## What phase 4 delivers
+
+- **Rails** (`RailBlock`, section 10). `pipe_rail`, `flat_rail`, the copper pipe rail in four
+  oxidation stages and their waxed versions, and `rail_post`. Pieces are `FLAT`, `RISE_A`, `RISE_B`
+  (a one-block rise is two pieces) and `CURVE`, in four facings, with the section 10 paths. One
+  multipart model per block: the bar, an end cap on each end no piece continues, and a leg where
+  the rail stands on solid ground (none on a post, fence or wall). Collision is a thin bar at the
+  path; for riders it is solid only from above, so nothing snags a rider on the rail or beside it.
+- **Smart placement** (`RailPlacement.choose`, one pure function for the server and the client
+  preview). Pieces continue an open end, climb where the ground steps up a block (both halves of
+  the rise are picked automatically), fall where it drops, and turn the last piece of a line into
+  a curve when placed beside it, as vanilla rails do; sneak places a straight piece. While a rail
+  is held, a see-through ghost of the piece shows where it goes, green when it joins a line.
+- **Grinding** (in `SlideController`, physics in `GrindPhysics`). Catch rules, the grind assist
+  (0.65 within 20 degrees of the rail), piece to piece along a line, slope and friction (waxed,
+  oxidized and board wax change it), switch-ups on A and D, the press on sneak, pop off with the
+  rail's velocity, and off the end into the air or onto the ground. Fences and walls grind
+  (`#alpineshred:grindable_vanilla`), as does `pipe_coping`; `GrindPaths.register` takes more.
+- **Boxes** (`BoxBlock`: `wood_box`, `metal_box`, `plastic_box` in 16 colors). Low (sneak) or
+  full, along the axis placed, bevelled where the row ends, waxed with honeycomb, recolored with
+  dye. Anything in `#alpineshred:slide/boxes` slides, slabs as low boxes, with friction from
+  `data/alpineshred/box_materials.json`; steering drops to 30% on a box.
+- **Ramps** (`park_ramp`). Quarter, half and full slopes as eight 2-pixel steps per block, placed
+  in a row they continue one slope. The wrench marks the lip; jump just after leaving a lip adds
+  20% pop.
+- **Quarter pipes** (`quarter_pipe`). One item places a whole radius 3 pipe rising the way you
+  face (sneak: radius 5); breaking any block removes it. The controller rides the arc itself, back
+  down onto the flat, or over the top straight up and back in. `pipe_coping` is the lip block.
+- **Park wrench.** Cycles a rail through the pieces that keep its line joined (says so when only
+  one fits), turns it with sneak; changes a ramp's slope and lip, a box's height and axis, turns
+  coping and decor. While held it draws every rail path nearby.
+- **Wax and copper.** Honeycomb waxes rails and boxes; an axe takes wax off and scrapes copper
+  back a stage; unwaxed copper rails weather on random ticks (`rail.oxidation`).
+- **Feel.** Grind loops for metal and copper rails, slide loops for wood, metal and plastic boxes,
+  a clank on the catch, rail sparks (green off copper) and box dust, and five grind clips
+  (`grind_5050`, `grind_nose`, `grind_tail`, `boardslide`, `slide_skis`) picked from the board's
+  angle to the rail.
+- **Server.** `GRIND` and `SLIDE` claims need a rail in the catch zone or a box underfoot. The
+  validator counts a rider on a rail, box or pipe arc as supported, allows a pipe's rise and its
+  top launch, and treats any server teleport as a fresh start.
+- **Park decor.** Green, blue and black slope markers, `park_flag` and `start_gate`, for
+  generated parks (phase 7).
+- **Tests.** 15 park game tests per loader (placement and joins, the 10-piece chain, box slide,
+  pipe ride and pipe launch, lip ramp, wrench, wax and oxidation, fences and walls, park claims,
+  and three replays through a real server connection), unit tests for the pure geometry,
+  placement and grind physics, and the park smoke run with screenshots in `client-park/`.
 
 ## What phase 3 delivers
 
@@ -280,8 +339,27 @@ covered by a test or noted in code.
 26. **Landing clips.** `land_clean` plays on every landing until phase 5 grades landings
     (`land_perfect` and `land_sketchy` ship now, unused).
 
-Not in phase 3, by design: tricks (grabs, spins, flips; phase 5). Real animation clips, sounds and
-textures replace the placeholders file by file under the same names.
+27. **Rail legs** stand the rail on the ground: they show where the block below has a solid top,
+    and not on a post, fence or wall (which carries the rail) or over air. Section 10's "auto true
+    unless the rail rests on a solid face" reads the other way round; legs into air looked wrong.
+28. **Rail collision for riders is solid from above only.** A thin bar that also blocks from the
+    side snags the server's replay of a rider grinding a rise (the rider is always a little below
+    the next bar segment's top). Walkers still get the whole bar.
+29. **Pipes ride with the slope gravity.** The arc uses `slopeAccelScale` like any slope, so a
+    rider rises on a pipe as high as they could have ridden down a slope with the same speed:
+    0.48 b/t climbs a radius 3 wall to the top. Air time off the top uses full gravity.
+30. **One item, whole pipe.** Section 11 describes the pipe as a column of segments; the item
+    places all of them at once (and breaking one removes the pipe), so a pipe is never half built.
+31. **Park recipes** are new (the doc names no ingredients for park blocks). The wood box is
+    slabs over planks so it does not clash with the chest, and the ramp has a snow base so it does
+    not clash with stairs.
+32. **Plastic box colors** are one block with a `color` property and a tinted model; the item
+    carries its color in the vanilla `BlockStateTag`, the creative tab lists all 16 and broken
+    boxes keep theirs.
+
+Not in phase 4, by design: trick scoring for grinds and slides, spin-ins and the
+`grind_completed` advancement (phase 5), line fill and waxing vanilla blocks (v1.1). Real
+animation clips, sounds and textures replace the placeholders file by file under the same names.
 
 ## License
 
