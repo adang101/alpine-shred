@@ -27,6 +27,13 @@ loom {
             property 'forge.enabledGameTestNamespaces', modId
             runDir 'build/gametest'
         }
+        // The real client on a virtual display, riding a generated run with simulated keys (CI only).
+        smokeClient {
+            client()
+            name 'Client Smoke Test'
+            property 'alpineshred.smoke', 'true'
+            runDir 'build/smoke'
+        }
     }
 }
 
