@@ -87,7 +87,7 @@ public final class ClientSmoke {
     }
 
     /** One gallery picture: play {@code clip}, wait {@code delay} ticks, shoot from {@code yaw}. */
-    private record Pose(String clip, int delay, float yaw, String angle) {
+    private record Pose(String name, String clip, int delay, float yaw) {
     }
 
     private static Stage stage = Stage.MENU;
@@ -367,7 +367,7 @@ public final class ClientSmoke {
         if (landings > 0 && rideTicks >= landedAt + 2 && rideTicks <= landedAt + 8) back(mc, p + "landing_" + landings);
         if (air && z > 62 && airTicks >= 3) back(mc, p + "kicker_air");
         if (air && z > 62 && airTicks >= 6) orbit(mc, p + "kicker_air_side", SIDE);
-        if (!skis && z > 77 && z < 84) view(mc, "first_person", CameraType.FIRST_PERSON);
+        if (z > 77 && z < 84) view(mc, p + "first_person", CameraType.FIRST_PERSON);
         if (z > POWDER_FROM + 2 && z < POWDER_TO) back(mc, p + "powder");
         if (z > POWDER_FROM + 4.5 && z < POWDER_TO) orbit(mc, p + "powder_side", SIDE);
         if (brake && z > 108) back(mc, p + "brake");
@@ -412,8 +412,8 @@ public final class ClientSmoke {
                 {RiderClips.POP_LAUNCH, "2"}, {RiderClips.AIR_BOARD, "8"}, {RiderClips.LAND_SKETCHY, "3"},
                 {RiderClips.WIPEOUT_FRONT, "12"}, {RiderClips.WIPEOUT_BACK, "12"}}) {
             int delay = Integer.parseInt(clip[1]);
-            out.add(new Pose(clip[0], delay, SIDE, "side"));
-            out.add(new Pose(clip[0], delay, -35f, "quarter"));
+            out.add(new Pose("pose_board_" + clip[0] + "_side", clip[0], delay, SIDE));
+            out.add(new Pose("pose_board_" + clip[0] + "_quarter", clip[0], delay, -35f));
         }
         return out;
     }
@@ -424,8 +424,8 @@ public final class ClientSmoke {
                 {RiderClips.TUCK_SKIS, "8"}, {RiderClips.SNOWPLOW_SKIS, "8"}, {RiderClips.AIR_SKIS, "8"},
                 {RiderClips.WIPEOUT_FRONT, "12"}}) {
             int delay = Integer.parseInt(clip[1]);
-            out.add(new Pose(clip[0], delay, SIDE, "side"));
-            out.add(new Pose(clip[0], delay, 150f, "front"));
+            out.add(new Pose("pose_skis_" + clip[0] + "_side", clip[0], delay, SIDE));
+            out.add(new Pose("pose_skis_" + clip[0] + "_front", clip[0], delay, 150f));
         }
         return out;
     }
@@ -446,7 +446,7 @@ public final class ClientSmoke {
             return true;
         }
         Pose pose = gallery.get(galleryIndex);
-        String name = "pose_" + pose.clip() + "_" + pose.angle();
+        String name = pose.name();
         galleryTicks++;
         if (galleryTicks == 1) {
             RiderTracker.previewClip(null);
@@ -457,7 +457,7 @@ public final class ClientSmoke {
             galleryIndex++;
             galleryTicks = 0;
         } else if (galleryTicks >= 2 + pose.delay()) {
-            orbit(mc, name, pose.yaw());
+            request(mc, name, CameraType.THIRD_PERSON_BACK, pose.yaw(), 8f, 3.8f);
         }
         return false;
     }
@@ -469,24 +469,28 @@ public final class ClientSmoke {
     }
 
     private static void orbit(Minecraft mc, String name, float yaw) {
-        request(mc, name, CameraType.THIRD_PERSON_BACK, yaw);
+        request(mc, name, CameraType.THIRD_PERSON_BACK, yaw, 12f, 3.2f);
     }
 
     private static void view(Minecraft mc, String name, CameraType type) {
         request(mc, name, type, Float.NaN);
     }
 
+    private static void request(Minecraft mc, String name, CameraType type, float orbitYaw) {
+        request(mc, name, type, orbitYaw, 0f, 0f);
+    }
+
     /**
      * Points the camera for a picture; the picture is taken once a frame has rendered from there
      * (software rendering on the CI display can be slower than the tick rate).
      */
-    private static void request(Minecraft mc, String name, CameraType type, float orbitYaw) {
+    private static void request(Minecraft mc, String name, CameraType type, float orbitYaw, float pitch, float distance) {
         if (pending != null || shots.contains(name)) return;
         mc.options.setCameraType(type);
         if (Float.isNaN(orbitYaw)) {
             CameraOrbit.clear();
         } else {
-            CameraOrbit.set(orbitYaw, 12f, 3.2f);
+            CameraOrbit.set(orbitYaw, pitch, distance);
         }
         pending = new Shot(name, frames);
     }

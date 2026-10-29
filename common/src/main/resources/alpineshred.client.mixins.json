@@ -6,6 +6,7 @@
   "client": [
     "CameraMixin",
     "GameRendererMixin",
+    "ItemInHandLayerMixin",
     "ItemInHandRendererMixin",
     "LocalPlayerMixin"
   ],

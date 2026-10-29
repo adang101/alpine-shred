@@ -112,7 +112,23 @@ def overlays():
     save(Image.fromarray(img, "RGBA"), "textures/gui/overlay/goggles_frame.png")
 
 
+def poles():
+    """Held ski poles (drawn by SnowGearLayer from boxes): 32 x 16, one flat colour per box.
+
+    Regions: shaft x 0-3, grip x 4-11 (rows 0-7), basket x 12-27 (rows 0-7), tip x 4-11 (rows 8-15).
+    """
+    for name, shaft in (("ski_poles", (176, 184, 196)), ("carbon_ski_poles", (40, 42, 48))):
+        a = np.zeros((16, 32, 4), np.uint8)
+        a[:, 0:4] = (*shaft, 255)
+        a[:, 1, :3] = np.clip(np.array(shaft) + 30, 0, 255)  # a highlight down the shaft
+        a[0:8, 4:12] = (22, 22, 26, 255)      # grip
+        a[0:8, 12:28] = (196, 40, 36, 255)    # basket
+        a[8:16, 4:12] = (70, 70, 76, 255)     # tip
+        save(Image.fromarray(a, "RGBA"), f"textures/entity/{name}.png")
+
+
 if __name__ == "__main__":
     particles()
     overlays()
-    print("wrote particle and overlay textures")
+    poles()
+    print("wrote particle, overlay and pole textures")

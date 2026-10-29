@@ -2,25 +2,35 @@ package io.github.adang101.alpineshred.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.config.AlpineConfig;
 import io.github.adang101.alpineshred.gear.GearAccess;
 import io.github.adang101.alpineshred.gear.GearKind;
 import io.github.adang101.alpineshred.gear.GearProfile;
 import io.github.adang101.alpineshred.movement.RideSnapshot;
 import io.github.adang101.alpineshred.movement.Riders;
+import io.github.adang101.alpineshred.registry.ModItems;
+import io.github.adang101.alpineshred.registry.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
@@ -37,11 +47,20 @@ import net.minecraft.world.item.ItemStack;
  *
  * <p>Phase 1 draws the pair-of-skis model once, centred between the feet; per-leg skis that follow
  * the leg animation come with the procedural {@code DesignedGearRenderer} (section 22).
+ *
+ * <p>Ski poles are a pair: one pole in each hand, shaft down and a little back, drawn here from
+ * boxes because the item's flat inventory sprite reads as a sword in the hand. The vanilla held
+ * item is hidden for them ({@code ItemInHandLayerMixin}, through {@link #drawsPoles}).
  */
 public class SnowGearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
     private static final float PX = 1f / 16f;
+    /** Degrees the pole tips back from the line of the arm. */
+    private static final float POLE_TILT = 45f;
+    private static final ResourceLocation POLE_TEXTURE = AlpineShred.id("textures/entity/ski_poles.png");
+    private static final ResourceLocation CARBON_POLE_TEXTURE = AlpineShred.id("textures/entity/carbon_ski_poles.png");
 
     private final ItemRenderer itemRenderer;
+    private final ModelPart pole = buildPole();
 
     public SnowGearLayer(RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> parent,
                          EntityRendererProvider.Context context) {
@@ -62,6 +81,57 @@ public class SnowGearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
         gear.goggles(player).ifPresent(stack -> renderGoggles(pose, buffers, light, player, stack));
         gear.mitts(player).ifPresent(stack -> renderMitts(pose, buffers, light, player, stack));
         gear.board(player).ifPresent(stack -> renderBoardOrSkis(pose, buffers, light, player, stack));
+        renderPoles(pose, buffers, light, player);
+    }
+
+    /** True when this layer draws {@code entity}'s poles, so the vanilla held item must not. */
+    public static boolean drawsPoles(LivingEntity entity, ItemStack stack) {
+        if (!(entity instanceof AbstractClientPlayer player) || !stack.is(ModTags.Items.POLES)) return false;
+        if (player.isInvisible() || player.isSpectator()) return false;
+        Entity camera = Minecraft.getInstance().getCameraEntity();
+        int range = AlpineConfig.CLIENT_GEAR_RENDER_DISTANCE.value();
+        return camera == null || camera == player || camera.distanceToSqr(player) <= (double) range * range;
+    }
+
+    /** The pole for {@code arm}: what that hand holds, or the other hand's poles when it is empty. */
+    private static ItemStack poleFor(AbstractClientPlayer player, HumanoidArm arm) {
+        boolean main = arm == player.getMainArm();
+        ItemStack held = main ? player.getMainHandItem() : player.getOffhandItem();
+        ItemStack other = main ? player.getOffhandItem() : player.getMainHandItem();
+        if (held.is(ModTags.Items.POLES)) return held;
+        if (held.isEmpty() && other.is(ModTags.Items.POLES)) return other;
+        return ItemStack.EMPTY;
+    }
+
+    private void renderPoles(PoseStack pose, MultiBufferSource buffers, int light, AbstractClientPlayer player) {
+        PlayerModel<AbstractClientPlayer> model = getParentModel();
+        boolean slim = "slim".equals(player.getModelName());
+        for (HumanoidArm arm : HumanoidArm.values()) {
+            ItemStack stack = poleFor(player, arm);
+            if (stack.isEmpty()) continue;
+            ModelPart part = arm == HumanoidArm.RIGHT ? model.rightArm : model.leftArm;
+            float centreX = (arm == HumanoidArm.RIGHT ? -1 : 1) * (slim ? 0.5f : 1f) * PX;
+            ResourceLocation texture = stack.is(ModItems.CARBON_SKI_POLES.get()) ? CARBON_POLE_TEXTURE : POLE_TEXTURE;
+            pose.pushPose();
+            part.translateAndRotate(pose);
+            pose.translate(centreX, 9.5f * PX, 0);
+            // Arm space: +y runs down the arm to the fist, +z is behind the rider.
+            pose.mulPose(Axis.XP.rotationDegrees(POLE_TILT));
+            pole.render(pose, buffers.getBuffer(RenderType.entityCutoutNoCull(texture)), light, OverlayTexture.NO_OVERLAY);
+            pose.popPose();
+        }
+    }
+
+    /** One pole, grip at the origin (the fist) and the shaft running 14 pixels down +y. */
+    private static ModelPart buildPole() {
+        MeshDefinition mesh = new MeshDefinition();
+        mesh.getRoot().addOrReplaceChild("pole", CubeListBuilder.create()
+                        .texOffs(0, 0).addBox(-0.25f, 0.5f, -0.25f, 0.5f, 12.5f, 0.5f)      // shaft
+                        .texOffs(4, 0).addBox(-0.5f, -2.5f, -0.5f, 1f, 3f, 1f)              // grip, through the fist
+                        .texOffs(12, 0).addBox(-1.25f, 10.75f, -1.25f, 2.5f, 0.25f, 2.5f)   // basket
+                        .texOffs(4, 8).addBox(-0.15f, 13f, -0.15f, 0.3f, 1f, 0.3f),         // tip
+                PartPose.ZERO);
+        return LayerDefinition.create(mesh, 32, 16).bakeRoot().getChild("pole");
     }
 
     private void renderGoggles(PoseStack pose, MultiBufferSource buffers, int light, AbstractClientPlayer player, ItemStack stack) {
@@ -102,10 +172,12 @@ public class SnowGearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
         RideSnapshot ride = Riders.get(player);
         pose.pushPose();
         if (ride.state().isStrapped()) {
-            // Under the feet, following crouch offsets of the legs.
+            // Under the feet, following crouch offsets of the legs: the item models' half-pixel deck
+            // is centred on the item origin, so a quarter pixel down puts its top at the soles (the
+            // lean layer lifts the rider by LeanRig.STAND to stand on it).
             ModelPart right = model.rightLeg;
             ModelPart left = model.leftLeg;
-            pose.translate((right.x + left.x) / 2f * PX, ((right.y + left.y) / 2f + 12f + 0.3f) * PX, (right.z + left.z) / 2f * PX);
+            pose.translate((right.x + left.x) / 2f * PX, ((right.y + left.y) / 2f + 12f + 0.25f) * PX, (right.z + left.z) / 2f * PX);
             flipUp(pose);
             if (kind == GearKind.BOARD) {
                 // A board rides across the body; stance picks which way the nose points.

@@ -48,9 +48,10 @@ final class LeanLayer implements IAnimation {
         switch (part) {
             case "body" -> {
                 if (type == TransformType.POSITION) {
-                    // Vanilla lowers a crouching (braking) player 0.125 blocks; keep the board on the snow.
-                    float crouchFix = player.isCrouching() ? 0.125f : 0f;
-                    return new Vec3f(v.getX() + (float) p.rootX(), v.getY() + (float) p.rootY() + crouchFix, v.getZ() + (float) p.rootZ());
+                    // Stand on the board, and undo vanilla's 0.125 block drop for a crouching (braking)
+                    // player so the board stays on the snow.
+                    float lift = (float) LeanRig.STAND + (player.isCrouching() ? 0.125f : 0f);
+                    return new Vec3f(v.getX() + (float) p.rootX(), v.getY() + (float) p.rootY() + lift, v.getZ() + (float) p.rootZ());
                 }
                 if (type == TransformType.ROTATION) {
                     return new Vec3f(v.getX() + (float) p.rootPitch(), v.getY(), v.getZ() + (float) p.rootRoll());

@@ -26,6 +26,12 @@ public final class LeanRig {
     /** Model pixels the upper body sinks at full speed, and at full pop charge. */
     public static final double SPEED_CROUCH = 1.5;
     public static final double CHARGE_CROUCH = 2.5;
+    /**
+     * Blocks a strapped rider is drawn above the ground: the gear layer draws the board's or the
+     * skis' half-pixel deck right under the soles, and the rider stands on it rather than sinking it
+     * into the snow. Rendering only; the player's position and eyes do not move.
+     */
+    public static final double STAND = 0.55 / 16;
 
     /** Angles in radians, offsets in blocks (root) and model pixels (crouch). */
     public record Pose(double rootPitch, double rootRoll, double rootX, double rootY, double rootZ,

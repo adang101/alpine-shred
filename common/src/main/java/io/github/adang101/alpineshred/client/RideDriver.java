@@ -100,6 +100,9 @@ public final class RideDriver implements RideHooks.ClientDriver {
         if (r == null || r.player() != player || lastContext == null) return false;
         if (!r.controller().polePush(lastContext)) return false;
         ModNetwork.sendRideAction(RideAction.POLE_PUSH, 0);
+        // Pushes come from item use, between controller ticks; the controller clears its events at
+        // the start of its next tick, before travel() would collect them.
+        pendingEvents.add(new SlideController.Pushed());
         return true;
     }
 

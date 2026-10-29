@@ -51,7 +51,7 @@ public final class RideEffects {
     }
 
     public static void register() {
-        ClientGuiEvent.RENDER_HUD.register(RideEffects::render);
+        ClientGuiEvent.RENDER_HUD.register(RideEffects::renderHud);
     }
 
     /** Degrees of camera roll this frame (positive rolls toward the rider's right). */
@@ -95,14 +95,17 @@ public final class RideEffects {
         return GearAccess.current().goggles(player);
     }
 
-    private static void render(GuiGraphics graphics, float partialTick) {
+    /**
+     * Goggles, speed lines and vignettes, drawn by the {@code GameRendererMixin} just before the
+     * vanilla GUI so the hotbar, crosshair and chat stay on top of them.
+     */
+    public static void renderScreenEffects(float partialTick) {
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
-        if (player == null || mc.options.hideGui) return;
+        if (player == null || mc.level == null) return;
+        GuiGraphics graphics = new GuiGraphics(mc, mc.renderBuffers().bufferSource());
         int w = graphics.guiWidth(), h = graphics.guiHeight();
-        boolean firstPerson = mc.options.getCameraType().isFirstPerson();
-
-        if (firstPerson) {
+        if (mc.options.getCameraType().isFirstPerson()) {
             goggles(player).ifPresent(stack -> {
                 if (!AlpineConfig.CLIENT_GOGGLES_OVERLAY.on()) return;
                 Lens lens = GogglesItem.lens(stack);
@@ -117,6 +120,15 @@ public final class RideEffects {
         }
         if (SCREEN.whiteout() > 0) overlay(graphics, VIGNETTE, w, h, 1, 1, 1, (float) SCREEN.whiteout());
         if (SCREEN.wipeoutPulse() > 0) overlay(graphics, VIGNETTE, w, h, 0.85f, 0.1f, 0.1f, (float) SCREEN.wipeoutPulse());
+        graphics.flush();
+    }
+
+    /** The speedometer and the board's wax and edge, over the vanilla HUD. */
+    private static void renderHud(GuiGraphics graphics, float partialTick) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null || mc.options.hideGui) return;
+        int w = graphics.guiWidth(), h = graphics.guiHeight();
 
         RiderView view = RiderTracker.localView();
         if (view == null || !view.state.isStrapped()) return;

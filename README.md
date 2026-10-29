@@ -4,12 +4,14 @@ Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1
 NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
 truth; this README covers how to build the code and where it stands against that document.
 
-**Status:** Phase 2 (movement core) is complete and green in CI on Forge and Fabric: 125 unit
-tests pass, and 25 game tests pass on each loader's headless dedicated server, including the risk
-R2 replay (below). Phase 1 (foundations and gear) is complete. Still to check by hand: for phase 2,
-three clients on one dedicated server (multiplayer script step 1) and riding real vanilla mountains
-with the debug overlay on (risk R4); left over from phase 1, gear rendering in third person and the
-jar on a NeoForge 1.20.1 server.
+**Status:** Phase 3 (feel) is built and green in CI: rider animation, camera roll and speed field
+of view, sliding and impact sounds, snow particles, and the basic HUD. 148 unit tests and 26 game
+tests per loader pass, and a scripted Forge client rides a test run on a snowboard and on skis
+under a virtual display, with screenshots. What remains of phase 3 is its exit gate, five outside
+testers riding for 10 minutes each ([docs/playtest-phase3.md](docs/playtest-phase3.md)). Phases 1
+and 2 are complete. Still to check by hand from earlier phases: three clients on one dedicated
+server (multiplayer script step 1), riding real vanilla mountains with the debug overlay on (risk
+R4), and the jar on a NeoForge 1.20.1 server.
 
 ## Build and test
 
@@ -22,12 +24,20 @@ Java 17 toolchain, which Gradle downloads if none is installed.
 | Regenerate lang, recipes, tags, loot | `.github/scripts/run-datagen.sh datagen.log` (writes `common/src/main/generated`; commit the result) |
 | Game tests, Fabric dedicated server | `./gradlew :fabric:runGametest` |
 | Game tests, Forge game-test server | `./gradlew :forge:runGameTestServer` |
-| Play-test | `./gradlew :fabric:runClient` or `./gradlew :forge:runClient` |
+| Client smoke test (Forge, needs a display or `xvfb-run`) | `./gradlew :forge:runSmokeClient` |
+| Play-test | `./gradlew :forge:runClient` (see the note on the Fabric dev client below) |
 | Regenerate placeholder art | `python3 art/placeholder/generate_textures.py && python3 art/placeholder/generate_models.py` |
+| Regenerate placeholder clips, sounds, particles, overlays | `python3 art/placeholder/generate_animations.py`, `generate_sounds.py` (needs ffmpeg), `generate_effects.py` |
 
-CI (`.github/workflows/build.yml`) runs all of the above except the clients, fails if committed
-generated data is stale, uploads the jars, and force-pushes logs, test reports and generated data to
-the `ci-logs` branch so they can be read with plain git.
+CI (`.github/workflows/build.yml`) runs all of the above except the play-test client, fails if
+committed generated data is stale, uploads the jars, and force-pushes logs, test reports, generated
+data and the smoke test's screenshots (`client-smoke/screenshots`) to the `ci-logs` branch so they
+can be read with plain git.
+
+Known issue: `./gradlew :fabric:runClient` does not start in the development environment. Trinkets
+3.7.2's `ClickableWidgetMixin` shadows a field by its Yarn name, which does not exist under the
+Mojang mappings this project develops with. Production Fabric (intermediary names) is not affected.
+Play-test Fabric with the built jar in a normal Fabric 1.20.1 instance.
 
 Known issue: `./gradlew :fabric:runDatagen` writes every file and then the JVM does not exit
 (the thread dump shows only daemon threads plus a process reaper). The script above waits for
@@ -63,20 +73,63 @@ common/   all game logic (Architectury); client code only under client/
               StrapCheck, StrapController, TuningData
   gear/       items, armor material, GearStats (pure), GearWear (pure), GearAccess,
               GearProfile(s), wax and lens recipes
+  feel/       pure, unit-tested: RiderClips (which clip for which state, one-shot director),
+              LeanRig (procedural lean pose), RideSoundRules, CameraEffects, ScreenEffects,
+              ParticleRules
   trick/      GrabType, AirRotation (pure)
   config/     ConfigSpec + AlpineConfig: both JSON files, every key from the doc
   data/       reload listeners for tuning, surface profiles and gear stats
   network/    ModNetwork (packets), SyncCodec (pure payloads), RideAction, PacketRateLimiter
   client/     RideDriver (runs the local player's controller), ClientNetwork, RideDebugOverlay,
-              key binds, gear render layer
+              key binds, gear render layer, ClientSmoke (the scripted client test), CameraOrbit
+    feel/     RiderTracker (per tick, every rider in 48 blocks), RiderView (what a rider is doing,
+              from the controller or the synced state), RiderAnimator (the only PlayerAnimator
+              code), LeanLayer, RiderSoundManager, RiderParticles, RideEffects (camera, HUD),
+              FeelStats
+    particle/ snow spray, poof and trail particles
   gametest/   game tests shared by both loaders; Course builds riding courses
   mixin/      PlayerMixin (synced state, travel, edge back-off, jump, footsteps), EntityMixin
               (step height, descending), PowderSnowBlockMixin, LivingEntityMixin (no sprint),
-              ServerGamePacketListenerAccessor; client/LocalPlayerMixin (no auto-jump)
+              ServerGamePacketListenerAccessor; client/LocalPlayerMixin (no auto-jump),
+              GameRendererMixin (camera roll, FOV, screen effects under the GUI),
+              ItemInHandRendererMixin (no first-person arms while sliding), ItemInHandLayerMixin
+              (poles drawn by the gear layer), CameraMixin (CameraOrbit)
 forge/    entry point, CuriosGearAccess, Curios slot data, platform hooks, game-test holder
 fabric/   entry points, TrinketsGearAccess, Trinkets slot data, datagen, game-test holder
-art/      placeholder texture and model generators
+art/      placeholder generators: textures, models, rider clips, sounds, particles, overlays
 ```
+
+## What phase 3 delivers
+
+- **Rider animation** (`RiderAnimator`, on PlayerAnimator). 22 placeholder clips in
+  `assets/alpineshred/player_animation/`: idle, strapped walk, glide (regular, goofy, skis), tuck,
+  brake and snowplow, pop charge and launch, air, three landings, two wipeouts, pole carry and
+  pushes. The base clip follows the ride state, cross-faded over 4 ticks; a procedural lean layer
+  tilts the body into turns about the feet, counter-rotates the torso and crouches with speed and
+  pop charge; a hands layer carries and pushes poles. Snowboarders' bodies turn sideways by stance,
+  and strapped riders stand on the board or skis (drawn a half pixel above the snow) instead of
+  sinking it. Ski poles show as a pair, one in each hand, rather than the held inventory sprite.
+  The head is never animated, so it follows the player's look. Every client animates every rider
+  within 48 blocks from the synced state; there are no animation packets.
+- **Camera.** Roll into carves (up to 6 degrees) and into wipeouts, speed field of view from 8 b/s
+  (up to +18 degrees, scaled by `client.fovEffect`), and no first-person arms while sliding.
+  `client.reduceMotion` turns off the roll, the field of view change and the speed lines.
+- **Sound.** 16 sound events with subtitles. Glide loops per surface (groomed snow, ice, powder),
+  scrape, carve and brake loops, each faded per tick from speed and lean; pop, soft and hard
+  landings, wipeout, pole push, strap in and out, wax and edge tuning. Placeholder audio is
+  synthesized (`generate_sounds.py`) until real recordings replace the files.
+- **Particles.** Snow spray off carves and brakes, a poof on landings and wipeouts, block dust off
+  other surfaces, and fading carve trails (`client.carveTrails`).
+- **HUD.** Goggle lens tint and frame in first person (`client.gogglesOverlay`), speed lines, a
+  whiteout vignette in snowfall without goggles, a flash on hitting powder at speed without
+  goggles and a red pulse on wipeouts (both off with `client.flashSafe`), and, with
+  `client.hudSpeed`, a speedometer and the board's wax and edge, scaled by `client.hudScale`.
+- **Client smoke test** (`ClientSmoke`, CI step 6). A Forge client on a virtual display builds a
+  snow run in a flat world, rides it on a snowboard and then on skis with poles (skate, pole push,
+  carve both ways, pop, kicker, powder, brake), and photographs each moment from behind, from the
+  side and in first person, then every clip in a still gallery. It fails on a mixin that does not
+  apply, a crash, or a rider that never slides, carves, launches, makes a sound, spawns a particle,
+  rolls the camera or widens the field of view.
 
 ## What phase 2 delivers
 
@@ -217,8 +270,18 @@ covered by a test or noted in code.
     channel, which Forge's `placeNewPlayer` cannot handle, so the tests log players in on a Netty
     `EmbeddedChannel` instead.
 
-Not in phase 2, by design: rider animation, camera roll and FOV, and sliding sounds (phase 3).
-Until then other players see a strapped rider glide in the vanilla standing pose with walking legs.
+24. **The strapped walk modifier is dropped locally while sliding.** The -35% movement modifier
+    narrows the field of view like slowness does, which fought the speed FOV. The client removes it
+    while the controller moves the player and puts it back on release; the server keeps it, and
+    walking is unchanged.
+25. **Remote riders' events are inferred.** Other clients see pops, landings, wipeouts and pole
+    pushes from synced state transitions, vertical motion and arm swings, so effects need no
+    packets. The local rider uses the controller's own events.
+26. **Landing clips.** `land_clean` plays on every landing until phase 5 grades landings
+    (`land_perfect` and `land_sketchy` ship now, unused).
+
+Not in phase 3, by design: tricks (grabs, spins, flips; phase 5). Real animation clips, sounds and
+textures replace the placeholders file by file under the same names.
 
 ## License
 
