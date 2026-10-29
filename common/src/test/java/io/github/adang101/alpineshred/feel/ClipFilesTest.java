@@ -39,7 +39,9 @@ class ClipFilesTest {
     void everyClipLoadsUnderItsOwnNameAndLeavesTheHeadAlone() throws IOException {
         for (String name : RiderClips.ALL) {
             KeyframeAnimation clip = load(name);
-            assertEquals(name, clip.extraData.get("name"), "registry id comes from the name field");
+            // The library keeps the name as JSON text and unquotes it into the registry id.
+            String stored = String.valueOf(clip.extraData.get("name"));
+            assertEquals(name, com.google.gson.JsonParser.parseString(stored).getAsString(), "registry id comes from the name field");
             KeyframeAnimation.StateCollection head = clip.getPart("head");
             assertTrue(head == null || !head.isEnabled(), name + " animates the head, which would freeze the look");
         }
