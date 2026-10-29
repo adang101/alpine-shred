@@ -140,6 +140,11 @@ public final class ClientSmoke {
     private static RideState lastState = RideState.OFF;
     private static final Map<Integer, Integer> airEpisodes = new TreeMap<>();
     private static final Set<String> surfaces = new java.util.TreeSet<>();
+    /** The last client ticks, dumped to the transcript when the server counts a violation. */
+    private static final java.util.ArrayDeque<String> recentTicks = new java.util.ArrayDeque<>();
+    private static int violationsSeen;
+    private static int dumps;
+    private static double lastY = Double.NaN;
 
     // ---- gallery ----
     private static List<Pose> gallery = List.of();
@@ -477,6 +482,24 @@ public final class ClientSmoke {
 
         ServerPlayer sp = serverPlayer;
         int violations = sp == null ? 0 : RideServer.violations(sp);
+        BlockPos feet = player.blockPosition();
+        recentTicks.addLast(String.format(Locale.ROOT,
+                "  t%d y%.3f dy%+.3f ground %b/%s %s %s speed %.3f feet %s below %s floats %b powder %b hcol %b fall %.2f",
+                rideTicks, player.getY(), Double.isNaN(lastY) ? 0 : player.getY() - lastY, player.onGround(),
+                c == null ? "-" : c.grounded(), c == null ? "-" : c.mode(), state, speed,
+                mc.level.getBlockState(feet).getBlock().getName().getString(),
+                mc.level.getBlockState(feet.below()).getBlock().getName().getString(),
+                io.github.adang101.alpineshred.movement.RideHooks.floatsOnPowder(player), player.isInPowderSnow,
+                player.horizontalCollision, player.fallDistance));
+        if (recentTicks.size() > 12) recentTicks.removeFirst();
+        lastY = player.getY();
+        if (violations > violationsSeen) {
+            if (dumps++ < 6) {
+                note("server violation " + violations + " (" + (sp == null ? "" : RideServer.lastReason(sp)) + "), last client ticks:");
+                recentTicks.forEach(ClientSmoke::note);
+            }
+            violationsSeen = violations;
+        }
         if (rideTicks % 20 == 0) {
             note(String.format(Locale.ROOT, "t%d %s %s speed %.3f grade %.1f surface %s distance %.0f violations %d",
                     rideTicks, player.blockPosition(), state, speed, c == null ? 0 : c.slope().degrees(),

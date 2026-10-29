@@ -149,7 +149,8 @@ public final class RideValidator {
             budget = Ballistics.nextVerticalVelocity(Math.max(budget, 0));
         }
         if (rise > allowed + RISE_TOLERANCE && reason == null) {
-            reason = String.format(java.util.Locale.ROOT, "rise %.3f > %.3f", rise, allowed);
+            reason = String.format(java.util.Locale.ROOT, "rise %.3f > %.3f (ground %b, before %b, %d ticks)", rise, allowed,
+                    onGround, groundedLast, dt);
         }
         airBudget = onGround ? 0 : budget;
 
