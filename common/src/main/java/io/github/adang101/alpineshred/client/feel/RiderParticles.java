@@ -5,7 +5,10 @@ import io.github.adang101.alpineshred.feel.ParticleRules;
 import io.github.adang101.alpineshred.movement.RideState;
 import io.github.adang101.alpineshred.movement.SlideModel;
 import io.github.adang101.alpineshred.movement.SurfaceProfile;
+import io.github.adang101.alpineshred.park.GrindMaterial;
 import io.github.adang101.alpineshred.registry.ModParticles;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -15,7 +18,8 @@ import net.minecraft.world.level.Level;
 /**
  * Client-side particles from the synced rider state (design doc section 17): snow spray off the
  * edge when carving or braking (block particles on non-snow ground), a burst on landing, and flat
- * carve trails ({@code client.carveTrails}). The server never sends any.
+ * carve trails ({@code client.carveTrails}), rail sparks while grinding metal (a burst on the catch)
+ * and block dust off a box. The server never sends any.
  */
 final class RiderParticles {
     private RiderParticles() {
@@ -24,13 +28,24 @@ final class RiderParticles {
     static void update(RiderView view) {
         Level level = view.player.level();
         RandomSource random = view.player.getRandom();
-        boolean snowy = view.surface != null && view.surface.category() != SurfaceProfile.Category.SCRAPE;
+        boolean snowy = view.surface != null && view.surface.category() != SurfaceProfile.Category.SCRAPE
+                && view.surface.category() != SurfaceProfile.Category.BOX;
         double x = view.player.getX(), y = view.player.getY(), z = view.player.getZ();
         double travel = view.speed > 0.01 ? travelYaw(view) : view.heading;
         double fx = SlideModel.dirX(travel), fz = SlideModel.dirZ(travel);
         double rx = SlideModel.dirX(travel + 90), rz = SlideModel.dirZ(travel + 90);
 
-        if (view.grounded && view.state.isGroundRiding()) {
+        if (view.state == RideState.GRIND) {
+            grindSparks(view, level, random, x, y, z, fx, fz);
+        } else if (view.state == RideState.SLIDE && view.blockUnder != null && !view.blockUnder.isAir()) {
+            int count = view.spray.take(ParticleRules.boxDustPerTick(view.speed));
+            BlockParticleOption dust = new BlockParticleOption(ParticleTypes.BLOCK, view.blockUnder);
+            for (int i = 0; i < count; i++) {
+                FeelStats.particlesSpawned++;
+                level.addParticle(dust, x - fx * 0.3 + (random.nextDouble() - 0.5) * 0.3, y + 0.05,
+                        z - fz * 0.3 + (random.nextDouble() - 0.5) * 0.3, -fx * 0.05, 0.05, -fz * 0.05);
+            }
+        } else if (view.grounded && view.state.isGroundRiding()) {
             int count = view.spray.take(ParticleRules.sprayPerTick(view.state, view.speed, view.lean));
             if (count > 0) {
                 ParticleOptions particle = snowy ? ModParticles.SNOW_SPRAY.get()
@@ -65,6 +80,24 @@ final class RiderParticles {
                 level.addParticle(ModParticles.SNOW_POOF.get(), x + Math.cos(a) * 0.3, y + 0.1, z + Math.sin(a) * 0.3,
                         Math.cos(a) * r, 0.05 + random.nextDouble() * 0.1, Math.sin(a) * r);
             }
+        }
+    }
+
+    /** Sparks off the contact point, thrown back along the rail; a burst on the catch. */
+    private static void grindSparks(RiderView view, Level level, RandomSource random, double x, double y, double z, double fx, double fz) {
+        boolean metal = view.material == GrindMaterial.METAL || view.material == GrindMaterial.COPPER;
+        int count = view.spray.take(ParticleRules.sparksPerTick(metal, view.speed, view.pressing));
+        if (view.caught && metal) count += ParticleRules.CATCH_SPARKS;
+        boolean copper = view.material == GrindMaterial.COPPER;
+        for (int i = 0; i < count; i++) {
+            double back = 0.1 + random.nextDouble() * 0.15 + view.speed * 0.2;
+            FeelStats.particlesSpawned++;
+            // Made through the engine so the spark can be tinted: green for copper (section 17).
+            Particle spark = Minecraft.getInstance().particleEngine.createParticle(ModParticles.RAIL_SPARK.get(),
+                    x + (random.nextDouble() - 0.5) * 0.2, y + 0.02, z + (random.nextDouble() - 0.5) * 0.2,
+                    -fx * back + (random.nextDouble() - 0.5) * 0.12, 0.06 + random.nextDouble() * 0.12,
+                    -fz * back + (random.nextDouble() - 0.5) * 0.12);
+            if (spark != null && copper) spark.setColor(0.55f, 1.0f, 0.7f);
         }
     }
 

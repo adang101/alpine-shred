@@ -2,6 +2,7 @@ package io.github.adang101.alpineshred.forge.gametest;
 
 import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.gametest.AlpineGameTests;
+import io.github.adang101.alpineshred.gametest.ParkGameTests;
 import io.github.adang101.alpineshred.gametest.RideGameTests;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -152,5 +153,77 @@ public final class ForgeGameTests {
     @GameTest(template = AlpineGameTests.TEMPLATE)
     public static void soundsAndParticlesAreRegistered(GameTestHelper helper) {
         AlpineGameTests.soundsAndParticlesAreRegistered(helper);
+    }
+
+    // ---- phase 4: park ----
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void railsConnectAndFollowTheGround(GameTestHelper helper) {
+        ParkGameTests.railsConnectAndFollowTheGround(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void tenPieceRailChainGrindsEndToEnd(GameTestHelper helper) {
+        ParkGameTests.tenPieceRailChainGrindsEndToEnd(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void serverAcceptsARailGrind(GameTestHelper helper) {
+        ParkGameTests.serverAcceptsARailGrind(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void waxAndOxidationChangeRailFriction(GameTestHelper helper) {
+        ParkGameTests.waxAndOxidationChangeRailFriction(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void fencesAndWallsGrind(GameTestHelper helper) {
+        ParkGameTests.fencesAndWallsGrind(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void boxSlideRunsTheBox(GameTestHelper helper) {
+        ParkGameTests.boxSlideRunsTheBox(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void serverAcceptsABoxSlide(GameTestHelper helper) {
+        ParkGameTests.serverAcceptsABoxSlide(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void rampsStackIntoRuns(GameTestHelper helper) {
+        ParkGameTests.rampsStackIntoRuns(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void wrenchCyclesAndTurnsRails(GameTestHelper helper) {
+        ParkGameTests.wrenchCyclesAndTurnsRails(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void quarterPipePlacesWhole(GameTestHelper helper) {
+        ParkGameTests.quarterPipePlacesWhole(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void pipeRideGoesUpAndComesBack(GameTestHelper helper) {
+        ParkGameTests.pipeRideGoesUpAndComesBack(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void pipeTopLaunchesAndReenters(GameTestHelper helper) {
+        ParkGameTests.pipeTopLaunchesAndReenters(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void serverAcceptsAPipeRide(GameTestHelper helper) {
+        ParkGameTests.serverAcceptsAPipeRide(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void parkClaimsNeedTheFeature(GameTestHelper helper) {
+        ParkGameTests.parkClaimsNeedTheFeature(helper);
     }
 }

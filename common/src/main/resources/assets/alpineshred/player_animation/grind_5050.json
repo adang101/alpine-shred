@@ -1,0 +1,192 @@
+{
+ "version": 3,
+ "name": "grind_5050",
+ "author": "Alpine Shred placeholder",
+ "description": "50-50: board along the rail, arms out",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 24,
+  "stopTick": 25,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 10,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 52
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": -62
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 13
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -13
+    }
+   },
+   {
+    "tick": 6,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 10,
+     "yaw": 0,
+     "roll": 3
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 52
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": -68
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 13
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -13
+    }
+   },
+   {
+    "tick": 18,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 10,
+     "yaw": 0,
+     "roll": -3
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 58
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": -62
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 13
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -13
+    }
+   },
+   {
+    "tick": 24,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 10,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -15,
+     "yaw": 0,
+     "roll": 52
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -20,
+     "yaw": 0,
+     "roll": -62
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 13
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -13
+    }
+   }
+  ]
+ }
+}

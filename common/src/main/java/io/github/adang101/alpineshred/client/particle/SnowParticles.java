@@ -23,6 +23,43 @@ public final class SnowParticles {
                 (type, level, x, y, z, xd, yd, zd) -> new Poof(level, x, y, z, xd, yd, zd, sprites));
         ParticleProviderRegistry.register(ModParticles.SNOW_TRAIL, sprites ->
                 (type, level, x, y, z, xd, yd, zd) -> new Trail(level, x, y, z, xd, zd, sprites));
+        ParticleProviderRegistry.register(ModParticles.RAIL_SPARK, sprites ->
+                (type, level, x, y, z, xd, yd, zd) -> new Spark(level, x, y, z, xd, yd, zd, sprites));
+    }
+
+    /** A rail spark: fast, bright (full light), bounces, burns out within half a second. */
+    static final class Spark extends TextureSheetParticle {
+        private final SpriteSet sprites;
+
+        Spark(ClientLevel level, double x, double y, double z, double xd, double yd, double zd, SpriteSet sprites) {
+            super(level, x, y, z);
+            this.xd = xd;
+            this.yd = yd;
+            this.zd = zd;
+            this.sprites = sprites;
+            this.gravity = 0.9f;
+            this.friction = 0.9f;
+            this.lifetime = 5 + random.nextInt(6);
+            this.quadSize = 0.03f + random.nextFloat() * 0.03f;
+            this.hasPhysics = true;
+            setSpriteFromAge(sprites);
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            setSpriteFromAge(sprites);
+        }
+
+        @Override
+        protected int getLightColor(float partialTick) {
+            return 0xF000F0;
+        }
+
+        @Override
+        public ParticleRenderType getRenderType() {
+            return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        }
     }
 
     /** Snow thrown off an edge: small, falls fast, shrinks through four frames. */

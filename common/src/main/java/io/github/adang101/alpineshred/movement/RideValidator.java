@@ -39,6 +39,14 @@ public final class RideValidator {
             double maxLaunch = GroundContact.launchVelocity(t, speedCap, GroundContact.MAX_LAUNCH_GRADE);
             return new Limits(speedCap, Math.max(t.stepUp, 0.6), Math.max(maxPop, maxLaunch), 3, 40, 3, 10);
         }
+
+        /**
+         * On a quarter pipe the rider climbs the arc on the ground at up to its speed, more than a
+         * step: the server allows a rise of the speed cap per tick while one is in reach.
+         */
+        public Limits onPipe() {
+            return new Limits(speedCap, Math.max(groundRise, speedCap), maxLaunchVy, launchGraceTicks, windowTicks, violationsToCorrect, speedWindow);
+        }
     }
 
     public enum Kind {OK, VIOLATION, CORRECT}

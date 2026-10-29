@@ -1,0 +1,107 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "top": "alpineshred:block/metal_box_top",
+  "side": "alpineshred:block/metal_box_side",
+  "end": "alpineshred:block/box_end",
+  "particle": "alpineshred:block/metal_box_side"
+ },
+ "elements": [
+  {
+   "from": [
+    0.0,
+    0.0,
+    1
+   ],
+   "to": [
+    16.0,
+    16.0,
+    15
+   ],
+   "faces": {
+    "north": {
+     "texture": "#end"
+    },
+    "east": {
+     "texture": "#side"
+    },
+    "south": {
+     "texture": "#end"
+    },
+    "west": {
+     "texture": "#side"
+    },
+    "up": {
+     "texture": "#top"
+    },
+    "down": {
+     "texture": "#side"
+    }
+   }
+  },
+  {
+   "from": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "to": [
+    16.0,
+    14,
+    1
+   ],
+   "faces": {
+    "north": {
+     "texture": "#end"
+    },
+    "east": {
+     "texture": "#end"
+    },
+    "south": {
+     "texture": "#end"
+    },
+    "west": {
+     "texture": "#end"
+    },
+    "up": {
+     "texture": "#top"
+    },
+    "down": {
+     "texture": "#end"
+    }
+   }
+  },
+  {
+   "from": [
+    0.0,
+    0.0,
+    15
+   ],
+   "to": [
+    16.0,
+    14,
+    16.0
+   ],
+   "faces": {
+    "north": {
+     "texture": "#end"
+    },
+    "east": {
+     "texture": "#end"
+    },
+    "south": {
+     "texture": "#end"
+    },
+    "west": {
+     "texture": "#end"
+    },
+    "up": {
+     "texture": "#top"
+    },
+    "down": {
+     "texture": "#end"
+    }
+   }
+  }
+ ]
+}

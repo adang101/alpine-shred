@@ -1,0 +1,62 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "post": "alpineshred:block/marker_post",
+  "cloth": "alpineshred:block/park_flag_cloth",
+  "particle": "alpineshred:block/park_flag_cloth"
+ },
+ "elements": [
+  {
+   "from": [
+    7,
+    0.0,
+    7
+   ],
+   "to": [
+    9,
+    16.0,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#post"
+    },
+    "east": {
+     "texture": "#post"
+    },
+    "south": {
+     "texture": "#post"
+    },
+    "west": {
+     "texture": "#post"
+    },
+    "up": {
+     "texture": "#post"
+    },
+    "down": {
+     "texture": "#post"
+    }
+   }
+  },
+  {
+   "from": [
+    9,
+    8,
+    8
+   ],
+   "to": [
+    16.0,
+    15,
+    8
+   ],
+   "faces": {
+    "north": {
+     "texture": "#cloth"
+    },
+    "south": {
+     "texture": "#cloth"
+    }
+   }
+  }
+ ]
+}

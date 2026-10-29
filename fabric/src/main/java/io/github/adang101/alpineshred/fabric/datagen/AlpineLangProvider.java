@@ -36,6 +36,25 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add(ModItems.LIFT_LINKER.get(), "Lift Linker");
         t.add(ModItems.LIFT_PASS.get(), "Lift Pass");
         t.add(ModBlocks.GROOMED_SNOW.get(), "Groomed Snow");
+        t.add(ModBlocks.PIPE_RAIL.get(), "Pipe Rail");
+        t.add(ModBlocks.FLAT_RAIL.get(), "Flat Rail");
+        String[] stages = {"", "Exposed ", "Weathered ", "Oxidized "};
+        for (int i = 0; i < stages.length; i++) {
+            t.add(ModBlocks.COPPER_RAILS.get(i).get(), stages[i] + "Copper Pipe Rail");
+            t.add(ModBlocks.WAXED_COPPER_RAILS.get(i).get(), "Waxed " + stages[i] + "Copper Pipe Rail");
+        }
+        t.add(ModBlocks.RAIL_POST.get(), "Rail Post");
+        t.add(ModBlocks.WOOD_BOX.get(), "Wood Box");
+        t.add(ModBlocks.METAL_BOX.get(), "Metal Box");
+        t.add(ModBlocks.PLASTIC_BOX.get(), "Plastic Box");
+        t.add(ModBlocks.PARK_RAMP.get(), "Park Ramp");
+        t.add(ModBlocks.QUARTER_PIPE.get(), "Quarter Pipe");
+        t.add(ModBlocks.PIPE_COPING.get(), "Pipe Coping");
+        t.add(ModBlocks.SLOPE_MARKER_GREEN.get(), "Green Slope Marker");
+        t.add(ModBlocks.SLOPE_MARKER_BLUE.get(), "Blue Slope Marker");
+        t.add(ModBlocks.SLOPE_MARKER_BLACK.get(), "Black Slope Marker");
+        t.add(ModBlocks.PARK_FLAG.get(), "Park Flag");
+        t.add(ModBlocks.START_GATE.get(), "Start Gate");
         t.add("itemGroup.alpineshred.main", "Alpine Shred");
 
         // ---- tooltips ----
@@ -56,7 +75,9 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("tooltip.alpineshred.ski_poles", "Hold while skiing and use to push off");
         t.add("tooltip.alpineshred.board_wax", "Craft with a board or skis: +8% speed on snow for 3000 blocks");
         t.add("tooltip.alpineshred.edge_tuner", "Use with a board or skis in your off hand to sharpen the edges");
-        t.add("tooltip.alpineshred.park_wrench", "Rotates and reshapes rails and boxes");
+        t.add("tooltip.alpineshred.park_wrench", "Use on a rail to cycle its shape, sneak to turn it. Ramps: slope, sneak for the lip. Boxes: height, sneak to turn.");
+        t.add("tooltip.alpineshred.quarter_pipe", "Places a whole radius 3 quarter pipe rising the way you face; sneak for radius 5");
+        t.add("tooltip.alpineshred.rail", "Place end to end: rails connect, turn and follow the ground. Sneak to force a straight piece.");
         t.add("tooltip.alpineshred.lift_linker", "Links lift stations and tower heads");
         t.add("tooltip.alpineshred.lift_pass", "Lets you ride lifts that require a pass");
         t.add("lens.alpineshred.clear", "Clear");
@@ -88,6 +109,23 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("message.alpineshred.tuner.sharp", "Edges are already sharp");
         t.add("message.alpineshred.tuner.done", "Edges sharpened");
         t.add("message.alpineshred.ride.corrected", "Position corrected by the server");
+        t.add("message.alpineshred.pipe.no_room", "No room for a radius %s quarter pipe here");
+        t.add("message.alpineshred.wrench.only_option", "This is the only piece that fits here");
+        t.add("message.alpineshred.wrench.rail", "Rail: %s, %s");
+        t.add("message.alpineshred.wrench.slope", "Ramp slope: %s");
+        t.add("message.alpineshred.wrench.lip_on", "Ramp lip on");
+        t.add("message.alpineshred.wrench.lip_off", "Ramp lip off");
+        t.add("shape.alpineshred.flat", "flat");
+        t.add("shape.alpineshred.rise_a", "rise (lower half)");
+        t.add("shape.alpineshred.rise_b", "rise (upper half)");
+        t.add("shape.alpineshred.curve", "curve");
+        t.add("direction.alpineshred.north", "north");
+        t.add("direction.alpineshred.east", "east");
+        t.add("direction.alpineshred.south", "south");
+        t.add("direction.alpineshred.west", "west");
+        t.add("slope.alpineshred.quarter", "quarter (14°)");
+        t.add("slope.alpineshred.half", "half (27°)");
+        t.add("slope.alpineshred.full", "full (45°)");
         t.add("message.alpineshred.protocol_mismatch", "Alpine Shred on this server speaks protocol %s, this client %s: riding is off until versions match");
 
         // ---- commands ----
@@ -111,6 +149,12 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("subtitles.alpineshred.ride.spin", "Rider spins");
         t.add("subtitles.alpineshred.ride.wipeout", "Rider wipes out");
         t.add("subtitles.alpineshred.ride.pole_push", "Pole plants");
+        t.add("subtitles.alpineshred.grind.rail_metal", "Rail grinds");
+        t.add("subtitles.alpineshred.grind.rail_copper", "Copper rail grinds");
+        t.add("subtitles.alpineshred.grind.box_wood", "Board slides on wood");
+        t.add("subtitles.alpineshred.grind.box_metal", "Board slides on metal");
+        t.add("subtitles.alpineshred.grind.box_plastic", "Board slides on plastic");
+        t.add("subtitles.alpineshred.grind.catch", "Rail catches");
         t.add("subtitles.alpineshred.gear.strap_in", "Bindings click");
         t.add("subtitles.alpineshred.gear.strap_out", "Bindings release");
         t.add("subtitles.alpineshred.gear.wax_apply", "Wax rubs on");

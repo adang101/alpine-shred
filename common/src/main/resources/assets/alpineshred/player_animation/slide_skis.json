@@ -1,0 +1,192 @@
+{
+ "version": 3,
+ "name": "slide_skis",
+ "author": "Alpine Shred placeholder",
+ "description": "Skis across a rail or box",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 20,
+  "stopTick": 21,
+  "isLoop": true,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.4,
+     "z": 0,
+     "pitch": 12,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": 42
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": -42
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": 7
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": -7
+    }
+   },
+   {
+    "tick": 5,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.4,
+     "z": 0,
+     "pitch": 12,
+     "yaw": 0,
+     "roll": 3
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": 42
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": -48
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": 7
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": -7
+    }
+   },
+   {
+    "tick": 15,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.4,
+     "z": 0,
+     "pitch": 12,
+     "yaw": 0,
+     "roll": -3
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": 48
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": -42
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": 7
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": -7
+    }
+   },
+   {
+    "tick": 20,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.4,
+     "z": 0,
+     "pitch": 12,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": 42
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.4,
+     "z": 0,
+     "pitch": -18,
+     "yaw": 0,
+     "roll": -42
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": 7
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -8,
+     "yaw": 0,
+     "roll": -7
+    }
+   }
+  ]
+ }
+}

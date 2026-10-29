@@ -1,0 +1,11 @@
+{
+  "category": "snow",
+  "friction": 0.0008,
+  "grip": 1.0,
+  "priority": 15,
+  "blocks": [
+    "alpineshred:quarter_pipe",
+    "alpineshred:pipe_coping",
+    "alpineshred:park_ramp"
+  ]
+}

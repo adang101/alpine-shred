@@ -127,8 +127,30 @@ def poles():
         save(Image.fromarray(a, "RGBA"), f"textures/entity/{name}.png")
 
 
+def sparks():
+    """Rail sparks (phase 4): a hot white core with an orange rim, shrinking over four frames.
+    White-ish so the particle can tint them (copper rails throw greener sparks)."""
+    for i in range(4):
+        radius = 2.4 - i * 0.5
+        a = np.zeros((8, 8, 4), np.uint8)
+        for y in range(8):
+            for x in range(8):
+                d = math.hypot(x - 3.5, y - 3.5)
+                alpha = max(0.0, min(1.0, (radius - d) / 0.8 + 0.5))
+                if alpha <= 0:
+                    continue
+                heat = max(0.0, 1.0 - d / max(radius, 0.1))
+                a[y, x] = [255, int(200 + 55 * heat), int(120 + 135 * heat), int(255 * alpha)]
+        save(Image.fromarray(a, "RGBA"), f"textures/particle/rail_spark_{i}.png")
+    path = os.path.join(ASSETS, "particles", "rail_spark.json")
+    with open(path, "w") as f:
+        json.dump({"textures": [f"alpineshred:rail_spark_{i}" for i in range(4)]}, f, indent=2)
+        f.write("\n")
+
+
 if __name__ == "__main__":
     particles()
+    sparks()
     overlays()
     poles()
     print("wrote particle, overlay and pole textures")

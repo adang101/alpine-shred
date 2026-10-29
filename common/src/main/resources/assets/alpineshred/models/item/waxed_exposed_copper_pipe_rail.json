@@ -1,0 +1,6 @@
+{
+ "parent": "minecraft:item/generated",
+ "textures": {
+  "layer0": "alpineshred:item/waxed_exposed_copper_pipe_rail"
+ }
+}

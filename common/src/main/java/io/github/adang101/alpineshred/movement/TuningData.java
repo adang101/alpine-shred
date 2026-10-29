@@ -1,5 +1,7 @@
 package io.github.adang101.alpineshred.movement;
 
+import io.github.adang101.alpineshred.park.BoxMaterial;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public final class TuningData {
     private static volatile MovementTuning tuning = MovementTuning.DEFAULT;
     private static volatile List<SurfaceProfile> surfaces = sorted(List.copyOf(SurfaceProfile.DEFAULTS.values()));
     private static volatile boolean loadedFromData;
+    private static volatile List<BoxMaterial> boxMaterials = BoxMaterial.DEFAULTS;
 
     private TuningData() {
     }
@@ -32,6 +35,15 @@ public final class TuningData {
 
     public static void setSurfaces(List<SurfaceProfile> value) {
         surfaces = sorted(value);
+    }
+
+    /** {@code box_materials.json}: first matching entry wins. */
+    public static List<BoxMaterial> boxMaterials() {
+        return boxMaterials;
+    }
+
+    public static void setBoxMaterials(List<BoxMaterial> value) {
+        boxMaterials = List.copyOf(value);
     }
 
     public static boolean loadedFromData() {

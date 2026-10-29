@@ -1,0 +1,72 @@
+{
+ "textures": {
+  "leg": "alpineshred:block/rail_leg",
+  "particle": "alpineshred:block/rail_leg"
+ },
+ "elements": [
+  {
+   "from": [
+    7.0,
+    0.0,
+    11.0
+   ],
+   "to": [
+    9.0,
+    6.0,
+    13.0
+   ],
+   "faces": {
+    "north": {
+     "texture": "#leg"
+    },
+    "east": {
+     "texture": "#leg"
+    },
+    "south": {
+     "texture": "#leg"
+    },
+    "west": {
+     "texture": "#leg"
+    },
+    "up": {
+     "texture": "#leg"
+    },
+    "down": {
+     "texture": "#leg"
+    }
+   }
+  },
+  {
+   "from": [
+    7.0,
+    0.0,
+    3.0
+   ],
+   "to": [
+    9.0,
+    6.0,
+    5.0
+   ],
+   "faces": {
+    "north": {
+     "texture": "#leg"
+    },
+    "east": {
+     "texture": "#leg"
+    },
+    "south": {
+     "texture": "#leg"
+    },
+    "west": {
+     "texture": "#leg"
+    },
+    "up": {
+     "texture": "#leg"
+    },
+    "down": {
+     "texture": "#leg"
+    }
+   }
+  }
+ ]
+}

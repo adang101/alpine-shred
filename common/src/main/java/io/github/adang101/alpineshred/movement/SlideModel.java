@@ -136,6 +136,7 @@ public final class SlideModel {
         // Step 3: turn.
         double maxTurn = turnRate(t, kind, speed) * gear.grip() * edgeMul;
         if (in.brake() && kind == GearKind.SKIS) maxTurn *= t.skiBrakeSteerMul;
+        if (surface.category() == SurfaceProfile.Category.BOX) maxTurn *= t.slideSteerMul; // line up, not carve off
         boolean pivoting = speed < t.pivotSpeed;
         double counterGripMul = 1.0;
         double turn;
@@ -193,6 +194,7 @@ public final class SlideModel {
     /** Ground sub-state for the synced rider state, from the step just taken. */
     public static RideState classifyGround(State s, Input in, SurfaceProfile surface) {
         if (surface.category() == SurfaceProfile.Category.POWDER) return RideState.POWDER;
+        if (surface.category() == SurfaceProfile.Category.BOX && s.speed > IDLE_SPEED) return RideState.SLIDE;
         if (in.brake() && s.speed > IDLE_SPEED) return RideState.BRAKE;
         if (s.speed <= IDLE_SPEED) return RideState.IDLE;
         if (s.edgeEngaged || Math.abs(s.lastTurn) > CARVE_TURN_THRESHOLD) return RideState.CARVE;

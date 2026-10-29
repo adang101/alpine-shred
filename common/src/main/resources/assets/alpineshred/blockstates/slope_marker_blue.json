@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "alpineshred:block/slope_marker_blue"
+  },
+  "facing=east": {
+   "model": "alpineshred:block/slope_marker_blue",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "alpineshred:block/slope_marker_blue",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "alpineshred:block/slope_marker_blue",
+   "y": 270
+  }
+ }
+}

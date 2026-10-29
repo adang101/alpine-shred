@@ -12,11 +12,14 @@ import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.gear.MittsItem;
 import io.github.adang101.alpineshred.gear.SkiPolesItem;
 import io.github.adang101.alpineshred.gear.SnowGearItem;
+import io.github.adang101.alpineshred.park.item.ParkWrenchItem;
+import io.github.adang101.alpineshred.park.item.PipeItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,8 +65,8 @@ public final class ModItems {
             () -> new DescribedItem("tooltip.alpineshred.board_wax", new Item.Properties()));
     public static final RegistrySupplier<EdgeTunerItem> EDGE_TUNER = ITEMS.register("edge_tuner",
             () -> new EdgeTunerItem(new Item.Properties().durability(64)));
-    public static final RegistrySupplier<DescribedItem> PARK_WRENCH = ITEMS.register("park_wrench",
-            () -> new DescribedItem("tooltip.alpineshred.park_wrench", new Item.Properties().stacksTo(1)));
+    public static final RegistrySupplier<ParkWrenchItem> PARK_WRENCH = ITEMS.register("park_wrench",
+            () -> new ParkWrenchItem(new Item.Properties().stacksTo(1)));
     public static final RegistrySupplier<DescribedItem> LIFT_LINKER = ITEMS.register("lift_linker",
             () -> new DescribedItem("tooltip.alpineshred.lift_linker", new Item.Properties().stacksTo(1)));
     public static final RegistrySupplier<DescribedItem> LIFT_PASS = ITEMS.register("lift_pass",
@@ -73,7 +76,35 @@ public final class ModItems {
     public static final RegistrySupplier<BlockItem> GROOMED_SNOW = ITEMS.register("groomed_snow",
             () -> new BlockItem(ModBlocks.GROOMED_SNOW.get(), new Item.Properties()));
 
+    /** The park blocks' items (section 10, 11), in block registration order; the pipe's places a whole pipe. */
+    private static final List<RegistrySupplier<? extends Item>> PARK = registerParkItems();
+
     private ModItems() {
+    }
+
+    private static List<RegistrySupplier<? extends Item>> registerParkItems() {
+        List<RegistrySupplier<? extends Item>> out = new ArrayList<>();
+        for (RegistrySupplier<? extends Block> block : ModBlocks.parkBlocks()) {
+            String id = block.getId().getPath();
+            if (block == ModBlocks.QUARTER_PIPE) {
+                out.add(ITEMS.register(id, () -> new PipeItem(block.get(), new Item.Properties())));
+            } else {
+                out.add(ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties())));
+            }
+        }
+        return Collections.unmodifiableList(out);
+    }
+
+    public static List<RegistrySupplier<? extends Item>> parkItems() {
+        return PARK;
+    }
+
+    /** The park block item registered as {@code id}. */
+    public static RegistrySupplier<? extends Item> parkItem(String id) {
+        for (RegistrySupplier<? extends Item> item : PARK) {
+            if (item.getId().getPath().equals(id)) return item;
+        }
+        throw new IllegalArgumentException("no park item " + id);
     }
 
     private static RegistrySupplier<SnowGearItem> gear(String id, GearKind kind, Rarity rarity, boolean fireResistant) {

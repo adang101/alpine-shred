@@ -1,0 +1,106 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "post": "alpineshred:block/start_gate_post",
+  "bar": "alpineshred:block/start_gate_bar",
+  "particle": "alpineshred:block/start_gate_post"
+ },
+ "elements": [
+  {
+   "from": [
+    0.0,
+    0.0,
+    7
+   ],
+   "to": [
+    2,
+    16.0,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#post"
+    },
+    "east": {
+     "texture": "#post"
+    },
+    "south": {
+     "texture": "#post"
+    },
+    "west": {
+     "texture": "#post"
+    },
+    "up": {
+     "texture": "#post"
+    },
+    "down": {
+     "texture": "#post"
+    }
+   }
+  },
+  {
+   "from": [
+    14,
+    0.0,
+    7
+   ],
+   "to": [
+    16.0,
+    16.0,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#post"
+    },
+    "east": {
+     "texture": "#post"
+    },
+    "south": {
+     "texture": "#post"
+    },
+    "west": {
+     "texture": "#post"
+    },
+    "up": {
+     "texture": "#post"
+    },
+    "down": {
+     "texture": "#post"
+    }
+   }
+  },
+  {
+   "from": [
+    2,
+    13,
+    7
+   ],
+   "to": [
+    14,
+    16.0,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#bar"
+    },
+    "east": {
+     "texture": "#bar"
+    },
+    "south": {
+     "texture": "#bar"
+    },
+    "west": {
+     "texture": "#bar"
+    },
+    "up": {
+     "texture": "#bar"
+    },
+    "down": {
+     "texture": "#bar"
+    }
+   }
+  }
+ ]
+}

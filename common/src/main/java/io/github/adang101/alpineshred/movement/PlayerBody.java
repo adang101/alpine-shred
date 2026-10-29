@@ -21,6 +21,7 @@ import java.util.Optional;
  */
 public final class PlayerBody implements SlideController.Body {
     private final Player player;
+    private io.github.adang101.alpineshred.park.ParkView park;
 
     public PlayerBody(Player player) {
         this.player = player;
@@ -67,6 +68,20 @@ public final class PlayerBody implements SlideController.Body {
         Vec3 after = player.position();
         return new SlideController.Moved(after.x - before.x, after.y - before.y, after.z - before.z,
                 player.onGround(), player.horizontalCollision);
+    }
+
+    @Override
+    public io.github.adang101.alpineshred.park.ParkView park() {
+        if (park == null) park = new io.github.adang101.alpineshred.park.block.LevelParkView(player.level());
+        return park;
+    }
+
+    /** Grinds and pipe rides put the feet on a path: no collision, standing, no fall damage building up. */
+    @Override
+    public void placeAt(double x, double y, double z) {
+        player.setPos(x, y, z);
+        player.setOnGround(true);
+        player.resetFallDistance();
     }
 
     @Override

@@ -187,6 +187,28 @@ def build():
     wipeout("wipeout_front", 1)
     wipeout("wipeout_back", -1)
 
+    # ---- grinds and box slides (phase 4): balance loops, regular stance ----
+    def balance(name, base, sway, length, description):
+        """A loop that rocks the torso and arms a little either way of base, for balance."""
+        left = copy.deepcopy(base)
+        right = copy.deepcopy(base)
+        left["torso"]["roll"] += sway
+        right["torso"]["roll"] -= sway
+        left["leftArm"]["roll"] -= sway * 2
+        right["rightArm"]["roll"] += sway * 2
+        clips.append(clip(name, [(0, base, "INOUTSINE"), (length // 4, left, "INOUTSINE"), (3 * length // 4, right, "INOUTSINE"),
+                                 (length, base, "INOUTSINE")], length, True, description))
+
+    balance("grind_5050", board_stance(2.0, 10, (-20, 62), (-15, 52), legs=13), 3, 24, "50-50: board along the rail, arms out")
+    nose = board_stance(2.6, 15, (-30, 45), (-10, 72), legs=15)
+    nose["torso"].update(x=1.2, roll=-6)
+    balance("grind_nose", nose, 2, 24, "Nose grind: weight over the lead foot")
+    tail = board_stance(2.6, 8, (-10, 72), (-30, 45), legs=15)
+    tail["torso"].update(x=-1.2, roll=6)
+    balance("grind_tail", tail, 2, 24, "Tail grind: weight over the rear foot")
+    balance("boardslide", board_stance(2.2, 6, (-8, 78), (-8, 78), legs=14), 4, 20, "Boardslide: board across the rail")
+    balance("slide_skis", ski_stance(2.4, 12, -18, 42, -8, leg_roll=7), 3, 20, "Skis across a rail or box")
+
     # ---- poles (the hands layer: arms only) ----
     carry = pose(1.5, rarm=dict(pitch=-35, roll=8), larm=dict(pitch=-35, roll=-8), arms_only=True)
     clips.append(breathing("pole_carry", carry, pose(1.5, rarm=dict(pitch=-37, roll=8), larm=dict(pitch=-37, roll=-8), arms_only=True),

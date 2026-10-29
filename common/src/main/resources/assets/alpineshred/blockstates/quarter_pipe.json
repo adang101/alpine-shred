@@ -1,0 +1,304 @@
+{
+ "variants": {
+  "facing=north,index=0,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_0"
+  },
+  "facing=east,index=0,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_0",
+   "y": 90
+  },
+  "facing=south,index=0,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_0",
+   "y": 180
+  },
+  "facing=west,index=0,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_0",
+   "y": 270
+  },
+  "facing=north,index=1,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_1"
+  },
+  "facing=east,index=1,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_1",
+   "y": 90
+  },
+  "facing=south,index=1,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_1",
+   "y": 180
+  },
+  "facing=west,index=1,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_1",
+   "y": 270
+  },
+  "facing=north,index=2,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_2"
+  },
+  "facing=east,index=2,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_2",
+   "y": 90
+  },
+  "facing=south,index=2,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_2",
+   "y": 180
+  },
+  "facing=west,index=2,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_2",
+   "y": 270
+  },
+  "facing=north,index=3,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_3"
+  },
+  "facing=east,index=3,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_3",
+   "y": 90
+  },
+  "facing=south,index=3,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_3",
+   "y": 180
+  },
+  "facing=west,index=3,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_3",
+   "y": 270
+  },
+  "facing=north,index=4,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4"
+  },
+  "facing=east,index=4,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 90
+  },
+  "facing=south,index=4,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 180
+  },
+  "facing=west,index=4,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 270
+  },
+  "facing=north,index=5,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4"
+  },
+  "facing=east,index=5,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 90
+  },
+  "facing=south,index=5,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 180
+  },
+  "facing=west,index=5,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 270
+  },
+  "facing=north,index=6,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4"
+  },
+  "facing=east,index=6,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 90
+  },
+  "facing=south,index=6,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 180
+  },
+  "facing=west,index=6,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 270
+  },
+  "facing=north,index=7,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4"
+  },
+  "facing=east,index=7,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 90
+  },
+  "facing=south,index=7,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 180
+  },
+  "facing=west,index=7,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 270
+  },
+  "facing=north,index=8,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4"
+  },
+  "facing=east,index=8,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 90
+  },
+  "facing=south,index=8,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 180
+  },
+  "facing=west,index=8,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 270
+  },
+  "facing=north,index=9,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4"
+  },
+  "facing=east,index=9,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 90
+  },
+  "facing=south,index=9,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 180
+  },
+  "facing=west,index=9,radius=3": {
+   "model": "alpineshred:block/quarter_pipe_3_4",
+   "y": 270
+  },
+  "facing=north,index=0,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_0"
+  },
+  "facing=east,index=0,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_0",
+   "y": 90
+  },
+  "facing=south,index=0,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_0",
+   "y": 180
+  },
+  "facing=west,index=0,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_0",
+   "y": 270
+  },
+  "facing=north,index=1,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_1"
+  },
+  "facing=east,index=1,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_1",
+   "y": 90
+  },
+  "facing=south,index=1,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_1",
+   "y": 180
+  },
+  "facing=west,index=1,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_1",
+   "y": 270
+  },
+  "facing=north,index=2,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_2"
+  },
+  "facing=east,index=2,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_2",
+   "y": 90
+  },
+  "facing=south,index=2,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_2",
+   "y": 180
+  },
+  "facing=west,index=2,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_2",
+   "y": 270
+  },
+  "facing=north,index=3,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_3"
+  },
+  "facing=east,index=3,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_3",
+   "y": 90
+  },
+  "facing=south,index=3,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_3",
+   "y": 180
+  },
+  "facing=west,index=3,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_3",
+   "y": 270
+  },
+  "facing=north,index=4,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_4"
+  },
+  "facing=east,index=4,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_4",
+   "y": 90
+  },
+  "facing=south,index=4,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_4",
+   "y": 180
+  },
+  "facing=west,index=4,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_4",
+   "y": 270
+  },
+  "facing=north,index=5,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_5"
+  },
+  "facing=east,index=5,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_5",
+   "y": 90
+  },
+  "facing=south,index=5,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_5",
+   "y": 180
+  },
+  "facing=west,index=5,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_5",
+   "y": 270
+  },
+  "facing=north,index=6,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_6"
+  },
+  "facing=east,index=6,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_6",
+   "y": 90
+  },
+  "facing=south,index=6,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_6",
+   "y": 180
+  },
+  "facing=west,index=6,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_6",
+   "y": 270
+  },
+  "facing=north,index=7,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_7"
+  },
+  "facing=east,index=7,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_7",
+   "y": 90
+  },
+  "facing=south,index=7,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_7",
+   "y": 180
+  },
+  "facing=west,index=7,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_7",
+   "y": 270
+  },
+  "facing=north,index=8,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_8"
+  },
+  "facing=east,index=8,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_8",
+   "y": 90
+  },
+  "facing=south,index=8,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_8",
+   "y": 180
+  },
+  "facing=west,index=8,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_8",
+   "y": 270
+  },
+  "facing=north,index=9,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_9"
+  },
+  "facing=east,index=9,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_9",
+   "y": 90
+  },
+  "facing=south,index=9,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_9",
+   "y": 180
+  },
+  "facing=west,index=9,radius=5": {
+   "model": "alpineshred:block/quarter_pipe_5_9",
+   "y": 270
+  }
+ }
+}

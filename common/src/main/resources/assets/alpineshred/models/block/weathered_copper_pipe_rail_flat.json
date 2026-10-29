@@ -1,0 +1,7 @@
+{
+ "parent": "alpineshred:block/template_rail_pipe_flat",
+ "textures": {
+  "rail": "alpineshred:block/weathered_copper_pipe_rail",
+  "particle": "alpineshred:block/weathered_copper_pipe_rail"
+ }
+}

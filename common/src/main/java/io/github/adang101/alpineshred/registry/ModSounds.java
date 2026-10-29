@@ -12,8 +12,8 @@ import java.util.List;
 
 /**
  * Sound events (design doc section 17). Ids use dots ({@code alpineshred:ride.glide.snow}); each
- * has an entry with a subtitle in {@code assets/alpineshred/sounds.json}. Grind, trick and lift
- * sounds join with their phases.
+ * has an entry with a subtitle in {@code assets/alpineshred/sounds.json}. Grind and box-slide sounds
+ * arrived in phase 4; trick and lift sounds join with their phases.
  */
 public final class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(AlpineShred.MOD_ID, Registries.SOUND_EVENT);
@@ -36,6 +36,12 @@ public final class ModSounds {
     public static final RegistrySupplier<SoundEvent> STRAP_OUT = sound("gear.strap_out");
     public static final RegistrySupplier<SoundEvent> WAX_APPLY = sound("gear.wax_apply");
     public static final RegistrySupplier<SoundEvent> TUNE = sound("gear.tune");
+    public static final RegistrySupplier<SoundEvent> GRIND_RAIL_METAL = sound("grind.rail.metal");
+    public static final RegistrySupplier<SoundEvent> GRIND_RAIL_COPPER = sound("grind.rail.copper");
+    public static final RegistrySupplier<SoundEvent> GRIND_BOX_WOOD = sound("grind.box.wood");
+    public static final RegistrySupplier<SoundEvent> GRIND_BOX_METAL = sound("grind.box.metal");
+    public static final RegistrySupplier<SoundEvent> GRIND_BOX_PLASTIC = sound("grind.box.plastic");
+    public static final RegistrySupplier<SoundEvent> GRIND_CATCH = sound("grind.catch");
 
     private ModSounds() {
     }

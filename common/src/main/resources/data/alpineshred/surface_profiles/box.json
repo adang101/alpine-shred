@@ -1,0 +1,9 @@
+{
+  "category": "box",
+  "friction": 0.0022,
+  "grip": 1.0,
+  "priority": 5,
+  "blocks": [
+    "#alpineshred:slide/boxes"
+  ]
+}

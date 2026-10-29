@@ -49,5 +49,14 @@
   "airGrabRotationMul": 0.8,
   "skateMaxSpeed": 0.14,
   "skateAccel": 0.006,
-  "scrapeSlideMinSpeed": 0.25
+  "scrapeSlideMinSpeed": 0.25,
+  "railFriction": 0.0008,
+  "railWaxedFriction": 0.0004,
+  "railOxidationFriction": 0.25,
+  "boxWaxedFrictionMul": 0.5,
+  "slideSteerMul": 0.3,
+  "slideMinSpeed": 0.08,
+  "lipAssistTicks": 3.0,
+  "lipAssistPop": 0.2,
+  "lipAssistMinSpeed": 0.45
 }

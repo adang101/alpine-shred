@@ -14,7 +14,10 @@ class RideProtocolTest {
         assertTrue(RideTransitions.clientMayRequest(RideState.AIR, RideState.WIPEOUT));
         assertFalse(RideTransitions.clientMayRequest(RideState.OFF, RideState.GLIDE), "strapping in is strap_toggle's job");
         assertFalse(RideTransitions.clientMayRequest(RideState.GLIDE, RideState.OFF));
-        assertFalse(RideTransitions.clientMayRequest(RideState.GLIDE, RideState.GRIND), "needs the phase 4 rail check");
+        assertTrue(RideTransitions.clientMayRequest(RideState.AIR, RideState.GRIND), "allowed; the server checks the rail");
+        assertTrue(RideTransitions.needsWorldCheck(RideState.GRIND));
+        assertTrue(RideTransitions.needsWorldCheck(RideState.SLIDE));
+        assertFalse(RideTransitions.needsWorldCheck(RideState.GLIDE));
         assertFalse(RideTransitions.clientMayRequest(RideState.GLIDE, RideState.LIFT));
         assertFalse(RideTransitions.clientMayRequest(RideState.LIFT, RideState.GLIDE));
     }

@@ -1,0 +1,7 @@
+{
+ "parent": "alpineshred:block/template_rail_pipe_curve",
+ "textures": {
+  "rail": "alpineshred:block/oxidized_copper_pipe_rail",
+  "particle": "alpineshred:block/oxidized_copper_pipe_rail"
+ }
+}

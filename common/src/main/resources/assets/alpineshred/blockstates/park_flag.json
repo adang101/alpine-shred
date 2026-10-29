@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "alpineshred:block/park_flag"
+  },
+  "facing=east": {
+   "model": "alpineshred:block/park_flag",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "alpineshred:block/park_flag",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "alpineshred:block/park_flag",
+   "y": 270
+  }
+ }
+}

@@ -1,0 +1,7 @@
+{
+ "parent": "alpineshred:block/template_rail_pipe_rise_b",
+ "textures": {
+  "rail": "alpineshred:block/pipe_rail",
+  "particle": "alpineshred:block/pipe_rail"
+ }
+}

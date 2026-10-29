@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "alpineshred:block/start_gate"
+  },
+  "facing=east": {
+   "model": "alpineshred:block/start_gate",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "alpineshred:block/start_gate",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "alpineshred:block/start_gate",
+   "y": 270
+  }
+ }
+}

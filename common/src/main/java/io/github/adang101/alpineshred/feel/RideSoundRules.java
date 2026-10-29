@@ -2,6 +2,7 @@ package io.github.adang101.alpineshred.feel;
 
 import io.github.adang101.alpineshred.movement.RideState;
 import io.github.adang101.alpineshred.movement.SurfaceProfile;
+import io.github.adang101.alpineshred.park.GrindMaterial;
 
 /**
  * Volume and pitch of a rider's sound loops (design doc section 17), as a pure function of the
@@ -16,7 +17,9 @@ public final class RideSoundRules {
     public static final double MAX_VOLUME = 0.8;
 
     public enum Loop {
-        GLIDE_SNOW, GLIDE_ICE, GLIDE_POWDER, SCRAPE, CARVE, BRAKE;
+        GLIDE_SNOW, GLIDE_ICE, GLIDE_POWDER, SCRAPE, CARVE, BRAKE,
+        /** Grinds and box slides (phase 4), by what the rail or box is made of. */
+        GRIND_METAL, GRIND_COPPER, BOX_WOOD, BOX_METAL, BOX_PLASTIC;
 
         private static final Loop[] VALUES = values();
 
@@ -58,10 +61,24 @@ public final class RideSoundRules {
      * @param lean    -1 to 1, positive toward a right turn
      */
     public static void targets(RideState state, SurfaceProfile.Category surface, double speed, double lean, Mix out) {
+        targets(state, surface, null, speed, lean, out);
+    }
+
+    /**
+     * @param material what the rail (while grinding) or box (while sliding) is made of, or null
+     */
+    public static void targets(RideState state, SurfaceProfile.Category surface, GrindMaterial material, double speed, double lean, Mix out) {
         out.clear();
+        if (state == RideState.GRIND || state == RideState.SLIDE) {
+            // Section 17: grind and slide loops, pitch by speed.
+            if (speed <= 0.01) return;
+            Loop loop = grindLoop(material == null ? GrindMaterial.METAL : material);
+            out.set(loop, clamp(speed / 0.6, 0, 1) * 0.7, 0.8 + speed * 0.4);
+            return;
+        }
         boolean sliding = switch (state) {
             case IDLE, GLIDE, CARVE, BRAKE, POWDER -> true;
-            default -> false; // OFF, AIR, WIPEOUT, LIFT; grinds and boxes get their own sounds in phase 4
+            default -> false; // OFF, AIR, WIPEOUT, LIFT
         };
         if (!sliding || surface == null || speed <= 0.01) return;
         double glide = clamp(speed / 0.8, 0, 1) * 0.6;
@@ -72,12 +89,23 @@ public final class RideSoundRules {
             case SNOW -> out.set(Loop.GLIDE_SNOW, glide * glideShare, glidePitch);
             case ICE -> out.set(Loop.GLIDE_ICE, glide * 0.9 * glideShare, glidePitch + 0.1);
             case POWDER -> out.set(Loop.GLIDE_POWDER, glide * 0.85 * glideShare, glidePitch - 0.1);
-            case SCRAPE -> out.set(Loop.SCRAPE, clamp(speed / 0.6, 0, 1) * 0.75, 0.75 + speed * 0.3);
+            case SCRAPE, BOX -> out.set(Loop.SCRAPE, clamp(speed / 0.6, 0, 1) * 0.75, 0.75 + speed * 0.3);
         }
-        if (surface != SurfaceProfile.Category.SCRAPE) {
+        if (surface != SurfaceProfile.Category.SCRAPE && surface != SurfaceProfile.Category.BOX) {
             if (state == RideState.CARVE) out.set(Loop.CARVE, Math.abs(lean) * speed * 1.5, 0.9 + speed * 0.2);
             if (braking) out.set(Loop.BRAKE, clamp(speed / 0.5, 0, 1) * 0.7, 0.9 + speed * 0.3);
         }
+    }
+
+    /** The loop for grinding or sliding on a material. */
+    public static Loop grindLoop(GrindMaterial material) {
+        return switch (material) {
+            case METAL -> Loop.GRIND_METAL;
+            case COPPER -> Loop.GRIND_COPPER;
+            case WOOD -> Loop.BOX_WOOD;
+            case PLASTIC -> Loop.BOX_PLASTIC;
+            case STONE, CONCRETE -> Loop.BOX_METAL;
+        };
     }
 
     /** One tick of the cross-fade: at most {@code MAX_VOLUME / FADE_TICKS} toward the target. */

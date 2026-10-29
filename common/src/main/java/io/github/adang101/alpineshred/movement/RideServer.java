@@ -136,6 +136,7 @@ public final class RideServer {
             return;
         }
         RideValidator.Limits limits = limits(player);
+        if (io.github.adang101.alpineshred.park.block.ParkChecks.nearPipe(player)) limits = limits.onPipe();
         double x = player.getX(), y = player.getY(), z = player.getZ();
         long clockDelta = r.hasLast ? r.clientClock - r.lastClockAtSample : 1;
         double horizontal = r.hasLast ? Math.hypot(x - r.lastX, z - r.lastZ) : 0;
@@ -235,6 +236,12 @@ public final class RideServer {
             }
             return false;
         }
+        if (RideTransitions.needsWorldCheck(wanted.state()) && wanted.state() != current.state()
+                && !io.github.adang101.alpineshred.park.block.ParkChecks.supports(player, wanted.state())) {
+            handleVerdict(player, r, r.validator.flag(r.clientClock,
+                    wanted.state() + " claimed with no " + (wanted.state() == RideState.GRIND ? "rail" : "box") + " there", limits(player)));
+            return false;
+        }
         // The server owns the mode; grabs and trick flags arrive with phase 5.
         RideSnapshot accepted = new RideSnapshot(wanted.state(), current.mode(), wanted.goofy(), false, GrabType.NONE,
                 0, wanted.lean(), wanted.speedLevel(), wanted.headingStep());
@@ -304,8 +311,10 @@ public final class RideServer {
         if (board.isEmpty()) return;
         if (r.body == null || r.body.player() != player) r.body = new PlayerBody(player);
         SurfaceProfile surface = r.body.surfaceUnderFeet();
-        GearWear.Contact contact = surface == null ? GearWear.Contact.AIR
-                : surface.category() == SurfaceProfile.Category.SCRAPE ? GearWear.Contact.SCRAPE : GearWear.Contact.SNOW;
+        GearWear.Contact contact = state == RideState.GRIND || state == RideState.SLIDE ? GearWear.Contact.GRIND
+                : surface == null ? GearWear.Contact.AIR
+                : surface.category() == SurfaceProfile.Category.SCRAPE ? GearWear.Contact.SCRAPE
+                : surface.category() == SurfaceProfile.Category.BOX ? GearWear.Contact.GRIND : GearWear.Contact.SNOW;
         int wax = GearNbt.wax(board);
         GearWear.Accumulator.Wear wear = r.wear.travel(distance, contact, state == RideState.CARVE, wax > 0,
                 AlpineConfig.GEAR_DURABILITY_MUL.value());

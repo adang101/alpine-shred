@@ -83,6 +83,16 @@ public final class MovementTuning {
         s.put("skateMaxSpeed", new Spec(0.14, 0.0, 1.0, "ext: W skates on flat snow up to this speed"));
         s.put("skateAccel", new Spec(0.006, 0.0, 0.1, "ext: skating acceleration per tick"));
         s.put("scrapeSlideMinSpeed", new Spec(0.25, 0.0, 3.0, "ext: below this speed on non-snow ground the rider walks"));
+        // Section 7 surface table (rail) and sections 10 and 11 (phase 4)
+        s.put("railFriction", new Spec(0.0008, 0.0, 0.1, "Grind friction on a rail"));
+        s.put("railWaxedFriction", new Spec(0.0004, 0.0, 0.1, "Grind friction on a waxed rail"));
+        s.put("railOxidationFriction", new Spec(0.25, 0.0, 5.0, "ext: rail friction rises by this fraction per copper oxidation stage"));
+        s.put("boxWaxedFrictionMul", new Spec(0.5, 0.0, 1.0, "ext: friction multiplier on a waxed box"));
+        s.put("slideSteerMul", new Spec(0.3, 0.0, 1.0, "Steering on a box, as a fraction of normal"));
+        s.put("slideMinSpeed", new Spec(0.08, 0.0, 3.0, "Minimum speed to start sliding a box"));
+        s.put("lipAssistTicks", new Spec(3, 0, 20, "Ticks after leaving a lip ramp in which jump adds the lip assist"));
+        s.put("lipAssistPop", new Spec(0.2, 0.0, 2.0, "Lip assist: extra pop, as a fraction of a full pop"));
+        s.put("lipAssistMinSpeed", new Spec(0.45, 0.0, 3.0, "Minimum speed for the lip assist"));
         SPECS = Collections.unmodifiableMap(s);
     }
 
@@ -139,6 +149,15 @@ public final class MovementTuning {
     public final double skateMaxSpeed;
     public final double skateAccel;
     public final double scrapeSlideMinSpeed;
+    public final double railFriction;
+    public final double railWaxedFriction;
+    public final double railOxidationFriction;
+    public final double boxWaxedFrictionMul;
+    public final double slideSteerMul;
+    public final double slideMinSpeed;
+    public final int lipAssistTicks;
+    public final double lipAssistPop;
+    public final double lipAssistMinSpeed;
 
     private final Map<String, Double> values;
 
@@ -200,6 +219,15 @@ public final class MovementTuning {
         skateMaxSpeed = get("skateMaxSpeed");
         skateAccel = get("skateAccel");
         scrapeSlideMinSpeed = get("scrapeSlideMinSpeed");
+        railFriction = get("railFriction");
+        railWaxedFriction = get("railWaxedFriction");
+        railOxidationFriction = get("railOxidationFriction");
+        boxWaxedFrictionMul = get("boxWaxedFrictionMul");
+        slideSteerMul = get("slideSteerMul");
+        slideMinSpeed = get("slideMinSpeed");
+        lipAssistTicks = (int) Math.round(get("lipAssistTicks"));
+        lipAssistPop = get("lipAssistPop");
+        lipAssistMinSpeed = get("lipAssistMinSpeed");
     }
 
     /** Value by key; throws for unknown keys so typos fail loudly in tests. */

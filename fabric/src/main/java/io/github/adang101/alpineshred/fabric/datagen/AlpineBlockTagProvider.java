@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,8 +23,9 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_ICE).add(Blocks.ICE, Blocks.PACKED_ICE, Blocks.BLUE_ICE, Blocks.FROSTED_ICE);
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_POWDER).add(Blocks.POWDER_SNOW);
 
-        // Custom box blocks join in phase 4; slabs in the tag work as low boxes.
+        // Slabs in the tag work as low boxes (section 11).
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_BOXES)
+                .add(ModBlocks.WOOD_BOX.get(), ModBlocks.METAL_BOX.get(), ModBlocks.PLASTIC_BOX.get())
                 .forceAddTag(BlockTags.PLANKS)
                 .forceAddTag(BlockTags.WOODEN_SLABS)
                 .add(Blocks.SMOOTH_STONE, Blocks.SMOOTH_STONE_SLAB,
@@ -36,10 +38,27 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
                         Blocks.LIGHT_GRAY_CONCRETE, Blocks.CYAN_CONCRETE, Blocks.PURPLE_CONCRETE, Blocks.BLUE_CONCRETE,
                         Blocks.BROWN_CONCRETE, Blocks.GREEN_CONCRETE, Blocks.RED_CONCRETE, Blocks.BLACK_CONCRETE);
 
-        // Rail blocks join in phase 4; the tag exists now so datapacks can extend it.
-        getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE);
+        // Section 18: all rail blocks and rail_post; section 11: the pipe coping too.
+        var grindable = getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE);
+        rails().forEach(grindable::add);
+        grindable.add(ModBlocks.RAIL_POST.get(), ModBlocks.PIPE_COPING.get());
         getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE_VANILLA).forceAddTag(BlockTags.FENCES).forceAddTag(BlockTags.WALLS);
 
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.GROOMED_SNOW.get());
+        var pickaxe = getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
+        rails().forEach(pickaxe::add);
+        pickaxe.add(ModBlocks.RAIL_POST.get(), ModBlocks.METAL_BOX.get(), ModBlocks.PLASTIC_BOX.get(), ModBlocks.PIPE_COPING.get());
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.WOOD_BOX.get(), ModBlocks.PARK_RAMP.get(),
+                ModBlocks.QUARTER_PIPE.get(), ModBlocks.SLOPE_MARKER_GREEN.get(), ModBlocks.SLOPE_MARKER_BLUE.get(),
+                ModBlocks.SLOPE_MARKER_BLACK.get(), ModBlocks.PARK_FLAG.get(), ModBlocks.START_GATE.get());
+    }
+
+    private static java.util.List<Block> rails() {
+        java.util.List<Block> out = new java.util.ArrayList<>();
+        out.add(ModBlocks.PIPE_RAIL.get());
+        out.add(ModBlocks.FLAT_RAIL.get());
+        ModBlocks.COPPER_RAILS.forEach(r -> out.add(r.get()));
+        ModBlocks.WAXED_COPPER_RAILS.forEach(r -> out.add(r.get()));
+        return out;
     }
 }

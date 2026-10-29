@@ -17,9 +17,10 @@ import java.util.WeakHashMap;
 /**
  * {@code RiderSoundManager} (design doc section 17): one looping sound per audible loop per rider
  * within {@value #RANGE} blocks, volume and pitch set every tick from {@link RideSoundRules}, surface
- * changes cross-faded over {@value RideSoundRules#FADE_TICKS} ticks, and the pop, landing, wipeout
- * and pole one-shots. All of it comes from the synced rider state, so remote riders sound right
- * without any sound packets.
+ * changes cross-faded over {@value RideSoundRules#FADE_TICKS} ticks, and the pop, landing, wipeout,
+ * pole and rail-catch one-shots. Grinds and box slides loop by the rail's or box's
+ * material. All of it comes from the synced rider state, so remote riders sound right without any
+ * sound packets.
  */
 final class RiderSoundManager {
     static final double RANGE = 32;
@@ -33,7 +34,7 @@ final class RiderSoundManager {
     static void update(RiderView view, double distanceSq) {
         boolean audible = distanceSq <= RANGE * RANGE;
         if (audible) {
-            RideSoundRules.targets(view.state, view.surface == null ? null : view.surface.category(), view.speed, view.lean, MIX);
+            RideSoundRules.targets(view.state, view.surface == null ? null : view.surface.category(), view.material, view.speed, view.lean, MIX);
         } else {
             java.util.Arrays.fill(MIX.volume, 0);
         }
@@ -63,6 +64,7 @@ final class RiderSoundManager {
             oneShot(view, hard ? ModSounds.LAND_HARD : ModSounds.LAND_SOFT, hard ? 0.9f : 0.6f, 0.95f + view.player.getRandom().nextFloat() * 0.1f);
         }
         if (view.wipedOut) oneShot(view, ModSounds.WIPEOUT, 1.0f, 0.95f);
+        if (view.caught) oneShot(view, ModSounds.GRIND_CATCH, 0.7f, 0.95f + view.player.getRandom().nextFloat() * 0.1f);
         if (view.polePushed) oneShot(view, ModSounds.POLE_PUSH, 0.6f, 0.9f + view.player.getRandom().nextFloat() * 0.2f);
     }
 
@@ -90,6 +92,11 @@ final class RiderSoundManager {
             case SCRAPE -> ModSounds.SCRAPE.get();
             case CARVE -> ModSounds.CARVE.get();
             case BRAKE -> ModSounds.BRAKE.get();
+            case GRIND_METAL -> ModSounds.GRIND_RAIL_METAL.get();
+            case GRIND_COPPER -> ModSounds.GRIND_RAIL_COPPER.get();
+            case BOX_WOOD -> ModSounds.GRIND_BOX_WOOD.get();
+            case BOX_METAL -> ModSounds.GRIND_BOX_METAL.get();
+            case BOX_PLASTIC -> ModSounds.GRIND_BOX_PLASTIC.get();
         };
     }
 

@@ -84,7 +84,13 @@ public final class RideGameTests {
         BlockPos pos = helper.absolutePos(new BlockPos(1, 2, 1));
         var level = helper.getLevel();
         check(SurfaceResolver.forState(level, pos, Blocks.STONE.defaultBlockState()) == SurfaceProfile.SCRAPE, "stone should scrape");
-        check(SurfaceResolver.forState(level, pos, Blocks.OAK_SLAB.defaultBlockState()) == SurfaceProfile.SCRAPE, "slabs should scrape");
+        // Section 11: slabs in #alpineshred:slide/boxes work as low boxes, by their material.
+        expectProfile("box_wood", Blocks.OAK_SLAB.defaultBlockState());
+        expectProfile("box_metal", ModBlocks.METAL_BOX.get().defaultBlockState());
+        expectProfile("box_plastic", ModBlocks.PLASTIC_BOX.get().defaultBlockState());
+        expectProfile("box_copper", Blocks.WAXED_COPPER_BLOCK.defaultBlockState());
+        expectProfile("box_wood_waxed", ModBlocks.WOOD_BOX.get().defaultBlockState().setValue(io.github.adang101.alpineshred.park.block.ParkStates.WAXED, true));
+        check(SurfaceResolver.forState(level, pos, Blocks.COBBLESTONE.defaultBlockState()) == SurfaceProfile.SCRAPE, "cobblestone should scrape");
         check(SurfaceResolver.forState(level, pos, Blocks.AIR.defaultBlockState()) == null, "air is no surface");
         check(SurfaceResolver.forState(level, pos, Blocks.WATER.defaultBlockState()) == null, "water is no surface");
         check(SurfaceResolver.forState(level, pos, Blocks.GRASS.defaultBlockState()) == null, "plants are no surface");
@@ -461,10 +467,22 @@ public final class RideGameTests {
     }
 
     /** What a replayed run did, for the per-course checks. */
-    private static final class Replay {
+    static final class Replay {
         double maxSpeed, launchVy, gearSpeed;
         int airTicks;
         boolean popped, climbed;
+        /** Every state the client was in, and ticks on rails, boxes and pipes. */
+        final java.util.EnumSet<RideState> states = java.util.EnumSet.noneOf(RideState.class);
+        int grindTicks, slideTicks, pipeTicks;
+    }
+
+    /** Where and how a replayed run starts and ends; an {@code endZ} of NaN rides for {@code maxTicks}. */
+    record ReplayRun(double startY, double startZ, double startSpeed, double endZ, int maxTicks) {
+        static final ReplayRun SPEED_CAP = new ReplayRun(0, 1.5, 1.45, 70, 200);
+
+        ReplayRun at(double y) {
+            return new ReplayRun(y, startZ, startSpeed, endZ, maxTicks);
+        }
     }
 
     /**
@@ -478,14 +496,20 @@ public final class RideGameTests {
      */
     private static Replay replayOnServer(GameTestHelper helper, Course course, double startY, boolean negativeControl,
                                          java.util.function.DoubleFunction<RideInput> script) {
+        return replayOnServer(helper, course, ReplayRun.SPEED_CAP.at(startY), negativeControl, script);
+    }
+
+    static Replay replayOnServer(GameTestHelper helper, Course course, ReplayRun runSpec, boolean negativeControl,
+                                 java.util.function.DoubleFunction<RideInput> script) {
+        double startY = runSpec.startY();
         ServerPlayer server = null;
         try {
-            server = serverRider(helper, course.at(Course.CENTER_X, startY, 1.5));
+            server = serverRider(helper, course.at(Course.CENTER_X, startY, runSpec.startZ()));
             var listener = (ServerGamePacketListenerAccessor) server.connection;
 
             Player client = helper.makeMockSurvivalPlayer();
             Course.equipBoard(client);
-            course.place(client, startY, 1.5, 1.45); // just above the cap: the controller holds it there
+            course.place(client, startY, runSpec.startZ(), runSpec.startSpeed()); // at the cap: just above it, the controller holds it there
             Ride ride = new Ride(client);
             StateSendThrottle throttle = new StateSendThrottle();
             Replay run = new Replay();
@@ -493,14 +517,19 @@ public final class RideGameTests {
 
             int floating = 0, maxFloating = 0;
             List<String> trace = new ArrayList<>();
-            for (int tick = 0; tick < 200 && course.relative(client).z < 70; tick++) {
+            boolean toEnd = !Double.isNaN(runSpec.endZ()); // NaN: ride for maxTicks wherever it goes
+            for (int tick = 0; tick < runSpec.maxTicks() && (!toEnd || course.relative(client).z < runSpec.endZ()); tick++) {
                 RideInput input = script.apply(course.relative(client).z);
                 server.setShiftKeyDown(input.sneak()); // what the client's sneak command tells the server
                 double yBefore = client.getY();
                 ride.tick(input);
                 SlideController c = ride.c();
                 run.maxSpeed = Math.max(run.maxSpeed, c.speed());
+                run.states.add(c.state());
                 if (c.state() == RideState.AIR) run.airTicks++;
+                if (c.state() == RideState.GRIND) run.grindTicks++;
+                if (c.state() == RideState.SLIDE) run.slideTicks++;
+                if (c.inPipe()) run.pipeTicks++;
                 if (c.grounded() && client.getY() - yBefore > 0.9) run.climbed = true;
                 Vec3 rel = course.relative(client);
                 trace.add(String.format(Locale.ROOT, "t%d z%.2f y%.3f %s v%.3f vy%.3f ground %s", tick, rel.z, rel.y,
@@ -537,7 +566,7 @@ public final class RideGameTests {
                 check(RideServer.violations(server) == 0, "ride validator flagged a legal ride at tick " + tick + ": "
                         + RideServer.lastReason(server) + "\n" + String.join("\n", tail(trace)));
             }
-            check(course.relative(client).z >= 70, "rider did not finish the course\n" + String.join("\n", tail(trace)));
+            check(!toEnd || course.relative(client).z >= runSpec.endZ(), "rider did not finish the course\n" + String.join("\n", tail(trace)));
             check(maxFloating < 80, "vanilla would kick for floating: " + maxFloating + " ticks");
 
             if (negativeControl) {
@@ -576,7 +605,7 @@ public final class RideGameTests {
     }
 
     /** A strapped survival server player at {@code pos}, with every pending teleport answered. */
-    private static ServerPlayer serverRider(GameTestHelper helper, Vec3 pos) {
+    static ServerPlayer serverRider(GameTestHelper helper, Vec3 pos) {
         ServerPlayer player = newServerPlayer(helper);
         player.setGameMode(GameType.SURVIVAL);
         acceptTeleport(player);
@@ -595,12 +624,12 @@ public final class RideGameTests {
         check(listener.alpineshred$awaitingPosition() == null, "teleport not accepted");
     }
 
-    private static void removeServerPlayer(ServerPlayer player) {
+    static void removeServerPlayer(ServerPlayer player) {
         if (player == null) return;
         player.getServer().getPlayerList().remove(player);
     }
 
-    private static List<String> tail(List<String> trace) {
+    static List<String> tail(List<String> trace) {
         return trace.subList(Math.max(0, trace.size() - 12), trace.size());
     }
 
@@ -623,7 +652,7 @@ public final class RideGameTests {
     }
 
     /** A rider run by the real {@link RideRunner} with the rider's own gear and default server settings. */
-    private static final class Ride {
+    static final class Ride {
         private final RideRunner runner;
         private final RideContext ctx;
         private SlideController.Mode mode = SlideController.Mode.WALK;

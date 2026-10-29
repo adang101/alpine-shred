@@ -51,11 +51,17 @@ public final class SurfaceResolver {
         return state.getCollisionShape(level, pos).isEmpty() ? null : SurfaceProfile.SCRAPE;
     }
 
-    /** Only explicit matches; never {@link SurfaceProfile#SCRAPE}. */
+    /**
+     * Only explicit matches; never {@link SurfaceProfile#SCRAPE}. A match of the {@code BOX}
+     * category becomes the block's own box material (friction from {@code box_materials.json}).
+     */
     @Nullable
     public static SurfaceProfile match(BlockState state) {
         for (Matcher m : matchers()) {
-            if (m.matches(state)) return m.profile();
+            if (m.matches(state)) {
+                SurfaceProfile p = m.profile();
+                return p.category() == SurfaceProfile.Category.BOX ? io.github.adang101.alpineshred.park.block.BoxMaterials.profile(state) : p;
+            }
         }
         return null;
     }

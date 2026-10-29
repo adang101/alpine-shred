@@ -465,13 +465,14 @@ public final class ClientSmoke {
         double speed = c == null ? 0 : c.speed();
         maxSpeed = Math.max(maxSpeed, speed);
         if (c != null && c.surface() != null) surfaces.add(c.surface().id().toString());
-        if (!Double.isNaN(lastX)) distance += Math.hypot(player.getX() - lastX, player.getZ() - lastZ);
+        double moved = Double.isNaN(lastX) ? 1 : Math.hypot(player.getX() - lastX, player.getZ() - lastZ);
+        if (!Double.isNaN(lastX)) distance += moved;
         lastX = player.getX();
         lastZ = player.getZ();
 
         float turn = Mth.clamp(Mth.wrapDegrees(steer(mc.level, player) - player.getYRot()), -5f, 5f);
         player.setYRot(player.getYRot() + turn);
-        hold(mc.options.keyUp, speed < 0.08);
+        hold(mc.options.keyUp, speed < 0.08 || state == RideState.IDLE);
 
         boolean air = state == RideState.AIR;
         if (air) {
@@ -485,7 +486,9 @@ public final class ClientSmoke {
             note(String.format(Locale.ROOT, "wipeout at %s, speed %.3f", player.blockPosition(), speed));
         }
         lastState = state;
-        stuckTicks = speed < 0.03 ? stuckTicks + 1 : 0;
+        // Stuck by what the player actually does: the controller's speed goes stale once the ride
+        // stops (a rider who comes to rest on rock stands up, IDLE, and nothing ticks the speed).
+        stuckTicks = moved < 0.03 ? stuckTicks + 1 : 0;
 
         ServerPlayer sp = serverPlayer;
         int violations = sp == null ? 0 : RideServer.violations(sp);
@@ -659,7 +662,8 @@ public final class ClientSmoke {
         for (String[] clip : new String[][]{{RiderClips.IDLE_BOARD, "8"}, {RiderClips.GLIDE_BOARD_REGULAR, "8"},
                 {RiderClips.TUCK_BOARD, "8"}, {RiderClips.BRAKE_BOARD, "8"}, {RiderClips.POP_CHARGE, "6"},
                 {RiderClips.POP_LAUNCH, "2"}, {RiderClips.AIR_BOARD, "8"}, {RiderClips.LAND_SKETCHY, "3"},
-                {RiderClips.WIPEOUT_FRONT, "12"}, {RiderClips.WIPEOUT_BACK, "12"}}) {
+                {RiderClips.WIPEOUT_FRONT, "12"}, {RiderClips.WIPEOUT_BACK, "12"}, {RiderClips.GRIND_5050, "6"},
+                {RiderClips.GRIND_NOSE, "6"}, {RiderClips.GRIND_TAIL, "6"}, {RiderClips.BOARDSLIDE, "6"}}) {
             int delay = Integer.parseInt(clip[1]);
             out.add(new Pose("pose_board_" + clip[0] + "_side", clip[0], delay, SIDE));
             out.add(new Pose("pose_board_" + clip[0] + "_quarter", clip[0], delay, -35f));
@@ -671,7 +675,7 @@ public final class ClientSmoke {
         List<Pose> out = new ArrayList<>();
         for (String[] clip : new String[][]{{RiderClips.IDLE_SKIS, "8"}, {RiderClips.GLIDE_SKIS, "8"},
                 {RiderClips.TUCK_SKIS, "8"}, {RiderClips.SNOWPLOW_SKIS, "8"}, {RiderClips.AIR_SKIS, "8"},
-                {RiderClips.WIPEOUT_FRONT, "12"}}) {
+                {RiderClips.WIPEOUT_FRONT, "12"}, {RiderClips.SLIDE_SKIS, "6"}}) {
             int delay = Integer.parseInt(clip[1]);
             out.add(new Pose("pose_skis_" + clip[0] + "_side", clip[0], delay, SIDE));
             out.add(new Pose("pose_skis_" + clip[0] + "_front", clip[0], delay, 150f));

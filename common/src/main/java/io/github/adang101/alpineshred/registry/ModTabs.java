@@ -7,8 +7,10 @@ import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.gear.Lens;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 
 /** One creative tab, {@code alpineshred:main}: gear, wearables, tools, park blocks, lift parts. */
@@ -35,9 +37,27 @@ public final class ModTabs {
                 output.accept(ModItems.LIFT_LINKER.get());
                 output.accept(ModItems.LIFT_PASS.get());
                 output.accept(ModItems.GROOMED_SNOW.get());
+                for (var item : ModItems.parkItems()) {
+                    if (item.getId().getPath().equals("plastic_box")) {
+                        for (DyeColor color : DyeColor.values()) output.accept(plasticBox(item.get(), color));
+                    } else {
+                        output.accept(item.get());
+                    }
+                }
             })));
 
     private ModTabs() {
+    }
+
+    /** A plastic box item that places in {@code color} (vanilla's {@code BlockStateTag}). */
+    public static ItemStack plasticBox(net.minecraft.world.item.Item item, DyeColor color) {
+        ItemStack stack = new ItemStack(item);
+        if (color != DyeColor.WHITE) {
+            CompoundTag states = new CompoundTag();
+            states.putString("color", color.getSerializedName());
+            stack.getOrCreateTag().put("BlockStateTag", states);
+        }
+        return stack;
     }
 
     public static void register() {

@@ -15,10 +15,14 @@ import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.movement.RideState;
 import io.github.adang101.alpineshred.movement.Riders;
 import io.github.adang101.alpineshred.network.ModNetwork;
+import io.github.adang101.alpineshred.park.block.PlasticBoxBlock;
+import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.registry.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraft.world.item.ItemStack;
 
@@ -44,6 +48,11 @@ public final class AlpineShredClient {
 
         ColorHandlerRegistry.registerItemColors((stack, tintIndex) -> tintIndex > 0 ? -1 : dyeColor(stack),
                 ModItems.SKI_BOOTS, ModItems.SNOWBOARD_BOOTS, ModItems.SKI_HELMET, ModItems.MITTS);
+        // Plastic boxes come in the 16 dye colors (section 11): one grey model, tinted.
+        ColorHandlerRegistry.registerBlockColors((state, level, pos, tintIndex) -> tintIndex == 0
+                ? plasticColor(state.getValue(PlasticBoxBlock.COLOR)) : -1, ModBlocks.PLASTIC_BOX);
+        ColorHandlerRegistry.registerItemColors((stack, tintIndex) -> tintIndex == 0 ? plasticColor(boxColor(stack)) : -1,
+                ModItems.parkItem("plastic_box"));
 
         ClientLifecycleEvent.CLIENT_SETUP.register(minecraft -> ItemPropertiesRegistry.register(ModItems.GOGGLES.get(),
                 AlpineShred.id("lens"), (stack, level, entity, seed) -> GogglesItem.lens(stack).modelValue()));
@@ -57,6 +66,20 @@ public final class AlpineShredClient {
         RideEffects.register();
         ClientSmoke.register();
         ClientTickEvent.CLIENT_POST.register(AlpineShredClient::clientTick);
+    }
+
+    /** A dye color as a plastic tint: its diffuse color, a little brighter. */
+    static int plasticColor(DyeColor color) {
+        float[] c = color.getTextureDiffuseColors();
+        int r = Math.min(255, (int) (c[0] * 255 * 1.08f)), g = Math.min(255, (int) (c[1] * 255 * 1.08f)), b = Math.min(255, (int) (c[2] * 255 * 1.08f));
+        return r << 16 | g << 8 | b;
+    }
+
+    /** The color a plastic box item places in ({@code BlockStateTag}), white by default. */
+    private static DyeColor boxColor(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if (tag == null || !tag.contains("BlockStateTag")) return DyeColor.WHITE;
+        return DyeColor.byName(tag.getCompound("BlockStateTag").getString("color"), DyeColor.WHITE);
     }
 
     private static int dyeColor(ItemStack stack) {

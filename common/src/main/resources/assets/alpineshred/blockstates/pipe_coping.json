@@ -1,0 +1,19 @@
+{
+ "variants": {
+  "facing=north": {
+   "model": "alpineshred:block/pipe_coping"
+  },
+  "facing=east": {
+   "model": "alpineshred:block/pipe_coping",
+   "y": 90
+  },
+  "facing=south": {
+   "model": "alpineshred:block/pipe_coping",
+   "y": 180
+  },
+  "facing=west": {
+   "model": "alpineshred:block/pipe_coping",
+   "y": 270
+  }
+ }
+}

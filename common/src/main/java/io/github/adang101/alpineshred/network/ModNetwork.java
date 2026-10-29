@@ -126,7 +126,7 @@ public final class ModNetwork {
     }
 
     public static void sendTuningSync(ServerPlayer player) {
-        byte[] payload = SyncCodec.deflate(SyncCodec.tuningPayload(TuningData.tuning(), TuningData.surfaces(), GearStatsRegistry.all()));
+        byte[] payload = SyncCodec.deflate(SyncCodec.tuningPayload(TuningData.tuning(), TuningData.surfaces(), GearStatsRegistry.all(), TuningData.boxMaterials()));
         FriendlyByteBuf buf = buffer();
         buf.writeByteArray(payload);
         NetworkManager.sendToPlayer(player, TUNING_SYNC, buf);

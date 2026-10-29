@@ -11,6 +11,7 @@ import io.github.adang101.alpineshred.gear.GearStatsRegistry;
 import io.github.adang101.alpineshred.movement.MovementTuning;
 import io.github.adang101.alpineshred.movement.SurfaceProfile;
 import io.github.adang101.alpineshred.movement.TuningData;
+import io.github.adang101.alpineshred.park.BoxMaterial;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -25,8 +26,8 @@ import java.util.Map;
 
 /**
  * Server data reload listeners (design doc section 18, "Data files"): {@code movement/tuning},
- * {@code surface_profiles} and {@code gear}. {@code box_materials} and {@code design_templates}
- * join in phases 4 and 6. Clients receive all three through {@code s2c/tuning_sync}
+ * {@code surface_profiles}, {@code gear} and {@code box_materials.json}; {@code design_templates}
+ * joins in phase 6. Clients receive them all through {@code s2c/tuning_sync}
  * ({@code ModNetwork}) at login and after every reload: the client-side slide controller reads them.
  */
 public final class AlpineDataLoaders {
@@ -35,6 +36,7 @@ public final class AlpineDataLoaders {
     public static final TuningLoader TUNING = new TuningLoader();
     public static final SurfaceLoader SURFACES = new SurfaceLoader();
     public static final GearLoader GEAR = new GearLoader();
+    public static final BoxMaterialLoader BOX_MATERIALS = new BoxMaterialLoader();
 
     private AlpineDataLoaders() {
     }
@@ -43,6 +45,7 @@ public final class AlpineDataLoaders {
         ReloadListenerRegistry.register(PackType.SERVER_DATA, TUNING, AlpineShred.id("movement/tuning"));
         ReloadListenerRegistry.register(PackType.SERVER_DATA, SURFACES, AlpineShred.id("surface_profiles"));
         ReloadListenerRegistry.register(PackType.SERVER_DATA, GEAR, AlpineShred.id("gear"));
+        ReloadListenerRegistry.register(PackType.SERVER_DATA, BOX_MATERIALS, AlpineShred.id("box_materials"));
     }
 
     /** {@code /alpineshred tuning reload}: re-reads only this mod's data, without a full /reload. */
@@ -50,6 +53,7 @@ public final class AlpineDataLoaders {
         TUNING.reloadNow(resources);
         SURFACES.reloadNow(resources);
         GEAR.reloadNow(resources);
+        BOX_MATERIALS.reloadNow(resources);
     }
 
     private abstract static class Loader extends SimpleJsonResourceReloadListener {
@@ -114,6 +118,41 @@ public final class AlpineDataLoaders {
             });
             GearStatsRegistry.replace(stats);
             AlpineShred.LOGGER.debug("Loaded {} gear stat files", stats.size());
+        }
+    }
+
+    /**
+     * {@code data/alpineshred/box_materials.json}: one file (not a folder), the last data pack's copy
+     * winning, as section 11 names it.
+     */
+    public static final class BoxMaterialLoader extends net.minecraft.server.packs.resources.SimplePreparableReloadListener<List<BoxMaterial>> {
+        private static final ResourceLocation FILE = AlpineShred.id("box_materials.json");
+
+        @Override
+        protected List<BoxMaterial> prepare(ResourceManager resources, ProfilerFiller profiler) {
+            var resource = resources.getResource(FILE);
+            if (resource.isEmpty()) {
+                AlpineShred.LOGGER.warn("data/alpineshred/box_materials.json missing; using built-in box materials");
+                return BoxMaterial.DEFAULTS;
+            }
+            try (var reader = resource.get().openAsReader()) {
+                JsonElement json = GSON.fromJson(reader, JsonElement.class);
+                if (json == null || !json.isJsonObject()) return BoxMaterial.DEFAULTS;
+                return BoxMaterial.fromJson(json.getAsJsonObject(), AlpineShred.LOGGER::warn);
+            } catch (Exception e) {
+                AlpineShred.LOGGER.warn("data/alpineshred/box_materials.json unreadable ({}); using built-in box materials", e.getMessage());
+                return BoxMaterial.DEFAULTS;
+            }
+        }
+
+        @Override
+        protected void apply(List<BoxMaterial> table, ResourceManager resources, ProfilerFiller profiler) {
+            TuningData.setBoxMaterials(table);
+            AlpineShred.LOGGER.debug("Loaded {} box materials", table.size());
+        }
+
+        void reloadNow(ResourceManager resources) {
+            apply(prepare(resources, InactiveProfiler.INSTANCE), resources, InactiveProfiler.INSTANCE);
         }
     }
 

@@ -1,0 +1,49 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "top": "alpineshred:block/plastic_box_top",
+  "side": "alpineshred:block/plastic_box_side",
+  "end": "alpineshred:block/box_end",
+  "particle": "alpineshred:block/plastic_box_side"
+ },
+ "elements": [
+  {
+   "from": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "to": [
+    16.0,
+    16.0,
+    16.0
+   ],
+   "faces": {
+    "north": {
+     "texture": "#side",
+     "tintindex": 0
+    },
+    "east": {
+     "texture": "#side",
+     "tintindex": 0
+    },
+    "south": {
+     "texture": "#side",
+     "tintindex": 0
+    },
+    "west": {
+     "texture": "#side",
+     "tintindex": 0
+    },
+    "up": {
+     "texture": "#top",
+     "tintindex": 0
+    },
+    "down": {
+     "texture": "#side",
+     "tintindex": 0
+    }
+   }
+  }
+ ]
+}

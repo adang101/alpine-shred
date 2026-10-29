@@ -1,0 +1,84 @@
+{
+  "materials": [
+    {
+      "material": "plastic",
+      "friction": 0.0016,
+      "blocks": [
+        "alpineshred:plastic_box"
+      ]
+    },
+    {
+      "material": "copper",
+      "friction": 0.0012,
+      "blocks": [
+        "minecraft:waxed_copper_block",
+        "minecraft:waxed_exposed_copper",
+        "minecraft:waxed_weathered_copper",
+        "minecraft:waxed_oxidized_copper",
+        "minecraft:waxed_cut_copper",
+        "minecraft:waxed_exposed_cut_copper",
+        "minecraft:waxed_weathered_cut_copper",
+        "minecraft:waxed_oxidized_cut_copper",
+        "minecraft:waxed_cut_copper_slab",
+        "minecraft:waxed_exposed_cut_copper_slab",
+        "minecraft:waxed_weathered_cut_copper_slab",
+        "minecraft:waxed_oxidized_cut_copper_slab"
+      ]
+    },
+    {
+      "material": "metal",
+      "friction": 0.002,
+      "blocks": [
+        "alpineshred:metal_box",
+        "minecraft:iron_block"
+      ]
+    },
+    {
+      "material": "concrete",
+      "friction": 0.002,
+      "blocks": [
+        "minecraft:white_concrete",
+        "minecraft:orange_concrete",
+        "minecraft:magenta_concrete",
+        "minecraft:light_blue_concrete",
+        "minecraft:yellow_concrete",
+        "minecraft:lime_concrete",
+        "minecraft:pink_concrete",
+        "minecraft:gray_concrete",
+        "minecraft:light_gray_concrete",
+        "minecraft:cyan_concrete",
+        "minecraft:purple_concrete",
+        "minecraft:blue_concrete",
+        "minecraft:brown_concrete",
+        "minecraft:green_concrete",
+        "minecraft:red_concrete",
+        "minecraft:black_concrete"
+      ]
+    },
+    {
+      "material": "stone",
+      "friction": 0.0024,
+      "blocks": [
+        "minecraft:smooth_stone",
+        "minecraft:smooth_stone_slab",
+        "minecraft:stone_bricks",
+        "minecraft:stone_brick_slab",
+        "minecraft:quartz_block",
+        "minecraft:quartz_slab",
+        "minecraft:smooth_quartz",
+        "minecraft:smooth_quartz_slab",
+        "#minecraft:walls"
+      ]
+    },
+    {
+      "material": "wood",
+      "friction": 0.003,
+      "blocks": [
+        "alpineshred:wood_box",
+        "#minecraft:planks",
+        "#minecraft:wooden_slabs",
+        "#minecraft:wooden_fences"
+      ]
+    }
+  ]
+}

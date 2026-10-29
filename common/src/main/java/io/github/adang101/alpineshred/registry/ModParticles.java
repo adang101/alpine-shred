@@ -21,6 +21,8 @@ public final class ModParticles {
     public static final RegistrySupplier<SimpleParticleType> SNOW_POOF = simple("snow_poof");
     /** Carve trails: flat marks on the snow along the edge, 40 ticks. */
     public static final RegistrySupplier<SimpleParticleType> SNOW_TRAIL = simple("snow_trail");
+    /** Grinding a metal or copper rail, and the catch: sparks off the contact point. */
+    public static final RegistrySupplier<SimpleParticleType> RAIL_SPARK = simple("rail_spark");
 
     private ModParticles() {
     }

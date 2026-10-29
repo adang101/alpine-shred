@@ -1,0 +1,364 @@
+{
+ "variants": {
+  "facing=north,lip=false,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0"
+  },
+  "facing=east,lip=false,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0_lip"
+  },
+  "facing=east,lip=true,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=quarter,step=0": {
+   "model": "alpineshred:block/park_ramp_quarter_0_lip",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1"
+  },
+  "facing=east,lip=false,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1_lip"
+  },
+  "facing=east,lip=true,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=quarter,step=1": {
+   "model": "alpineshred:block/park_ramp_quarter_1_lip",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2"
+  },
+  "facing=east,lip=false,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2_lip"
+  },
+  "facing=east,lip=true,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=quarter,step=2": {
+   "model": "alpineshred:block/park_ramp_quarter_2_lip",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3"
+  },
+  "facing=east,lip=false,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3_lip"
+  },
+  "facing=east,lip=true,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=quarter,step=3": {
+   "model": "alpineshred:block/park_ramp_quarter_3_lip",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0"
+  },
+  "facing=east,lip=false,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0_lip"
+  },
+  "facing=east,lip=true,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=half,step=0": {
+   "model": "alpineshred:block/park_ramp_half_0_lip",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1"
+  },
+  "facing=east,lip=false,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1"
+  },
+  "facing=east,lip=false,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1"
+  },
+  "facing=east,lip=false,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1_lip"
+  },
+  "facing=east,lip=true,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=half,step=1": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1_lip"
+  },
+  "facing=east,lip=true,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=half,step=2": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1_lip"
+  },
+  "facing=east,lip=true,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=half,step=3": {
+   "model": "alpineshred:block/park_ramp_half_1_lip",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0"
+  },
+  "facing=east,lip=false,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0"
+  },
+  "facing=east,lip=false,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0"
+  },
+  "facing=east,lip=false,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 270
+  },
+  "facing=north,lip=false,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0"
+  },
+  "facing=east,lip=false,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 90
+  },
+  "facing=south,lip=false,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 180
+  },
+  "facing=west,lip=false,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0_lip"
+  },
+  "facing=east,lip=true,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=full,step=0": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0_lip"
+  },
+  "facing=east,lip=true,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=full,step=1": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0_lip"
+  },
+  "facing=east,lip=true,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=full,step=2": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 270
+  },
+  "facing=north,lip=true,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0_lip"
+  },
+  "facing=east,lip=true,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 90
+  },
+  "facing=south,lip=true,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 180
+  },
+  "facing=west,lip=true,slope=full,step=3": {
+   "model": "alpineshred:block/park_ramp_full_0_lip",
+   "y": 270
+  }
+ }
+}

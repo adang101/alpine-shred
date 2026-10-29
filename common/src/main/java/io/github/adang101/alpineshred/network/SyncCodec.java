@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import io.github.adang101.alpineshred.gear.GearKind;
 import io.github.adang101.alpineshred.gear.GearStats;
 import io.github.adang101.alpineshred.movement.MovementTuning;
+import io.github.adang101.alpineshred.park.BoxMaterial;
 import io.github.adang101.alpineshred.movement.SurfaceProfile;
 
 import java.io.ByteArrayOutputStream;
@@ -79,10 +80,15 @@ public final class SyncCodec {
 
     // ---- tuning_sync ----------------------------------------------------------------------------
 
-    public record Tuning(MovementTuning tuning, List<SurfaceProfile> surfaces, Map<String, GearStats> gear) {
+    public record Tuning(MovementTuning tuning, List<SurfaceProfile> surfaces, Map<String, GearStats> gear, List<BoxMaterial> boxMaterials) {
     }
 
     public static JsonObject tuningPayload(MovementTuning tuning, Collection<SurfaceProfile> surfaces, Map<String, GearStats> gear) {
+        return tuningPayload(tuning, surfaces, gear, BoxMaterial.DEFAULTS);
+    }
+
+    public static JsonObject tuningPayload(MovementTuning tuning, Collection<SurfaceProfile> surfaces, Map<String, GearStats> gear,
+                                           List<BoxMaterial> boxMaterials) {
         JsonObject json = new JsonObject();
         json.add("tuning", tuning.toJson());
         JsonObject s = new JsonObject();
@@ -91,6 +97,7 @@ public final class SyncCodec {
         JsonObject g = new JsonObject();
         gear.forEach((id, stats) -> g.add(id, stats.toJson()));
         json.add("gear", g);
+        json.add("box_materials", BoxMaterial.toJson(boxMaterials));
         return json;
     }
 
@@ -115,7 +122,10 @@ public final class SyncCodec {
                 gear.put(e.getKey(), GearStats.fromJson(e.getKey(), e.getValue().getAsJsonObject(), fallback, warn));
             }
         }
-        return new Tuning(tuning, surfaces, gear);
+        List<BoxMaterial> boxes = json.has("box_materials") && json.get("box_materials").isJsonObject()
+                ? BoxMaterial.fromJson(json.getAsJsonObject("box_materials"), warn)
+                : BoxMaterial.DEFAULTS;
+        return new Tuning(tuning, surfaces, gear, boxes);
     }
 
     // ---- config_sync ----------------------------------------------------------------------------

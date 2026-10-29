@@ -1,0 +1,7 @@
+{
+ "parent": "alpineshred:block/template_rail_pipe_curve",
+ "textures": {
+  "rail": "alpineshred:block/pipe_rail",
+  "particle": "alpineshred:block/pipe_rail"
+ }
+}

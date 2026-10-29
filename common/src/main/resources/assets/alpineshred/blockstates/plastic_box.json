@@ -1,0 +1,60 @@
+{
+ "variants": {
+  "axis=z,end_a=false,end_b=false,half=low": {
+   "model": "alpineshred:block/plastic_box_low_xx"
+  },
+  "axis=x,end_a=false,end_b=false,half=low": {
+   "model": "alpineshred:block/plastic_box_low_xx",
+   "y": 270
+  },
+  "axis=z,end_a=false,end_b=true,half=low": {
+   "model": "alpineshred:block/plastic_box_low_xb"
+  },
+  "axis=x,end_a=false,end_b=true,half=low": {
+   "model": "alpineshred:block/plastic_box_low_xb",
+   "y": 270
+  },
+  "axis=z,end_a=true,end_b=false,half=low": {
+   "model": "alpineshred:block/plastic_box_low_ax"
+  },
+  "axis=x,end_a=true,end_b=false,half=low": {
+   "model": "alpineshred:block/plastic_box_low_ax",
+   "y": 270
+  },
+  "axis=z,end_a=true,end_b=true,half=low": {
+   "model": "alpineshred:block/plastic_box_low_ab"
+  },
+  "axis=x,end_a=true,end_b=true,half=low": {
+   "model": "alpineshred:block/plastic_box_low_ab",
+   "y": 270
+  },
+  "axis=z,end_a=false,end_b=false,half=full": {
+   "model": "alpineshred:block/plastic_box_full_xx"
+  },
+  "axis=x,end_a=false,end_b=false,half=full": {
+   "model": "alpineshred:block/plastic_box_full_xx",
+   "y": 270
+  },
+  "axis=z,end_a=false,end_b=true,half=full": {
+   "model": "alpineshred:block/plastic_box_full_xb"
+  },
+  "axis=x,end_a=false,end_b=true,half=full": {
+   "model": "alpineshred:block/plastic_box_full_xb",
+   "y": 270
+  },
+  "axis=z,end_a=true,end_b=false,half=full": {
+   "model": "alpineshred:block/plastic_box_full_ax"
+  },
+  "axis=x,end_a=true,end_b=false,half=full": {
+   "model": "alpineshred:block/plastic_box_full_ax",
+   "y": 270
+  },
+  "axis=z,end_a=true,end_b=true,half=full": {
+   "model": "alpineshred:block/plastic_box_full_ab"
+  },
+  "axis=x,end_a=true,end_b=true,half=full": {
+   "model": "alpineshred:block/plastic_box_full_ab",
+   "y": 270
+  }
+ }
+}

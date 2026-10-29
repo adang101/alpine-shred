@@ -49,7 +49,7 @@ class AssetFilesTest {
 
     @Test
     void everyParticleHasItsTextures() throws IOException {
-        for (String particle : List.of("snow_spray", "snow_poof", "snow_trail")) {
+        for (String particle : List.of("snow_spray", "snow_poof", "snow_trail", "rail_spark")) {
             JsonObject def = json("/assets/alpineshred/particles/" + particle + ".json");
             for (JsonElement t : def.getAsJsonArray("textures")) {
                 String[] id = t.getAsString().split(":", 2);

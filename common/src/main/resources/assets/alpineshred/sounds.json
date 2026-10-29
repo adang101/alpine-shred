@@ -126,5 +126,53 @@
         "name": "alpineshred:gear/tune"
       }
     ]
+  },
+  "grind.rail.metal": {
+    "subtitle": "subtitles.alpineshred.grind.rail_metal",
+    "sounds": [
+      {
+        "name": "alpineshred:grind/rail_metal"
+      }
+    ]
+  },
+  "grind.rail.copper": {
+    "subtitle": "subtitles.alpineshred.grind.rail_copper",
+    "sounds": [
+      {
+        "name": "alpineshred:grind/rail_copper"
+      }
+    ]
+  },
+  "grind.box.wood": {
+    "subtitle": "subtitles.alpineshred.grind.box_wood",
+    "sounds": [
+      {
+        "name": "alpineshred:grind/box_wood"
+      }
+    ]
+  },
+  "grind.box.metal": {
+    "subtitle": "subtitles.alpineshred.grind.box_metal",
+    "sounds": [
+      {
+        "name": "alpineshred:grind/box_metal"
+      }
+    ]
+  },
+  "grind.box.plastic": {
+    "subtitle": "subtitles.alpineshred.grind.box_plastic",
+    "sounds": [
+      {
+        "name": "alpineshred:grind/box_plastic"
+      }
+    ]
+  },
+  "grind.catch": {
+    "subtitle": "subtitles.alpineshred.grind.catch",
+    "sounds": [
+      {
+        "name": "alpineshred:grind/catch"
+      }
+    ]
   }
 }

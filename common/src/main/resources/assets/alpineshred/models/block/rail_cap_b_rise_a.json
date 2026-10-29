@@ -1,0 +1,40 @@
+{
+ "textures": {
+  "cap": "alpineshred:block/rail_cap",
+  "particle": "alpineshred:block/rail_cap"
+ },
+ "elements": [
+  {
+   "from": [
+    6.5,
+    13.5,
+    0.0
+   ],
+   "to": [
+    9.5,
+    16.0,
+    1
+   ],
+   "faces": {
+    "north": {
+     "texture": "#cap"
+    },
+    "east": {
+     "texture": "#cap"
+    },
+    "south": {
+     "texture": "#cap"
+    },
+    "west": {
+     "texture": "#cap"
+    },
+    "up": {
+     "texture": "#cap"
+    },
+    "down": {
+     "texture": "#cap"
+    }
+   }
+  }
+ ]
+}

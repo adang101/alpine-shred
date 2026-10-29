@@ -35,7 +35,12 @@ public record SurfaceProfile(
         /** Powder snow: rider floats only above the float speed. */
         POWDER,
         /** Any other solid block. Fast board wear. */
-        SCRAPE;
+        SCRAPE,
+        /**
+         * A slideable box (section 11): blocks in {@code #alpineshred:slide/boxes}. The friction comes
+         * from {@code box_materials.json} per block; this category's profile only matches.
+         */
+        BOX;
 
         public static Category byName(String name) {
             for (Category c : values()) {
@@ -54,6 +59,11 @@ public record SurfaceProfile(
     public static final SurfaceProfile PACKED_ICE = builtin("packed_ice", Category.ICE, 0.0003, 0.60, 10, "minecraft:packed_ice");
     public static final SurfaceProfile BLUE_ICE = builtin("blue_ice", Category.ICE, 0.00017, 0.50, 10, "minecraft:blue_ice");
     public static final SurfaceProfile POWDER = builtin("powder", Category.POWDER, 0.0040, 0.80, 10, "minecraft:powder_snow", "#alpineshred:slide/powder");
+    /** Park features ridden like groomed snow: quarter pipes, their coping, park ramps (phase 4). */
+    public static final SurfaceProfile PARK = builtin("park", Category.SNOW, 0.0008, 1.00, 15,
+            "alpineshred:quarter_pipe", "alpineshred:pipe_coping", "alpineshred:park_ramp");
+    /** Boxes (section 7 table); {@code BoxMaterials} supplies each block's own friction. */
+    public static final SurfaceProfile BOX = builtin("box", Category.BOX, 0.0022, 1.00, 5, "#alpineshred:slide/boxes");
     /** Fallback for every other solid block; never matched by block lists. */
     public static final SurfaceProfile SCRAPE = builtin("scrape", Category.SCRAPE, 0.0180, 0.70, Integer.MIN_VALUE);
 
@@ -62,7 +72,7 @@ public record SurfaceProfile(
 
     static {
         Map<String, SurfaceProfile> map = new LinkedHashMap<>();
-        for (SurfaceProfile p : List.of(GROOMED, SNOW_BLOCK, SNOW_LAYER, ICE, PACKED_ICE, BLUE_ICE, POWDER, SCRAPE)) {
+        for (SurfaceProfile p : List.of(GROOMED, SNOW_BLOCK, SNOW_LAYER, ICE, PACKED_ICE, BLUE_ICE, POWDER, PARK, BOX, SCRAPE)) {
             map.put(p.id(), p);
         }
         DEFAULTS = Collections.unmodifiableMap(map);

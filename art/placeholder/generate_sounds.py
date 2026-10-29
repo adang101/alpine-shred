@@ -131,6 +131,39 @@ def one_shots():
     return s
 
 
+def park_sounds():
+    """Grind and box-slide loops and the rail catch (phase 4). A separate generator, so adding
+    them leaves every earlier file byte for byte the same."""
+    global rng
+    saved, rng = rng, np.random.default_rng(20261104)
+    s = {}
+    sec = 2.0
+    t = np.arange(int(RATE * sec)) / RATE
+
+    def ring(freqs):
+        # Whole cycles over the loop (f * sec is an integer), so the loop wraps cleanly.
+        return sum(a * np.sin(2 * np.pi * round(f * sec) / sec * t) for f, a in freqs)
+
+    s["grind/rail_metal"] = normalize(band_noise(sec, 1500, 9000, tilt=-1) * periodic(sec, 14, 0.25)
+                                      + ring(((1870, 0.18), (2960, 0.12), (4410, 0.07))) * periodic(sec, 3, 0.3), 0.6)
+    s["grind/rail_copper"] = normalize(band_noise(sec, 900, 6000, tilt=-2) * periodic(sec, 12, 0.25)
+                                       + ring(((1240, 0.2), (1990, 0.12), (3050, 0.06))) * periodic(sec, 2, 0.3), 0.6)
+    grain = np.zeros(int(RATE * sec))
+    for i in rng.integers(0, len(grain) - 60, 90):
+        grain[i:i + 60] += rng.standard_normal(60) * np.exp(-np.arange(60) / 14)
+    s["grind/box_wood"] = normalize(band_noise(sec, 200, 2500, tilt=-3) * periodic(sec, 6, 0.3) + grain * 0.5, 0.6)
+    s["grind/box_metal"] = normalize(band_noise(sec, 700, 7000, tilt=-1.5) * periodic(sec, 8, 0.2)
+                                     + ring(((610, 0.1), (1520, 0.06))) * periodic(sec, 4, 0.4), 0.55)
+    s["grind/box_plastic"] = normalize(band_noise(sec, 1200, 8000, tilt=-2.5) * periodic(sec, 5, 0.12), 0.45)
+    sec = 0.5
+    n = int(RATE * sec)
+    clank = sum(tone(sec, f, None, d) * a for f, a, d in ((1870, 0.5, 0.18), (2960, 0.35, 0.12), (4410, 0.2, 0.08)))
+    s["grind/catch"] = normalize(clank + click(sec, 0.002, brightness=7000) * 0.8
+                                 + band_noise(sec, 2000, 8000) * envelope(n, 0.002, 0.04) * 0.4, 0.75)
+    rng = saved
+    return s
+
+
 def write_ogg(path, samples):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     pcm = (np.clip(samples, -1, 1) * 32767).astype(np.int16)
@@ -164,13 +197,19 @@ EVENTS = {
     "gear.strap_out": (["gear/strap_out"], "gear.strap_out"),
     "gear.wax_apply": (["gear/wax_apply"], "gear.wax_apply"),
     "gear.tune": (["gear/tune"], "gear.tune"),
+    "grind.rail.metal": (["grind/rail_metal"], "grind.rail_metal"),
+    "grind.rail.copper": (["grind/rail_copper"], "grind.rail_copper"),
+    "grind.box.wood": (["grind/box_wood"], "grind.box_wood"),
+    "grind.box.metal": (["grind/box_metal"], "grind.box_metal"),
+    "grind.box.plastic": (["grind/box_plastic"], "grind.box_plastic"),
+    "grind.catch": (["grind/catch"], "grind.catch"),
 }
 
 
 def main():
     if not os.path.isdir(ROOT):
         sys.exit("run from the repository root")
-    audio = {**loops(), **one_shots()}
+    audio = {**loops(), **one_shots(), **park_sounds()}
     for name, samples in audio.items():
         write_ogg(os.path.join(SOUNDS, name + ".ogg"), samples)
     sounds_json = {}

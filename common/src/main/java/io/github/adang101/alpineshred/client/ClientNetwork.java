@@ -42,6 +42,7 @@ public final class ClientNetwork {
                     // In singleplayer these are the integrated server's own values coming back.
                     TuningData.setTuning(tuning.tuning());
                     TuningData.setSurfaces(tuning.surfaces());
+                    TuningData.setBoxMaterials(tuning.boxMaterials());
                     if (!tuning.gear().isEmpty()) GearStatsRegistry.replace(tuning.gear());
                 } catch (IOException e) {
                     AlpineShred.LOGGER.warn("Ignoring bad tuning_sync from server: {}", e.getMessage());

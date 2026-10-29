@@ -1,0 +1,74 @@
+{
+ "parent": "minecraft:block/block",
+ "textures": {
+  "post": "alpineshred:block/marker_post",
+  "sign": "alpineshred:block/slope_marker_green",
+  "particle": "alpineshred:block/slope_marker_green"
+ },
+ "elements": [
+  {
+   "from": [
+    7,
+    0.0,
+    7
+   ],
+   "to": [
+    9,
+    16.0,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#post"
+    },
+    "east": {
+     "texture": "#post"
+    },
+    "south": {
+     "texture": "#post"
+    },
+    "west": {
+     "texture": "#post"
+    },
+    "up": {
+     "texture": "#post"
+    },
+    "down": {
+     "texture": "#post"
+    }
+   }
+  },
+  {
+   "from": [
+    4,
+    10,
+    7
+   ],
+   "to": [
+    12,
+    15,
+    9
+   ],
+   "faces": {
+    "north": {
+     "texture": "#sign"
+    },
+    "east": {
+     "texture": "#post"
+    },
+    "south": {
+     "texture": "#sign"
+    },
+    "west": {
+     "texture": "#post"
+    },
+    "up": {
+     "texture": "#post"
+    },
+    "down": {
+     "texture": "#post"
+    }
+   }
+  }
+ ]
+}

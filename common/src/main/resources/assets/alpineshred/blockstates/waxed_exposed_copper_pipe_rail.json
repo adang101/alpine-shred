@@ -1,0 +1,676 @@
+{
+ "multipart": [
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "north"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_flat"
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "north",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_flat"
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "north",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_flat"
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "north",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_flat"
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "east"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_flat",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "east",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_flat",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "east",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_flat",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "east",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_flat",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "south"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_flat",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "south",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_flat",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "south",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_flat",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "south",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_flat",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "west"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_flat",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "west",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_flat",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "west",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_flat",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "flat",
+    "facing": "west",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_flat",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "north"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_a"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "north",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_a"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "north",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_a"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "north",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_a"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "east"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_a",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "east",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_a",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "east",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_a",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "east",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_a",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "south"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_a",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "south",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_a",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "south",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_a",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "south",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_a",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "west"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_a",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "west",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_a",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "west",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_a",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_a",
+    "facing": "west",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_a",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "north"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_b"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "north",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_b"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "north",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_b"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "north",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_b"
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "east"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_b",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "east",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_b",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "east",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_b",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "east",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_b",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "south"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_b",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "south",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_b",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "south",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_b",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "south",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_b",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "west"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_rise_b",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "west",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_rise_b",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "west",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_rise_b",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "rise_b",
+    "facing": "west",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_rise_b",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "north"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_curve"
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "north",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_curve"
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "north",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_curve"
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "north",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_curve"
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "east"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_curve",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "east",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_curve",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "east",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_curve",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "east",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_curve",
+    "y": 90
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "south"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_curve",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "south",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_curve",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "south",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_curve",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "south",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_curve",
+    "y": 180
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "west"
+   },
+   "apply": {
+    "model": "alpineshred:block/exposed_copper_pipe_rail_curve",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "west",
+    "connected_a": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_a_curve",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "west",
+    "connected_b": "false"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_cap_b_curve",
+    "y": 270
+   }
+  },
+  {
+   "when": {
+    "shape": "curve",
+    "facing": "west",
+    "legs": "true"
+   },
+   "apply": {
+    "model": "alpineshred:block/rail_legs_curve",
+    "y": 270
+   }
+  }
+ ]
+}
