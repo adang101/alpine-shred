@@ -89,7 +89,7 @@ public class GroomedRunPiece extends StructurePiece {
         int minZ = Math.max(chunkBox.minZ(), boundingBox.minZ()), maxZ = Math.min(chunkBox.maxZ(), boundingBox.maxZ());
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
-                int ground = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
+                int ground = groundAt(level, pos, x, z);
                 if (!level.getFluidState(pos.set(x, ground, z)).isEmpty()) continue; // never into water
                 RunShape.Column c = RunShape.column(plan, x, z, ground);
                 switch (c.kind()) {
@@ -103,12 +103,28 @@ public class GroomedRunPiece extends StructurePiece {
         BlockState marker = markerBlock();
         for (int[] m : RunShape.markers(plan)) {
             if (!chunkBox.isInside(m[0], chunkBox.minY(), m[1])) continue;
-            int y = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, m[0], m[1]);
+            int y = groundAt(level, pos, m[0], m[1]);
             pos.set(m[0], y, m[1]);
             if (level.getBlockState(pos).canBeReplaced() && level.getFluidState(pos).isEmpty()) {
                 level.setBlock(pos, marker, Block.UPDATE_CLIENTS);
             }
         }
+    }
+
+    /**
+     * The first block above the ground at (x, z): below any tree that a neighbouring chunk's
+     * decoration has already grown into this one, and below plants and snow layers.
+     */
+    private static int groundAt(WorldGenLevel level, BlockPos.MutableBlockPos pos, int x, int z) {
+        int y = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
+        int floor = Math.max(level.getMinBuildHeight(), y - 40);
+        while (y > floor) {
+            BlockState below = level.getBlockState(pos.set(x, y - 1, z));
+            if (!(below.is(BlockTags.LOGS) || below.is(BlockTags.LEAVES) || below.is(Blocks.SNOW)
+                    || (below.canBeReplaced() && below.getFluidState().isEmpty()))) break;
+            y--;
+        }
+        return y;
     }
 
     private void groom(WorldGenLevel level, BlockPos.MutableBlockPos pos, int x, int z, int ground, int surface) {

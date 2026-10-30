@@ -63,6 +63,25 @@ jobs:
           mkdir -p forge/build/gametest && echo "eula=true" > forge/build/gametest/eula.txt
           ./gradlew :forge:runGameTestServer $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/4-forge-gametest.log"
 
+      # Phase 7's visual review: a default world with structures on; the server finds, builds and
+      # counts the nearest of each Alpine Shred structure and the client pictures it from above.
+      - name: Worldgen tour (Forge client, default world)
+        if: success() || failure()
+        timeout-minutes: 25
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1-mesa-dri > /dev/null
+          mkdir -p forge/build/smoke-worldgen/config
+          printf '%s\n' onboardAccessibility:false skipMultiplayerWarning:true tutorialStep:none \
+            pauseOnLostFocus:false renderDistance:10 simulationDistance:6 narrator:0 maxFps:30 \
+            joinedFirstServer:true soundCategory_master:0.0 > forge/build/smoke-worldgen/options.txt
+          printf 'earlyWindowControl = false\n' > forge/build/smoke-worldgen/config/fml.toml
+          xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew :forge:runWorldgenClient $GRADLE_ARGS 2>&1 \
+            | tee "$RUNNER_TEMP/ci-logs/7b-worldgen.log"
+          cat forge/build/smoke-worldgen/alpineshred-smoke.txt
+          grep -q "^RESULT PASS" forge/build/smoke-worldgen/alpineshred-smoke.txt
+
       # The real Forge client on a virtual display (Mesa software GL): starts, creates a flat world,
       # rides a generated run with simulated keys, takes screenshots and quits (ClientSmoke). Forge,
       # because the Fabric dev client cannot start: Trinkets 3.7.2 shadows a Yarn field name that
@@ -99,22 +118,6 @@ jobs:
             | tee "$RUNNER_TEMP/ci-logs/7-mountain.log"
           cat forge/build/smoke-mountain/alpineshred-smoke.txt
           grep -q "^RESULT PASS" forge/build/smoke-mountain/alpineshred-smoke.txt
-
-      # Phase 7's visual review: a default world with structures on; the server finds, builds and
-      # counts the nearest of each Alpine Shred structure and the client pictures it from above.
-      - name: Worldgen tour (Forge client, default world)
-        if: success() || failure()
-        timeout-minutes: 25
-        env:
-          LIBGL_ALWAYS_SOFTWARE: "1"
-        run: |
-          mkdir -p forge/build/smoke-worldgen/config
-          cp forge/build/smoke/options.txt forge/build/smoke-worldgen/options.txt
-          printf 'earlyWindowControl = false\n' > forge/build/smoke-worldgen/config/fml.toml
-          xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew :forge:runWorldgenClient $GRADLE_ARGS 2>&1 \
-            | tee "$RUNNER_TEMP/ci-logs/7b-worldgen.log"
-          cat forge/build/smoke-worldgen/alpineshred-smoke.txt
-          grep -q "^RESULT PASS" forge/build/smoke-worldgen/alpineshred-smoke.txt
 
       # Phase 4: the client rides a park line (rail, boxes, quarter pipe) and pictures the tools.
       - name: Park ride (Forge client)

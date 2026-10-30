@@ -582,6 +582,12 @@ covered by a test or noted in code.
     samples. Water, for the planner, is a surface at or below sea level.
 58. **`worldgen.frequencyMul` thins starts** (below 1, by the start's own seed); spacing stays the
     structure set's, since sets are data a pack may change.
+59. **Runs and resorts are over section 19's generation budget**: on the CI machine (two cores) a
+    run start takes about 230 ms and a resort about 190 ms, against 50 and 150 ms; parks and snow
+    features take about 3 ms. The planner reads the generator's own heights from a lattice every 8
+    blocks, about a hundred noise columns a run at a millisecond or two each. A run is planned once
+    per candidate chunk (one per 22 by 22 chunk region) on a world generation thread, and away from
+    snowy biomes a candidate costs five biome samples. The game test fails if the means pass 400 ms.
 
 Not in phases 5 to 7, by design: lift statistics and the `lift_ridden` trigger, and the resort's
 lift line (phase 8), line fill and waxing vanilla blocks (v1.1), PNG import of designs (v1.1).

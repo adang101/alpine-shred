@@ -48,7 +48,7 @@ public final class WorldgenSurvey {
     }
 
     /** Structure, search radius in chunks. */
-    private static final Object[][] SURVEY = {{"ski_resort", 100}, {"terrain_park", 64}, {"groomed_run", 64}, {"snow_feature", 32}};
+    private static final Object[][] SURVEY = {{"ski_resort", 200}, {"terrain_park", 100}, {"groomed_run", 120}, {"snow_feature", 50}};
     private static final int MAX_CHUNKS_FROM_START = 7;
 
     private WorldgenSurvey() {
