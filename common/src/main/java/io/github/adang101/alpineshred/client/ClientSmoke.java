@@ -126,6 +126,12 @@ public final class ClientSmoke {
 
     private static Stage stage = Stage.MENU;
     private static int ticks;
+    /**
+     * A screenshot stalls the client for a moment, and its game time falls behind the server's until
+     * the next time sync: a watcher's samples just after one are not written (they would be stamped
+     * with the wrong game time).
+     */
+    private static int quietUntil;
     private static int stageTicks;
     private static int frames;
     private static BlockPos origin;
@@ -618,7 +624,7 @@ public final class ClientSmoke {
         if (state.isStrapped() && Double.isNaN(riderStartZ)) riderStartZ = z;
         if (!Double.isNaN(riderStartZ)) riderMaxZ = Double.isNaN(riderMaxZ) ? z : Math.max(riderMaxZ, z);
         long gt = mc.level.getGameTime();
-        if (state != lastState || gt % 5 == 0) {
+        if ((state != lastState || gt % 5 == 0) && ticks >= quietUntil) {
             note(String.format(Locale.ROOT, "watch gt%d %s %.2f %.2f %.2f clip %s", gt, state, rider.getX(), rider.getY(), rider.getZ(),
                     RiderTracker.clipOf(rider)));
         }
@@ -1043,6 +1049,9 @@ public final class ClientSmoke {
      */
     private static void request(Minecraft mc, String name, CameraType type, float orbitYaw, float pitch, float distance) {
         if (pending != null || shots.contains(name)) return;
+        // The multiplayer rider takes none: the single-player run takes the same pictures, and a
+        // stalled rider looks to the watchers like a rider stopped in the air.
+        if (MULTI && !WATCHER) return;
         mc.options.setCameraType(type);
         if (Float.isNaN(orbitYaw)) {
             CameraOrbit.clear();
@@ -1058,6 +1067,7 @@ public final class ClientSmoke {
         Screenshot.grab(mc.gameDirectory, "smoke_" + shot.name() + ".png", mc.getMainRenderTarget(), message -> {
         });
         shots.add(shot.name());
+        quietUntil = ticks + 30;
         LocalPlayer player = mc.player;
         String where = player == null || origin == null ? "" : String.format(Locale.ROOT, " at z %.1f, %s",
                 player.getZ() - origin.getZ(), RideDriver.INSTANCE.localState(player));
