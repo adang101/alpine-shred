@@ -204,6 +204,43 @@ class RideValidatorTest {
         assertEquals(RideValidator.Kind.VIOLATION, last, "hovering up after a small launch");
     }
 
+    /**
+     * The multiplayer smoke test's second case: the board stays on the kicker past its reported
+     * launch's window, then leaves the lip still rising. The arc continues from the rise seen on
+     * the way off; it does not stretch into hovering.
+     */
+    @Test
+    void leavingALipAfterTheLaunchWindowKeepsTheArc() {
+        RideValidator v = new RideValidator();
+        double y = 64, z = 0;
+        v.observe(0, 0, y, z, true, LIMITS);
+        v.noteRampLaunch(0, 0.243, LIMITS);
+        int tick = 1;
+        for (; tick <= 6; tick++) { // still on the ramp, climbing it
+            y += 0.2;
+            z += 0.7;
+            assertEquals(RideValidator.Kind.OK, v.observe(tick, 0, y, z, true, LIMITS).kind(), "on the ramp, tick " + tick);
+        }
+        double vy = 0.243;
+        for (int n = 0; n < 14; n++, tick++) {
+            y += vy;
+            z += 0.7;
+            vy = Ballistics.nextVerticalVelocity(vy);
+            RideValidator.Verdict verdict = v.observe(tick, 0, y, z, false, LIMITS);
+            assertEquals(RideValidator.Kind.OK, verdict.kind(), "tick " + tick + ": " + verdict.reason());
+        }
+        RideValidator hover = new RideValidator();
+        hover.observe(0, 0, 64, 0, true, LIMITS);
+        double h = 64.243;
+        hover.observe(1, 0, h, 0.7, false, LIMITS);
+        RideValidator.Kind last = RideValidator.Kind.OK;
+        for (int t = 2; t < 14 && last == RideValidator.Kind.OK; t++) {
+            h += 0.1;
+            last = hover.observe(t, 0, h, t * 0.7, false, LIMITS).kind();
+        }
+        assertEquals(RideValidator.Kind.VIOLATION, last, "hovering up after leaving a lip");
+    }
+
     @Test
     void reportedLaunchesAreCappedAtThePhysicalMaximum() {
         RideValidator v = new RideValidator();
