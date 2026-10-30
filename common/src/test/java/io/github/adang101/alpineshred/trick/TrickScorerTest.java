@@ -134,4 +134,16 @@ class TrickScorerTest {
         assertNotNull(TrickValidator.check(new GrindReport(0, 0, 0, false, 0, 5, false, 8, 200, 0), 22, 1.6));
         assertNotNull(TrickValidator.check(new GrindReport(0, 0, 0, false, 0, 5, false, 80, 20, 0), 22, 1.6));
     }
+
+    @Test
+    void slopeErrorIsTheAngleBetweenTheVelocityAndTheSurface() {
+        assertEquals(0.0, TrickAngles.lineAngle(1, 0, 1, 0), 1.0e-9);
+        assertEquals(45.0, TrickAngles.lineAngle(1, -1, 1, 0), 1.0e-9);
+        assertEquals(0.0, TrickAngles.lineAngle(0, -1, 0, 1), 1.0e-9);      // a line and its reverse
+        assertEquals(10.0, TrickAngles.lineAngle(1, -Math.tan(Math.toRadians(30)), 1, -Math.tan(Math.toRadians(20))), 1.0e-9);
+        // Straight down onto the top of a quarter pipe's wall: a perfect match; flat onto the transition too.
+        assertEquals(0.0, TrickAngles.pipeSlopeError(0, -1, Math.PI / 2), 1.0e-9);
+        assertEquals(0.0, TrickAngles.pipeSlopeError(-0.5, 0, 0), 1.0e-9);
+        assertEquals(90.0, TrickAngles.pipeSlopeError(0, -1, 0), 1.0e-9);
+    }
 }

@@ -256,6 +256,11 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = RideGameTests.LARGE)
+    public static void aReportBeforeItsLandingIsJudgedOnThatAir(GameTestHelper helper) {
+        TrickGameTests.aReportBeforeItsLandingIsJudgedOnThatAir(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
     public static void trickAdvancementsFire(GameTestHelper helper) {
         TrickGameTests.trickAdvancementsFire(helper);
     }

@@ -28,4 +28,21 @@ public final class TrickAngles {
     public static double headingError(double takeoffRelative, double yawAccum) {
         return residual(takeoffRelative + yawAccum, 180.0);
     }
+
+    /**
+     * Degrees between two lines in one vertical plane, each given as a direction (along the plane's
+     * horizontal axis, then up): 0 to 90, a direction and its reverse being the same line. The slope
+     * error of a landing is the angle between the rider's velocity and the surface it lands on.
+     */
+    public static double lineAngle(double along1, double up1, double along2, double up2) {
+        return residual(Math.toDegrees(Math.atan2(up1, along1) - Math.atan2(up2, along2)), 180.0);
+    }
+
+    /**
+     * The slope error landing on a quarter pipe's arc at {@code theta} (0 at the transition, pi / 2
+     * at the vertical) with velocity {@code along} the pipe's facing and {@code vy} up.
+     */
+    public static double pipeSlopeError(double along, double vy, double theta) {
+        return lineAngle(along, vy, Math.cos(theta), Math.sin(theta));
+    }
 }

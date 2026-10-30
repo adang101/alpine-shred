@@ -858,8 +858,9 @@ public final class ClientSmoke {
         boolean jump = z > 50 && z < 52.5;
         boolean brake = z > 104;
         hold(mc.options.keyUp, skate);
-        // Off the kicker on the board: a 360 (hold D until the board has come round), for the trick checks.
-        boolean spin = !skis && state == RideState.AIR && z > KICKER && c != null && Math.abs(c.spinAngle()) < 340;
+        // Off the kicker on the board: a frontside 180 (hold D until the board is round; the kicker's
+        // 11 or so ticks of air are short of the 17 a 360 takes at 24 degrees a tick), for the trick checks.
+        boolean spin = !skis && state == RideState.AIR && z > KICKER && c != null && Math.abs(c.spinAngle()) < 170;
         hold(mc.options.keyRight, right || spin);
         hold(mc.options.keyLeft, left);
         hold(mc.options.keyJump, jump);
@@ -932,15 +933,20 @@ public final class ClientSmoke {
     }
 
     /**
-     * Phase 5's exit gate, "server scores match the client HUD": the 360 off the kicker reached the
+     * Phase 5's exit gate, "server scores match the client HUD": the 180 off the kicker reached the
      * popup, and the combo the popup banked is the one the server banked.
      */
     private static void checkTricks() {
         var received = io.github.adang101.alpineshred.client.trick.TrickHud.received();
         note("tricks received: " + received);
-        boolean spun = received.stream().anyMatch(r -> r.lines().stream().anyMatch(l -> l.id().equals("spin_360")));
-        check(spun, "board: the 360 off the kicker never reached the popup");
         ServerPlayer sp = serverPlayer;
+        if (sp != null) {
+            note("server: last trick " + io.github.adang101.alpineshred.trick.TrickServer.lastResult(sp) + ", violations "
+                    + io.github.adang101.alpineshred.movement.RideServer.violations(sp) + ", last reason "
+                    + io.github.adang101.alpineshred.movement.RideServer.lastReason(sp));
+        }
+        boolean spun = received.stream().anyMatch(r -> r.lines().stream().anyMatch(l -> l.id().equals("spin_180")));
+        check(spun, "board: the 180 off the kicker never reached the popup");
         int server = sp == null ? -1 : io.github.adang101.alpineshred.trick.TrickServer.lastBanked(sp);
         int hud = io.github.adang101.alpineshred.client.trick.TrickHud.lastBankedTotal();
         note("banked: server " + server + ", popup " + hud);

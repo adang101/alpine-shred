@@ -112,6 +112,48 @@ art/      placeholder generators: textures, models, rider clips, sounds, particl
           park blockstates and models
 ```
 
+## What phase 5 delivers
+
+- **Tricks in the air** (in `SlideController`, rates in `AirRotation`). A and D spin (ramping to 24
+  degrees per tick on a board, 28 on skis), W and S flip, Z X C V grab Indy, Mute, Nose and Tail,
+  sneak grabs Method; a grab slows rotation by 20%. The board turns with the spin; flips turn the
+  rider's body (a snowboarder rolls, a skier pitches).
+- **Landing grades** (`LandingQuality`). The board's angle to the direction of travel (a switch
+  landing counts as straight), the flip left over and the descent against the slope landed on (a
+  quarter pipe's arc included) give PERFECT, CLEAN, SKETCHY (40% speed lost) or BAIL (a wipeout),
+  widened by the gear's landing forgiveness. Off a rail or box the board turns out of the slide by
+  itself. The landing clip, sound and snow poof follow the grade.
+- **Scoring** (`TrickScorer`, `Combo`). Section 8's catalog: spins by half-turns, flips, grabs by
+  time held (mitts add 10%), grinds and box slides per second by variant, switch entries, switch-ups,
+  spin in and spin out, air time and height; variety and combo multipliers, landing factors, the
+  repeat rule and the `trick.maxComboScore` cap. A combo continues while the next landing or grind
+  entry comes within 60 ground ticks at speed, banks when it runs out, and a bail loses it.
+- **Server authority** (`TrickServer`, `TrickValidator`). The client reports each air session with
+  something to score and each rail or box (`c2s/air_report`, `c2s/grind_report`); the server times
+  every session itself from the rider's state claims on the rider clock, and checks the reports
+  against that (air ticks, apex, time on the rail), the rail or box in the world, the spin and flip
+  rates, and the landing heading against the spin, then grades the landing with the slope it reads
+  from the world and scores it. A forged report scores nothing and counts as a violation.
+  Results go back as `s2c/trick_result` (to the rider, or as `trick.broadcast` says) and fire
+  `TrickEvents.LANDED` for other mods.
+- **Popup.** At the top center: the combo's tricks stacking up, its running score and multiplier,
+  and a timer bar draining over the 60 ground ticks. On a bank, the total and a chime; on a bail,
+  "Bail!" and a thud. Every number is the server's.
+- **Statistics and advancements.** Custom stats `trick_score`, `tricks_landed`, `air_time`,
+  `grind_distance`, `lift_rides`, `ride_distance` and `best_combo`; triggers `trick_landed` and
+  `grind_completed`; advancements `root`, `first_run`, `waxed_up`, `first_grind`, `first_air` and
+  `spin_cycle`; `/alpineshred stats [player]`.
+- **Animation.** Ten grab clips (five each for board and skis), flips turning the body root, and
+  the perfect, clean and sketchy landing clips. Remote riders' grabs and flips come from the synced
+  state's grab and rotation flags, which the server now passes on in the air.
+- **Tests.** Unit tests for the catalog, landing windows, combo formula, report bounds and wire
+  formats, and the controller's spins, flips and grabs; game tests sending forged and honest reports
+  through the server (rejected and counted; scored exactly), a report arriving before its landing's
+  claim (the order a real client sends them in), chaining and banking into the stats, a bail losing
+  the combo, grind reports needing their rail, and the advancements; and the smoke run spins a 180
+  off the kicker and checks the popup banked the same total the server did (the kicker's air is
+  short of the 17 ticks a 360 takes; the game tests and unit tests score 360s).
+
 ## What phase 4 delivers
 
 - **Rails** (`RailBlock`, section 10). `pipe_rail`, `flat_rail`, the copper pipe rail in four
@@ -370,9 +412,40 @@ covered by a test or noted in code.
     carries its color in the vanilla `BlockStateTag`, the creative tab lists all 16 and broken
     boxes keep theirs.
 
-Not in phase 4, by design: trick scoring for grinds and slides, spin-ins and the
-`grind_completed` advancement (phase 5), line fill and waxing vanilla blocks (v1.1). Real
-animation clips, sounds and textures replace the placeholders file by file under the same names.
+33. **Spins count to the nearest half-turn** (170 degrees is a 180): the landing grade already
+    charges for an under-rotated landing. Flips likewise. A grab needs 3 ticks to count.
+34. **The combo clock runs on the ground only.** Section 8's "within 60 ticks" would end every
+    combo during a long air; the clock pauses in the air and on rails, and restarts on any landing.
+35. **Repeats score half** each time after the first in a combo (not a quarter, then an eighth).
+36. **Variety and combo multipliers apply to the whole combo**, so the popup shows one running
+    total and one multiplier; each landing's own points carry its landing factor (and 1.1 when
+    switch) as they come in.
+37. **A grind's entry grade** is PERFECT within 15 degrees of its variant's own line (along the rail
+    for a 50-50, across it for a boardslide, 45 degrees off for nose and tail), otherwise CLEAN. An
+    air session that ends on a rail scores its tricks at CLEAN; the grind's report grades the entry.
+38. **The landing heading is judged against the way of travel at takeoff**, which the air does not
+    change: the report carries the board's angle at takeoff, the heading error is that plus the
+    spin, and rule 4 checks exactly that. Hitting a wall in the air no longer turns a clean landing
+    into a bail, and a rider going straight up out of a quarter pipe is judged against the wall's
+    fall line, not the drift along it.
+39. **Two extra statistics**: `ride_distance` (for `first_run`, through a vanilla tick trigger with a
+    player stats predicate) and `best_combo` (for `/alpineshred stats`).
+40. **`trick_landed`'s `min_score`** is the landing's own points before the combo multipliers.
+41. **Off a rail or box the board turns out of the slide by itself** (30 degrees a tick, to the
+    nearer of forward and switch), so riding a boardslide off the end is no bail; spins count from
+    there.
+42. **Hops with nothing to score send no report.** The server sees every landing in the state
+    claims, and any landing restarts the combo clock.
+43. **The server times sessions on the rider clock** (the client's ticks, counted in move packets)
+    from the state claims, in packet order, not by sampling the state each server tick: a report
+    comes just before its landing's claim, and on a real connection several claims can arrive
+    between two server ticks.
+44. **Landing slope on a quarter pipe** is the angle between the velocity and the arc where the rider
+    comes down (straight down onto the top of the wall is a perfect match).
+
+Not in phase 5, by design: lift statistics and the `lift_ridden` trigger (phase 8), `park_rat`
+(phase 7), `fresh_coat` (phase 6), line fill and waxing vanilla blocks (v1.1). Real animation
+clips, sounds and textures replace the placeholders file by file under the same names.
 
 ## License
 

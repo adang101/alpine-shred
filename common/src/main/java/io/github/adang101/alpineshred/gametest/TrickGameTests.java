@@ -19,6 +19,7 @@ import io.github.adang101.alpineshred.trick.TrickServer;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -46,12 +47,32 @@ public final class TrickGameTests {
 
     /** {@code ticks} of air as the server sees it (claimed AIR, not standing), then a landing. */
     private static void airSession(ServerPlayer player, int ticks) {
+        takeOff(player);
+        clientTicks(player, ticks);
+        land(player);
+    }
+
+    private static void takeOff(ServerPlayer player) {
         player.setOnGround(false);
         check(RideServer.handleState(player, Riders.get(player).withState(RideState.AIR).pack()), "AIR refused");
-        for (int i = 0; i < ticks; i++) StrapController.serverTick(player);
+    }
+
+    private static void land(ServerPlayer player) {
         player.setOnGround(true);
         check(RideServer.handleState(player, Riders.get(player).withState(RideState.GLIDE).pack()), "landing GLIDE refused");
-        StrapController.serverTick(player);
+        clientTicks(player, 1);
+    }
+
+    /**
+     * {@code n} ticks of a client: a move packet each (the rider clock trick sessions are timed on
+     * counts them), then the server's tick.
+     */
+    private static void clientTicks(ServerPlayer player, int n) {
+        for (int i = 0; i < n; i++) {
+            player.connection.handleMovePlayer(new ServerboundMovePlayerPacket.PosRot(player.getX(), player.getY(), player.getZ(),
+                    player.getYRot(), player.getXRot(), player.onGround()));
+            StrapController.serverTick(player);
+        }
     }
 
     private static AirReport spin(double yaw, int ticks, double headingError) {
@@ -160,9 +181,9 @@ public final class TrickGameTests {
             Vec3 on = course.at(Course.CENTER_X, 2.5, 8.5);
             player.setPos(on.x, on.y, on.z);
             check(RideServer.handleState(player, Riders.get(player).withState(RideState.GRIND).pack()), "GRIND refused on a rail");
-            for (int i = 0; i < 20; i++) StrapController.serverTick(player);
+            clientTicks(player, 20);
             check(RideServer.handleState(player, Riders.get(player).withState(RideState.AIR).pack()), "AIR refused");
-            StrapController.serverTick(player);
+            clientTicks(player, 1);
             int before = RideServer.violations(player);
             TrickServer.handleGrind(player, new GrindReport(nothing.getX(), nothing.getY(), nothing.getZ(), false, 0, 5, false, 6, 20, 0));
             check(TrickServer.lastResult(player) == null, "a grind with no rail scored");
@@ -173,6 +194,30 @@ public final class TrickGameTests {
             TrickResult result = TrickServer.lastResult(player);
             check(result != null && result.quality() == LandingQuality.PERFECT, "50-50 entered 5 degrees off: " + result);
             check(result.points() == (int) Math.round(40 * 1.0 * 1.25), "points " + result.points());
+            helper.succeed();
+        } finally {
+            RideGameTests.removeServerPlayer(player);
+        }
+    }
+
+    /**
+     * The order a real client sends things in: the report from the landing tick comes before the
+     * landing's state claim, and a one-tick hop just before the air does not stand in for it.
+     */
+    public static void aReportBeforeItsLandingIsJudgedOnThatAir(GameTestHelper helper) {
+        ServerPlayer player = null;
+        try {
+            player = rider(helper, new Course(helper));
+            airSession(player, 1);                                     // a bump: one tick of air, no report
+            clientTicks(player, 3);
+            takeOff(player);
+            clientTicks(player, 12);
+            int before = RideServer.violations(player);
+            TrickServer.handleAir(player, spin(180, 12, 0));           // before the landing claim
+            land(player);
+            TrickResult result = TrickServer.lastResult(player);
+            check(RideServer.violations(player) == before, "an honest 180 was flagged: " + RideServer.violations(player));
+            check(result != null && result.lines().stream().anyMatch(l -> l.id().equals("spin_180")), "the 180 did not score: " + result);
             helper.succeed();
         } finally {
             RideGameTests.removeServerPlayer(player);

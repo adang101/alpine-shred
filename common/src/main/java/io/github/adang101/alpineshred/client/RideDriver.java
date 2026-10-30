@@ -152,7 +152,11 @@ public final class RideDriver implements RideHooks.ClientDriver {
             } else if (event instanceof SlideController.Launched launch) {
                 ModNetwork.sendRideAction(RideAction.LAUNCH, (int) Math.round(launch.velocity() * 1000));
             } else if (event instanceof SlideController.TrickLanded landed) {
-                ModNetwork.sendAirReport(landed.report());
+                // Hops with nothing to score stay home: the server sees the landing in the state
+                // claims, and that alone keeps a combo going.
+                if (!io.github.adang101.alpineshred.trick.TrickScorer.air(landed.report(), false).isEmpty()) {
+                    ModNetwork.sendAirReport(landed.report());
+                }
             } else if (event instanceof SlideController.GrindEnded ended) {
                 ModNetwork.sendGrindReport(ended.report());
             }

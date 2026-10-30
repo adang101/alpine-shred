@@ -255,6 +255,11 @@ public final class FabricGameTests implements FabricGameTest {
     }
 
     @GameTest(template = LARGE)
+    public static void aReportBeforeItsLandingIsJudgedOnThatAir(GameTestHelper helper) {
+        TrickGameTests.aReportBeforeItsLandingIsJudgedOnThatAir(helper);
+    }
+
+    @GameTest(template = LARGE)
     public static void trickAdvancementsFire(GameTestHelper helper) {
         TrickGameTests.trickAdvancementsFire(helper);
     }

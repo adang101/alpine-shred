@@ -203,6 +203,19 @@ public final class RideServer {
         return r.clientClock + pending - 1;
     }
 
+    /**
+     * The rider clock as of the last packet handled: the client ticks counted so far, including the
+     * move packets that came in since the last server tick. Trick sessions are timed on it.
+     */
+    public static long packetClock(Player player) {
+        Rider r = rider(player);
+        int pending = 0;
+        if (player instanceof ServerPlayer sp && sp.connection != null && r.lastReceived >= 0) {
+            pending = Math.max(0, ((ServerGamePacketListenerAccessor) sp.connection).alpineshred$receivedMovePackets() - r.lastReceived);
+        }
+        return r.clientClock + pending;
+    }
+
     private static void advanceClock(Player player, Rider r) {
         int packets = 1;
         if (player instanceof ServerPlayer sp && sp.connection != null) {
@@ -281,13 +294,18 @@ public final class RideServer {
                     wanted.state() + " claimed with no " + (wanted.state() == RideState.GRIND ? "rail" : "box") + " there", limits(player)));
             return false;
         }
-        // The server owns the mode; grabs and trick flags arrive with phase 5.
-        RideSnapshot accepted = new RideSnapshot(wanted.state(), current.mode(), wanted.goofy(), false, GrabType.NONE,
-                0, wanted.lean(), wanted.speedLevel(), wanted.headingStep());
+        // The server owns the mode. Grabs and the spin and flip flags are for watchers' animation,
+        // and only mean anything in the air; the trick reports carry what scores.
+        boolean air = wanted.state() == RideState.AIR;
+        RideSnapshot accepted = new RideSnapshot(wanted.state(), current.mode(), wanted.goofy(), air && wanted.grabActive(),
+                air ? wanted.grab() : GrabType.NONE, air ? wanted.flags() : 0, wanted.lean(), wanted.speedLevel(), wanted.headingStep());
         if (wanted.state() == RideState.WIPEOUT && current.state() != RideState.WIPEOUT) {
             wipeoutDamage(player, r.recentSpeed());
         }
         Riders.set(player, accepted);
+        if (player instanceof ServerPlayer sp) {
+            io.github.adang101.alpineshred.trick.TrickServer.claimed(sp, current.state(), wanted.state());
+        }
         return true;
     }
 

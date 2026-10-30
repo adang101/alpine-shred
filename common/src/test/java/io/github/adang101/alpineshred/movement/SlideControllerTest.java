@@ -179,6 +179,81 @@ class SlideControllerTest {
     }
 
     @Test
+    void theReportedHeadingErrorIsTheTakeoffOffsetPlusTheSpin() {
+        // Validation rule 4 on the server checks exactly this, so an honest client always passes it.
+        for (double target : new double[]{0, 60, 100, 165, 200, 250, 335}) {
+            VoxelBody body = kicker();
+            SlideController c = riding(body, 0.8);
+            SlideController.TrickLanded landed = airOffTheKicker(body, c,
+                    ctl -> Math.abs(ctl.spinAngle()) < target ? new RideInput(1, 0, 0, false, false, GrabType.NONE) : RideInput.coast(0));
+            var r = landed.report();
+            assertEquals(io.github.adang101.alpineshred.trick.TrickAngles.headingError(r.takeoffRelative(), r.yawAccum()),
+                    r.headingError(), 1.0e-9, "spin to " + target);
+        }
+    }
+
+    /**
+     * A long rail on posts beyond the kicker's drop: a 90 in the air catches it as a boardslide, and
+     * off its end the board turns out of the slide by itself, so the landing is no bail.
+     */
+    @Test
+    void offTheEndOfABoardslideTheBoardTurnsOutOnItsOwn() {
+        java.util.Map<Long, io.github.adang101.alpineshred.park.GrindPath> rail = new java.util.HashMap<>();
+        for (int z = 12; z < 40; z++) {
+            rail.put((long) z, new io.github.adang101.alpineshred.park.GrindPath(z, io.github.adang101.alpineshred.park.RailPath.at(
+                    io.github.adang101.alpineshred.park.RailShape.FLAT, io.github.adang101.alpineshred.park.Facing.NORTH, 0, -4, z),
+                    io.github.adang101.alpineshred.park.GrindMaterial.METAL, 0.0008));
+        }
+        io.github.adang101.alpineshred.park.GrindPhysics.Lookup lookup = p -> {
+            List<io.github.adang101.alpineshred.park.GrindPath> out = new ArrayList<>();
+            int by = (int) Math.floor(p.y()), bz = (int) Math.floor(p.z());
+            if (Math.abs(Math.floor(p.x())) <= 1 && by >= -5 && by <= -3) {
+                for (int z = bz - 1; z <= bz + 1; z++) {
+                    if (rail.containsKey((long) z)) out.add(rail.get((long) z));
+                }
+            }
+            return out;
+        };
+        VoxelBody body = new VoxelBody(VoxelBody.Terrain.of((x, z) -> z < 10 ? 0 : z < 11 ? 1 : -6, SurfaceProfile.GROOMED), 0.5, 0.5);
+        body.park = new io.github.adang101.alpineshred.park.ParkView() {
+            public io.github.adang101.alpineshred.park.GrindPhysics.Lookup grinds() {
+                return lookup;
+            }
+
+            public io.github.adang101.alpineshred.park.PipeSection pipeNear(io.github.adang101.alpineshred.park.V3 feet) {
+                return null;
+            }
+
+            public boolean lipNear(io.github.adang101.alpineshred.park.V3 feet) {
+                return false;
+            }
+        };
+        SlideController c = riding(body, 0.8);
+        List<SlideController.TrickLanded> landings = new ArrayList<>();
+        boolean slid = false;
+        for (int tick = 0; tick < 200 && landings.stream().noneMatch(l -> l.report().fromRail()); tick++) {
+            boolean spin = c.state() == RideState.AIR && !slid && Math.abs(c.spinAngle()) < 80;
+            c.tick(body, spin ? new RideInput(1, 0, 0, false, false, GrabType.NONE) : RideInput.coast(0), BOARD);
+            slid |= c.state() == RideState.GRIND;
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.TrickLanded l) landings.add(l);
+                if (e instanceof SlideController.GrindEnded g) {
+                    assertEquals(io.github.adang101.alpineshred.park.GrindPhysics.Variant.BOARDSLIDE.ordinal(), g.report().variant(),
+                            "caught as a boardslide");
+                    assertEquals(-4, g.report().y(), "reported on the rail's block");
+                }
+            }
+        }
+        assertTrue(slid, "never caught the rail: " + landings);
+        SlideController.TrickLanded off = landings.stream().filter(l -> l.report().fromRail()).findFirst()
+                .orElseThrow(() -> new AssertionError("never left the rail: " + c.state() + " z " + body.z));
+        double rel = Math.abs(off.report().takeoffRelative());
+        assertTrue(rel < 1.0e-6 || Math.abs(rel - 180) < 1.0e-6, "takeoff offset " + rel);
+        assertTrue(off.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "bailed off the end of a boardslide");
+        assertTrue(c.state() != RideState.WIPEOUT);
+    }
+
+    @Test
     void aSteppedRampLaunchesWhateverTheTickPhaseAndSpeed() {
         // Four blocks rising 3/8 each (grade 0.375, just above launchGrade), then a drop: a kicker
         // built from snow layers. The last tick or two before the lip often crosses no step.

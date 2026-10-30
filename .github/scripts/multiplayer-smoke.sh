@@ -35,25 +35,70 @@ done
 grep -q "Done (" "$B/smoke-server/logs/latest.log" || { echo "server never started"; tail -40 "$LOGS/9-multi-server.log"; kill $SERVER; exit 1; }
 echo "server up"
 
-CLIENTS=()
+# Each client gets its own X server (xvfb-run -a can hand two clients the same display, and a
+# client whose window never opens hangs before the mod loads), and a watchdog: a client that has
+# not started loading mods 4 minutes after launch is killed and launched once more.
+XPIDS=()
+start_x() {
+  Xvfb ":$1" -screen 0 960x540x24 -nolisten tcp > /dev/null 2>&1 &
+  XPIDS+=($!)
+  for _ in $(seq 1 50); do [ -e "/tmp/.X11-unix/X$1" ] && return 0; sleep 0.2; done
+  echo "Xvfb :$1 did not start"; return 1
+}
+kill_client() { pkill -f -- "--username $1" 2>/dev/null; }
+declare -A PIDS DISPLAYS
+launch() {
+  local role=$1 run="multiRider"
+  [ "$role" = watcher1 ] && run="multiWatcher1"; [ "$role" = watcher2 ] && run="multiWatcher2"
+  DISPLAY=":${DISPLAYS[$role]}" ./gradlew ":forge:run${run^}" "${GRADLE_ARGS_ARR[@]}" >> "$LOGS/9-multi-$role.log" 2>&1 &
+  PIDS[$role]=$!
+}
+GRADLE_ARGS_ARR=("$@")
+n=91
 for role in rider watcher1 watcher2; do
-  run="multiRider"; [ "$role" = watcher1 ] && run="multiWatcher1"; [ "$role" = watcher2 ] && run="multiWatcher2"
   dir="$B/smoke-$role"
   mkdir -p "$dir/config"
+  rm -f "$dir/alpineshred-smoke.txt"
   printf '%s\n' onboardAccessibility:false skipMultiplayerWarning:true tutorialStep:none \
     pauseOnLostFocus:false renderDistance:6 simulationDistance:6 narrator:0 maxFps:20 \
     joinedFirstServer:true soundCategory_master:0.0 > "$dir/options.txt"
   printf 'earlyWindowControl = false\n' > "$dir/config/fml.toml"
-  xvfb-run -a -s "-screen 0 960x540x24" ./gradlew ":forge:run${run^}" "$@" > "$LOGS/9-multi-$role.log" 2>&1 &
-  CLIENTS+=($!)
-  sleep 25
+  DISPLAYS[$role]=$n; n=$((n + 1))
+  start_x "${DISPLAYS[$role]}" || exit 1
+  : > "$LOGS/9-multi-$role.log"
+  launch "$role"
+  # Watchdog: started loading within 4 minutes, or one more try.
+  for _ in $(seq 1 48); do
+    grep -q "Forge mod loading" "$LOGS/9-multi-$role.log" && break
+    kill -0 "${PIDS[$role]}" 2>/dev/null || break
+    sleep 5
+  done
+  if ! grep -q "Forge mod loading" "$LOGS/9-multi-$role.log"; then
+    echo "$role did not start loading; launching it again"
+    kill_client "$role"; kill "${PIDS[$role]}" 2>/dev/null; wait "${PIDS[$role]}" 2>/dev/null
+    echo "==== second launch" >> "$LOGS/9-multi-$role.log"
+    launch "$role"
+  fi
+  sleep 10
 done
 
-for pid in "${CLIENTS[@]}"; do wait $pid; done
-echo "clients done"
-for i in $(seq 1 60); do kill -0 $SERVER 2>/dev/null || break; sleep 5; done
+# The server's smoke ends the session (and stops the server) when the watchers are done or it
+# times out; clients get a minute after that to write their transcripts, then are stopped.
+for _ in $(seq 1 180); do kill -0 $SERVER 2>/dev/null || break; sleep 5; done
 kill $SERVER 2>/dev/null
 wait $SERVER 2>/dev/null
+for _ in $(seq 1 12); do
+  alive=0
+  for role in rider watcher1 watcher2; do kill -0 "${PIDS[$role]}" 2>/dev/null && alive=1; done
+  [ $alive = 0 ] && break
+  sleep 5
+done
+for role in rider watcher1 watcher2; do
+  if kill -0 "${PIDS[$role]}" 2>/dev/null; then echo "$role still running; stopping it"; kill_client "$role"; fi
+  kill "${PIDS[$role]}" 2>/dev/null; wait "${PIDS[$role]}" 2>/dev/null
+done
+echo "clients done"
+for x in "${XPIDS[@]}"; do kill "$x" 2>/dev/null; done
 
 status=0
 for f in "$B/smoke-server/alpineshred-server-smoke.txt" "$B/smoke-rider/alpineshred-smoke.txt" \

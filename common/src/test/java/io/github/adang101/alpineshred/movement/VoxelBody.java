@@ -46,7 +46,14 @@ final class VoxelBody implements SlideController.Body {
      * the tick hovering past the edge, reported on the ground.
      */
     boolean verticalFirst;
+    /** Park features for the controller to find (rails); none by default. */
+    io.github.adang101.alpineshred.park.ParkView park = io.github.adang101.alpineshred.park.ParkView.NONE;
     private double supportX, supportZ;
+
+    @Override
+    public io.github.adang101.alpineshred.park.ParkView park() {
+        return park;
+    }
 
     VoxelBody(Terrain terrain, double x, double z) {
         this.terrain = terrain;

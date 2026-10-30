@@ -41,7 +41,8 @@ public final class Combo {
         double sum = 0;
         List<TrickPart> scored = new ArrayList<>();
         for (TrickPart p : parts) {
-            int times = seen.merge(p.id(), 1, Integer::sum);
+            // Air time and height are not tricks: only trick types repeat.
+            int times = p.category() == null ? 1 : seen.merge(p.id(), 1, Integer::sum);
             double points = times > 1 ? p.points() / 2 : p.points();
             scored.add(new TrickPart(p.id(), p.category(), points));
             sum += points;

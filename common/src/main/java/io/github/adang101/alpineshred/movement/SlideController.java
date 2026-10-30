@@ -179,7 +179,12 @@ public final class SlideController {
     private final AirRotation rotation = new AirRotation();
     private final int[] grabTicks = new int[GrabType.values().length];
     private GrabType grab = GrabType.NONE;
+    /** Degrees the board pointed off the air session's reference direction at takeoff (see airReference). */
     private double takeoffRelative;
+    /** What is left of the board's turn out of a slide, degrees. */
+    private double exitAlign;
+    /** Degrees per tick the board turns out of a slide after leaving it. */
+    static final double EXIT_ALIGN_RATE = 30;
     private double apexY = Double.NaN;
     private boolean airFromRail;
     /** The rail or box being ridden, for its report: entry block, variant, angles, time and distance. */
@@ -397,7 +402,7 @@ public final class SlideController {
             clearTerrain();
             surface = body.surfaceUnderFeet();
             events.add(new Landed(airTicks, vyBefore));
-            LandingQuality quality = endAir(body, vyBefore, false, ctx);
+            LandingQuality quality = endAir(body, slopeError(body, vyBefore, speedBefore), false, ctx);
             airTicks = 0;
             if (quality == LandingQuality.BAIL && state == RideState.WIPEOUT) return;
             if (surface != null && !canRide(surface, motion.speed, ctx) && state != RideState.WIPEOUT) {
@@ -451,9 +456,27 @@ public final class SlideController {
         rotation.reset();
         java.util.Arrays.fill(grabTicks, 0);
         grab = GrabType.NONE;
-        takeoffRelative = SlideModel.wrapDegrees(motion.heading - motion.travelYaw);
         apexY = Double.NaN;
+        airReference(motion.travelYaw);
         if (state != RideState.WIPEOUT) state = RideState.AIR;
+    }
+
+    /**
+     * The direction the air session's landing is judged against (section 8, "Landing evaluation"):
+     * the way of travel at takeoff, which the air does not change, so the heading error at landing is
+     * the takeoff's offset plus the spin, on the client and the server alike. Off a rail or box the
+     * board turns out of the slide on its own (a boardslide's 90 needs no spin to land): the offset
+     * is the nearest of forward and switch, and the turn plays out over the first air ticks.
+     */
+    private void airReference(double yaw) {
+        double rel = SlideModel.wrapDegrees(motion.heading - yaw);
+        exitAlign = 0;
+        if (airFromRail) {
+            double aligned = Math.abs(rel) > 90 ? 180 : 0;
+            exitAlign = SlideModel.wrapDegrees(aligned - rel);
+            rel = aligned;
+        }
+        takeoffRelative = rel;
     }
 
     /**
@@ -469,7 +492,9 @@ public final class SlideController {
         int spin = in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
         grab = in.grab() != GrabType.NONE ? in.grab() : in.sneak() ? GrabType.METHOD : GrabType.NONE;
         double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE);
-        motion.heading = SlideModel.wrapDegrees(motion.heading + spun);
+        double align = Math.max(-EXIT_ALIGN_RATE, Math.min(EXIT_ALIGN_RATE, exitAlign));
+        exitAlign -= align;
+        motion.heading = SlideModel.wrapDegrees(motion.heading + spun + align);
         if (grab != GrabType.NONE) grabTicks[grab.ordinal()]++;
     }
 
@@ -479,11 +504,14 @@ public final class SlideController {
      * slope landed on, and applies it: a sketchy landing loses 40% of the speed, a bail wipes out.
      * Onto a rail or box there is nothing to grade here. Returns the quality.
      */
-    private LandingQuality endAir(Body body, double vyBefore, boolean onRail, RideContext ctx) {
-        double rel = SlideModel.wrapDegrees(motion.heading - motion.travelYaw);
+    private LandingQuality endAir(Body body, double slopeError, boolean onRail, RideContext ctx) {
+        // The board's way relative to the takeoff's travel (see airReference): what is left of the
+        // turn out of a slide is done now.
+        motion.heading = SlideModel.wrapDegrees(motion.heading + exitAlign);
+        exitAlign = 0;
+        double rel = SlideModel.wrapDegrees(takeoffRelative + rotation.yawAccum);
         double headingError = TrickAngles.residual(rel, 180);
         double flipResidual = TrickAngles.residual(rotation.pitchAccum, 360);
-        double slopeError = onRail ? 0 : slopeError(body, vyBefore);
         LandingQuality quality = onRail ? LandingQuality.CLEAN
                 : LandingQuality.evaluate(headingError, flipResidual, slopeError, ctx.gear().landingForgiveness());
         double apex = Double.isNaN(apexY) ? 0 : Math.max(0, apexY - body.y());
@@ -499,9 +527,9 @@ public final class SlideController {
         return quality;
     }
 
-    /** Degrees between the descent and the ground landed on, along the way of travel. */
-    private double slopeError(Body body, double vyBefore) {
-        double descent = Math.toDegrees(Math.atan2(Math.max(0, -vyBefore), Math.max(1.0e-6, motion.speed)));
+    /** Degrees between the descent ({@code speed} across, {@code vyBefore} up) and the ground landed on, along the way of travel. */
+    private double slopeError(Body body, double vyBefore, double speed) {
+        double descent = Math.toDegrees(Math.atan2(Math.max(0, -vyBefore), Math.max(1.0e-6, speed)));
         double dx = SlideModel.dirX(motion.travelYaw) * 0.5, dz = SlideModel.dirZ(motion.travelYaw) * 0.5;
         double behind = body.groundTop(body.x() - dx, body.z() - dz, body.y() + 1.0, body.y() - 2.0);
         double ahead = body.groundTop(body.x() + dx, body.z() + dz, body.y() + 1.0, body.y() - 2.0);
@@ -517,13 +545,14 @@ public final class SlideController {
                 featureSwitch, featureLength, featureTicks, featureSwitchUps)));
     }
 
-    private void openFeature(Body body, boolean box, double relative) {
+    /** Opens a rail or box report with the rider's feet {@code at} on it (on the rail's path, for a rail). */
+    private void openFeature(V3 at, boolean box, double relative) {
         endFeature();
         featureOpen = true;
         featureBox = box;
-        featureX = (int) Math.floor(body.x());
-        featureY = (int) Math.floor(body.y() - (box ? 0.01 : 0.3));
-        featureZ = (int) Math.floor(body.z());
+        featureX = (int) Math.floor(at.x());
+        featureY = (int) Math.floor(at.y() - (box ? 0.01 : 0.3));
+        featureZ = (int) Math.floor(at.z());
         double a = Math.abs(SlideModel.wrapDegrees(relative));
         featureAxis = a > 90 ? 180 - a : a;
         featureSwitch = a > 90;
@@ -536,7 +565,9 @@ public final class SlideController {
     /** Box slides: a session from the tick SLIDE starts to the tick it ends. */
     private void trackBox(Body body) {
         if (state == RideState.SLIDE) {
-            if (!featureOpen || !featureBox) openFeature(body, true, SlideModel.wrapDegrees(motion.heading - motion.travelYaw));
+            if (!featureOpen || !featureBox) {
+                openFeature(new V3(body.x(), body.y(), body.z()), true, SlideModel.wrapDegrees(motion.heading - motion.travelYaw));
+            }
             featureTicks++;
             featureLength += motion.speed;
         } else if (featureOpen && featureBox) {
@@ -656,12 +687,13 @@ public final class SlideController {
         if (caught == null) return false;
         if (!grounded) {
             events.add(new Landed(airTicks, vyNow));
-            endAir(body, vyNow, true, ctx);
+            endAir(body, 0, true, ctx);
         }
         endFeature(); // straight off a box onto a rail
         events.add(new Caught(caught.path().material()));
         grind = caught;
-        openFeature(body, false, caught.relativeHeading());
+        // Where the rider is caught on the rail, not where the catch was seen from (a tick short, or off a box's end).
+        openFeature(caught.position(), false, caught.relativeHeading());
         grounded = true;
         vy = 0;
         chargeTicks = 0;
@@ -795,7 +827,7 @@ public final class SlideController {
         pipeAcrossSpeed = vx * l.x() + vz * l.z();
         if (!grounded) {
             events.add(new Landed(airTicks, vy));
-            endAir(body, vy, false, ctx);
+            endAir(body, TrickAngles.pipeSlopeError(along, vy, theta), false, ctx);
         }
         grounded = true;
         vy = 0;
@@ -847,6 +879,9 @@ public final class SlideController {
             vy = Math.max(0, pipeSpeed);
             events.add(new Launched(vy));
             enterAir();
+            // Straight up over the coping: the landing back in is judged against the wall's fall
+            // line, not the little drift along it.
+            airReference(SlideModel.yawOf(facing.x(), facing.z()));
             return;
         }
         if (pipeTheta <= 0) {

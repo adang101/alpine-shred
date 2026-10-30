@@ -73,6 +73,8 @@ final class RiderParticles {
         }
         if (!Double.isNaN(view.landedImpact) && snowy) {
             int count = ParticleRules.poofCount(view.landedImpact);
+            // Section 17: fewer on perfect landings.
+            if (view.landedQuality == io.github.adang101.alpineshred.trick.LandingQuality.PERFECT) count = Math.max(3, count / 2);
             for (int i = 0; i < count; i++) {
                 double a = random.nextDouble() * Math.PI * 2;
                 double r = 0.05 + random.nextDouble() * 0.15;
