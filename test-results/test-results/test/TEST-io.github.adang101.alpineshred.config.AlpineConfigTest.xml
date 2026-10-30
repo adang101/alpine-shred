@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.config.AlpineConfigTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:33.320Z" hostname="runnervm48cm3" time="0.256">
+  <properties/>
+  <testcase name="corruptFileIsBackedUpAndReplaced()" classname="io.github.adang101.alpineshred.config.AlpineConfigTest" time="0.141"/>
+  <testcase name="newerSchemaIsReadButNotOverwritten()" classname="io.github.adang101.alpineshred.config.AlpineConfigTest" time="0.023"/>
+  <testcase name="partialFileKeepsValuesAndFillsDefaults()" classname="io.github.adang101.alpineshred.config.AlpineConfigTest" time="0.01"/>
+  <testcase name="strictValidationAutoFollowsServerType()" classname="io.github.adang101.alpineshred.config.AlpineConfigTest" time="0.002"/>
+  <testcase name="badValuesAreClampedOrDefaultedAndLogged()" classname="io.github.adang101.alpineshred.config.AlpineConfigTest" time="0.045"/>
+  <testcase name="stringBooleansAreAccepted()" classname="io.github.adang101.alpineshred.config.AlpineConfigTest" time="0.006"/>
+  <testcase name="missingFileIsCreatedWithEveryKey()" classname="io.github.adang101.alpineshred.config.AlpineConfigTest" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

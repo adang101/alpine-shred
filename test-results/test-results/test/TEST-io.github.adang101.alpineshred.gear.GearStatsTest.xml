@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.gear.GearStatsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.598Z" hostname="runnervm48cm3" time="0.048">
+  <properties/>
+  <testcase name="kindNamesAcceptDocSpellings()" classname="io.github.adang101.alpineshred.gear.GearStatsTest" time="0.002"/>
+  <testcase name="parseClampsAndFallsBack()" classname="io.github.adang101.alpineshred.gear.GearStatsTest" time="0.01"/>
+  <testcase name="defaultsMatchSectionFiveTable()" classname="io.github.adang101.alpineshred.gear.GearStatsTest" time="0.001"/>
+  <testcase name="shippedGearFilesEqualBuiltInDefaults()" classname="io.github.adang101.alpineshred.gear.GearStatsTest" time="0.031"/>
+  <testcase name="jsonRoundTrip()" classname="io.github.adang101.alpineshred.gear.GearStatsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

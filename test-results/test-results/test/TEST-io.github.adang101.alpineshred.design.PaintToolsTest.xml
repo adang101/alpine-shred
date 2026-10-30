@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.design.PaintToolsTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.251Z" hostname="runnervm48cm3" time="0.131">
+  <properties/>
+  <testcase name="mirrorAppliesToEveryTool()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.005"/>
+  <testcase name="anEditorStrokeIsOneUndoStepAndShapesPreview()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.005"/>
+  <testcase name="facesCopyAndTheDesignRoundTrips()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.005"/>
+  <testcase name="gradientEndpointsAndMiddleStop()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.007"/>
+  <testcase name="everyBuiltInTemplateParsesAndPaints()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.047"/>
+  <testcase name="colorPickerMath()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.02"/>
+  <testcase name="undoStackKeeps32Steps()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.001"/>
+  <testcase name="ditherIsDeterministicAndUsesOnlyTheStops()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.009"/>
+  <testcase name="lockTransparentOnlyRepaintsPaintedPixels()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.001"/>
+  <testcase name="brokenTemplatesSayWhy()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.003"/>
+  <testcase name="floodFillIsFourConnectedExactAndStopsAtTheOutline()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.011"/>
+  <testcase name="linesRectanglesAndPatterns()" classname="io.github.adang101.alpineshred.design.PaintToolsTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

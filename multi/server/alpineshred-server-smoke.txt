@@ -1,0 +1,29 @@
+built the run at BlockPos{x=6, y=-60, z=-8}
+joined: rider
+rider strapped: OK
+stall gt808 952 ms
+t808 gt808 IDLE at z 1.5
+stall gt809 153 ms
+stall gt855 260 ms
+joined: watcher1
+showcase of 20 designs at 13.5 -43.0 9.5
+stall gt1927 286 ms
+stall gt2062 172 ms
+joined: watcher2
+showcase of 20 designs at -1.5 -54.0 50.5
+stall gt3309 190 ms
+t3616 gt3616 GLIDE at z 1.6
+t3666 gt3666 CARVE at z 13.2
+t3687 gt3687 GLIDE at z 23.2
+t3693 gt3693 CARVE at z 26.6
+t3708 gt3708 GLIDE at z 36.9
+t3732 gt3732 AIR at z 53.3
+t3749 gt3749 CARVE at z 64.6
+t3750 gt3750 AIR at z 66.7
+stall gt3765 724 ms
+t3766 gt3766 POWDER at z 87.5
+t3788 gt3788 GLIDE at z 93.0
+t3808 gt3808 BRAKE at z 104.9
+t3858 gt3858 GLIDE at z 124.4
+server states [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], violations 0
+RESULT PASS

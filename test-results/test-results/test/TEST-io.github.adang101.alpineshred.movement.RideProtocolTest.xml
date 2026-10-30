@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.RideProtocolTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.802Z" hostname="runnervm48cm3" time="0.007">
+  <properties/>
+  <testcase name="clientsMayOnlyProposeRidingStatesWhileStrapped()" classname="io.github.adang101.alpineshred.movement.RideProtocolTest" time="0.0"/>
+  <testcase name="changesSendAtMostTenPerSecond()" classname="io.github.adang101.alpineshred.movement.RideProtocolTest" time="0.004"/>
+  <testcase name="tappingSteerKeysNeverExceedsTheServerRateLimit()" classname="io.github.adang101.alpineshred.movement.RideProtocolTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

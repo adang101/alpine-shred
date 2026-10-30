@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "base": [
+    {
+      "item": "alpineshred:park_snowboard"
+    },
+    {
+      "item": "alpineshred:freeride_snowboard"
+    }
+  ],
+  "result": {
+    "item": "alpineshred:pro_snowboard"
+  },
+  "template": {
+    "item": "minecraft:netherite_upgrade_smithing_template"
+  }
+}

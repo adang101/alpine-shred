@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.FeelTargetsTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.677Z" hostname="runnervm48cm3" time="0.09">
+  <properties/>
+  <testcase name="docSnapDistanceAloneWouldFlickerAt45DegreesThisIsWhyItScalesWithSpeed()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.003"/>
+  <testcase name="tenPieceFlatRailAt8BpsExitsWithAtLeast80Percent()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.001"/>
+  <testcase name="fiveDegreeGroomedSlopeSettlesBetween10And14Bps()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.032"/>
+  <testcase name="a360IsAchievableOffAFullSlopeRampAt16Bps()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.009"/>
+  <testcase name="tenBpsOnFlatSnowBlockCoastsAtLeast50Blocks()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.002"/>
+  <testcase name="halfSlopeRampAt16BpsGivesApex07To12()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.004"/>
+  <testcase name="fullSlopeRampAt16BpsGivesApex25To38AndAtLeast16AirTicks()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.001"/>
+  <testcase name="twentyDegreeGroomedSlopeReaches20BpsIn6To9SecondsAndStaysUnderTheCap()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.013"/>
+  <testcase name="descendingVoxelStaircasesAtSpeedNeverFlickerIntoAir()" classname="io.github.adang101.alpineshred.movement.FeelTargetsTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

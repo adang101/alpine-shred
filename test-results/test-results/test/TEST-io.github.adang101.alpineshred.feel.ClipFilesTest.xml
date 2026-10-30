@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.feel.ClipFilesTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.429Z" hostname="runnervm48cm3" time="0.114">
+  <properties/>
+  <testcase name="oneShotsAreAsLongAsTheDirectorPlaysThemAndLoopsLoop()" classname="io.github.adang101.alpineshred.feel.ClipFilesTest" time="0.052"/>
+  <testcase name="everyClipLoadsUnderItsOwnNameAndLeavesTheHeadAlone()" classname="io.github.adang101.alpineshred.feel.ClipFilesTest" time="0.042"/>
+  <testcase name="glidePosesPlayWithTheIntendedSigns()" classname="io.github.adang101.alpineshred.feel.ClipFilesTest" time="0.009"/>
+  <testcase name="poleClipsMoveOnlyTheArms()" classname="io.github.adang101.alpineshred.feel.ClipFilesTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

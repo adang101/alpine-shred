@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.park.RailPlacementTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:35.915Z" hostname="runnervm48cm3" time="0.028">
+  <properties/>
+  <testcase name="sneakingForcesFlatAlongTheFacing()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.006"/>
+  <testcase name="wrenchOffersOnlyPiecesThatKeepTheLine()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.005"/>
+  <testcase name="curveFacingsCoverEveryCorner()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.003"/>
+  <testcase name="placingBesideTheEndOfALineTurnsItIntoACurve()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.001"/>
+  <testcase name="extendsALineOnLevelGround()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.002"/>
+  <testcase name="climbsWhereTheGroundStepsUpAndFinishesTheRise()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.001"/>
+  <testcase name="fillsAGapBetweenTwoLines()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.0"/>
+  <testcase name="connectionsDriveEndCaps()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.0"/>
+  <testcase name="fallsWhereTheGroundDrops()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.002"/>
+  <testcase name="noRailNearbyFollowsThePlayer()" classname="io.github.adang101.alpineshred.park.RailPlacementTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,92 @@
+joined as watcher2
+stage MULTI_WAIT
+stage WATCH
+rider's board design bbd69afa (expected bbd69afa)
+watch gt3421 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3425 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3430 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3435 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3440 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3445 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3450 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3455 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3460 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3460 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3465 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3470 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3475 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3480 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3485 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3490 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3495 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3500 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3505 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3510 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3515 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3520 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3525 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3530 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3535 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3540 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3540 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3545 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3550 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3555 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3560 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3565 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3570 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3575 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3580 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3580 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3585 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3590 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3595 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3600 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3605 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3610 IDLE 6.50 -44.00 -6.50 clip -
+watch gt3615 IDLE 6.50 -44.00 -6.49 clip -
+watch gt3616 GLIDE 6.50 -44.00 -6.47 clip -
+watch gt3620 GLIDE 6.50 -44.00 -6.38 clip -
+watch gt3625 GLIDE 6.50 -44.00 -6.13 clip -
+watch gt3630 GLIDE 6.50 -44.00 -5.73 clip -
+watch gt3635 GLIDE 6.50 -44.00 -5.09 clip -
+watch gt3640 GLIDE 6.50 -44.89 -4.26 clip -
+watch gt3645 GLIDE 6.50 -44.99 -2.84 clip -
+watch gt3650 GLIDE 6.50 -45.67 -1.44 clip -
+watch gt3655 GLIDE 6.50 -45.98 0.47 clip -
+watch gt3660 GLIDE 6.50 -46.67 1.66 clip -
+watch gt3665 GLIDE 6.50 -47.64 4.10 clip -
+watch gt3666 CARVE 6.50 -47.76 4.47 clip -
+screenshot watcher2_sees_carve
+watch gt3705 CARVE 6.50 -54.64 25.85 clip glide_board_regular
+watch gt3708 GLIDE 6.50 -54.92 27.64 clip glide_board_regular
+watch gt3710 GLIDE 6.50 -55.00 28.93 clip glide_board_regular
+watch gt3715 GLIDE 6.50 -56.70 32.20 clip glide_board_regular
+watch gt3720 GLIDE 6.50 -57.84 35.80 clip tuck_board
+watch gt3725 GLIDE 6.50 -59.00 39.93 clip glide_board_regular
+watch gt3730 GLIDE 6.50 -59.00 43.47 clip glide_board_regular
+watch gt3732 AIR 6.50 -58.83 44.81 clip pop_launch
+screenshot watcher2_sees_air
+watch gt3765 AIR 5.01 -58.70 64.43 clip air_board
+watch gt3770 AIR 5.01 -58.70 64.43 clip air_board
+watch gt3775 AIR 5.01 -58.70 64.43 clip air_board
+watch gt3779 POWDER 4.83 -58.80 69.45 clip land_clean
+watch gt3780 POWDER 4.64 -58.90 74.47 clip land_clean
+watch gt3785 POWDER 4.42 -59.00 81.56 clip land_clean
+watch gt3788 GLIDE 4.38 -59.00 83.39 clip land_clean
+screenshot watcher2_sees_glide
+watch gt3820 BRAKE 4.01 -59.00 101.75 clip brake_board
+watch gt3820 BRAKE 4.00 -59.00 102.07 clip brake_board
+watch gt3825 BRAKE 3.96 -59.00 104.22 clip -
+watch gt3830 BRAKE 3.90 -59.00 106.79 clip -
+watch gt3835 BRAKE 3.87 -59.00 108.41 clip -
+watch gt3840 BRAKE 3.84 -59.00 110.14 clip -
+watch gt3845 BRAKE 3.80 -59.00 111.93 clip -
+watch gt3850 BRAKE 3.77 -59.00 113.34 clip -
+watch gt3855 BRAKE 3.74 -59.00 114.75 clip -
+watch gt3859 GLIDE 3.72 -59.00 115.84 clip -
+the rider left
+watcher2: 18 design textures held; 18 built, mean 1.884 ms, longest 21.024 ms
+watcher2 saw the rider in [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], 122 blocks down the run, clips=13 loops=3 oneShots=6 particles=87 polePushes=0 maxFov=0.0 maxRoll=0.0
+screenshots: 3
+RESULT PASS

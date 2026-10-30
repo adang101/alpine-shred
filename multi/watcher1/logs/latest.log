@@ -1,0 +1,641 @@
+[10:12:49] [main/INFO] (Launcher) ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, MOD_DEV, --assetIndex, 1.20.1-5, --assetsDir, /home/runner/.gradle/caches/fabric-loom/assets, --gameDir, ., --fml.forgeVersion, 47.4.28, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, -mixin.config, alpineshred.mixins.json, -mixin.config, alpineshred.client.mixins.json, --username, watcher1, --quickPlayMultiplayer, localhost:25565, --mixin.config, alpineshred.mixins.json, --mixin.config, alpineshred.client.mixins.json]
+[10:12:49] [main/INFO] (Launcher) ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 21.0.13 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[10:12:49] [main/INFO] (unprotect) Initializing Unprotect using ModLauncher backend, target: Minecraft and loader classes (minecraft+forge)
+[10:12:49] [main/WARN] (FMLConfig) Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/smoke-watcher1/config/fml.toml is not correct. Correcting
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowHeight] was corrected from null to 480
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [versionCheck] was corrected from null to true
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowFBScale] was corrected from null to 1
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowProvider] was corrected from null to fmlearlywindow
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowWidth] was corrected from null to 854
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowMaximized] was corrected from null to false
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [defaultConfigPath] was corrected from null to defaultconfigs
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [disableOptimizedDFU] was corrected from null to true
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowLogHelpMessage] was corrected from null to true
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [maxThreads] was corrected from null to -1
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowSquir] was corrected from null to false
+[10:12:49] [main/INFO] (FMLConfig) Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[10:12:49] [main/INFO] (ImmediateWindowHandler) ImmediateWindowProvider not loading because splash screen is disabled
+[10:12:49] [main/INFO] (mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/mixin-patched/0.8.5.12/cf1f787f58d3b08b0cb53ecbba7928c09a1893c8/mixin-patched-0.8.5.12.jar%23116!/ Service=ModLauncher Env=CLIENT
+[10:12:50] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.28/2f0765ea31561e9dfaf8eb8b54ac0548cd857559/javafmllanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[10:12:50] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.28/4e54a5f415a61888bd9c5d61b140ae5f86bf665f/lowcodelanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[10:12:50] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.28/4d3efb7da0466927cc5b1e4487c3d3c33ba842d0/mclanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[10:12:50] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.28/99808794b6f9f27ca527ad9db1203409fb8552f8/fmlcore-1.20.1-47.4.28.jar is missing mods.toml file
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file javafmllanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@5c936b5f
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file lowcodelanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@5c936b5f
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file mclanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@5c936b5f
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file fmlcore-1.20.1-47.4.28.jar of type LIBRARY with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@5c936b5f
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@5c936b5f
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file main of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@5c936b5f
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file  of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@5c936b5f
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file architectury-forge-0f2af2a4-9.2.14.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file curios-forge-0f2af2a4-5.14.1+1.20.1.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file 18332274998620356733.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file architectury-forge-0f2af2a4-9.2.14.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file curios-forge-0f2af2a4-5.14.1+1.20.1.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (ModDiscoverer) Found mod file 18332274998620356733.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@3015fc1b
+[10:12:50] [main/INFO] (JarInJarDependencyLocator) No dependencies to load found. Skipping!
+[10:12:53] [main/INFO] (mixin) Compatibility level set to JAVA_17
+[10:12:53] [main/INFO] (LaunchServiceHandler) Launching target 'forgeclientuserdev' with arguments [--version, MOD_DEV, --gameDir, ., --assetsDir, /home/runner/.gradle/caches/fabric-loom/assets, --assetIndex, 1.20.1-5, --username, watcher1, --quickPlayMultiplayer, localhost:25565]
+[10:12:53] [main/INFO] (mixin) Remapping refMap curios.refmap.json using RemapperChain (Architectury Patched)
+[10:12:53] [main/INFO] (unprotect) Found 7423 Minecraft classes
+[10:12:53] [main/INFO] (mixin) Remapping refMap architectury-forge-refmap.json using RemapperChain (Architectury Patched)
+[10:12:53] [main/INFO] (mixin) Remapping refMap architectury-common-refmap.json using RemapperChain (Architectury Patched)
+[10:12:53] [main/INFO] (mixin) Remapping refMap player-animation-lib-minecraft_common-refmap.json using RemapperChain (Architectury Patched)
+[30Oct2026 10:13:00.229] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 188 Datafixer optimizations took 276 milliseconds
+[30Oct2026 10:13:03.064] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/assets/.mcassetsroot' uses unexpected schema
+[30Oct2026 10:13:03.064] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/data/.mcassetsroot' uses unexpected schema
+[30Oct2026 10:13:03.084] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[30Oct2026 10:13:03.095] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: watcher1
+[30Oct2026 10:13:03.278] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.2+13
+[30Oct2026 10:13:04.028] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.28, for MC 1.20.1 with MCP 20230612.114412
+[30Oct2026 10:13:04.028] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.28 Initialized
+[30Oct2026 10:13:04.310] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id architectury:sync_ids
+[30Oct2026 10:13:04.312] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id architectury:sync_ids
+[30Oct2026 10:13:05.676] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/strap_toggle
+[30Oct2026 10:13:05.680] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/ride_state
+[30Oct2026 10:13:05.681] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/ride_action
+[30Oct2026 10:13:05.681] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/air_report
+[30Oct2026 10:13:05.682] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/grind_report
+[30Oct2026 10:13:05.683] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/design_save
+[30Oct2026 10:13:05.952] [modloading-worker-0/INFO] [Alpine Shred/]: Alpine Shred initialized on Forge
+[30Oct2026 10:13:06.055] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/config_sync
+[30Oct2026 10:13:06.056] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/tuning_sync
+[30Oct2026 10:13:06.056] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/trick_result
+[30Oct2026 10:13:06.057] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/design_result
+[30Oct2026 10:13:06.057] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/design_templates
+[30Oct2026 10:13:06.057] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/ride_correct
+[30Oct2026 10:13:06.057] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/debug_ride
+[30Oct2026 10:13:06.057] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering S2C receiver with id alpineshred:s2c/debug_stats
+[30Oct2026 10:13:06.566] [modloading-worker-0/INFO] [Alpine Shred/]: [smoke] client smoke test armed
+[30Oct2026 10:13:07.914] [Render thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: []
+[30Oct2026 10:13:08.138] [Render thread/ERROR] [com.mojang.text2speech.Narrator/]: Error while loading the narrator
+com.mojang.text2speech.Narrator$InitializeException: Failed to load library flite
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:69) ~[text2speech-1.17.9.jar%23162!/:?]
+	at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar%23162!/:?]
+	at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar%23162!/:?]
+	at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[?:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar%23185!/:?]
+	at dev.architectury.transformer.TransformerRuntime.main(TransformerRuntime.java:220) ~[?:?]
+Caused by: java.lang.UnsatisfiedLinkError: Unable to load library 'flite':
+libflite.so: cannot open shared object file: No such file or directory
+libflite.so: cannot open shared object file: No such file or directory
+Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/alpine-shred/alpine-shred/forge/build/classes/java/main:/home/runner/work/alpine-shred/alpine-shred/forge/build/resources/main:/home/runner/.gradle/caches/fabric-loom/1.20.1/forge/1.20.1-47.4.28/client-extra.jar:/home/runner/.gradle/caches/fabric-loom/1.20.1/loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/mappings.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-transformer/5.2.87/c81d58e13fbd902ba5d909126733b9e3771c4395/architectury-transformer-5.2.87-agent.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-transformer/5.2.87/980814ce433a3396de4495194f027dfecc94bb3a/architectury-transformer-5.2.87-runtime.jar:/home/runner/work/alpine-shred/alpine-shred/common/build/devlibs/alpineshred-common-0.1.0-alpha.1+mc1.20.1-dev.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.4.28/3dadce8bfe5d10799189cac6196ea1162a04b9ae/fmlearlydisplay-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.28/2f0765ea31561e9dfaf8eb8b54ac0548cd857559/javafmllanguage-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.28/4e54a5f415a61888bd9c5d61b140ae5f86bf665f/lowcodelanguage-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.28/4d3efb7da0466927cc5b1e4487c3d3c33ba842d0/mclanguage-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.28/99808794b6f9f27ca527ad9db1203409fb8552f8/fmlcore-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/fabric-loom/forge/transformed-dependencies-v1/net/minecraftforge/7bda255dd05f79a155f943f0b575472f4cf1ba7a6f713553cb9dcefe2c8ae521/fmlloader/1.20.1-47.4.28/fmlloader-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.2.33/3fae69cfa9c5095bcc25c0a8a3ed9b26c156f922/eventbus-6.2.33.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.2.4/e30bab269d896613e38396274711410b3a0e4b87/coremods-5.2.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.4/f67f5ffaa5f5130cf6fb9b133da00c7df3b532a5/nashorn-core-15.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.9.1/ab35de4c537184a09339069f1a3b3aacf2289149/asm-commons-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.9.1/e51f5b0ae0b0c1960687ae970a2a3434d39d8abb/asm-util-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.9.1/1ab8d9316ef7a67240087919a708246c37ed1660/asm-analysis-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.github.juuxel/unprotect-modlauncher/2.0.2/20d36922d7bb84c3185c213e935150584d6c7166/unprotect-modlauncher-2.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.github.juuxel/unprotect/2.0.2/d79e894ec170237a02281b45e3203df6306675d6/unprotect-2.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.9.1/b6b1b3366296163b4b1f540731aad0a2baa484d8/asm-tree-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.9.1/2ceea6ab43bcae1979b2a6d85fc0ca429877e5ab/asm-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.3.0/b562e9bb61235c9520e26282cdee71f8f802d1fc/terminalconsoleappender-1.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.20.0/8f15415b022a25b473e8e16c28ae913186ffb9c4/jline-reader-3.20.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.20.0/d0ddcc708ddf527a3454c941b7b9225cc83a15ff/jline-terminal-3.20.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/mixin-patched/0.8.5.12/cf1f787f58d3b08b0cb53ecbba7928c09a1893c8/mixin-patched-0.8.5.12.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.2/757920418805fb90bfebb3d46b1d9e7669fca2eb/lwjgl-glfw-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.2/766bb0e8e829598b1c8052fd8173c62af741c52/lwjgl-glfw-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.2/ee8e95be0b438602038bc1f02dc5e3d011b1b216/lwjgl-opengl-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.2/b8368430ef0d91a5acbc6fbfa47b20c3ec083aec/lwjgl-opengl-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.2/a2550795014d622b686e9caac50b14baa87d2c70/lwjgl-stb-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.2/5c987f43b342d722b54970159040af76f1c87403/lwjgl-stb-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.2/9f65c248dd77934105274fcf8351abb75b34327c/lwjgl-tinyfd-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.2/5d27fc67172b3fcd8400d61a7cfb75da881f609/lwjgl-tinyfd-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.2/4421d94af68e35dcaa31737a6fc59136a1e61b94/lwjgl-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.2/767684973f259d97e7dc66a125eb153986f177e7/lwjgl-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-naming-service/2.0.9/c4c4732b3a00b67523c3028b49af402402be7883/architectury-naming-service-2.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-mixin-remapper-service/2.0.9/eede5ef35349f2b295fe1f3e7579382d26784b24/architectury-mixin-remapper-service-2.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/mcp-annotations/2.0.9/84f3d1e27805912592af0289d6fce0be53ee689a/mcp-annotations-2.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/dev-launch-injector/0.2.1+build.8/da8bef7e6e2f952da707f282bdb46882a0fce5e3/dev-launch-injector-0.2.1+build.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.2/877e17e39ebcd58a9c956dc3b5b777813de0873a/lwjgl-jemalloc-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.2/2bc33176cdfabf34a63df154b80914e8f433316b/lwjgl-jemalloc-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.2/ae5357ed6d934546d3533993ea84c0cfb75eed95/lwjgl-openal-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.2/650981780b8bbfb3ce43657b22ec8e77bfb1f37a/lwjgl-openal-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar:/home/runner/work/alpine-shred/alpine-shred/.gradle/loom-cache/remapped_mods/remapped/dev/architectury/architectury-forge-0f2af2a4/9.2.14/architectury-forge-0f2af2a4-9.2.14.jar:/home/runner/work/alpine-shred/alpine-shred/.gradle/loom-cache/remapped_mods/remapped/dev/kosmx/player-anim/player-animation-lib-forge-0f2af2a4/1.0.2-rc1+1.20/player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar:/home/runner/work/alpine-shred/alpine-shred/.gradle/loom-cache/remapped_mods/remapped/top/theillusivec4/curios/curios-forge-0f2af2a4/5.14.1+1.20.1/curios-forge-0f2af2a4-5.14.1+1.20.1.jar:/tmp/18332274998620356733.jar)
+	at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:307) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+	at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+	at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar%23162!/:?]
+	... 21 more
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:197) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar%23162!/:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar%23162!/:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar%23162!/:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[?:?]
+		at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar%23185!/:?]
+		at dev.architectury.transformer.TransformerRuntime.main(TransformerRuntime.java:220) ~[?:?]
+	Suppressed: java.lang.UnsatisfiedLinkError: libflite.so: cannot open shared object file: No such file or directory
+		at com.sun.jna.Native.open(Native Method) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:210) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar%23162!/:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar%23162!/:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar%23162!/:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[?:?]
+		at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar%23185!/:?]
+		at dev.architectury.transformer.TransformerRuntime.main(TransformerRuntime.java:220) ~[?:?]
+	Suppressed: java.io.IOException: Native library (linux-x86-64/libflite.so) not found in resource path (/home/runner/work/alpine-shred/alpine-shred/forge/build/classes/java/main:/home/runner/work/alpine-shred/alpine-shred/forge/build/resources/main:/home/runner/.gradle/caches/fabric-loom/1.20.1/forge/1.20.1-47.4.28/client-extra.jar:/home/runner/.gradle/caches/fabric-loom/1.20.1/loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/mappings.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-transformer/5.2.87/c81d58e13fbd902ba5d909126733b9e3771c4395/architectury-transformer-5.2.87-agent.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-transformer/5.2.87/980814ce433a3396de4495194f027dfecc94bb3a/architectury-transformer-5.2.87-runtime.jar:/home/runner/work/alpine-shred/alpine-shred/common/build/devlibs/alpineshred-common-0.1.0-alpha.1+mc1.20.1-dev.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlearlydisplay/1.20.1-47.4.28/3dadce8bfe5d10799189cac6196ea1162a04b9ae/fmlearlydisplay-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.28/2f0765ea31561e9dfaf8eb8b54ac0548cd857559/javafmllanguage-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.28/4e54a5f415a61888bd9c5d61b140ae5f86bf665f/lowcodelanguage-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.28/4d3efb7da0466927cc5b1e4487c3d3c33ba842d0/mclanguage-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.28/99808794b6f9f27ca527ad9db1203409fb8552f8/fmlcore-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/fabric-loom/forge/transformed-dependencies-v1/net/minecraftforge/7bda255dd05f79a155f943f0b575472f4cf1ba7a6f713553cb9dcefe2c8ae521/fmlloader/1.20.1-47.4.28/fmlloader-1.20.1-47.4.28.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/forgespi/7.0.1/3b4972a0cdb135853dba219be61a79b22cff1309/forgespi-7.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/accesstransformers/8.0.4/272d240aa73f42195b2a68e2ebd8b701ecf41f63/accesstransformers-8.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/10.0.9/6d9443f56f50bb85cea383686ff9c867391458b/modlauncher-10.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/eventbus/6.2.33/3fae69cfa9c5095bcc25c0a8a3ed9b26c156f922/eventbus-6.2.33.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/coremods/5.2.4/e30bab269d896613e38396274711410b3a0e4b87/coremods-5.2.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.openjdk.nashorn/nashorn-core/15.4/f67f5ffaa5f5130cf6fb9b133da00c7df3b532a5/nashorn-core-15.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.9.1/ab35de4c537184a09339069f1a3b3aacf2289149/asm-commons-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mergetool/1.1.5/f3da18e12c696d35a47c82cbb2cc8b5aa15e1154/mergetool-1.1.5-api.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.9.1/e51f5b0ae0b0c1960687ae970a2a3434d39d8abb/asm-util-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.9.1/1ab8d9316ef7a67240087919a708246c37ed1660/asm-analysis-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.github.juuxel/unprotect-modlauncher/2.0.2/20d36922d7bb84c3185c213e935150584d6c7166/unprotect-modlauncher-2.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.github.juuxel/unprotect/2.0.2/d79e894ec170237a02281b45e3203df6306675d6/unprotect-2.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.9.1/b6b1b3366296163b4b1f540731aad0a2baa484d8/asm-tree-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.9.1/2ceea6ab43bcae1979b2a6d85fc0ca429877e5ab/asm-9.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4/4.9.1/e92af8ab33e428461927b484e90bb155a4f3a052/antlr4-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr4-runtime/4.9.1/428664f05d2b7f7b7610204b5aa7c1763f62011a/antlr4-runtime-4.9.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/unsafe/0.2.0/54d7a0a5e8fdb71b973025caa46f341ae5904f39/unsafe-0.2.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/toml/3.6.4/51d6cefb2b55ee55ee26b16391212fb2c7dfb4f4/toml-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.electronwill.night-config/core/3.6.4/510f174abbf1c947494db50ef2445683bd52c230/core-3.6.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarSelector/0.3.19/376cc9c8ea60720cf027c01fc033de915699801c/JarJarSelector-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarMetadata/0.3.19/83feaa9b770e6ac0e96ee4fc23fa89325c5fe2/JarJarMetadata-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.8.5/4433f50c07debefaed0553bd0068f4f48d449313/maven-artifact-3.8.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.jodah/typetools/0.6.3/a01aaa6ddaea9ec07ec4f209487b7a46a526283a/typetools-0.6.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecrell/terminalconsoleappender/1.3.0/b562e9bb61235c9520e26282cdee71f8f802d1fc/terminalconsoleappender-1.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-reader/3.20.0/8f15415b022a25b473e8e16c28ae913186ffb9c4/jline-reader-3.20.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.jline/jline-terminal/3.20.0/d0ddcc708ddf527a3454c941b7b9225cc83a15ff/jline-terminal-3.20.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/mixin-patched/0.8.5.12/cf1f787f58d3b08b0cb53ecbba7928c09a1893c8/mixin-patched-0.8.5.12.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.sf.jopt-simple/jopt-simple/5.0.4/4fdac2fbe92dfad86aa6e9301736f6b4342a3f5c/jopt-simple-5.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/logging/1.1.1/832b8e6674a9b325a5175a3a6267dfaf34c85139/logging-1.1.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-core/2.19.0/3b6eeb4de4c49c0fe38a4ee27188ff5fee44d0bb/log4j-core-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j2-impl/2.19.0/5c04bfdd63ce9dceb2e284b81e96b6a70010ee10/log4j-slf4j2-impl-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.19.0/ea1b37f38c327596b216542bc636cfdc0b8036fa/log4j-api-2.19.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/srgutils/0.4.11/fbad1341ffdb47d276bbdc40ecb06da49e053e74/srgutils-0.4.11.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.codehaus.plexus/plexus-utils/3.3.0/cf43b5391de623b36fe066a21127baef82c64022/plexus-utils-3.3.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.12.0/c6842c86792ff03b9f1d1fe2aab8dc23aa6c6f0e/commons-lang3-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.10/dd9b193aef96e973d5a11ab13cd17430c2e4306b/gson-2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre/60458f877d055d0c9114d9e1a2efb737b4bc282c/guava-31.1-jre.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.machinezoo.noexception/noexception/1.7.1/b65330c98e38a1f915fa54a6e5eca496505e3f0a/noexception-1.7.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-simple/1.7.30/e606eac955f55ecf1d8edcccba04eb8ac98088dd/slf4j-simple-1.7.30.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.1/f48d81adce2abf5ad3cfe463df517952749e03bc/slf4j-api-2.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.2/757920418805fb90bfebb3d46b1d9e7669fca2eb/lwjgl-glfw-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-glfw/3.3.2/766bb0e8e829598b1c8052fd8173c62af741c52/lwjgl-glfw-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.2/ee8e95be0b438602038bc1f02dc5e3d011b1b216/lwjgl-opengl-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-opengl/3.3.2/b8368430ef0d91a5acbc6fbfa47b20c3ec083aec/lwjgl-opengl-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.2/a2550795014d622b686e9caac50b14baa87d2c70/lwjgl-stb-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.3.2/5c987f43b342d722b54970159040af76f1c87403/lwjgl-stb-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.2/9f65c248dd77934105274fcf8351abb75b34327c/lwjgl-tinyfd-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-tinyfd/3.3.2/5d27fc67172b3fcd8400d61a7cfb75da881f609/lwjgl-tinyfd-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.2/4421d94af68e35dcaa31737a6fc59136a1e61b94/lwjgl-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.3.2/767684973f259d97e7dc66a125eb153986f177e7/lwjgl-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/ST4/4.3/92f2c1ad8d84abcbeead6cf7f2c53a04166293c2/ST4-4.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.antlr/antlr-runtime/3.5.2/cd9cd41361c155f3af0f653009dcecb08d8b4afd/antlr-runtime-3.5.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.abego.treelayout/org.abego.treelayout.core/1.0.3/457216e8e6578099ae63667bb1e4439235892028/org.abego.treelayout.core-1.0.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.glassfish/javax.json/1.0.4/3178f73569fd7a1e5ffc464e680f7a8cc784b85a/javax.json-1.0.4.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.ibm.icu/icu4j/71.1/9e7d3304c23f9ba5cb71915f7cce23231a57a445/icu4j-71.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.1/1dcf1de382a0bf95a3d8b0849546c88bac1292c9/failureaccess-1.0.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.12.0/d5692f0526415fcc6de94bb5bfbd3afd9dd3b3e5/checker-qual-3.12.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.11.0/c5a0ace696d3f8b1c1d8cc036d8c03cc0cbe6b69/error_prone_annotations-2.11.0.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-naming-service/2.0.9/c4c4732b3a00b67523c3028b49af402402be7883/architectury-naming-service-2.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/architectury-mixin-remapper-service/2.0.9/eede5ef35349f2b295fe1f3e7579382d26784b24/architectury-mixin-remapper-service-2.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/mcp-annotations/2.0.9/84f3d1e27805912592af0289d6fce0be53ee689a/mcp-annotations-2.0.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/dev-launch-injector/0.2.1+build.8/da8bef7e6e2f952da707f282bdb46882a0fce5e3/dev-launch-injector-0.2.1+build.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.github.oshi/oshi-core/6.2.2/54f5efc19bca95d709d9a37d19ffcbba3d21c1a6/oshi-core-6.2.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/authlib/4.0.43/2ff9d747a77570a07a60d32ac77eb6162ad2a2d9/authlib-4.0.43.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/blocklist/1.0.10/5c685c5ffa94c4cd39496c7184c1d122e515ecef/blocklist-1.0.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/brigadier/1.1.8/5244ce82c3337bba4a196a3ce858bfaecc74404a/brigadier-1.1.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/datafixerupper/6.0.8/3ba4a30557a9b057760af4011f909ba619fc5125/datafixerupper-6.0.8.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/patchy/2.2.10/da05971b07cbb379d002cf7eaec6a2048211fefc/patchy-2.2.10.jar:/home/runner/.gradle/caches/modules-2/files-2.1/com.mojang/text2speech/1.17.9/3cad216e3a7f0c19b4b394388bc9ffc446f13b14/text2speech-1.17.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.15/49d94806b6e3dc933dacbd8acb0fdbab8ebd1e5d/commons-codec-1.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.82.Final/a544270cf1ae8b8077082f5036436a9a9971ea71/netty-buffer-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.82.Final/b77200379acb345a9ffdece1c605e591ac3e4e0a/netty-codec-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.82.Final/22d148e85c3f5ebdacc0ce1f5aabb1d420f73f3/netty-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.82.Final/644041d1fa96a5d3130a29e8978630d716d76e38/netty-handler-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.82.Final/38f665ae8dcd29032eea31245ba7806bed2e0fa8/netty-resolver-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.82.Final/e7c7dd18deac93105797f30057c912651ea76521/netty-transport-classes-epoll-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/476409d6255001ca53a55f65b01c13822f8dc93a/netty-transport-native-epoll-4.1.82.Final-linux-aarch_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.82.Final/c7350a71920f3ae9142945e25fed4846cce53374/netty-transport-native-epoll-4.1.82.Final-linux-x86_64.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.82.Final/3e895b35ca1b8a0eca56cacff4c2dde5d2c6abce/netty-transport-native-unix-common-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.82.Final/e431a218d91acb6476ccad5f5aafde50aa3945ca/netty-transport-4.1.82.Final.jar:/home/runner/.gradle/caches/modules-2/files-2.1/it.unimi.dsi/fastutil/8.5.9/bb7ea75ecdb216654237830b3a96d87ad91f8cc5/fastutil-8.5.9.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.15/7f2e0c573eaa7a74bac2e89b359e1f73d92a0a1d/httpcore-4.4.15.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.joml/joml/1.10.5/22566d58af70ad3d72308bab63b8339906deb649/joml-1.10.5.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.2/877e17e39ebcd58a9c956dc3b5b777813de0873a/lwjgl-jemalloc-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-jemalloc/3.3.2/2bc33176cdfabf34a63df154b80914e8f433316b/lwjgl-jemalloc-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.2/ae5357ed6d934546d3533993ea84c0cfb75eed95/lwjgl-openal-3.3.2.jar:/home/runner/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-openal/3.3.2/650981780b8bbfb3ce43657b22ec8e77bfb1f37a/lwjgl-openal-3.3.2-natives-linux.jar:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar:/home/runner/work/alpine-shred/alpine-shred/.gradle/loom-cache/remapped_mods/remapped/dev/architectury/architectury-forge-0f2af2a4/9.2.14/architectury-forge-0f2af2a4-9.2.14.jar:/home/runner/work/alpine-shred/alpine-shred/.gradle/loom-cache/remapped_mods/remapped/dev/kosmx/player-anim/player-animation-lib-forge-0f2af2a4/1.0.2-rc1+1.20/player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar:/home/runner/work/alpine-shred/alpine-shred/.gradle/loom-cache/remapped_mods/remapped/top/theillusivec4/curios/curios-forge-0f2af2a4/5.14.1+1.20.1/curios-forge-0f2af2a4-5.14.1+1.20.1.jar:/tmp/18332274998620356733.jar)
+		at com.sun.jna.Native.extractFromResourcePath(Native.java:1145) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.loadLibrary(NativeLibrary.java:281) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:467) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.sun.jna.NativeLibrary.getInstance(NativeLibrary.java:409) ~[jna-5.12.1.jar%23177!/:5.12.1 (b0)]
+		at com.mojang.text2speech.NarratorLinux$FliteLibrary.loadNative(NarratorLinux.java:67) ~[text2speech-1.17.9.jar%23162!/:?]
+		at com.mojang.text2speech.NarratorLinux.<init>(NarratorLinux.java:18) ~[text2speech-1.17.9.jar%23162!/:?]
+		at com.mojang.text2speech.Narrator.getNarrator(Narrator.java:41) ~[text2speech-1.17.9.jar%23162!/:?]
+		at net.minecraft.client.GameNarrator.<init>(GameNarrator.java:19) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at net.minecraft.client.Minecraft.<init>(Minecraft.java:553) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at net.minecraft.client.main.Main.main(Main.java:182) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+		at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+		at java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar%2397!/:?]
+		at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[?:?]
+		at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar%23185!/:?]
+		at dev.architectury.transformer.TransformerRuntime.main(TransformerRuntime.java:220) ~[?:?]
+[30Oct2026 10:13:08.169] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources
+[30Oct2026 10:13:08.224] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/smoke-watcher1/config/curios-client.toml is not correct. Correcting
+[30Oct2026 10:13:08.227] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client was corrected from null to its default, SimpleCommentedConfig:{}. 
+[30Oct2026 10:13:08.228] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.renderCurios was corrected from null to its default, true. 
+[30Oct2026 10:13:08.228] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.enableButton was corrected from null to its default, true. 
+[30Oct2026 10:13:08.228] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.buttonXOffset was corrected from null to its default, 0. 
+[30Oct2026 10:13:08.228] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.buttonYOffset was corrected from null to its default, 0. 
+[30Oct2026 10:13:08.228] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.creativeButtonXOffset was corrected from null to its default, 0. 
+[30Oct2026 10:13:08.228] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.creativeButtonYOffset was corrected from null to its default, 0. 
+[30Oct2026 10:13:08.228] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.buttonCorner was corrected from null to its default, TOP_LEFT. 
+[30Oct2026 10:13:08.243] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/smoke-watcher1/config/forge-client.toml is not correct. Correcting
+[30Oct2026 10:13:08.243] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client was corrected from null to its default, SimpleCommentedConfig:{}. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.alwaysSetupTerrainOffThread was corrected from null to its default, false. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.experimentalForgeLightPipelineEnabled was corrected from null to its default, false. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.showLoadWarnings was corrected from null to its default, true. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.useCombinedDepthStencilAttachment was corrected from null to its default, false. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.compressLanIPv6Addresses was corrected from null to its default, true. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.calculateAllNormals was corrected from null to its default, false. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.stabilizeDirectionGetNearest was corrected from null to its default, true. 
+[30Oct2026 10:13:08.244] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key client.allowMipmapLowering was corrected from null to its default, false. 
+[30Oct2026 10:13:08.248] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/smoke-watcher1/config/curios-common.toml is not correct. Correcting
+[30Oct2026 10:13:08.249] [modloading-worker-0/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key slots was corrected from null to its default, []. 
+[30Oct2026 10:13:08.434] [Worker-Main-3/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.0.06.hex, loading
+[30Oct2026 10:13:09.632] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[30Oct2026 10:13:10.062] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: UP_TO_DATE Current: 47.4.28 Target: null
+[30Oct2026 10:13:13.964] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
+[30Oct2026 10:13:13.964] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
+[30Oct2026 10:13:13.967] [Render thread/ERROR] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:283) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at com.mojang.blaze3d.audio.Library.init(Library.java:153) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.sounds.SoundEngine.loadLibrary(SoundEngine.java:104) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.sounds.SoundEngine.reload(SoundEngine.java:96) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:125) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.sounds.SoundManager.apply(SoundManager.java:40) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.server.packs.resources.SimplePreparableReloadListener.method_18790(SimplePreparableReloadListener.java:13) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at net.minecraft.server.packs.resources.SimpleReloadInstance.method_18365(SimpleReloadInstance.java:69) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.util.thread.BlockableEventLoop.doRunTask(BlockableEventLoop.java:156) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.util.thread.ReentrantBlockableEventLoop.doRunTask(ReentrantBlockableEventLoop.java:23) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.util.thread.BlockableEventLoop.pollTask(BlockableEventLoop.java:130) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.util.thread.BlockableEventLoop.runAllTasks(BlockableEventLoop.java:115) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.Minecraft.runTick(Minecraft.java:1106) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.Minecraft.run(Minecraft.java:718) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at net.minecraft.client.main.Main.main(Main.java:218) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?]
+	at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:580) ~[?:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.clientService(CommonLaunchHandler.java:99) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at net.minecraftforge.fml.loading.targets.ForgeClientUserdevLaunchHandler.devService(ForgeClientUserdevLaunchHandler.java:19) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?]
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar%2397!/:?]
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[?:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar%23185!/:?]
+	at dev.architectury.transformer.TransformerRuntime.main(TransformerRuntime.java:220) ~[?:?]
+[30Oct2026 10:13:14.434] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x4 minecraft:textures/atlas/blocks.png-atlas
+[30Oct2026 10:13:14.459] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[30Oct2026 10:13:14.460] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[30Oct2026 10:13:14.462] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[30Oct2026 10:13:14.463] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[30Oct2026 10:13:14.474] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[30Oct2026 10:13:14.475] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[30Oct2026 10:13:14.476] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[30Oct2026 10:13:14.477] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[30Oct2026 10:13:15.161] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[30Oct2026 10:13:15.322] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/particles.png-atlas
+[30Oct2026 10:13:15.326] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[30Oct2026 10:13:15.327] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[30Oct2026 10:13:15.609] [Render thread/INFO] [net.minecraft.client.gui.screens.ConnectScreen/]: Connecting to localhost, 25565
+[30Oct2026 10:13:18.191] [Netty Epoll Client IO #0/INFO] [net.minecraftforge.network.NetworkHooks/]: Connected to a modded server.
+[30Oct2026 10:13:21.672] [Render thread/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 2 advancements
+[30Oct2026 10:13:24.105] [Render thread/INFO] [Alpine Shred/]: [smoke] joined as watcher1
+[30Oct2026 10:13:24.106] [Render thread/INFO] [Alpine Shred/]: [smoke] stage MULTI_WAIT
+[30Oct2026 10:13:25.197] [Render thread/INFO] [Alpine Shred/]: [smoke] stage WATCH
+[30Oct2026 10:13:25.272] [Render thread/INFO] [Alpine Shred/]: [smoke] rider's board design bbd69afa (expected bbd69afa)
+[30Oct2026 10:13:25.273] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2066 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:25.656] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2070 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:25.718] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2075 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:25.847] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2080 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:25.987] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2085 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:26.146] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2090 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:26.455] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2095 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:26.704] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2100 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:26.838] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2100 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:27.177] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2105 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:27.384] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2110 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:27.540] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2115 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:27.807] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2120 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:27.888] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2120 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:28.136] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2125 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:28.414] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2130 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:28.646] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2135 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:28.949] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2140 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:29.163] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2145 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:29.393] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2150 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:29.590] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2155 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:29.916] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2160 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:30.141] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2165 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:30.359] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2170 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:30.630] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2175 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:30.834] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2180 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:31.035] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2185 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:31.281] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2190 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:31.506] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2195 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:31.816] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2200 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:31.931] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2200 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:32.132] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2205 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:32.346] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2210 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:32.611] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2215 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:32.862] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2220 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:33.117] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2225 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:33.412] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2230 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:33.685] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2235 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:33.872] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2240 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:34.109] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2245 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:34.366] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2250 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:34.626] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2255 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:34.839] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2260 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:35.055] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2265 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:35.375] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2270 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:35.594] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2275 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:35.794] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2280 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:35.856] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2280 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:36.135] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2285 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:36.359] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2290 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:36.621] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2295 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:36.873] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2300 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:37.106] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2305 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:37.372] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2310 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:37.630] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2315 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:37.858] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2320 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:38.111] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2325 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:38.364] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2330 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:38.587] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2335 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:38.880] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2340 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:39.108] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2345 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:39.362] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2350 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:39.627] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2355 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:39.844] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2360 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:40.128] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2365 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:40.358] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2370 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:40.624] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2375 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:40.844] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2380 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:41.143] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2385 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:41.357] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2390 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:41.588] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2395 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:41.897] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2400 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:42.085] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2405 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:42.376] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2410 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:42.629] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2415 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:42.873] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2420 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:43.093] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2425 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:43.361] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2430 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:43.628] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2435 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:43.892] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2440 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:44.110] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2445 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:44.362] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2450 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:44.621] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2455 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:44.844] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2460 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:45.036] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2465 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:45.288] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2470 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:45.576] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2475 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:45.828] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2480 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:46.033] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2485 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:46.284] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2490 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:46.540] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2495 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:46.809] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2500 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:46.864] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2500 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:47.094] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2505 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:47.357] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2510 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:47.609] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2515 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:47.836] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2520 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:48.058] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2525 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:48.319] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2530 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:48.531] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2535 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:48.812] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2540 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:48.887] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2540 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:49.120] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2545 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:49.389] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2550 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:49.595] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2555 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:49.838] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2560 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:50.102] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2565 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:50.405] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2570 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:50.638] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2575 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:50.865] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2580 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:51.129] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2585 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:51.336] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2590 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:51.585] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2595 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:51.860] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2600 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:52.110] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2605 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:52.360] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2610 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:52.620] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2615 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:52.831] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2620 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:53.047] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2625 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:53.316] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2630 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:53.568] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2635 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:53.820] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2640 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:53.897] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2640 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:54.112] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2645 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:54.335] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2650 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:54.623] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2655 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:54.835] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2660 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:55.032] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2665 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:55.304] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2670 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:55.570] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2675 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:55.831] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2680 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:56.040] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2685 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:56.285] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2690 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:56.594] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2695 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:56.823] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2700 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:56.880] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2700 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:57.098] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2705 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:57.362] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2710 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:57.597] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2715 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:57.863] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2720 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:58.105] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2725 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:58.356] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2730 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:58.623] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2735 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:58.863] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2740 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:59.079] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2745 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:59.347] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2750 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:59.622] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2755 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:13:59.890] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2760 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:00.126] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2765 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:00.364] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2770 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:00.615] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2775 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:00.844] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2780 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:01.050] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2785 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:01.315] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2790 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:01.578] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2795 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:01.782] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2800 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:01.832] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2800 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:02.083] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2805 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:02.335] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2810 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:02.601] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2815 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:02.859] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2820 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:03.114] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2825 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:03.367] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2830 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:03.620] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2835 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:03.880] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2840 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:04.084] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2845 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:04.343] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2850 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:04.594] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2855 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:04.852] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2860 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:05.082] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2865 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:05.362] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2870 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:05.630] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2875 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:05.830] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2880 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:06.053] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2885 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:06.315] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2890 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:06.569] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2895 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:06.782] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2900 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:06.834] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2900 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:07.102] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2905 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:07.362] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2910 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:07.597] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2915 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:07.859] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2920 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:08.144] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2925 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:08.382] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2930 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:08.604] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2935 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:08.884] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2940 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:09.085] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2945 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:09.336] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2950 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:09.609] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2955 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:09.894] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2960 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:10.096] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2965 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:10.363] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2970 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:10.623] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2975 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:10.830] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2980 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:11.034] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2985 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:11.354] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2990 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:11.572] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt2995 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:11.827] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3000 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:12.035] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3005 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:12.305] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3010 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:12.548] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3015 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:12.814] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3020 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:12.867] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3020 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:13.105] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3025 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:13.383] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3030 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:13.608] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3035 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:13.871] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3040 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:14.096] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3045 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:14.357] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3050 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:14.608] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3055 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:14.860] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3060 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:15.112] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3065 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:15.366] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3070 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:15.620] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3075 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:15.838] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3080 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:16.077] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3085 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:16.332] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3090 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:16.575] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3095 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:16.867] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3100 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:17.046] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3105 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:17.357] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3110 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:17.567] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3115 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:17.824] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3120 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:17.872] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3120 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:18.123] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3125 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:18.373] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3130 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:18.627] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3135 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:18.828] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3140 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:19.034] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3145 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:19.344] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3150 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:19.554] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3155 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:19.810] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3160 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:19.872] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3160 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:20.090] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3165 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:20.364] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3170 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:20.620] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3175 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:20.888] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3180 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:21.093] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3185 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:21.355] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3190 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:21.626] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3195 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:21.846] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3200 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:22.110] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3205 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:22.349] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3210 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:22.603] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3215 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:22.866] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3220 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:23.101] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3225 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:23.357] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3230 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:23.611] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3235 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:23.874] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3240 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:24.083] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3245 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:24.351] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3250 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:24.612] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3255 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:24.839] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3260 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:25.094] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3265 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:25.373] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3270 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:25.587] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3275 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:25.830] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3280 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:26.054] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3285 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:26.308] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3290 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:26.557] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3295 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:26.807] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3300 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:26.858] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3300 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:27.114] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3305 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:27.385] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] watcher2 joined the game
+[30Oct2026 10:14:27.425] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3310 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:27.657] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3315 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:27.876] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3320 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:28.083] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3325 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:28.364] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3330 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:28.590] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3335 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:28.840] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3340 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:29.121] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3345 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:29.342] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3350 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:29.606] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3355 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:29.859] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3360 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:30.085] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3365 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:30.358] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3370 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:30.583] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3375 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:30.866] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3380 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:31.182] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3385 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:31.393] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3390 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:31.661] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3395 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:31.841] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3400 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:32.134] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3405 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:32.331] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3410 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:32.561] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3415 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:32.817] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3420 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:32.867] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3420 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:33.118] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3425 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:33.345] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3430 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:33.611] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3435 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:33.837] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3440 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:34.119] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3445 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:34.357] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3450 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:34.618] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3455 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:34.872] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3460 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:35.052] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3465 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:35.318] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3470 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:35.537] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3475 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:35.785] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3480 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:35.869] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3480 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:36.105] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3485 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:36.372] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3490 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:36.614] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3495 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:36.884] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3500 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:37.096] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3505 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:37.346] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3510 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:37.601] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3515 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:37.838] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3520 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:38.059] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3525 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:38.290] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3530 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:38.547] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3535 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:38.811] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3540 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:38.861] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3540 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:39.115] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3545 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:39.383] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3550 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:39.591] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3555 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:39.845] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3560 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:40.083] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3565 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:40.350] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3570 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:40.605] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3575 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:40.856] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3580 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:41.109] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3585 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:41.366] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3590 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:41.620] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3595 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:41.872] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3600 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:42.125] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3605 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:42.379] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3610 IDLE 6.50 -44.00 -6.50 clip idle_board
+[30Oct2026 10:14:42.584] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3615 IDLE 6.50 -44.00 -6.49 clip idle_board
+[30Oct2026 10:14:42.707] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3616 GLIDE 6.50 -44.00 -6.47 clip glide_board_regular
+[30Oct2026 10:14:42.863] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3620 GLIDE 6.50 -44.00 -6.38 clip glide_board_regular
+[30Oct2026 10:14:43.117] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3625 GLIDE 6.50 -44.00 -6.13 clip glide_board_regular
+[30Oct2026 10:14:43.377] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3630 GLIDE 6.50 -44.00 -5.73 clip glide_board_regular
+[30Oct2026 10:14:43.633] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3635 GLIDE 6.50 -44.00 -5.03 clip glide_board_regular
+[30Oct2026 10:14:43.831] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3640 GLIDE 6.50 -44.89 -4.24 clip glide_board_regular
+[30Oct2026 10:14:44.083] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3645 GLIDE 6.50 -44.99 -2.84 clip glide_board_regular
+[30Oct2026 10:14:44.336] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3650 GLIDE 6.50 -45.67 -1.44 clip glide_board_regular
+[30Oct2026 10:14:44.601] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3655 GLIDE 6.50 -45.98 0.17 clip glide_board_regular
+[30Oct2026 10:14:44.853] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3660 GLIDE 6.50 -46.33 1.29 clip glide_board_regular
+[30Oct2026 10:14:45.070] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3665 GLIDE 6.50 -46.96 3.32 clip glide_board_regular
+[30Oct2026 10:14:45.191] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3667 CARVE 6.50 -47.54 4.28 clip glide_board_regular
+[30Oct2026 10:14:45.350] [Render thread/INFO] [Alpine Shred/]: [smoke] screenshot watcher1_sees_carve
+[30Oct2026 10:14:46.890] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3700 CARVE 6.50 -53.73 22.61 clip glide_board_regular
+[30Oct2026 10:14:47.088] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3705 CARVE 6.50 -54.65 26.03 clip glide_board_regular
+[30Oct2026 10:14:47.292] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3708 GLIDE 6.50 -55.00 27.72 clip glide_board_regular
+[30Oct2026 10:14:47.381] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3710 GLIDE 6.50 -55.33 29.22 clip glide_board_regular
+[30Oct2026 10:14:47.585] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3715 GLIDE 6.50 -57.00 32.44 clip glide_board_regular
+[30Oct2026 10:14:47.848] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3720 GLIDE 6.50 -57.67 35.90 clip glide_board_regular
+[30Oct2026 10:14:48.157] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3725 GLIDE 6.50 -58.90 39.92 clip glide_board_regular
+[30Oct2026 10:14:48.343] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3730 GLIDE 6.50 -59.00 44.56 clip glide_board_regular
+[30Oct2026 10:14:48.446] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3732 AIR 6.50 -58.83 44.81 clip pop_launch
+[30Oct2026 10:14:48.504] [Render thread/INFO] [Alpine Shred/]: [smoke] screenshot watcher1_sees_air
+[30Oct2026 10:14:50.136] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3765 AIR 5.01 -58.70 64.43 clip -
+[30Oct2026 10:14:50.374] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3770 AIR 5.01 -58.70 64.43 clip -
+[30Oct2026 10:14:50.599] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3775 AIR 5.01 -58.70 64.43 clip -
+[30Oct2026 10:14:50.790] [Render thread/INFO] [net.minecraft.client.gui.components.ChatComponent/]: [System] [CHAT] rider has made the advancement [Catching Air]
+[30Oct2026 10:14:50.798] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3778 POWDER 4.83 -58.80 69.45 clip -
+[30Oct2026 10:14:50.870] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3780 POWDER 4.46 -59.00 79.49 clip -
+[30Oct2026 10:14:50.928] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3780 POWDER 4.46 -59.00 79.49 clip -
+[30Oct2026 10:14:51.153] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3785 POWDER 4.41 -59.00 81.77 clip -
+[30Oct2026 10:14:51.258] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3787 GLIDE 4.38 -59.00 83.42 clip -
+[30Oct2026 10:14:51.327] [Render thread/INFO] [Alpine Shred/]: [smoke] screenshot watcher1_sees_glide
+[30Oct2026 10:14:52.805] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3820 BRAKE 4.01 -59.00 101.42 clip -
+[30Oct2026 10:14:52.855] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3820 BRAKE 4.00 -59.00 101.91 clip -
+[30Oct2026 10:14:53.110] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3825 BRAKE 3.96 -59.00 104.21 clip -
+[30Oct2026 10:14:53.337] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3830 BRAKE 3.91 -59.00 106.37 clip -
+[30Oct2026 10:14:53.601] [Render thread/INFO] [Alpine Shred/]: [smoke] watch gt3835 BRAKE 3.87 -59.00 108.38 clip -
+[30Oct2026 10:14:53.708] [Render thread/INFO] [Alpine Shred/]: [smoke] the rider left
+[30Oct2026 10:14:53.713] [Render thread/INFO] [Alpine Shred/]: [smoke] watcher1: 18 design textures held; 18 built, mean 4.097 ms, longest 40.000 ms
+[30Oct2026 10:14:53.719] [Render thread/INFO] [Alpine Shred/]: [smoke] watcher1 saw the rider in [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], 115 blocks down the run, clips=4 loops=2 oneShots=0 particles=83 polePushes=0 maxFov=0.0 maxRoll=0.0
+[30Oct2026 10:14:53.721] [Render thread/INFO] [Alpine Shred/]: [smoke] PASS
+[30Oct2026 10:14:53.754] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!

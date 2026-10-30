@@ -1,0 +1,150 @@
+[10:11:25] [main/INFO] (Launcher) ModLauncher running: args [--launchTarget, forgeserveruserdev, --gameDir, ., --fml.forgeVersion, 47.4.28, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, -mixin.config, alpineshred.mixins.json, -mixin.config, alpineshred.client.mixins.json, nogui, --mixin.config, alpineshred.mixins.json, --mixin.config, alpineshred.client.mixins.json]
+[10:11:25] [main/INFO] (Launcher) ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 21.0.13 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1017-azure
+[10:11:25] [main/INFO] (unprotect) Initializing Unprotect using ModLauncher backend, target: Minecraft and loader classes (minecraft+forge)
+[10:11:25] [main/WARN] (FMLConfig) Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/smoke-server/config/fml.toml is not correct. Correcting
+[10:11:25] [main/INFO] (FMLConfig) Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[10:11:25] [main/INFO] (FMLConfig) Incorrect key [earlyWindowLogHelpMessage] was corrected from null to true
+[10:11:25] [main/INFO] (FMLConfig) Incorrect key [earlyWindowSquir] was corrected from null to false
+[10:11:25] [main/INFO] (FMLConfig) Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[10:11:25] [main/INFO] (ImmediateWindowHandler) ImmediateWindowProvider not loading because launch target is forgeserveruserdev
+[10:11:25] [main/INFO] (mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/mixin-patched/0.8.5.12/cf1f787f58d3b08b0cb53ecbba7928c09a1893c8/mixin-patched-0.8.5.12.jar%23116!/ Service=ModLauncher Env=SERVER
+[10:11:25] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.28/2f0765ea31561e9dfaf8eb8b54ac0548cd857559/javafmllanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[10:11:25] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.28/4e54a5f415a61888bd9c5d61b140ae5f86bf665f/lowcodelanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[10:11:25] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.28/4d3efb7da0466927cc5b1e4487c3d3c33ba842d0/mclanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[10:11:25] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.28/99808794b6f9f27ca527ad9db1203409fb8552f8/fmlcore-1.20.1-47.4.28.jar is missing mods.toml file
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file javafmllanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@4146577c
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file lowcodelanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@4146577c
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file mclanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@4146577c
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file fmlcore-1.20.1-47.4.28.jar of type LIBRARY with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@4146577c
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@4146577c
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file main of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@4146577c
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file  of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@4146577c
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file architectury-forge-0f2af2a4-9.2.14.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file curios-forge-0f2af2a4-5.14.1+1.20.1.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file 16894374543338107308.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file architectury-forge-0f2af2a4-9.2.14.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file curios-forge-0f2af2a4-5.14.1+1.20.1.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (ModDiscoverer) Found mod file 16894374543338107308.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@428b5b3f
+[10:11:25] [main/INFO] (JarInJarDependencyLocator) No dependencies to load found. Skipping!
+[10:11:27] [main/INFO] (mixin) Compatibility level set to JAVA_17
+[10:11:27] [main/INFO] (LaunchServiceHandler) Launching target 'forgeserveruserdev' with arguments [--gameDir, ., nogui]
+[10:11:27] [main/INFO] (mixin) Remapping refMap curios.refmap.json using RemapperChain (Architectury Patched)
+[10:11:27] [main/INFO] (unprotect) Found 7423 Minecraft classes
+[10:11:27] [main/INFO] (mixin) Remapping refMap architectury-forge-refmap.json using RemapperChain (Architectury Patched)
+[10:11:27] [main/INFO] (mixin) Remapping refMap architectury-common-refmap.json using RemapperChain (Architectury Patched)
+[10:11:27] [main/INFO] (mixin) Remapping refMap player-animation-lib-minecraft_common-refmap.json using RemapperChain (Architectury Patched)
+[30Oct2026 10:11:33.474] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.28, for MC 1.20.1 with MCP 20230612.114412
+[30Oct2026 10:11:33.474] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.4.28 Initialized
+[30Oct2026 10:11:33.642] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id architectury:sync_ids
+[30Oct2026 10:11:34.511] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/strap_toggle
+[30Oct2026 10:11:34.512] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/ride_state
+[30Oct2026 10:11:34.512] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/ride_action
+[30Oct2026 10:11:34.512] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/air_report
+[30Oct2026 10:11:34.513] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/grind_report
+[30Oct2026 10:11:34.513] [modloading-worker-0/INFO] [dev.architectury.networking.forge.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/design_save
+[30Oct2026 10:11:34.663] [modloading-worker-0/INFO] [Alpine Shred/]: [smoke] multiplayer server smoke test armed
+[30Oct2026 10:11:34.665] [modloading-worker-0/INFO] [Alpine Shred/]: Alpine Shred initialized on Forge
+[30Oct2026 10:11:35.167] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/smoke-server/config/curios-common.toml is not correct. Correcting
+[30Oct2026 10:11:35.167] [main/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key slots was corrected from null to its default, []. 
+[30Oct2026 10:11:35.452] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[30Oct2026 10:11:35.943] [Forge Version Check/INFO] [net.minecraftforge.fml.VersionChecker/]: [forge] Found status: UP_TO_DATE Current: 47.4.28 Target: null
+[30Oct2026 10:11:36.605] [main/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[30Oct2026 10:11:36.651] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/assets/.mcassetsroot' uses unexpected schema
+[30Oct2026 10:11:36.651] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/data/.mcassetsroot' uses unexpected schema
+[30Oct2026 10:11:37.337] [main/ERROR] [net.minecraft.server.dedicated.DedicatedServerProperties/]: No key layers in MapLike[{}]
+[30Oct2026 10:11:38.176] [main/INFO] [net.minecraft.world.item.crafting.RecipeManager/]: Loaded 7 recipes
+[30Oct2026 10:11:38.247] [main/INFO] [net.minecraft.advancements.AdvancementList/]: Loaded 1322 advancements
+[30Oct2026 10:11:38.253] [main/INFO] [top.theillusivec4.curios.Curios/]: Loaded 12 curio slots
+[30Oct2026 10:11:38.256] [main/INFO] [top.theillusivec4.curios.Curios/]: Loaded 1 curio entities
+[30Oct2026 10:11:38.928] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting minecraft server version 1.20.1
+[30Oct2026 10:11:38.929] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Loading properties
+[30Oct2026 10:11:38.929] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Default game type: CREATIVE
+[30Oct2026 10:11:38.929] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Generating keypair
+[30Oct2026 10:11:39.058] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Starting Minecraft server on *:25565
+[30Oct2026 10:11:39.079] [Server thread/INFO] [net.minecraft.server.network.ServerConnectionListener/]: Using epoll channel type
+[30Oct2026 10:11:39.158] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[30Oct2026 10:11:39.158] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: The server will make no attempt to authenticate usernames. Beware.
+[30Oct2026 10:11:39.158] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[30Oct2026 10:11:39.158] [Server thread/WARN] [net.minecraft.server.dedicated.DedicatedServer/]: To change this, set "online-mode" to "true" in the server.properties file.
+[30Oct2026 10:11:39.178] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/forge-server.toml is not correct. Correcting
+[30Oct2026 10:11:39.178] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[30Oct2026 10:11:39.179] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[30Oct2026 10:11:39.179] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[30Oct2026 10:11:39.179] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[30Oct2026 10:11:39.179] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[30Oct2026 10:11:39.179] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[30Oct2026 10:11:39.179] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[30Oct2026 10:11:39.180] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[30Oct2026 10:11:39.180] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key server.useItemWithDurationZero was corrected from null to its default, false. 
+[30Oct2026 10:11:39.185] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/curios-server.toml is not correct. Correcting
+[30Oct2026 10:11:39.185] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key keepCurios was corrected from null to its default, DEFAULT. 
+[30Oct2026 10:11:39.187] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key menu was corrected from null to its default, SimpleCommentedConfig:{}. 
+[30Oct2026 10:11:39.187] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key menu.enableLegacyMenu was corrected from null to its default, false. 
+[30Oct2026 10:11:39.187] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key menu.experimental was corrected from null to its default, SimpleCommentedConfig:{}. 
+[30Oct2026 10:11:39.187] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key menu.experimental.minimumColumns was corrected from null to its default, 1. 
+[30Oct2026 10:11:39.187] [Server thread/WARN] [net.minecraftforge.common.ForgeConfigSpec/CORE]: Incorrect key menu.experimental.maxSlotsPerPage was corrected from null to its default, 48. 
+[30Oct2026 10:11:39.219] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Preparing level "world"
+[30Oct2026 10:11:39.827] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Preparing start region for dimension minecraft:overworld
+[30Oct2026 10:11:40.475] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[30Oct2026 10:11:40.477] [Worker-Main-3/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 0%
+[30Oct2026 10:11:40.828] [Worker-Main-2/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 10%
+[30Oct2026 10:11:41.328] [Worker-Main-1/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Preparing spawn area: 55%
+[30Oct2026 10:11:41.723] [Server thread/INFO] [net.minecraft.server.level.progress.LoggerChunkProgressListener/]: Time elapsed: 1895 ms
+[30Oct2026 10:11:41.723] [Server thread/INFO] [net.minecraft.server.dedicated.DedicatedServer/]: Done (2.548s)! For help, type "help"
+[30Oct2026 10:11:41.741] [Server thread/INFO] [net.minecraftforge.gametest.ForgeGameTestHooks/]: Enabled Gametest Namespaces: []
+[30Oct2026 10:11:41.764] [Server thread/INFO] [net.minecraftforge.server.permission.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[30Oct2026 10:11:41.873] [Server thread/INFO] [Alpine Shred/]: [smoke] built the run at BlockPos{x=6, y=-60, z=-8}
+[30Oct2026 10:12:22.329] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: rider[/[::1]:46154] logged in with entity id 1 at (-9.5, -60.0, 6.5)
+[30Oct2026 10:12:22.510] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: rider joined the game
+[30Oct2026 10:12:22.617] [Server thread/INFO] [Alpine Shred/]: [smoke] joined: rider
+[30Oct2026 10:12:23.118] [Server thread/INFO] [Alpine Shred/]: [smoke] rider strapped: OK
+[30Oct2026 10:12:23.127] [Server thread/INFO] [Alpine Shred/]: [smoke] stall gt808 952 ms
+[30Oct2026 10:12:23.127] [Server thread/INFO] [Alpine Shred/]: [smoke] t808 gt808 IDLE at z 1.5
+[30Oct2026 10:12:23.281] [Server thread/INFO] [Alpine Shred/]: [smoke] stall gt809 153 ms
+[30Oct2026 10:12:24.789] [Server thread/INFO] [Alpine Shred/]: [smoke] stall gt855 260 ms
+[30Oct2026 10:13:18.190] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: watcher1[/[::1]:44716] logged in with entity id 2 at (-8.5, -60.0, -5.5)
+[30Oct2026 10:13:18.233] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: watcher1 joined the game
+[30Oct2026 10:13:18.289] [Server thread/INFO] [Alpine Shred/]: [smoke] joined: watcher1
+[30Oct2026 10:13:18.405] [Server thread/INFO] [Alpine Shred/]: [smoke] showcase of 20 designs at 13.5 -43.0 9.5
+[30Oct2026 10:13:18.415] [Server thread/INFO] [Alpine Shred/]: [smoke] stall gt1927 286 ms
+[30Oct2026 10:13:25.066] [Server thread/INFO] [Alpine Shred/]: [smoke] stall gt2062 172 ms
+[30Oct2026 10:14:27.304] [Server thread/INFO] [net.minecraft.server.players.PlayerList/]: watcher2[/[::1]:51662] logged in with entity id 23 at (-6.5, -60.0, 3.5)
+[30Oct2026 10:14:27.314] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: watcher2 joined the game
+[30Oct2026 10:14:27.345] [Server thread/INFO] [Alpine Shred/]: [smoke] joined: watcher2
+[30Oct2026 10:14:27.417] [Server thread/INFO] [Alpine Shred/]: [smoke] showcase of 20 designs at -1.5 -54.0 50.5
+[30Oct2026 10:14:27.422] [Server thread/INFO] [Alpine Shred/]: [smoke] stall gt3309 190 ms
+[30Oct2026 10:14:42.628] [Server thread/INFO] [Alpine Shred/]: [smoke] t3616 gt3616 GLIDE at z 1.6
+[30Oct2026 10:14:45.145] [Server thread/INFO] [Alpine Shred/]: [smoke] t3666 gt3666 CARVE at z 13.2
+[30Oct2026 10:14:46.181] [Server thread/INFO] [Alpine Shred/]: [smoke] t3687 gt3687 GLIDE at z 23.2
+[30Oct2026 10:14:46.487] [Server thread/INFO] [Alpine Shred/]: [smoke] t3693 gt3693 CARVE at z 26.6
+[30Oct2026 10:14:47.233] [Server thread/INFO] [Alpine Shred/]: [smoke] t3708 gt3708 GLIDE at z 36.9
+[30Oct2026 10:14:48.431] [Server thread/INFO] [Alpine Shred/]: [smoke] t3732 gt3732 AIR at z 53.3
+[30Oct2026 10:14:49.285] [Server thread/INFO] [Alpine Shred/]: [smoke] t3749 gt3749 CARVE at z 64.6
+[30Oct2026 10:14:49.347] [Server thread/INFO] [Alpine Shred/]: [smoke] t3750 gt3750 AIR at z 66.7
+[30Oct2026 10:14:50.751] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: rider has made the advancement [Catching Air]
+[30Oct2026 10:14:50.756] [Server thread/INFO] [Alpine Shred/]: [smoke] stall gt3765 724 ms
+[30Oct2026 10:14:50.779] [Server thread/INFO] [Alpine Shred/]: [smoke] t3766 gt3766 POWDER at z 87.5
+[30Oct2026 10:14:51.232] [Server thread/INFO] [Alpine Shred/]: [smoke] t3788 gt3788 GLIDE at z 93.0
+[30Oct2026 10:14:52.234] [Server thread/INFO] [Alpine Shred/]: [smoke] t3808 gt3808 BRAKE at z 104.9
+[30Oct2026 10:14:53.778] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: watcher1 lost connection: Disconnected
+[30Oct2026 10:14:53.779] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: watcher1 left the game
+[30Oct2026 10:14:53.933] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: rider has made the advancement [First Run]
+[30Oct2026 10:14:54.740] [Server thread/INFO] [Alpine Shred/]: [smoke] t3858 gt3858 GLIDE at z 124.4
+[30Oct2026 10:14:54.780] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: rider lost connection: Disconnected
+[30Oct2026 10:14:54.781] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: rider left the game
+[30Oct2026 10:14:54.925] [Server thread/INFO] [net.minecraft.server.network.ServerGamePacketListenerImpl/]: watcher2 lost connection: Disconnected
+[30Oct2026 10:14:54.926] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: watcher2 left the game
+[30Oct2026 10:14:54.939] [Server thread/INFO] [Alpine Shred/]: [smoke] server states [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], violations 0
+[30Oct2026 10:14:54.941] [Server thread/INFO] [Alpine Shred/]: [smoke] RESULT PASS
+[30Oct2026 10:14:54.979] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Stopping server
+[30Oct2026 10:14:54.982] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving players
+[30Oct2026 10:14:54.982] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving worlds
+[30Oct2026 10:14:56.882] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[30Oct2026 10:14:57.063] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[30Oct2026 10:14:57.063] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[30Oct2026 10:14:57.079] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[30Oct2026 10:14:57.079] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[30Oct2026 10:14:57.079] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[30Oct2026 10:14:57.080] [Server thread/INFO] [net.minecraft.server.MinecraftServer/]: ThreadedAnvilChunkStorage: All dimensions are saved

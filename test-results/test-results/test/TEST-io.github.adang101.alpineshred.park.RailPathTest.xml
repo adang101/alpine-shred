@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.park.RailPathTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:35.789Z" hostname="runnervm48cm3" time="0.125">
+  <properties/>
+  <testcase name="neighbouringEndsEitherMeetExactlyOrAreFarApart()" classname="io.github.adang101.alpineshred.park.RailPathTest" time="0.113"/>
+  <testcase name="risesChainUpAndFlatsResume()" classname="io.github.adang101.alpineshred.park.RailPathTest" time="0.001"/>
+  <testcase name="everyEndIsOnABlockEdgeMidpoint()" classname="io.github.adang101.alpineshred.park.RailPathTest" time="0.002"/>
+  <testcase name="pointAndTangentAlongACurve()" classname="io.github.adang101.alpineshred.park.RailPathTest" time="0.003"/>
+  <testcase name="facingsTurnClockwise()" classname="io.github.adang101.alpineshred.park.RailPathTest" time="0.0"/>
+  <testcase name="authoredPathsMatchTheDocTable()" classname="io.github.adang101.alpineshred.park.RailPathTest" time="0.001"/>
+  <testcase name="closestPointIsMeasuredHorizontally()" classname="io.github.adang101.alpineshred.park.RailPathTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

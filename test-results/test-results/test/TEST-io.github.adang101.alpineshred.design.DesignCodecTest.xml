@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.design.DesignCodecTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.126Z" hostname="runnervm48cm3" time="0.121">
+  <properties/>
+  <testcase name="roundTripsBoardsAndSkis()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.033"/>
+  <testcase name="pixelsOutsideTheOutlineAreForcedTransparent()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.007"/>
+  <testcase name="theHashIsStableAndIgnoresTheNameAndAuthor()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.005"/>
+  <testcase name="theAtlasShowsTheDefaultsThroughAndCutsTheOutline()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.003"/>
+  <testcase name="wrongDimensionsAreRejected()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.007"/>
+  <testcase name="namesAreSanitized()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.002"/>
+  <testcase name="decompressionBombsStopAtTheFaceSize()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.028"/>
+  <testcase name="shareCodesRoundTripAndCheckTheKind()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.014"/>
+  <testcase name="oversizeDesignsAreRejected()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.003"/>
+  <testcase name="partialAlphaIsRejected()" classname="io.github.adang101.alpineshred.design.DesignCodecTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

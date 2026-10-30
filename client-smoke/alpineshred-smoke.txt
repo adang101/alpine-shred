@@ -1,0 +1,166 @@
+stage LOADING
+stage BUILDING
+built the run at BlockPos{x=7, y=-60, z=2}; strap OK
+strapped in at BlockPos{x=7, y=-44, z=3}
+stage RIDE_BOARD
+t10 z1.7 y16.00 GLIDE speed 0.049 lean 0.00 frames 88 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t20 z2.6 y16.00 GLIDE speed 0.143 lean 0.00 frames 100 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t30 z4.7 y15.00 GLIDE speed 0.247 lean 0.00 frames 115 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t40 z7.5 y14.00 GLIDE speed 0.325 lean 0.00 frames 129 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t50 z11.1 y13.00 GLIDE speed 0.398 lean 0.00 frames 144 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t60 z15.5 y12.00 CARVE speed 0.466 lean 1.00 frames 159 clips=2 loops=2 oneShots=0 particles=22 polePushes=0 maxFov=1.2958893 maxRoll=4.7417088
+screenshot board_carve_right at z 16.5, CARVE
+screenshot board_carve_right_side at z 18.9, CARVE
+t70 z20.5 y10.00 CARVE speed 0.523 lean 1.00 frames 174 clips=2 loops=2 oneShots=0 particles=57 polePushes=0 maxFov=3.06951 maxRoll=5.864892
+t80 z26.0 y8.00 GLIDE speed 0.585 lean 0.00 frames 189 clips=2 loops=2 oneShots=0 particles=68 polePushes=0 maxFov=4.773693 maxRoll=5.9308248
+screenshot board_carve_left at z 30.3, CARVE
+t90 z32.2 y6.00 CARVE speed 0.648 lean -1.00 frames 204 clips=2 loops=2 oneShots=0 particles=109 polePushes=0 maxFov=6.693609 maxRoll=5.9308248
+screenshot board_carve_left_side at z 32.9, CARVE
+t100 z39.0 y4.00 GLIDE speed 0.701 lean 0.00 frames 219 clips=2 loops=2 oneShots=0 particles=135 polePushes=0 maxFov=8.362664 maxRoll=5.9308248
+screenshot board_front at z 39.7, GLIDE
+screenshot board_glide_offside at z 44.9, GLIDE
+t110 z46.4 y1.00 GLIDE speed 0.767 lean 0.00 frames 234 clips=2 loops=2 oneShots=0 particles=135 polePushes=0 maxFov=10.231211 maxRoll=5.9308248
+screenshot board_charge_side at z 51.8, GLIDE
+airborne at z 53.3
+t120 z54.1 y1.90 AIR speed 0.762 lean 0.00 frames 248 clips=4 loops=2 oneShots=1 particles=135 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshot board_pop_air_side at z 54.8, AIR
+t130 z61.7 y1.75 GLIDE speed 0.762 lean 0.00 frames 263 clips=6 loops=2 oneShots=3 particles=144 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshot board_landing_1 at z 63.9, CARVE
+airborne at z 65.3
+screenshot board_kicker_air at z 67.4, AIR
+t140 z68.9 y2.82 AIR speed 0.721 lean 0.00 frames 275 clips=8 loops=2 oneShots=4 particles=157 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshot board_kicker_air_side at z 69.6, AIR
+screenshot board_landing_2 at z 75.3, GLIDE
+t150 z76.0 y1.00 GLIDE speed 0.707 lean 0.00 frames 289 clips=9 loops=2 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshot board_first_person at z 78.1, GLIDE
+t160 z82.9 y1.00 GLIDE speed 0.677 lean 0.00 frames 304 clips=10 loops=2 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshot board_powder at z 86.8, POWDER
+screenshot board_powder_side at z 89.4, POWDER
+t170 z89.4 y1.00 POWDER speed 0.622 lean 0.00 frames 319 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t180 z95.3 y1.00 GLIDE speed 0.581 lean 0.00 frames 333 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t190 z101.0 y1.00 GLIDE speed 0.559 lean 0.00 frames 348 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t200 z106.4 y1.00 BRAKE speed 0.521 lean 0.00 frames 363 clips=11 loops=4 oneShots=5 particles=182 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshot board_brake at z 109.0, BRAKE
+t210 z111.3 y1.00 BRAKE speed 0.461 lean 0.00 frames 378 clips=11 loops=4 oneShots=5 particles=196 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshot board_brake_side at z 111.8, BRAKE
+t220 z115.6 y1.00 BRAKE speed 0.403 lean 0.00 frames 392 clips=11 loops=4 oneShots=5 particles=209 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t230 z119.3 y1.00 BRAKE speed 0.348 lean 0.00 frames 407 clips=11 loops=4 oneShots=5 particles=220 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t240 z122.5 y1.00 BRAKE speed 0.295 lean 0.00 frames 422 clips=11 loops=4 oneShots=5 particles=230 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+board: states [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], max speed 0.775, landings 2, clips=11 loops=4 oneShots=5 particles=235 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+stage GALLERY_BOARD
+screenshot pose_board_idle_board_side at z 127.0, GLIDE
+screenshot pose_board_idle_board_quarter at z 129.8, GLIDE
+screenshot pose_board_glide_board_regular_side at z 132.5, IDLE
+screenshot pose_board_glide_board_regular_quarter at z 132.6, IDLE
+screenshot pose_board_tuck_board_side at z 132.6, IDLE
+screenshot pose_board_tuck_board_quarter at z 132.6, IDLE
+screenshot pose_board_brake_board_side at z 132.6, IDLE
+screenshot pose_board_brake_board_quarter at z 132.6, IDLE
+screenshot pose_board_pop_charge_side at z 132.6, IDLE
+screenshot pose_board_pop_charge_quarter at z 132.6, IDLE
+screenshot pose_board_pop_launch_side at z 132.6, IDLE
+screenshot pose_board_pop_launch_quarter at z 132.6, IDLE
+screenshot pose_board_air_board_side at z 132.6, IDLE
+screenshot pose_board_air_board_quarter at z 132.6, IDLE
+screenshot pose_board_land_sketchy_side at z 132.6, IDLE
+screenshot pose_board_land_sketchy_quarter at z 132.6, IDLE
+screenshot pose_board_wipeout_front_side at z 132.6, IDLE
+screenshot pose_board_wipeout_front_quarter at z 132.6, IDLE
+screenshot pose_board_wipeout_back_side at z 132.6, IDLE
+screenshot pose_board_wipeout_back_quarter at z 132.6, IDLE
+screenshot pose_board_grind_5050_side at z 132.6, IDLE
+screenshot pose_board_grind_5050_quarter at z 132.6, IDLE
+screenshot pose_board_grind_nose_side at z 132.6, IDLE
+screenshot pose_board_grind_nose_quarter at z 132.6, IDLE
+screenshot pose_board_grind_tail_side at z 132.6, IDLE
+screenshot pose_board_grind_tail_quarter at z 132.6, IDLE
+screenshot pose_board_boardslide_side at z 132.6, IDLE
+screenshot pose_board_boardslide_quarter at z 132.6, IDLE
+screenshot pose_board_grab_indy_side at z 132.6, IDLE
+screenshot pose_board_grab_indy_quarter at z 132.6, IDLE
+screenshot pose_board_grab_mute_side at z 132.6, IDLE
+screenshot pose_board_grab_mute_quarter at z 132.6, IDLE
+screenshot pose_board_grab_nose_side at z 132.6, IDLE
+screenshot pose_board_grab_nose_quarter at z 132.6, IDLE
+screenshot pose_board_grab_tail_side at z 132.6, IDLE
+screenshot pose_board_grab_tail_quarter at z 132.6, IDLE
+screenshot pose_board_grab_method_side at z 132.6, IDLE
+screenshot pose_board_grab_method_quarter at z 132.6, IDLE
+tricks received: [TrickResult[points=121, lines=[Line[id=spin_180, points=100], Line[id=height, points=10]], quality=CLEAN, switchLanding=true, multiplier=1.0, comboTotal=121, landings=1, banked=false, bail=false], TrickResult[points=0, lines=[], quality=CLEAN, switchLanding=false, multiplier=1.0, comboTotal=121, landings=1, banked=true, bail=false]]
+server: last trick TrickResult[points=0, lines=[], quality=CLEAN, switchLanding=false, multiplier=1.0, comboTotal=121, landings=1, banked=true, bail=false], violations 0, last reason 
+banked: server 121, popup 121
+stage SWAP
+skis: strap OK
+stage RIDE_SKIS
+t10 z2.1 y16.00 GLIDE speed 0.139 lean 0.00 frames 1077 clips=91 loops=5 oneShots=6 particles=235 polePushes=1 maxFov=10.950285 maxRoll=5.9308248
+screenshot skis_pole_push_side at z 2.3, GLIDE
+t20 z4.2 y15.00 GLIDE speed 0.332 lean 0.00 frames 1092 clips=93 loops=5 oneShots=7 particles=235 polePushes=2 maxFov=10.950285 maxRoll=5.9308248
+t30 z7.9 y14.00 GLIDE speed 0.404 lean 0.00 frames 1107 clips=94 loops=5 oneShots=7 particles=235 polePushes=2 maxFov=10.950285 maxRoll=5.9308248
+t40 z13.3 y12.00 CARVE speed 0.574 lean 1.00 frames 1122 clips=95 loops=5 oneShots=8 particles=242 polePushes=3 maxFov=10.950285 maxRoll=5.9308248
+screenshot skis_carve_right at z 16.2, CARVE
+screenshot skis_carve_right_side at z 18.6, CARVE
+t50 z19.2 y10.00 CARVE speed 0.619 lean 1.00 frames 1137 clips=96 loops=5 oneShots=8 particles=282 polePushes=3 maxFov=10.950285 maxRoll=5.9308248
+t60 z25.7 y8.00 GLIDE speed 0.674 lean 0.00 frames 1152 clips=96 loops=5 oneShots=8 particles=303 polePushes=3 maxFov=10.950285 maxRoll=5.9308248
+screenshot skis_carve_left at z 30.5, CARVE
+t70 z32.7 y6.00 CARVE speed 0.723 lean -1.00 frames 1167 clips=96 loops=5 oneShots=8 particles=344 polePushes=3 maxFov=10.950285 maxRoll=5.9308248
+screenshot skis_carve_left_side at z 33.4, CARVE
+screenshot skis_front at z 40.1, GLIDE
+t80 z40.1 y3.00 GLIDE speed 0.755 lean 0.00 frames 1182 clips=96 loops=5 oneShots=8 particles=367 polePushes=3 maxFov=10.950285 maxRoll=5.9308248
+screenshot skis_glide_offside at z 45.5, GLIDE
+t90 z47.8 y1.00 GLIDE speed 0.785 lean 0.00 frames 1197 clips=96 loops=5 oneShots=8 particles=367 polePushes=3 maxFov=11.203928 maxRoll=5.9308248
+screenshot skis_charge_side at z 51.7, GLIDE
+airborne at z 53.3
+screenshot skis_pop_air_side at z 54.8, AIR
+t100 z55.6 y2.17 AIR speed 0.769 lean 0.00 frames 1212 clips=98 loops=5 oneShots=9 particles=367 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+screenshot skis_landing_1 at z 63.2, GLIDE
+t110 z63.2 y2.50 GLIDE speed 0.727 lean 0.00 frames 1226 clips=101 loops=5 oneShots=10 particles=376 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+airborne at z 65.3
+screenshot skis_kicker_air at z 67.5, AIR
+screenshot skis_kicker_air_side at z 69.7, AIR
+t120 z70.4 y2.44 AIR speed 0.723 lean 0.00 frames 1241 clips=103 loops=5 oneShots=10 particles=376 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+screenshot skis_landing_2 at z 75.5, GLIDE
+t130 z77.6 y1.00 GLIDE speed 0.704 lean 0.00 frames 1256 clips=105 loops=5 oneShots=11 particles=388 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+screenshot skis_first_person at z 78.3, GLIDE
+t140 z84.5 y1.00 GLIDE speed 0.674 lean 0.00 frames 1270 clips=106 loops=5 oneShots=11 particles=388 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+screenshot skis_powder at z 87.1, POWDER
+screenshot skis_powder_side at z 89.6, POWDER
+t150 z90.9 y1.00 POWDER speed 0.614 lean 0.00 frames 1285 clips=106 loops=5 oneShots=11 particles=388 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+t160 z96.8 y1.00 GLIDE speed 0.583 lean 0.00 frames 1300 clips=106 loops=5 oneShots=11 particles=388 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+t170 z102.5 y1.00 GLIDE speed 0.561 lean 0.00 frames 1315 clips=106 loops=5 oneShots=11 particles=388 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+t180 z107.9 y1.00 BRAKE speed 0.519 lean 0.00 frames 1329 clips=107 loops=5 oneShots=11 particles=399 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+screenshot skis_brake at z 108.9, BRAKE
+screenshot skis_brake_side at z 111.9, BRAKE
+t190 z112.8 y1.00 BRAKE speed 0.470 lean 0.00 frames 1344 clips=107 loops=5 oneShots=11 particles=414 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+t200 z117.3 y1.00 BRAKE speed 0.424 lean 0.00 frames 1359 clips=107 loops=5 oneShots=11 particles=427 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+t210 z121.3 y1.00 BRAKE speed 0.380 lean 0.00 frames 1374 clips=107 loops=5 oneShots=11 particles=439 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+skis: states [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], max speed 0.785, landings 2, clips=107 loops=5 oneShots=11 particles=448 polePushes=3 maxFov=11.340436 maxRoll=5.9308248
+stage GALLERY_SKIS
+screenshot pose_skis_idle_skis_side at z 127.9, GLIDE
+screenshot pose_skis_idle_skis_front at z 131.6, GLIDE
+screenshot pose_skis_glide_skis_side at z 134.2, IDLE
+screenshot pose_skis_glide_skis_front at z 134.2, IDLE
+screenshot pose_skis_tuck_skis_side at z 134.2, IDLE
+screenshot pose_skis_tuck_skis_front at z 134.2, IDLE
+screenshot pose_skis_snowplow_skis_side at z 134.2, IDLE
+screenshot pose_skis_snowplow_skis_front at z 134.2, IDLE
+screenshot pose_skis_air_skis_side at z 134.2, IDLE
+screenshot pose_skis_air_skis_front at z 134.2, IDLE
+screenshot pose_skis_wipeout_front_side at z 134.2, IDLE
+screenshot pose_skis_wipeout_front_front at z 134.2, IDLE
+screenshot pose_skis_slide_skis_side at z 134.2, IDLE
+screenshot pose_skis_slide_skis_front at z 134.2, IDLE
+screenshot pose_skis_grab_indy_skis_side at z 134.2, IDLE
+screenshot pose_skis_grab_indy_skis_front at z 134.2, IDLE
+screenshot pose_skis_grab_method_skis_side at z 134.2, IDLE
+screenshot pose_skis_grab_method_skis_front at z 134.2, IDLE
+stage PAINT
+screenshot paint_bench_slots at z 1.5, OFF
+paint: 12 templates from the server
+screenshot paint_editor at z 1.5, OFF
+paint: save OK
+paint: server gear Design[board "Smoke Test" by Dev edge #e03030 hash 03b3da8f]
+screenshot paint_held at z 1.5, OFF
+screenshot paint_inventory at z 1.5, OFF
+paint: 2 design textures built
+screenshots: 95
+RESULT PASS

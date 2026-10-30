@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.feel.AssetFilesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.387Z" hostname="runnervm48cm3" time="0.04">
+  <properties/>
+  <testcase name="everyClipFileExists()" classname="io.github.adang101.alpineshred.feel.AssetFilesTest" time="0.012"/>
+  <testcase name="everySoundEventHasFilesAndATranslatedSubtitle()" classname="io.github.adang101.alpineshred.feel.AssetFilesTest" time="0.014"/>
+  <testcase name="everyParticleHasItsTextures()" classname="io.github.adang101.alpineshred.feel.AssetFilesTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.park.ParkShapesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:35.777Z" hostname="runnervm48cm3" time="0.011">
+  <properties/>
+  <testcase name="pipeCellsFollowTheArc()" classname="io.github.adang101.alpineshred.park.ParkShapesTest" time="0.002"/>
+  <testcase name="rampRunsClimbOneBlockInEvenSteps()" classname="io.github.adang101.alpineshred.park.ParkShapesTest" time="0.003"/>
+  <testcase name="pipeColumnsNeverRiseAboveTheArc()" classname="io.github.adang101.alpineshred.park.ParkShapesTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.SurfaceProfileTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:35.458Z" hostname="runnervm48cm3" time="0.018">
+  <properties/>
+  <testcase name="defaultsMatchSectionSevenTable()" classname="io.github.adang101.alpineshred.movement.SurfaceProfileTest" time="0.004"/>
+  <testcase name="customProfileNeedsFriction()" classname="io.github.adang101.alpineshred.movement.SurfaceProfileTest" time="0.001"/>
+  <testcase name="groomedOutranksGenericSnow()" classname="io.github.adang101.alpineshred.movement.SurfaceProfileTest" time="0.003"/>
+  <testcase name="shippedProfileFilesEqualBuiltInDefaults()" classname="io.github.adang101.alpineshred.movement.SurfaceProfileTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

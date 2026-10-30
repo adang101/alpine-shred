@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.SlideModelTest" tests="21" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:35.416Z" hostname="runnervm48cm3" time="0.03">
+  <properties/>
+  <testcase name="waxedBoardGlidesFaster()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.005"/>
+  <testcase name="deadZoneIgnoresTinyLookOffsets()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.001"/>
+  <testcase name="lookSteeringIsLimitedBySpeedAndGrip()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="keysSchemeSteersWithADAndIgnoresTheCamera()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="popAndWipeoutFormulas()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.001"/>
+  <testcase name="iceDriftsMoreThanGroomed()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="tuckIsFasterThanFlareOnASlope()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.004"/>
+  <testcase name="lookingStraightBackDoesNotSpinTheBoard()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="groundStateClassification()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="switchRidingIsStableWhenLookingAlongTravel()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.001"/>
+  <testcase name="matchingEdgeBoostsTurnAndScrubsSpeed()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.003"/>
+  <testcase name="belowPivotSpeedKeysRotateTheBoardInPlace()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="hardDriftNearNinetyDegreesDoesNotChatterBetweenStances()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.001"/>
+  <testcase name="fasterBoardHasHigherTerminalSpeed()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.002"/>
+  <testcase name="turnRateHalvesAtTheReferenceSpeed()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.004"/>
+  <testcase name="polePushOnlyBelowItsSpeedLimit()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.001"/>
+  <testcase name="angleHelpers()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="counterEdgeDriftsMoreThanNoEdge()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.001"/>
+  <testcase name="stallAngleOnSnowIsAboutTwoDegrees()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.0"/>
+  <testcase name="stoppedFacingUphillSlidesBackTailFirst()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.004"/>
+  <testcase name="brakingStopsFasterAndSkisSnowplowWithHalfSteering()" classname="io.github.adang101.alpineshred.movement.SlideModelTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

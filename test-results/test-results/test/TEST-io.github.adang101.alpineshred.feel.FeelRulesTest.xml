@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.feel.FeelRulesTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.545Z" hostname="runnervm48cm3" time="0.052">
+  <properties/>
+  <testcase name="surfaceChangesCrossFadeOverFourTicks()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.002"/>
+  <testcase name="eachSurfaceHasItsOwnLoopAndTheAirIsSilent()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.002"/>
+  <testcase name="powderFlashAndWipeoutPulseLastTenTicks()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.001"/>
+  <testcase name="leaningKeepsTheFeetAndBoardPlanted()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.003"/>
+  <testcase name="tuckHasHysteresis()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.002"/>
+  <testcase name="glideLoopFollowsTheDocFormulaOnSnow()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.001"/>
+  <testcase name="speedLinesAndWhiteoutFollowSpeed()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.0"/>
+  <testcase name="reduceMotionAndWipeoutsOverrideTheCamera()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.0"/>
+  <testcase name="directorPlaysLaunchAndLandingOneShots()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.001"/>
+  <testcase name="carvingAndBrakingLayerOverTheGlide()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.0"/>
+  <testcase name="ridersCrouchWithSpeedAndCharge()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.021"/>
+  <testcase name="boardersLeanTowardTheEdgeTheTurnUses()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.001"/>
+  <testcase name="particleRates()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.003"/>
+  <testcase name="cameraRollAndFovSettleOnTheDocTargets()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.001"/>
+  <testcase name="cameraSmoothsAtPointTwoPerTickAndInterpolatesFrames()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.0"/>
+  <testcase name="baseClipsFollowStateModeAndStance()" classname="io.github.adang101.alpineshred.feel.FeelRulesTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

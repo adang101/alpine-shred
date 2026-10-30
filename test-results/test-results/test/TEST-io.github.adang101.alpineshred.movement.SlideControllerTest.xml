@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.SlideControllerTest" tests="28" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:35.237Z" hostname="runnervm48cm3" time="0.177">
+  <properties/>
+  <testcase name="brakingStopsInAThirdOfTheCoastingDistance()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.007"/>
+  <testcase name="popChargesWhileHeldAndFiresOnRelease()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.001"/>
+  <testcase name="theReportedHeadingErrorIsTheTakeoffOffsetPlusTheSpin()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.007"/>
+  <testcase name="walksOnStoneAtWalkingSpeed()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.002"/>
+  <testcase name="skatingGetsARiderMovingOnFlatSnow()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.001"/>
+  <testcase name="snapshotCarriesStateSpeedAndHeading()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.0"/>
+  <testcase name="headOnWallAtSpeedWipesOutForThirtyTicks()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.001"/>
+  <testcase name="polePushIsForSkisOnTheGround()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.0"/>
+  <testcase name="descendsAVoxelStaircaseWithoutGoingAirborne()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.005"/>
+  <testcase name="aSpinInTheAirTurnsTheBoardAndLandsScored()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.001"/>
+  <testcase name="ridingOffAFlatLedgeDoesNotLaunch()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.008"/>
+  <testcase name="sneakInTheAirIsAMethodGrab()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.001"/>
+  <testcase name="offTheEndOfABoardslideTheBoardTurnsOutOnItsOwn()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.028"/>
+  <testcase name="takesOverFromWalkingOnSnow()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.003"/>
+  <testcase name="slowWallBumpIsNotAWipeout()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.0"/>
+  <testcase name="lookingRightTurnsTheRiderRight()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.003"/>
+  <testcase name="scrapingDisabledWalksAsSoonAsTheSnowEnds()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.001"/>
+  <testcase name="slidesOntoStoneThenScrapesDownToWalking()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.004"/>
+  <testcase name="aStepFollowedByADropLaunchesAndLands()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.006"/>
+  <testcase name="steppedRampsLaunchWithVanillaStyleCollisionToo()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.024"/>
+  <testcase name="anUnfinishedFlipBails()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.004"/>
+  <testcase name="aHeadOnHitIsAWipeoutWhateverTheDistanceAtTheStartOfTheTick()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.002"/>
+  <testcase name="aSteppedRampLaunchesWhateverTheTickPhaseAndSpeed()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.018"/>
+  <testcase name="grabsAreCountedAndSlowTheSpin()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.005"/>
+  <testcase name="wipeoutLocksInputAndBleedsSpeed()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.001"/>
+  <testcase name="aHalfSpinLandsSwitch()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.003"/>
+  <testcase name="vanillaStyleHoverPastEdgesNeitherLaunchesNorFlickers()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.012"/>
+  <testcase name="powderFloatsAtSpeedAndSinksWhenSlow()" classname="io.github.adang101.alpineshred.movement.SlideControllerTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

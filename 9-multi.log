@@ -1,0 +1,84 @@
+server up
+clients done
+=== forge/build/smoke-server/alpineshred-server-smoke.txt
+t808 gt808 IDLE at z 1.5
+stall gt809 153 ms
+stall gt855 260 ms
+joined: watcher1
+showcase of 20 designs at 13.5 -43.0 9.5
+stall gt1927 286 ms
+stall gt2062 172 ms
+joined: watcher2
+showcase of 20 designs at -1.5 -54.0 50.5
+stall gt3309 190 ms
+t3616 gt3616 GLIDE at z 1.6
+t3666 gt3666 CARVE at z 13.2
+t3687 gt3687 GLIDE at z 23.2
+t3693 gt3693 CARVE at z 26.6
+t3708 gt3708 GLIDE at z 36.9
+t3732 gt3732 AIR at z 53.3
+t3749 gt3749 CARVE at z 64.6
+t3750 gt3750 AIR at z 66.7
+stall gt3765 724 ms
+t3766 gt3766 POWDER at z 87.5
+t3788 gt3788 GLIDE at z 93.0
+t3808 gt3808 BRAKE at z 104.9
+t3858 gt3858 GLIDE at z 124.4
+server states [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], violations 0
+RESULT PASS
+=== forge/build/smoke-rider/alpineshred-smoke.txt
+t50 z11.1 y13.00 GLIDE speed 0.398 lean 0.00 frames 2504 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t60 z15.5 y12.00 CARVE speed 0.466 lean 1.00 frames 2510 clips=2 loops=2 oneShots=0 particles=22 polePushes=0 maxFov=1.2958893 maxRoll=4.7417088
+t70 z20.5 y10.00 CARVE speed 0.523 lean 1.00 frames 2518 clips=2 loops=2 oneShots=0 particles=57 polePushes=0 maxFov=3.06951 maxRoll=5.864892
+t80 z26.0 y8.00 GLIDE speed 0.585 lean 0.00 frames 2526 clips=2 loops=2 oneShots=0 particles=68 polePushes=0 maxFov=4.773693 maxRoll=5.9308248
+t90 z32.2 y6.00 CARVE speed 0.648 lean -1.00 frames 2532 clips=2 loops=2 oneShots=0 particles=109 polePushes=0 maxFov=6.693609 maxRoll=5.9308248
+t100 z39.0 y4.00 GLIDE speed 0.701 lean 0.00 frames 2538 clips=2 loops=2 oneShots=0 particles=135 polePushes=0 maxFov=8.362664 maxRoll=5.9308248
+t110 z46.4 y1.00 GLIDE speed 0.767 lean 0.00 frames 2546 clips=2 loops=2 oneShots=0 particles=135 polePushes=0 maxFov=10.231211 maxRoll=5.9308248
+airborne at z 53.3
+t120 z54.1 y1.90 AIR speed 0.762 lean 0.00 frames 2553 clips=4 loops=2 oneShots=1 particles=135 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t130 z61.7 y1.75 GLIDE speed 0.762 lean 0.00 frames 2557 clips=6 loops=2 oneShots=3 particles=144 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+airborne at z 65.3
+t140 z68.9 y2.82 AIR speed 0.721 lean 0.00 frames 2559 clips=8 loops=2 oneShots=4 particles=157 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t150 z76.0 y1.00 GLIDE speed 0.707 lean 0.00 frames 2564 clips=9 loops=2 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t160 z82.9 y1.00 GLIDE speed 0.677 lean 0.00 frames 2569 clips=10 loops=2 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t170 z89.4 y1.00 POWDER speed 0.622 lean 0.00 frames 2576 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t180 z95.3 y1.00 GLIDE speed 0.581 lean 0.00 frames 2582 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t190 z101.0 y1.00 GLIDE speed 0.559 lean 0.00 frames 2588 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t200 z106.4 y1.00 BRAKE speed 0.521 lean 0.00 frames 2596 clips=11 loops=4 oneShots=5 particles=182 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t210 z111.3 y1.00 BRAKE speed 0.461 lean 0.00 frames 2602 clips=11 loops=4 oneShots=5 particles=196 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t220 z115.6 y1.00 BRAKE speed 0.403 lean 0.00 frames 2612 clips=11 loops=4 oneShots=5 particles=209 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t230 z119.3 y1.00 BRAKE speed 0.348 lean 0.00 frames 2620 clips=11 loops=4 oneShots=5 particles=220 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+t240 z122.5 y1.00 BRAKE speed 0.295 lean 0.00 frames 2627 clips=11 loops=4 oneShots=5 particles=230 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+board: states [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], max speed 0.775, landings 2, clips=11 loops=4 oneShots=5 particles=235 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshots: 0
+RESULT PASS
+=== forge/build/smoke-watcher1/alpineshred-smoke.txt
+joined as watcher1
+stage MULTI_WAIT
+stage WATCH
+rider's board design bbd69afa (expected bbd69afa)
+screenshot watcher1_sees_carve
+screenshot watcher1_sees_air
+screenshot watcher1_sees_glide
+the rider left
+watcher1: 18 design textures held; 18 built, mean 4.097 ms, longest 40.000 ms
+watcher1 saw the rider in [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], 115 blocks down the run, clips=4 loops=2 oneShots=0 particles=83 polePushes=0 maxFov=0.0 maxRoll=0.0
+screenshots: 3
+RESULT PASS
+=== forge/build/smoke-watcher2/alpineshred-smoke.txt
+joined as watcher2
+stage MULTI_WAIT
+stage WATCH
+rider's board design bbd69afa (expected bbd69afa)
+screenshot watcher2_sees_carve
+screenshot watcher2_sees_air
+screenshot watcher2_sees_glide
+the rider left
+watcher2: 18 design textures held; 18 built, mean 1.884 ms, longest 21.024 ms
+watcher2 saw the rider in [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], 122 blocks down the run, clips=13 loops=3 oneShots=6 particles=87 polePushes=0 maxFov=0.0 maxRoll=0.0
+screenshots: 3
+RESULT PASS
+multiplayer check: server stalls gt808 (952 ms), gt809 (153 ms), gt855 (260 ms), gt1927 (286 ms), gt2062 (172 ms), gt3309 (190 ms), gt3765 (724 ms)
+multiplayer check: forge/build/smoke-watcher1/alpineshred-smoke.txt: 27 samples while riding, 0 off the track, 0 in a state the rider was not in
+multiplayer check: forge/build/smoke-watcher2/alpineshred-smoke.txt: 30 samples while riding, 0 off the track, 0 in a state the rider was not in
+multiplayer check: PASS

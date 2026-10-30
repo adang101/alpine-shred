@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.SlopeAndContactTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:35.446Z" hostname="runnervm48cm3" time="0.012">
+  <properties/>
+  <testcase name="rampLaunchBeatsSnapAboveLaunchGradeAndSpeed()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.001"/>
+  <testcase name="planeSampleGivesExactGradeAndDownhillDirection()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.003"/>
+  <testcase name="snapDistanceGrowsWithSpeedFromTheDocValue()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.001"/>
+  <testcase name="filterHandlesDownhillDirectionCrossingNorth()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.0"/>
+  <testcase name="popOrAlreadyAirborneNeverSnaps()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.001"/>
+  <testcase name="launchGradeIsCappedSoSingleStepsCannotFling()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.0"/>
+  <testcase name="filterSmoothsAVoxelStaircaseToItsMeanGrade()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.004"/>
+  <testcase name="groundedRiderWithNoGapStaysGrounded()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.0"/>
+  <testcase name="missingSamplesFallBackToOneSidedDifferences()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.001"/>
+  <testcase name="ballisticsMatchVanillaJump()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.001"/>
+  <testcase name="stepHeightRaisesOnlyOnSnowAtSpeed()" classname="io.github.adang101.alpineshred.movement.SlopeAndContactTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,279 @@
+joined as rider
+stage MULTI_WAIT
+strapped in at BlockPos{x=6, y=-44, z=-7} with 3 players online
+stage RIDE_MULTI
+self gt3611 IDLE 6.50 -44.00 -6.50
+self gt3612 IDLE 6.50 -44.00 -6.49
+self gt3613 IDLE 6.50 -44.00 -6.48
+self gt3614 IDLE 6.50 -44.00 -6.47
+self gt3615 GLIDE 6.50 -44.00 -6.45
+self gt3616 GLIDE 6.50 -44.00 -6.42
+self gt3617 GLIDE 6.50 -44.00 -6.39
+self gt3618 GLIDE 6.50 -44.00 -6.35
+self gt3619 GLIDE 6.50 -44.00 -6.31
+t10 z1.7 y16.00 GLIDE speed 0.049 lean 0.00 frames 2469 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+self gt3620 GLIDE 6.50 -44.00 -6.26
+self gt3621 GLIDE 6.50 -44.00 -6.20
+self gt3622 GLIDE 6.50 -44.00 -6.14
+self gt3623 GLIDE 6.50 -44.00 -6.08
+self gt3624 GLIDE 6.50 -44.00 -6.01
+self gt3625 GLIDE 6.50 -44.00 -5.93
+self gt3626 GLIDE 6.50 -44.00 -5.85
+self gt3627 GLIDE 6.50 -44.00 -5.75
+self gt3628 GLIDE 6.50 -44.00 -5.64
+self gt3629 GLIDE 6.50 -44.00 -5.51
+t20 z2.6 y16.00 GLIDE speed 0.143 lean 0.00 frames 2478 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+self gt3630 GLIDE 6.50 -44.00 -5.37
+self gt3631 GLIDE 6.50 -44.00 -5.22
+self gt3632 GLIDE 6.50 -44.00 -5.05
+self gt3633 GLIDE 6.50 -44.00 -4.88
+self gt3634 GLIDE 6.50 -44.00 -4.69
+self gt3635 GLIDE 6.50 -45.00 -4.49
+self gt3636 GLIDE 6.50 -45.00 -4.28
+self gt3637 GLIDE 6.50 -45.00 -4.06
+self gt3638 GLIDE 6.50 -45.00 -3.83
+self gt3639 GLIDE 6.50 -45.00 -3.58
+t30 z4.7 y15.00 GLIDE speed 0.247 lean 0.00 frames 2487 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+self gt3640 GLIDE 6.50 -45.00 -3.34
+self gt3641 GLIDE 6.50 -45.00 -3.09
+self gt3642 GLIDE 6.50 -45.00 -2.83
+self gt3643 GLIDE 6.50 -45.00 -2.57
+self gt3644 GLIDE 6.50 -45.00 -2.31
+self gt3645 GLIDE 6.50 -45.00 -2.03
+self gt3646 GLIDE 6.50 -45.00 -1.75
+self gt3647 GLIDE 6.50 -45.00 -1.45
+self gt3648 GLIDE 6.50 -46.00 -1.14
+self gt3649 GLIDE 6.50 -46.00 -0.83
+t40 z7.5 y14.00 GLIDE speed 0.325 lean 0.00 frames 2497 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+self gt3650 GLIDE 6.50 -46.00 -0.50
+self gt3651 GLIDE 6.50 -46.00 -0.17
+self gt3652 GLIDE 6.50 -46.00 0.16
+self gt3653 GLIDE 6.50 -46.00 0.50
+self gt3654 GLIDE 6.50 -46.00 0.85
+self gt3655 GLIDE 6.50 -46.00 1.20
+self gt3656 GLIDE 6.50 -46.00 1.57
+self gt3657 GLIDE 6.50 -47.00 1.94
+self gt3658 GLIDE 6.50 -47.00 2.33
+self gt3660 GLIDE 6.50 -47.00 2.72
+t50 z11.1 y13.00 GLIDE speed 0.398 lean 0.00 frames 2504 clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+self gt3661 GLIDE 6.50 -47.00 3.12
+self gt3662 GLIDE 6.50 -47.00 3.52
+self gt3663 GLIDE 6.50 -47.00 3.94
+self gt3664 GLIDE 6.50 -47.00 4.36
+self gt3665 CARVE 6.50 -48.00 4.79
+self gt3666 CARVE 6.50 -48.00 5.23
+self gt3667 CARVE 6.50 -48.00 5.67
+self gt3668 CARVE 6.50 -48.00 6.12
+self gt3669 CARVE 6.50 -48.00 6.57
+self gt3670 CARVE 6.50 -48.00 7.03
+t60 z15.5 y12.00 CARVE speed 0.466 lean 1.00 frames 2510 clips=2 loops=2 oneShots=0 particles=22 polePushes=0 maxFov=1.2958893 maxRoll=4.7417088
+self gt3671 CARVE 6.50 -48.00 7.49
+self gt3672 CARVE 6.50 -49.00 7.97
+self gt3673 CARVE 6.50 -49.00 8.45
+self gt3674 CARVE 6.50 -49.00 8.94
+self gt3675 CARVE 6.50 -49.00 9.43
+self gt3676 CARVE 6.50 -49.00 9.92
+self gt3677 CARVE 6.50 -49.00 10.42
+self gt3678 CARVE 6.50 -50.00 10.93
+self gt3679 CARVE 6.50 -50.00 11.45
+self gt3680 CARVE 6.50 -50.00 11.97
+t70 z20.5 y10.00 CARVE speed 0.523 lean 1.00 frames 2518 clips=2 loops=2 oneShots=0 particles=57 polePushes=0 maxFov=3.06951 maxRoll=5.864892
+self gt3680 CARVE 6.50 -50.00 12.49
+self gt3681 CARVE 6.50 -50.00 13.02
+self gt3682 CARVE 6.50 -50.00 13.55
+self gt3683 CARVE 6.50 -51.00 14.10
+self gt3684 GLIDE 6.50 -51.00 14.64
+self gt3685 GLIDE 6.50 -51.00 15.19
+self gt3686 GLIDE 6.50 -51.00 15.75
+self gt3687 GLIDE 6.50 -51.00 16.31
+self gt3688 GLIDE 6.50 -52.00 16.88
+self gt3689 GLIDE 6.50 -52.00 17.46
+t80 z26.0 y8.00 GLIDE speed 0.585 lean 0.00 frames 2526 clips=2 loops=2 oneShots=0 particles=68 polePushes=0 maxFov=4.773693 maxRoll=5.9308248
+self gt3690 GLIDE 6.50 -52.00 18.04
+self gt3691 CARVE 6.50 -52.00 18.63
+self gt3692 CARVE 6.50 -52.00 19.23
+self gt3693 CARVE 6.50 -52.00 19.84
+self gt3694 CARVE 6.50 -53.00 20.45
+self gt3695 CARVE 6.50 -53.00 21.06
+self gt3696 CARVE 6.50 -53.00 21.69
+self gt3697 CARVE 6.50 -53.00 22.32
+self gt3698 CARVE 6.50 -54.00 22.95
+self gt3699 CARVE 6.50 -54.00 23.60
+t90 z32.2 y6.00 CARVE speed 0.648 lean -1.00 frames 2532 clips=2 loops=2 oneShots=0 particles=109 polePushes=0 maxFov=6.693609 maxRoll=5.9308248
+self gt3700 CARVE 6.50 -54.00 24.24
+self gt3701 CARVE 6.50 -54.00 24.90
+self gt3702 CARVE 6.50 -54.00 25.56
+self gt3703 CARVE 6.50 -55.00 26.22
+self gt3704 CARVE 6.50 -55.00 26.89
+self gt3705 CARVE 6.50 -55.00 27.57
+self gt3706 CARVE 6.50 -55.00 28.24
+self gt3707 GLIDE 6.50 -55.00 28.93
+self gt3708 GLIDE 6.50 -56.00 29.62
+self gt3709 GLIDE 6.50 -56.00 30.31
+t100 z39.0 y4.00 GLIDE speed 0.701 lean 0.00 frames 2538 clips=2 loops=2 oneShots=0 particles=135 polePushes=0 maxFov=8.362664 maxRoll=5.9308248
+self gt3710 GLIDE 6.50 -56.00 31.01
+self gt3711 GLIDE 6.50 -56.00 31.72
+self gt3712 GLIDE 6.50 -57.00 32.44
+self gt3713 GLIDE 6.50 -57.00 33.16
+self gt3714 GLIDE 6.50 -57.00 33.88
+self gt3715 GLIDE 6.50 -57.00 34.62
+self gt3716 GLIDE 6.50 -58.00 35.36
+self gt3717 GLIDE 6.50 -58.00 36.11
+self gt3718 GLIDE 6.50 -58.00 36.86
+self gt3719 GLIDE 6.50 -58.00 37.62
+t110 z46.4 y1.00 GLIDE speed 0.767 lean 0.00 frames 2546 clips=2 loops=2 oneShots=0 particles=135 polePushes=0 maxFov=10.231211 maxRoll=5.9308248
+self gt3720 GLIDE 6.50 -59.00 38.39
+self gt3721 GLIDE 6.50 -59.00 39.16
+self gt3722 GLIDE 6.50 -59.00 39.93
+self gt3723 GLIDE 6.50 -59.00 40.71
+self gt3724 GLIDE 6.50 -59.00 41.48
+self gt3725 GLIDE 6.50 -59.00 42.25
+self gt3726 GLIDE 6.50 -59.00 43.02
+self gt3727 GLIDE 6.50 -59.00 43.79
+self gt3728 GLIDE 6.50 -59.00 44.56
+airborne at z 53.3
+self gt3729 AIR 6.50 -58.50 45.32
+t120 z54.1 y1.90 AIR speed 0.762 lean 0.00 frames 2553 clips=4 loops=2 oneShots=1 particles=135 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3730 AIR 6.50 -58.10 46.08
+self gt3731 AIR 6.50 -57.78 46.84
+self gt3732 AIR 6.50 -57.54 47.60
+self gt3733 AIR 6.50 -57.39 48.37
+self gt3734 AIR 6.50 -57.32 49.13
+self gt3735 AIR 6.50 -57.32 49.89
+self gt3736 AIR 6.50 -57.41 50.65
+self gt3737 AIR 6.50 -57.57 51.41
+self gt3738 AIR 6.50 -57.81 52.17
+self gt3739 AIR 6.50 -58.13 52.94
+t130 z61.7 y1.75 GLIDE speed 0.762 lean 0.00 frames 2557 clips=6 loops=2 oneShots=3 particles=144 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3740 GLIDE 6.50 -58.25 53.70
+self gt3740 CARVE 6.43 -57.88 54.44
+self gt3741 CARVE 6.33 -57.50 55.15
+self gt3742 CARVE 6.21 -57.50 55.86
+self gt3743 CARVE 6.10 -57.50 56.57
+airborne at z 65.3
+self gt3744 AIR 6.00 -57.58 57.29
+self gt3745 AIR 5.90 -57.34 58.00
+self gt3746 AIR 5.80 -57.18 58.71
+self gt3747 AIR 5.70 -57.10 59.43
+self gt3748 AIR 5.61 -57.10 60.14
+t140 z68.9 y2.82 AIR speed 0.721 lean 0.00 frames 2559 clips=8 loops=2 oneShots=4 particles=157 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3749 AIR 5.51 -57.18 60.86
+self gt3750 AIR 5.41 -57.34 61.57
+self gt3751 AIR 5.31 -57.57 62.29
+self gt3752 AIR 5.21 -57.87 63.00
+self gt3753 AIR 5.11 -58.25 63.71
+self gt3754 AIR 5.01 -58.70 64.43
+self gt3755 CARVE 4.91 -59.00 65.14
+self gt3756 CARVE 4.84 -59.00 65.86
+self gt3760 CARVE 4.78 -59.00 66.57
+self gt3761 GLIDE 4.74 -59.00 67.28
+t150 z76.0 y1.00 GLIDE speed 0.707 lean 0.00 frames 2564 clips=9 loops=2 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3762 GLIDE 4.72 -59.00 67.98
+self gt3763 GLIDE 4.69 -59.00 68.69
+self gt3764 GLIDE 4.67 -59.00 69.39
+self gt3765 GLIDE 4.65 -59.00 70.08
+self gt3766 GLIDE 4.64 -59.00 70.78
+self gt3767 GLIDE 4.62 -59.00 71.47
+self gt3768 GLIDE 4.61 -59.00 72.16
+self gt3769 GLIDE 4.59 -59.00 72.84
+self gt3770 GLIDE 4.58 -59.00 73.53
+self gt3771 GLIDE 4.57 -59.00 74.20
+t160 z82.9 y1.00 GLIDE speed 0.677 lean 0.00 frames 2569 clips=10 loops=2 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3772 GLIDE 4.55 -59.00 74.88
+self gt3773 GLIDE 4.54 -59.00 75.56
+self gt3774 GLIDE 4.53 -59.00 76.23
+self gt3775 POWDER 4.51 -59.00 76.89
+self gt3776 POWDER 4.50 -59.00 77.55
+self gt3777 POWDER 4.48 -59.00 78.20
+self gt3778 POWDER 4.47 -59.00 78.85
+self gt3779 POWDER 4.46 -59.00 79.49
+self gt3780 POWDER 4.45 -59.00 80.12
+self gt3781 POWDER 4.43 -59.00 80.75
+t170 z89.4 y1.00 POWDER speed 0.622 lean 0.00 frames 2576 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3782 POWDER 4.42 -59.00 81.37
+self gt3780 POWDER 4.41 -59.00 81.99
+self gt3781 POWDER 4.40 -59.00 82.60
+self gt3782 POWDER 4.38 -59.00 83.20
+self gt3783 POWDER 4.37 -59.00 83.80
+self gt3784 POWDER 4.36 -59.00 84.39
+self gt3785 GLIDE 4.35 -59.00 84.98
+self gt3786 GLIDE 4.34 -59.00 85.57
+self gt3787 GLIDE 4.32 -59.00 86.16
+self gt3788 GLIDE 4.31 -59.00 86.74
+t180 z95.3 y1.00 GLIDE speed 0.581 lean 0.00 frames 2582 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3789 GLIDE 4.30 -59.00 87.32
+self gt3790 GLIDE 4.29 -59.00 87.90
+self gt3791 GLIDE 4.28 -59.00 88.48
+self gt3792 GLIDE 4.26 -59.00 89.05
+self gt3793 GLIDE 4.25 -59.00 89.62
+self gt3794 GLIDE 4.24 -59.00 90.19
+self gt3795 GLIDE 4.23 -59.00 90.76
+self gt3796 GLIDE 4.22 -59.00 91.33
+self gt3797 GLIDE 4.21 -59.00 91.89
+self gt3798 GLIDE 4.20 -59.00 92.45
+t190 z101.0 y1.00 GLIDE speed 0.559 lean 0.00 frames 2588 clips=10 loops=3 oneShots=5 particles=175 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3800 GLIDE 4.18 -59.00 93.01
+self gt3801 GLIDE 4.17 -59.00 93.57
+self gt3802 GLIDE 4.16 -59.00 94.12
+self gt3803 GLIDE 4.15 -59.00 94.67
+self gt3804 GLIDE 4.14 -59.00 95.22
+self gt3805 GLIDE 4.13 -59.00 95.77
+self gt3806 GLIDE 4.12 -59.00 96.32
+self gt3807 BRAKE 4.11 -59.00 96.86
+self gt3808 BRAKE 4.10 -59.00 97.39
+self gt3809 BRAKE 4.08 -59.00 97.92
+t200 z106.4 y1.00 BRAKE speed 0.521 lean 0.00 frames 2596 clips=11 loops=4 oneShots=5 particles=182 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3810 BRAKE 4.07 -59.00 98.44
+self gt3811 BRAKE 4.06 -59.00 98.95
+self gt3812 BRAKE 4.05 -59.00 99.46
+self gt3813 BRAKE 4.04 -59.00 99.96
+self gt3814 BRAKE 4.03 -59.00 100.46
+self gt3815 BRAKE 4.02 -59.00 100.95
+self gt3816 BRAKE 4.01 -59.00 101.44
+self gt3817 BRAKE 4.00 -59.00 101.91
+self gt3818 BRAKE 3.99 -59.00 102.39
+self gt3819 BRAKE 3.98 -59.00 102.85
+t210 z111.3 y1.00 BRAKE speed 0.461 lean 0.00 frames 2602 clips=11 loops=4 oneShots=5 particles=196 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3820 BRAKE 3.98 -59.00 103.31
+self gt3821 BRAKE 3.97 -59.00 103.77
+self gt3822 BRAKE 3.96 -59.00 104.22
+self gt3823 BRAKE 3.95 -59.00 104.66
+self gt3824 BRAKE 3.94 -59.00 105.10
+self gt3825 BRAKE 3.93 -59.00 105.53
+self gt3826 BRAKE 3.92 -59.00 105.96
+self gt3827 BRAKE 3.91 -59.00 106.38
+self gt3828 BRAKE 3.90 -59.00 106.79
+self gt3829 BRAKE 3.90 -59.00 107.20
+t220 z115.6 y1.00 BRAKE speed 0.403 lean 0.00 frames 2612 clips=11 loops=4 oneShots=5 particles=209 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3830 BRAKE 3.89 -59.00 107.60
+self gt3831 BRAKE 3.88 -59.00 108.00
+self gt3832 BRAKE 3.87 -59.00 108.39
+self gt3833 BRAKE 3.86 -59.00 108.78
+self gt3834 BRAKE 3.86 -59.00 109.16
+self gt3835 BRAKE 3.85 -59.00 109.54
+self gt3836 BRAKE 3.84 -59.00 109.91
+self gt3837 BRAKE 3.83 -59.00 110.27
+self gt3838 BRAKE 3.83 -59.00 110.63
+self gt3839 BRAKE 3.82 -59.00 110.98
+t230 z119.3 y1.00 BRAKE speed 0.348 lean 0.00 frames 2620 clips=11 loops=4 oneShots=5 particles=220 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3840 BRAKE 3.81 -59.00 111.33
+self gt3841 BRAKE 3.81 -59.00 111.68
+self gt3842 BRAKE 3.80 -59.00 112.01
+self gt3843 BRAKE 3.79 -59.00 112.34
+self gt3844 BRAKE 3.79 -59.00 112.67
+self gt3845 BRAKE 3.78 -59.00 112.99
+self gt3846 BRAKE 3.77 -59.00 113.31
+self gt3847 BRAKE 3.77 -59.00 113.62
+self gt3848 BRAKE 3.76 -59.00 113.93
+self gt3849 BRAKE 3.75 -59.00 114.23
+t240 z122.5 y1.00 BRAKE speed 0.295 lean 0.00 frames 2627 clips=11 loops=4 oneShots=5 particles=230 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+self gt3850 BRAKE 3.75 -59.00 114.52
+self gt3851 BRAKE 3.74 -59.00 114.81
+self gt3852 BRAKE 3.74 -59.00 115.09
+self gt3853 BRAKE 3.73 -59.00 115.37
+self gt3854 BRAKE 3.73 -59.00 115.65
+self gt3855 BRAKE 3.72 -59.00 115.92
+self gt3856 BRAKE 3.71 -59.00 116.18
+board: states [IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR], max speed 0.775, landings 2, clips=11 loops=4 oneShots=5 particles=235 polePushes=0 maxFov=10.950285 maxRoll=5.9308248
+screenshots: 0
+RESULT PASS

@@ -1,0 +1,81 @@
+stage LOADING
+stage FINDING
+snowy slopes at BlockPos{x=-352, y=100, z=96}; start BlockPos{x=-331, y=95, z=72} facing 200 (8912 ms to find and generate)
+strap OK
+strapped in at BlockPos{x=-331, y=95, z=72}
+stage RIDE_MOUNTAIN
+t20 BlockPos{x=-331, y=95, z=71} CARVE speed 0.129 grade 33.3 surface snow_layer distance 1 violations 0
+t40 BlockPos{x=-330, y=94, z=68} GLIDE speed 0.172 grade 32.1 surface snow_layer distance 4 violations 0
+t60 BlockPos{x=-328, y=94, z=64} GLIDE speed 0.182 grade 18.7 surface snow_layer distance 8 violations 0
+screenshot mountain_60 at z -7.4, CARVE
+t80 BlockPos{x=-327, y=89, z=61} IDLE speed 0.164 grade 25.1 surface scrape distance 11 violations 0
+t100 BlockPos{x=-327, y=85, z=60} IDLE speed 0.164 grade 25.1 surface scrape distance 13 violations 0
+t120 BlockPos{x=-327, y=85, z=60} IDLE speed 0.164 grade 25.1 surface scrape distance 13 violations 0
+t140 BlockPos{x=-327, y=85, z=59} IDLE speed 0.164 grade 25.1 surface scrape distance 13 violations 0
+t160 BlockPos{x=-327, y=85, z=59} IDLE speed 0.164 grade 25.1 surface scrape distance 13 violations 0
+t180 BlockPos{x=-327, y=85, z=59} IDLE speed 0.164 grade 25.1 surface scrape distance 14 violations 0
+stuck at BlockPos{x=-327, y=85, z=59}; restarting at BlockPos{x=-349, y=84, z=84}
+t200 BlockPos{x=-349, y=83, z=85} GLIDE speed 0.145 grade 44.3 surface snow_layer distance 15 violations 0
+t220 BlockPos{x=-349, y=80, z=89} AIR speed 0.316 grade 61.8 surface snow_block distance 19 violations 0
+t240 BlockPos{x=-349, y=75, z=96} AIR speed 0.424 grade 43.6 surface snow_layer distance 26 violations 0
+t260 BlockPos{x=-348, y=69, z=101} GLIDE speed 0.038 grade 17.7 surface snow_layer distance 31 violations 0
+screenshot mountain_260 at z 29.5, GLIDE
+t280 BlockPos{x=-348, y=69, z=99} IDLE speed 0.012 grade 23.5 surface snow_layer distance 33 violations 0
+t300 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.033 grade 43.8 surface snow_layer distance 33 violations 0
+screenshot mountain_side at z 28.3, GLIDE
+t320 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.033 grade 45.0 surface snow_layer distance 34 violations 0
+t340 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.042 grade 39.0 surface snow_layer distance 35 violations 0
+t360 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.041 grade 45.0 surface snow_layer distance 35 violations 0
+t380 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.022 grade 19.4 surface snow_layer distance 36 violations 0
+t400 BlockPos{x=-348, y=69, z=99} IDLE speed 0.011 grade 24.7 surface snow_layer distance 36 violations 0
+t420 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.089 grade 44.1 surface snow_layer distance 37 violations 0
+t440 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.058 grade 16.5 surface snow_layer distance 38 violations 0
+t460 BlockPos{x=-348, y=69, z=100} IDLE speed 0.004 grade 44.6 surface snow_layer distance 39 violations 0
+screenshot mountain_460 at z 28.2, IDLE
+t480 BlockPos{x=-348, y=69, z=99} CARVE speed 0.037 grade 18.3 surface snow_layer distance 40 violations 0
+t500 BlockPos{x=-348, y=69, z=100} IDLE speed 0.003 grade 44.3 surface snow_layer distance 41 violations 0
+screenshot mountain_first_person at z 28.2, IDLE
+t520 BlockPos{x=-348, y=69, z=99} IDLE speed 0.010 grade 25.2 surface snow_layer distance 42 violations 0
+t540 BlockPos{x=-348, y=69, z=100} IDLE speed 0.005 grade 43.6 surface snow_layer distance 43 violations 0
+t560 BlockPos{x=-348, y=69, z=99} IDLE speed 0.010 grade 25.2 surface snow_layer distance 44 violations 0
+t580 BlockPos{x=-348, y=69, z=100} IDLE speed 0.005 grade 43.6 surface snow_layer distance 45 violations 0
+t600 BlockPos{x=-348, y=69, z=99} IDLE speed 0.010 grade 25.2 surface snow_layer distance 46 violations 0
+t620 BlockPos{x=-348, y=69, z=100} IDLE speed 0.005 grade 43.6 surface snow_layer distance 47 violations 0
+t640 BlockPos{x=-348, y=69, z=99} IDLE speed 0.010 grade 25.2 surface snow_layer distance 47 violations 0
+t660 BlockPos{x=-348, y=69, z=100} IDLE speed 0.005 grade 43.6 surface snow_layer distance 48 violations 0
+screenshot mountain_660 at z 28.2, IDLE
+t680 BlockPos{x=-348, y=69, z=99} IDLE speed 0.010 grade 25.2 surface snow_layer distance 49 violations 0
+t700 BlockPos{x=-348, y=69, z=100} IDLE speed 0.005 grade 43.6 surface snow_layer distance 50 violations 0
+t720 BlockPos{x=-348, y=69, z=99} IDLE speed 0.010 grade 25.2 surface snow_layer distance 51 violations 0
+t740 BlockPos{x=-348, y=69, z=100} IDLE speed 0.005 grade 43.6 surface snow_layer distance 52 violations 0
+t760 BlockPos{x=-348, y=69, z=99} IDLE speed 0.010 grade 25.2 surface snow_layer distance 53 violations 0
+t780 BlockPos{x=-348, y=69, z=100} IDLE speed 0.008 grade 43.6 surface snow_layer distance 54 violations 0
+t800 BlockPos{x=-348, y=69, z=99} IDLE speed 0.016 grade 23.7 surface snow_layer distance 55 violations 0
+t820 BlockPos{x=-348, y=69, z=100} IDLE speed 0.011 grade 42.2 surface snow_layer distance 56 violations 0
+t840 BlockPos{x=-348, y=69, z=99} IDLE speed 0.016 grade 23.7 surface snow_layer distance 57 violations 0
+t860 BlockPos{x=-348, y=69, z=100} IDLE speed 0.011 grade 42.2 surface snow_layer distance 58 violations 0
+screenshot mountain_860 at z 28.2, IDLE
+t880 BlockPos{x=-348, y=69, z=99} IDLE speed 0.016 grade 23.7 surface snow_layer distance 59 violations 0
+t900 BlockPos{x=-348, y=69, z=100} IDLE speed 0.011 grade 42.2 surface snow_layer distance 60 violations 0
+t920 BlockPos{x=-348, y=69, z=99} IDLE speed 0.016 grade 23.7 surface snow_layer distance 61 violations 0
+t940 BlockPos{x=-348, y=69, z=100} IDLE speed 0.011 grade 42.2 surface snow_layer distance 62 violations 0
+t960 BlockPos{x=-348, y=69, z=99} IDLE speed 0.016 grade 23.7 surface snow_layer distance 63 violations 0
+t980 BlockPos{x=-348, y=69, z=100} IDLE speed 0.011 grade 42.2 surface snow_layer distance 64 violations 0
+t1000 BlockPos{x=-348, y=69, z=99} IDLE speed 0.016 grade 23.7 surface snow_layer distance 65 violations 0
+t1020 BlockPos{x=-348, y=69, z=100} IDLE speed 0.015 grade 42.0 surface snow_layer distance 66 violations 0
+t1040 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.047 grade 18.6 surface snow_layer distance 67 violations 0
+t1060 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.044 grade 20.5 surface snow_layer distance 68 violations 0
+screenshot mountain_1060 at z 28.1, GLIDE
+t1080 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.128 grade 41.1 surface snow_layer distance 68 violations 0
+t1100 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.082 grade 2.3 surface snow_layer distance 69 violations 0
+t1120 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.081 grade 35.2 surface snow_layer distance 70 violations 0
+t1140 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.076 grade 3.2 surface snow_layer distance 71 violations 0
+t1160 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.081 grade 35.2 surface snow_layer distance 72 violations 0
+t1180 BlockPos{x=-348, y=69, z=99} GLIDE speed 0.076 grade 3.2 surface snow_layer distance 73 violations 0
+t1200 BlockPos{x=-348, y=69, z=100} GLIDE speed 0.038 grade 18.7 surface snow_layer distance 74 violations 0
+mountain: 1200 ticks, 74 blocks, max speed 0.424, states [IDLE, GLIDE, CARVE, AIR], wipeouts 0, restarts 1
+air episodes (ticks=count): {11=1, 15=1}
+surfaces: [scrape, snow_block, snow_layer]
+server violations 0, last reason: 
+screenshots: 8
+RESULT PASS

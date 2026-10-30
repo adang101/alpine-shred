@@ -1,0 +1,60 @@
+stage LOADING
+stage BUILDING
+rail: flat|> flat<> flat<> flat<> flat<> rise_a<> rise_b<> flat<> flat<> flat<|
+built the park at BlockPos{x=0, y=-60, z=-2}; strap OK
+strapped in at BlockPos{x=0, y=-53, z=-1}
+stage RIDE_PARK
+t1 z1.50 y7.00 IDLE speed 0.000 pipe false clips=1 loops=0 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t5 z1.55 y7.00 GLIDE speed 0.022 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t10 z1.74 y7.00 GLIDE speed 0.049 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t20 z2.63 y7.00 GLIDE speed 0.143 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t30 z4.66 y6.00 GLIDE speed 0.247 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t40 z7.49 y5.00 GLIDE speed 0.324 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t50 z11.11 y4.00 GLIDE speed 0.397 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=0.0 maxRoll=0.0
+t60 z15.52 y3.00 GLIDE speed 0.476 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=1.4471536 maxRoll=0.0
+t70 z20.59 y1.00 GLIDE speed 0.528 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=3.262075 maxRoll=0.0
+t80 z25.76 y1.50 GLIDE speed 0.494 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t90 z30.50 y1.50 GLIDE speed 0.460 pipe false clips=2 loops=1 oneShots=0 particles=0 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t92 z32.43 y1.50 GRIND speed 0.433 pipe false clips=3 loops=2 oneShots=1 particles=9 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+screenshot park_grind at z 33.7, GRIND
+screenshot park_grind_side at z 35.0, GRIND
+t100 z35.84 y1.50 GRIND speed 0.420 pipe false clips=3 loops=2 oneShots=1 particles=22 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+screenshot park_grind_offside at z 36.3, GRIND
+t110 z39.37 y2.50 GRIND speed 0.329 pipe false clips=3 loops=2 oneShots=1 particles=38 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t119 z42.00 y2.50 AIR speed 0.317 pipe false clips=4 loops=2 oneShots=1 particles=49 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t120 z42.32 y2.50 AIR speed 0.317 pipe false clips=4 loops=2 oneShots=1 particles=49 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t124 z43.58 y2.00 GLIDE speed 0.317 pipe false clips=5 loops=2 oneShots=2 particles=57 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t130 z45.53 y2.00 GLIDE speed 0.340 pipe false clips=5 loops=2 oneShots=2 particles=57 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t140 z49.23 y1.00 GLIDE speed 0.376 pipe false clips=6 loops=2 oneShots=2 particles=57 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t150 z52.93 y1.00 GLIDE speed 0.365 pipe false clips=6 loops=2 oneShots=2 particles=57 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t154 z54.36 y1.50 SLIDE speed 0.348 pipe false clips=7 loops=3 oneShots=2 particles=58 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+screenshot park_box at z 55.0, SLIDE
+screenshot park_box_side at z 56.0, SLIDE
+t160 z56.30 y1.50 SLIDE speed 0.312 pipe false clips=7 loops=3 oneShots=2 particles=60 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t170 z59.26 y1.50 SLIDE speed 0.284 pipe false clips=7 loops=3 oneShots=2 particles=64 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t180 z61.99 y1.50 SLIDE speed 0.270 pipe false clips=7 loops=3 oneShots=2 particles=67 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t183 z62.82 y1.42 AIR speed 0.280 pipe false clips=8 loops=4 oneShots=2 particles=67 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t187 z63.94 y1.00 GLIDE speed 0.280 pipe false clips=9 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t190 z64.77 y1.00 GLIDE speed 0.277 pipe false clips=9 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t200 z67.49 y1.00 GLIDE speed 0.268 pipe false clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t210 z70.11 y1.00 GLIDE speed 0.258 pipe false clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t220 z72.64 y1.00 GLIDE speed 0.249 pipe false clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+screenshot park_pipe_side at z 75.0, GLIDE
+t230 z75.15 y1.37 GLIDE speed 0.173 pipe true clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+screenshot park_pipe at z 75.6, GLIDE
+t240 z75.94 y2.00 GLIDE speed 0.007 pipe true clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t250 z75.19 y1.40 GLIDE speed 0.150 pipe true clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t260 z73.25 y1.00 GLIDE speed 0.226 pipe false clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+screenshot park_pipe_return at z 71.7, GLIDE
+t270 z71.03 y1.00 GLIDE speed 0.218 pipe false clips=10 loops=4 oneShots=3 particles=74 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t272 z70.60 y1.00 BRAKE speed 0.212 pipe false clips=11 loops=5 oneShots=3 particles=75 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t280 z69.08 y1.00 BRAKE speed 0.172 pipe false clips=11 loops=5 oneShots=3 particles=79 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t290 z67.63 y1.00 BRAKE speed 0.123 pipe false clips=11 loops=5 oneShots=3 particles=84 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+t300 z66.67 y1.00 BRAKE speed 0.074 pipe false clips=11 loops=5 oneShots=3 particles=86 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+park: states [IDLE, GLIDE, BRAKE, AIR, GRIND, SLIDE], grind 27 ticks, slide 29, pipe 33, max speed 0.528, clips=11 loops=5 oneShots=3 particles=87 polePushes=0 maxFov=3.6203334 maxRoll=0.0
+stage PARK_TOOLS
+screenshot park_wrench_overlay at z 29.5, OFF
+ghost: BlockPos{x=0, y=2, z=42} Block{alpineshred:pipe_rail}[connected_a=false,connected_b=true,facing=north,legs=true,shape=flat,waxed=false]
+screenshot park_ghost at z 44.5, OFF
+screenshots: 10
+RESULT PASS

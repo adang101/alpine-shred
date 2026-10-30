@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.gear.GearWearTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:54:34.651Z" hostname="runnervm48cm3" time="0.023">
+  <properties/>
+  <testcase name="grindAndScrapeWearFaster()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.001"/>
+  <testcase name="snowWearIsOneDamagePer128Blocks()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.001"/>
+  <testcase name="edgeDropsOnePer40CarvingBlocksOnSnowOnly()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.0"/>
+  <testcase name="durabilityMultiplierScalesAndCanDisableWear()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.0"/>
+  <testcase name="partialProgressCarriesAcrossSurfaceChanges()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.005"/>
+  <testcase name="waxCountsDownPerBlockOnSnow()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.0"/>
+  <testcase name="airborneTravelCausesNoWear()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.006"/>
+  <testcase name="edgeGripMultiplierFollowsTheDocFormula()" classname="io.github.adang101.alpineshred.gear.GearWearTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

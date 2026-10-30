@@ -1,0 +1,10 @@
+// 1.20.1	2026-10-30T09:54:01.249782347	Alpine Shred/Tags for minecraft:block
+e1f8ccfed937ff42c81a9f3cad2c989cd199f149 data/alpineshred/tags/blocks/slide/powder.json
+8941dbf316e1b9c382a7b03723353969239a9eac data/minecraft/tags/blocks/mineable/shovel.json
+308bedfc074d78c7db5e2c1bd38eae4d21178b70 data/alpineshred/tags/blocks/slide/ice.json
+c0eb540a1a485989c7c79cf794320f79d64f07cc data/minecraft/tags/blocks/mineable/pickaxe.json
+84a7f17e1795d3b7f4172fe802aa592d893f5984 data/alpineshred/tags/blocks/slide/snow.json
+34dfb6931cdaa74584be6401d6f5416a7beabdef data/alpineshred/tags/blocks/grindable_vanilla.json
+43e090072e33c4d99508974943aeb7124eba1f40 data/alpineshred/tags/blocks/slide/boxes.json
+aeda96bcc634298da9a5e190a3ad286ed2b69c0f data/alpineshred/tags/blocks/grindable.json
+0414661059aca9116590e2d2deae484a45b040e5 data/minecraft/tags/blocks/mineable/axe.json

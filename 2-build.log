@@ -1,0 +1,90 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Architect Plugin: 3.4.162
+Architectury Loom: 1.11.458
+
+> Task :fabric:processResources UP-TO-DATE
+> Task :fabric:processIncludeJars
+> Task :fabric:sourcesJar
+> Task :fabric:processTestResources NO-SOURCE
+> Task :fabric:validateAccessWidener NO-SOURCE
+> Task :common:compileJava UP-TO-DATE
+> Task :common:processResources UP-TO-DATE
+> Task :common:classes UP-TO-DATE
+> Task :common:jar UP-TO-DATE
+> Task :forge:processResources
+> Task :fabric:compileJava UP-TO-DATE
+> Task :fabric:classes UP-TO-DATE
+> Task :fabric:jar
+> Task :fabric:compileTestJava NO-SOURCE
+> Task :fabric:testClasses UP-TO-DATE
+> Task :fabric:test NO-SOURCE
+> Task :fabric:check UP-TO-DATE
+> Task :fabric:remapSourcesJar
+
+> Task :forge:compileJava
+/home/runner/work/alpine-shred/alpine-shred/forge/src/main/java/io/github/adang101/alpineshred/forge/AlpineShredForge.java:16: warning: [removal] get() in FMLJavaModLoadingContext has been deprecated and marked for removal
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+                                                   ^
+Note: /home/runner/work/alpine-shred/alpine-shred/forge/src/main/java/io/github/adang101/alpineshred/client/platform/forge/ClientPlatformHooksImpl.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+1 warning
+
+> Task :forge:classes
+> Task :forge:jar
+> Task :forge:compileTestJava NO-SOURCE
+> Task :forge:processIncludeJars
+> Task :forge:sourcesJar
+> Task :forge:processTestResources NO-SOURCE
+> Task :forge:testClasses UP-TO-DATE
+> Task :forge:test NO-SOURCE
+> Task :forge:validateAccessWidener NO-SOURCE
+> Task :forge:check UP-TO-DATE
+> Task :forge:remapSourcesJar
+> Task :common:compileTestJava
+> Task :common:processIncludeJars
+> Task :common:sourcesJar
+> Task :common:processTestResources NO-SOURCE
+> Task :common:testClasses
+> Task :common:test
+> Task :common:remapJar
+> Task :common:validateAccessWidener NO-SOURCE
+> Task :common:check
+
+> Task :common:transformProductionFabric
+[Architectury Transformer] Read classpath in 999.8 ms
+[Architectury Transformer] Transformed jar with 5 transformer(s) in 2.091 s
+
+> Task :common:remapSourcesJar
+> Task :common:assemble
+> Task :fabric:shadowJar
+
+> Task :common:transformProductionForge
+[Architectury Transformer] Read classpath in 1.437 s
+
+> Task :fabric:remapJar
+> Task :fabric:assemble
+> Task :fabric:build
+
+> Task :common:transformProductionForge
+[Architectury Transformer] Transformed jar with 7 transformer(s) in 2.679 s
+
+> Task :common:build
+> Task :forge:shadowJar
+> Task :forge:remapJar
+> Task :forge:assemble
+> Task :forge:build
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_3-1793354057035.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/alpine-shred/alpine-shred/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 29s
+27 actionable tasks: 22 executed, 5 up-to-date

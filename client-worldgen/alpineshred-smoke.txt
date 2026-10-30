@@ -1,0 +1,21 @@
+stage LOADING
+stage TOUR
+surveying from the snowy slopes at BlockPos{x=-352, y=100, z=96}
+ski_resort at chunk [348, 515]: box 5545..5667, 126..177, 8225..8274; 2 pieces (1 runs, 1 lodges), farthest 6 chunks; located in 8659 ms, 66 chunks built in 12668 ms; {groomed_snow=1472, lodge_chests=1, slope_markers=8, snow_blocks=6382, spruce_planks=1145}
+terrain_park at chunk [-26, 10]: box -436..-404, 58..92, 71..172; 4 pieces (0 runs, 0 lodges), farthest 5 chunks; located in 12 ms, 45 chunks built in 5187 ms; {boxes=9, rails=20, snow_blocks=6047, start_gates=1}
+groomed_run at chunk [-38, 27]: box -637..-577, 65..109, 383..455; 1 pieces (1 runs, 0 lodges), farthest 4 chunks; located in 375 ms, 48 chunks built in 5509 ms; {groomed_snow=787, slope_markers=6, snow_blocks=9410}
+snow_feature at chunk [-28, 13]: box -460..-430, 66..94, 188..220; 1 pieces (0 runs, 0 lodges), farthest 1 chunks; located in 23 ms, 25 chunks built in 1331 ms; {snow_blocks=1168}
+survey: 4 structures in 34115 ms
+to the ski_resort: 5607 245 8291, yaw -180 pitch 70
+screenshot worldgen_ski_resort from BlockPos{x=5606, y=244, z=8290}
+to the terrain_park: -420 148 156, yaw -180 pitch 66
+screenshot worldgen_terrain_park from BlockPos{x=-420, y=148, z=155}
+to the groomed_run: -607 149 444, yaw -180 pitch 66
+screenshot worldgen_groomed_run from BlockPos{x=-607, y=149, z=443}
+to the snow_feature: -445 112 215, yaw -180 pitch 70
+screenshot worldgen_snow_feature from BlockPos{x=-445, y=112, z=215}
+into the terrain park at BlockPos{x=-420, y=76, z=154}
+screenshot worldgen_park_inside from BlockPos{x=-420, y=76, z=154}
+park_rat awarded at BlockPos{x=-420, y=76, z=154}
+screenshots: 5
+RESULT PASS
