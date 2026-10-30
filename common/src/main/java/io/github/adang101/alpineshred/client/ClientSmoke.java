@@ -792,6 +792,7 @@ public final class ClientSmoke {
             }
             return false;
         }
+        if (tourStop >= result.stops().size()) return parkRat(mc, result);
         if (tourStop < 0 || shots.contains("worldgen_" + result.stops().get(tourStop).name())) {
             tourStop++;
             if (tourStop >= result.stops().size()) return parkRat(mc, result);

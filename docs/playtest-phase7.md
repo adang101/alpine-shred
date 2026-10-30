@@ -36,7 +36,6 @@ minecraft:snowy_slopes` first if none are found: they only generate in snowy bio
 4. Slope markers stand on both edges about every 24 blocks, green, blue or black, matching how
    steep it is.
 5. Where the run crosses a chunk border, nothing is cut off or doubled.
-6. Wait for snowfall (`/weather thunder`): snow does not pile up on the groomed surface.
 
 **Ski resort**
 

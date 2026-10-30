@@ -152,8 +152,7 @@ art/      placeholder generators: textures, models, rider clips, sounds, particl
   chunk builds only its own columns: cut or fill by up to 2 blocks to the never-climbing profile,
   groomed snow over two snow blocks, trees, plants and snow layers cleared 10 blocks up, edges
   fading into snow layers over 3 blocks, slope markers in the difficulty's color on both edges
-  every 24 blocks. Groomed snow refuses snow layers, so neither `freeze_top_layer` nor snowfall
-  covers a run.
+  every 24 blocks. Snowfall can lay snow layers on a run, as on any snow.
 - **Ski resorts** (`ResortStructure`, `LodgePiece`): a run and, past its run-out, the lodge (24 by
   18, spruce, a fireplace, tables, lanterns, a Paint Bench), its door turned up the run and its
   floor level with the run's end, on a cobblestone foundation; its chest uses
