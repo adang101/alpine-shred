@@ -320,6 +320,8 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("commands.alpineshred.design.cleared", "Cleared %s design(s)");
         t.add("advancements.alpineshred.fresh_coat.title", "Fresh Coat");
         t.add("advancements.alpineshred.fresh_coat.description", "Paint a design on a board or skis");
+        t.add("advancements.alpineshred.park_rat.title", "Park Rat");
+        t.add("advancements.alpineshred.park_rat.description", "Find a terrain park in the snow");
         t.add("design_template.alpineshred.solid", "Solid");
         t.add("design_template.alpineshred.stripes", "Stripes");
         t.add("design_template.alpineshred.pinstripe", "Pinstripe");

@@ -40,8 +40,8 @@ import java.util.TreeMap;
  * hold, and picks a viewpoint above it for the client's picture.
  */
 public final class WorldgenSurvey {
-    /** Where the camera goes for one structure's picture. */
-    public record Stop(String name, double x, double y, double z, float yaw, float pitch) {
+    /** Where the camera goes for one structure's picture, and a point inside its first piece. */
+    public record Stop(String name, double x, double y, double z, float yaw, float pitch, BlockPos inside) {
     }
 
     public record Result(List<Stop> stops, List<String> notes, List<String> failures) {
@@ -131,7 +131,9 @@ public final class WorldgenSurvey {
                 default -> check(failures, counts.getOrDefault("snow_blocks", 0) >= 20, name + ": only "
                         + counts.getOrDefault("snow_blocks", 0) + " snow blocks");
             }
-            stops.add(viewpoint(level, name, box));
+            BoundingBox first = start.getPieces().get(0).getBoundingBox();
+            BlockPos inside = new BlockPos((first.minX() + first.maxX()) / 2, Math.min(first.maxY(), first.minY() + 3), (first.minZ() + first.maxZ()) / 2);
+            stops.add(viewpoint(level, name, box, inside));
         }
         return new Result(stops, notes, failures);
     }
@@ -141,7 +143,7 @@ public final class WorldgenSurvey {
     }
 
     /** Above and south of the structure, looking down at its middle, far enough back to see it whole. */
-    private static Stop viewpoint(ServerLevel level, String name, BoundingBox box) {
+    private static Stop viewpoint(ServerLevel level, String name, BoundingBox box, BlockPos inside) {
         double cx = (box.minX() + box.maxX() + 1) / 2.0, cz = (box.minZ() + box.maxZ() + 1) / 2.0;
         int ground = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (int) Math.floor(cx), (int) Math.floor(cz));
         double extent = Math.max(box.getXSpan(), box.getZSpan());
@@ -150,7 +152,7 @@ public final class WorldgenSurvey {
         double dx = cx - ex, dy = ground - ey, dz = cz - ez;
         float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
         float pitch = (float) Math.toDegrees(-Math.atan2(dy, Math.hypot(dx, dz)));
-        return new Stop(name, ex, ey, ez, yaw, pitch);
+        return new Stop(name, ex, ey, ez, yaw, pitch, inside);
     }
 
     /** What stands inside the box, by kind. */

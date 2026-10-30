@@ -794,7 +794,7 @@ public final class ClientSmoke {
         }
         if (tourStop < 0 || shots.contains("worldgen_" + result.stops().get(tourStop).name())) {
             tourStop++;
-            if (tourStop >= result.stops().size()) return true;
+            if (tourStop >= result.stops().size()) return parkRat(mc, result);
             var stop = result.stops().get(tourStop);
             onServer(mc, p -> {
                 p.teleportTo(p.serverLevel(), stop.x(), stop.y(), stop.z(), stop.yaw(), stop.pitch());
@@ -808,6 +808,36 @@ public final class ClientSmoke {
         }
         if (++tourTicks >= TOUR_WAIT) view(mc, "worldgen_" + result.stops().get(tourStop).name(), CameraType.FIRST_PERSON);
         return false;
+    }
+
+    private static int parkRatTicks = -1;
+
+    /** Last: stand in the terrain park until {@code park_rat} is awarded (the location trigger runs once a second). */
+    private static boolean parkRat(Minecraft mc, io.github.adang101.alpineshred.smoke.WorldgenSurvey.Result result) {
+        tourStop = result.stops().size(); // stay here
+        var park = result.stops().stream().filter(st -> st.name().equals("terrain_park")).findFirst().orElse(null);
+        if (park == null) return true;
+        if (parkRatTicks < 0) {
+            BlockPos in = park.inside();
+            onServer(mc, p -> {
+                p.teleportTo(p.serverLevel(), in.getX() + 0.5, in.getY(), in.getZ() + 0.5, 180f, 10f);
+                p.getAbilities().flying = true;
+                p.onUpdateAbilities();
+            });
+            note("into the terrain park at " + in);
+            parkRatTicks = 0;
+            return false;
+        }
+        if (++parkRatTicks == 80) {
+            view(mc, "worldgen_park_inside", CameraType.FIRST_PERSON);
+            onServer(mc, p -> {
+                var adv = p.server.getAdvancements().getAdvancement(AlpineShred.id("park_rat"));
+                boolean done = adv != null && p.getAdvancements().getOrStartProgress(adv).isDone();
+                note("park_rat " + (done ? "awarded" : "not awarded") + " at " + p.blockPosition());
+                check(done, "park_rat was not awarded inside the terrain park at " + p.blockPosition());
+            });
+        }
+        return parkRatTicks > 120;
     }
 
     // ---- multiplayer (phase 2's exit gate) -------------------------------------------------------------
