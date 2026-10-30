@@ -86,7 +86,11 @@ public final class TrickGameTests {
      */
     public static void forgedAirReportsAreRejected(GameTestHelper helper) {
         ServerPlayer player = null;
+        // Three forged reports in a row are enough for a correction; on a strict (dedicated) server
+        // that would wipe the rider out and the honest report after them would rightly be ignored.
+        String strictBefore = io.github.adang101.alpineshred.config.AlpineConfig.MOVEMENT_VALIDATION_STRICT.get();
         try {
+            io.github.adang101.alpineshred.config.AlpineConfig.MOVEMENT_VALIDATION_STRICT.set("false");
             player = rider(helper, new Course(helper));
             airSession(player, 20);
             int before = RideServer.violations(player);
@@ -114,6 +118,7 @@ public final class TrickGameTests {
                     "the same air was scored twice");
             helper.succeed();
         } finally {
+            io.github.adang101.alpineshred.config.AlpineConfig.MOVEMENT_VALIDATION_STRICT.set(strictBefore);
             RideGameTests.removeServerPlayer(player);
         }
     }
