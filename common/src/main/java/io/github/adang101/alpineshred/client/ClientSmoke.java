@@ -114,7 +114,7 @@ public final class ClientSmoke {
     private static final float SIDE = -90f;
     private static final float OFFSIDE = 90f;
 
-    private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS,
+    private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS, PAINT,
         FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, DONE}
 
     private record Shot(String name, int frame) {
@@ -261,7 +261,10 @@ public final class ClientSmoke {
                 }
             }
             case GALLERY_SKIS -> {
-                if (gallery(mc)) finish(mc);
+                if (gallery(mc)) next(Stage.PAINT);
+            }
+            case PAINT -> {
+                if (paint(mc)) finish(mc);
             }
             case FINDING -> {
                 if (mc.player != null && origin != null && Riders.isStrapped(mc.player) && stageTicks > 40) {
@@ -393,6 +396,166 @@ public final class ClientSmoke {
                 finish(mc);
             }
         }
+    }
+
+    // ---- painting (phase 6) --------------------------------------------------------------------------
+
+    private static BlockPos benchPos;
+    private static int paintResults;
+    private static io.github.adang101.alpineshred.design.Design painted;
+    private static int serverHash;
+
+    /**
+     * Phase 6, by hand as a player would: a Paint Bench, a board moved into its slot (which opens the
+     * editor), a template, a pencil stroke and a gradient, a name, Save; then the server's copy of the
+     * gear must carry exactly that design, and the board is drawn designed in hand and in the inventory.
+     */
+    private static boolean paint(Minecraft mc) {
+        LocalPlayer player = mc.player;
+        if (player == null) return true;
+        if (stageTicks == 1) {
+            onServer(mc, sp -> {
+                StrapController.unstrap(sp, StrapController.UnstrapReason.COMMAND);
+                toTop(sp);
+                BlockPos at = sp.blockPosition().relative(sp.getDirection(), 2);
+                sp.serverLevel().setBlockAndUpdate(at, io.github.adang101.alpineshred.registry.ModBlocks.PAINT_BENCH.get().defaultBlockState());
+                benchPos = at;
+                sp.getInventory().clearContent();
+                sp.getInventory().add(new ItemStack(ModItems.PARK_SNOWBOARD.get()));
+                sp.getInventory().add(new ItemStack(net.minecraft.world.item.Items.RED_DYE, 4));
+            });
+            return false;
+        }
+        if (stageTicks == 20) {
+            if (benchPos == null || mc.gameMode == null) {
+                failures.add("paint: no bench");
+                return true;
+            }
+            net.minecraft.world.phys.Vec3 hit = net.minecraft.world.phys.Vec3.atCenterOf(benchPos);
+            mc.gameMode.useItemOn(player, InteractionHand.MAIN_HAND,
+                    new net.minecraft.world.phys.BlockHitResult(hit, net.minecraft.core.Direction.UP, benchPos, false));
+            return false;
+        }
+        if (stageTicks == 40) {
+            if (!(mc.screen instanceof io.github.adang101.alpineshred.client.design.PaintBenchScreen)
+                    || !(player.containerMenu instanceof io.github.adang101.alpineshred.design.PaintBenchMenu menu)) {
+                failures.add("paint: the bench did not open: " + mc.screen);
+                return true;
+            }
+            view(mc, "paint_bench_slots", CameraType.FIRST_PERSON);
+            // Shift-click the board in: the editor opens by itself.
+            for (int i = 2; i < menu.slots.size(); i++) {
+                if (menu.getSlot(i).getItem().is(ModItems.PARK_SNOWBOARD.get())) {
+                    mc.gameMode.handleInventoryMouseClick(menu.containerId, i, 0, net.minecraft.world.inventory.ClickType.QUICK_MOVE, player);
+                    break;
+                }
+            }
+            return false;
+        }
+        if (stageTicks == 60) {
+            if (!(mc.screen instanceof io.github.adang101.alpineshred.client.design.DesignEditorScreen editor)) {
+                failures.add("paint: placing the board did not open the editor: " + mc.screen);
+                return true;
+            }
+            var state = editor.state();
+            var templates = io.github.adang101.alpineshred.design.paint.DesignTemplates.all();
+            note("paint: " + templates.size() + " templates from the server");
+            check(templates.size() >= 12, "paint: only " + templates.size() + " templates arrived");
+            templates.stream().filter(t -> t.id().endsWith(":sunset")).findFirst().ifPresent(state::applyTemplate);
+            state.setPrimary(0xFFFFFF);
+            state.setTool(io.github.adang101.alpineshred.design.paint.EditorState.Tool.PENCIL);
+            state.brushBigger();
+            state.press(0, 6, 8);
+            for (int x = 7; x <= 57; x++) state.drag(x, 8);
+            state.release(57, 8);
+            state.setFace(1);
+            state.setTool(io.github.adang101.alpineshred.design.paint.EditorState.Tool.GRADIENT);
+            state.setPrimary(0x1A365D);
+            state.setSecondary(0x63B3ED);
+            state.press(0, 0, 8);
+            state.drag(63, 8);
+            state.release(63, 8);
+            state.setFace(0);
+            state.setName("Smoke Test");
+            state.setEdge(0xE03030);
+            check(state.canUndo(), "paint: no undo history");
+            return false;
+        }
+        if (stageTicks == 70) {
+            view(mc, "paint_editor", CameraType.FIRST_PERSON);
+            return false;
+        }
+        if (stageTicks == 90) {
+            if (!(mc.screen instanceof io.github.adang101.alpineshred.client.design.DesignEditorScreen editor)) {
+                failures.add("paint: the editor closed: " + mc.screen);
+                return true;
+            }
+            painted = editor.state().toDesign();
+            paintResults = io.github.adang101.alpineshred.client.design.DesignClient.results();
+            editor.save();
+            return false;
+        }
+        if (stageTicks > 90 && stageTicks < 200 && io.github.adang101.alpineshred.client.design.DesignClient.results() == paintResults) return false;
+        if (stageTicks < 200 && serverHash == 0 && painted != null) {
+            var result = io.github.adang101.alpineshred.client.design.DesignClient.lastResult();
+            note("paint: save " + result);
+            check(result == io.github.adang101.alpineshred.design.DesignStatus.OK, "paint: the save was " + result);
+            serverHash = -1;
+            onServer(mc, sp -> {
+                if (sp.containerMenu instanceof io.github.adang101.alpineshred.design.PaintBenchMenu menu) {
+                    var d = io.github.adang101.alpineshred.design.DesignNbt.read(menu.gear());
+                    note("paint: server gear " + d);
+                    check(d != null && d.sameArt(painted), "paint: the server's gear does not carry the painted design: " + d);
+                    check(d != null && d.author().equals(sp.getGameProfile().getName()), "paint: author not written");
+                    serverHash = d == null ? -1 : d.hash();
+                } else {
+                    failures.add("paint: the server's bench is not open");
+                }
+            });
+            return false;
+        }
+        if (stageTicks == 205 && serverHash == 0) failures.add("paint: no answer to the save");
+        if (stageTicks == 210) {
+            mc.setScreen(null);
+            player.closeContainer();
+            return false;
+        }
+        if (stageTicks == 240) {
+            // The board came back to the inventory: hold it for the pictures.
+            onServer(mc, sp -> {
+                for (int i = 0; i < sp.getInventory().getContainerSize(); i++) {
+                    if (sp.getInventory().getItem(i).is(ModItems.PARK_SNOWBOARD.get())) {
+                        ItemStack board = sp.getInventory().removeItemNoUpdate(i);
+                        sp.setItemInHand(InteractionHand.MAIN_HAND, board);
+                        break;
+                    }
+                }
+            });
+            return false;
+        }
+        if (stageTicks == 260) {
+            var held = player.getMainHandItem();
+            var d = io.github.adang101.alpineshred.design.DesignNbt.read(held);
+            check(d != null && d.hash() == serverHash, "paint: the held board does not carry the saved design: " + d);
+            orbit(mc, "paint_held", SIDE);
+            return false;
+        }
+        if (stageTicks == 300) {
+            mc.setScreen(new net.minecraft.client.gui.screens.inventory.InventoryScreen(player));
+            return false;
+        }
+        if (stageTicks == 320) {
+            view(mc, "paint_inventory", CameraType.THIRD_PERSON_BACK);
+            return false;
+        }
+        if (stageTicks >= 340) {
+            mc.setScreen(null);
+            int textures = io.github.adang101.alpineshred.client.design.DesignTextureCache.size();
+            note("paint: " + textures + " design textures built");
+            check(textures > 0, "paint: no design texture was built");
+            return true;
+        }
+        return false;
     }
 
     // ---- mountain (risk R4) ------------------------------------------------------------------------

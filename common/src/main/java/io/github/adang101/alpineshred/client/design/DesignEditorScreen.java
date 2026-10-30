@@ -594,7 +594,7 @@ public class DesignEditorScreen extends Screen {
                 : "";
         if (!cost.isEmpty()) g.drawString(font, cost, canvasX + canvasW - font.width(cost), canvasY[0] - 10, 0xC0C0C0);
         for (var child : children()) {
-            if (child instanceof Tipped t && child instanceof Button b && b.isHovered()) {
+            if (child instanceof Tipped t && child instanceof Button b && b.isHovered() && !t.tip().getString().isEmpty()) {
                 g.renderTooltip(font, t.tip(), mouseX, mouseY);
             }
         }
@@ -727,6 +727,26 @@ public class DesignEditorScreen extends Screen {
         }
     }
 
+    /** Text that follows a value, in a button's place (inactive, no frame). */
+    static class LabelButton extends TipButton {
+        private final Supplier<Component> text;
+        private final net.minecraft.client.gui.Font font;
+
+        LabelButton(int w, Supplier<Component> text, net.minecraft.client.gui.Font font) {
+            super(0, 0, w, ROW_H, text.get(), b -> {
+            }, Component.empty());
+            this.text = text;
+            this.font = font;
+            this.active = false;
+        }
+
+        @Override
+        public void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
+            setMessage(text.get());
+            g.drawCenteredString(font, getMessage(), getX() + getWidth() / 2, getY() + (getHeight() - 8) / 2, 0xE0E0E0);
+        }
+    }
+
     /** A button drawn pressed while {@code on} holds. */
     static class ToggleButton extends TipButton {
         private final BooleanSupplier on;
@@ -785,15 +805,7 @@ public class DesignEditorScreen extends Screen {
 
         /** Text that follows a value, drawn as an inactive button. */
         void label(DesignEditorScreen screen, Supplier<Component> text, int width) {
-            Button b = new Button(0, 0, width, ROW_H, text.get(), x -> {
-            }, Button.DEFAULT_NARRATION) {
-                @Override
-                public void renderWidget(GuiGraphics g, int mouseX, int mouseY, float partialTick) {
-                    setMessage(text.get());
-                    g.drawCenteredString(screen.font, getMessage(), getX() + getWidth() / 2, getY() + (getHeight() - 8) / 2, 0xE0E0E0);
-                }
-            };
-            b.active = false;
+            LabelButton b = new LabelButton(width, text, screen.font);
             place(b, width);
             screen.addRenderableWidget(b);
         }

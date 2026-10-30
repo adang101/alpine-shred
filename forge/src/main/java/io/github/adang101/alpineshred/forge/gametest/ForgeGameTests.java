@@ -264,4 +264,24 @@ public final class ForgeGameTests {
     public static void trickAdvancementsFire(GameTestHelper helper) {
         TrickGameTests.trickAdvancementsFire(helper);
     }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void aSaveWritesTheDesignAndTakesTheDye(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.DesignGameTests.aSaveWritesTheDesignAndTakesTheDye(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void rejectedSavesChargeNothing(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.DesignGameTests.rejectedSavesChargeNothing(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void smithingCarriesTheDesign(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.DesignGameTests.smithingCarriesTheDesign(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void aDesignSurvivesSaveAndLoad(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.DesignGameTests.aDesignSurvivesSaveAndLoad(helper);
+    }
 }
