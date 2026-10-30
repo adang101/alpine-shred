@@ -167,6 +167,43 @@ class RideValidatorTest {
         }
     }
 
+    /**
+     * The multiplayer smoke test's case: a kicker launch stamped up to three rider ticks before the
+     * rise it started (two of budget lag, one more inside the launch window) still covers that rise,
+     * and hovering up after a small launch is still flagged.
+     */
+    @Test
+    void aLaunchStampedTwoTicksEarlyStillCoversItsRise() {
+        double v0 = 0.243;
+        for (int early = 0; early <= RideValidator.CLOCK_JITTER_TICKS + 1; early++) {
+            RideValidator v = new RideValidator();
+            double y = 64;
+            v.observe(0, 0, y, 0, true, LIMITS);
+            v.noteRampLaunch(0, v0, LIMITS);
+            int tick = 1;
+            for (int k = 0; k < early; k++, tick++) {
+                assertEquals(RideValidator.Kind.OK, v.observe(tick, 0, y, tick * 0.7, true, LIMITS).kind(), "still on the lip");
+            }
+            double vy = v0;
+            for (int n = 0; n < 12; n++, tick++) {
+                y += vy;
+                vy = Ballistics.nextVerticalVelocity(vy);
+                RideValidator.Verdict verdict = v.observe(tick, 0, y, tick * 0.7, false, LIMITS);
+                assertEquals(RideValidator.Kind.OK, verdict.kind(), early + " early, tick " + tick + ": " + verdict.reason());
+            }
+        }
+        RideValidator hover = new RideValidator();
+        hover.observe(0, 0, 64, 0, true, LIMITS);
+        hover.noteRampLaunch(0, v0, LIMITS);
+        double y = 64;
+        RideValidator.Kind last = RideValidator.Kind.OK;
+        for (int tick = 1; tick < 12 && last == RideValidator.Kind.OK; tick++) {
+            y += 0.1; // rising steadily, as no launch can
+            last = hover.observe(tick, 0, y, tick * 0.7, false, LIMITS).kind();
+        }
+        assertEquals(RideValidator.Kind.VIOLATION, last, "hovering up after a small launch");
+    }
+
     @Test
     void reportedLaunchesAreCappedAtThePhysicalMaximum() {
         RideValidator v = new RideValidator();
