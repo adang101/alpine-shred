@@ -141,11 +141,11 @@ public final class ServerSmoke {
         ticks++;
         // Server stalls, for the multiplayer check: while the server stands still the watchers see
         // the rider stand still, whatever the rider's own client does.
-        long now = System.nanoTime();
-        if (lastTickNanos != 0 && now - lastTickNanos > 150_000_000L) {
-            note(String.format(Locale.ROOT, "stall gt%d %d ms", server.overworld().getGameTime(), (now - lastTickNanos) / 1_000_000));
+        long nanos = System.nanoTime();
+        if (lastTickNanos != 0 && nanos - lastTickNanos > 150_000_000L) {
+            note(String.format(Locale.ROOT, "stall gt%d %d ms", server.overworld().getGameTime(), (nanos - lastTickNanos) / 1_000_000));
         }
-        lastTickNanos = now;
+        lastTickNanos = nanos;
         ServerPlayer rider = server.getPlayerList().getPlayerByName("rider");
         if (rider != null) {
             RideState state = Riders.state(rider);

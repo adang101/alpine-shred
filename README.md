@@ -4,15 +4,19 @@ Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1
 NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
 truth; this README covers how to build the code and where it stands against that document.
 
-**Status:** Phase 4 (park blocks and grinding) is built: rails in every shape with smart placement,
-grinding, boxes, ramps, quarter pipes, the park wrench and wax. Its exit gate passes: the 10-piece
-rail chain, box slide and pipe ride game tests are green on both loaders (42 game tests per loader
-and 181 unit tests in all), and a scripted Forge client rides a park line in CI step 8. A short
-hand check of building and riding a park is in [docs/playtest-phase4.md](docs/playtest-phase4.md).
-Phases 1 to 3 are complete except phase 3's exit gate, five outside testers riding for 10 minutes
-each ([docs/playtest-phase3.md](docs/playtest-phase3.md)). Phase 2's last open item, three clients
-seeing correct state, now runs in CI step 9 on a real dedicated server (see below). Still to check
-by hand: the jar on a NeoForge 1.20.1 server.
+**Status:** Phase 6 (board and ski customization) is built: the Paint Bench, the paint editor,
+validated saves, share codes, templates, and procedurally drawn designed boards and skis. Its
+automated part passes in CI: the codec, tool and asset unit tests, saves through the bench on
+both loaders, a scripted client painting and saving through the real editor, and a three-client
+multiplayer run in which both watchers receive and draw the rider's design and twenty more. The
+people part of its exit gate (five players each painting and saving a design in under 10
+minutes, twenty designs on three clients) is in [docs/playtest-phase6.md](docs/playtest-phase6.md).
+Phase 5 (tricks and scoring) is complete: forged reports are rejected in the game tests, and the
+smoke client's popup banks exactly what the server banks. Phases 1 to 4 are complete except phase
+3's exit gate, five outside testers riding for 10 minutes each
+([docs/playtest-phase3.md](docs/playtest-phase3.md)), and the hand checks in
+[docs/playtest-phase4.md](docs/playtest-phase4.md). Still to check by hand: the jar on a NeoForge
+1.20.1 server, and Trinkets (Fabric) syncing designs, which CI cannot run.
 
 ## Build and test
 
