@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -129,6 +130,23 @@ class RunPlannerTest {
         int markers = RunShape.markers(p).size();
         assertTrue(markers >= 2 * (int) ((p.length() - RunPlanner.RUN_OUT) / RunShape.MARKER_SPACING) - 2, "markers " + markers);
         assertEquals(0, markers % 2, "pairs");
+    }
+
+    @Test
+    void aRunStartsBelowASummitTooSteepToRideFrom() {
+        // A cone: 0.9 within 20 blocks of the top, 0.3 below that.
+        Synthetic cone = Synthetic.of((x, z) -> {
+            double r = Math.hypot(x, z);
+            return (int) Math.floor(r < 20 ? 220 - 0.9 * r : 202 - 0.3 * (r - 20));
+        });
+        int[] top = RunPlanner.uphillStart(cone, 60, 0, 88);
+        assertFalse(RunPlanner.goodStart(cone, SEA, top[0], top[1]), "the summit is too steep at " + top[0] + ", " + top[1]);
+        assertNull(RunPlanner.plan(cone, SEA, top[0], top[1], 60, 0, 5));
+        assertEquals(RunPlanner.Failure.STEEP, RunPlanner.lastFailure());
+        RunPlanner.Plan p = RunPlanner.planThrough(cone, SEA, 60, 0, 88, 5, RunPlanner.MAX_REACH);
+        assertNotNull(p, "no run: " + RunPlanner.lastFailure());
+        checkPlan(p, 60, 0);
+        assertTrue(p.length() > 96, "length " + p.length());
     }
 
     @Test

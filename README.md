@@ -29,13 +29,14 @@ Java 17 toolchain, which Gradle downloads if none is installed.
 | Regenerate lang, recipes, tags, loot | `.github/scripts/run-datagen.sh datagen.log` (writes `common/src/main/generated`; commit the result) |
 | Game tests, Fabric dedicated server | `./gradlew :fabric:runGametest` |
 | Game tests, Forge game-test server | `./gradlew :forge:runGameTestServer` |
-| Client smoke test (Forge, needs a display or `xvfb-run`) | `./gradlew :forge:runSmokeClient`; real terrain: `:forge:runMountainClient`; park: `:forge:runParkClient` |
+| Client smoke test (Forge, needs a display or `xvfb-run`) | `./gradlew :forge:runSmokeClient`; real terrain: `:forge:runMountainClient`; park: `:forge:runParkClient`; structures: `:forge:runWorldgenClient` |
 | Multiplayer smoke (dedicated server and three clients) | `.github/scripts/multiplayer-smoke.sh <log dir>` |
 | Play-test | `./gradlew :forge:runClient` (see the note on the Fabric dev client below) |
 | Regenerate placeholder art | `python3 art/placeholder/generate_textures.py && python3 art/placeholder/generate_models.py` |
 | Regenerate placeholder clips, sounds, particles, overlays | `python3 art/placeholder/generate_animations.py`, `generate_sounds.py` (needs ffmpeg), `generate_effects.py` |
 | Regenerate park blockstates, models and textures | `python3 art/placeholder/generate_park.py` |
 | Regenerate default gear looks and the Paint Bench | `python3 art/placeholder/generate_gear_atlases.py`, `generate_bench.py` |
+| Regenerate the park, snow feature and lodge templates | `python3 art/placeholder/generate_structures.py` |
 
 CI (`.github/workflows/build.yml`) runs all of the above except the play-test client, fails if
 committed generated data is stale, uploads the jars, and force-pushes logs, test reports, generated
@@ -100,6 +101,11 @@ common/   all game logic (Architectury); client code only under client/
     paint/    pure, unit-tested: Canvas, PaintTools, EditorState, UndoStack, Colors,
               DesignTemplate(s)
               game side: DesignNbt, PaintBenchBlock, PaintBenchMenu, DesignServer, DesignEvents
+  worldgen/   pure, unit-tested: RunPlanner (section 12's planner), RunShape (what a run does to
+              each column, markers, bounds)
+              game side: GroomedRunStructure, ResortStructure, ToggleableJigsawStructure (parks
+              and snow features), GroomedRunPiece, LodgePiece, GeneratorTerrain, WorldgenToggle,
+              ModStructures
   config/     ConfigSpec + AlpineConfig: both JSON files, every key from the doc
   data/       reload listeners for tuning, surface profiles and gear stats
   network/    ModNetwork (packets), SyncCodec (pure payloads), RideAction, PacketRateLimiter
@@ -115,6 +121,8 @@ common/   all game logic (Architectury); client code only under client/
     design/   DesignedGearRenderer, DesignTextureCache, PaintBenchScreen, DesignEditorScreen,
               DesignClient
   gametest/   game tests shared by both loaders; Course builds riding courses
+  smoke/      ServerSmoke (the multiplayer server's script), SmokeCourse, WorldgenSurvey (finds,
+              builds and counts one of each structure for the worldgen smoke run)
   mixin/      PlayerMixin (synced state, travel, edge back-off, jump, footsteps), EntityMixin
               (step height, descending), PowderSnowBlockMixin, LivingEntityMixin (no sprint),
               ServerGamePacketListenerAccessor; client/LocalPlayerMixin (no auto-jump),
@@ -126,8 +134,46 @@ common/   all game logic (Architectury); client code only under client/
 forge/    entry point, CuriosGearAccess, Curios slot data, platform hooks, game-test holder
 fabric/   entry points, TrinketsGearAccess, Trinkets slot data, datagen, game-test holder
 art/      placeholder generators: textures, models, rider clips, sounds, particles, overlays,
-          park blockstates and models, default gear atlases, the Paint Bench
+          park blockstates and models, default gear atlases, the Paint Bench, structure templates
 ```
+
+## What phase 7 delivers
+
+- **Four structures in snowy biomes** (section 12), all data under `data/alpineshred/worldgen/`
+  (structures, sets, template pools) and `tags/worldgen/biome/has_*`, so datapacks can retune or
+  replace them: `terrain_park` (spacing 28 / separation 10 chunks), `groomed_run` (22 / 8),
+  `ski_resort` (56 / 24, 6 chunks clear of runs) and `snow_feature` (10 / 4). Each type asks its
+  `worldgen.*` switch before placing; `worldgen.frequencyMul` below 1 skips that share of starts.
+  `/locate structure alpineshred:<id>` and `/place structure` work unchanged.
+- **Groomed runs** (`RunPlanner`, `RunShape`, `GroomedRunPiece`): the planner of section 12 on the
+  generator's own heights (start at least sea level plus 20 on a 0.15 to 0.60 grade; green, blue
+  or black from the seed; 8 headings every 8 blocks; stops at the length, flat ground, water or the
+  biome's edge; a 16-block run-out; Catmull-Rom smoothing every 2 blocks; width 9, 11 or 13). Each
+  chunk builds only its own columns: cut or fill by up to 2 blocks to the never-climbing profile,
+  groomed snow over two snow blocks, trees, plants and snow layers cleared 10 blocks up, edges
+  fading into snow layers over 3 blocks, slope markers in the difficulty's color on both edges
+  every 24 blocks. Groomed snow refuses snow layers, so neither `freeze_top_layer` nor snowfall
+  covers a run.
+- **Ski resorts** (`ResortStructure`, `LodgePiece`): a run and, past its run-out, the lodge (24 by
+  18, spruce, a fireplace, tables, lanterns, a Paint Bench), its door turned up the run and its
+  floor level with the run's end, on a cobblestone foundation; its chest uses
+  `alpineshred:chests/lodge`. The lift line comes with lifts in phase 8.
+- **Terrain parks** (jigsaw, `park/entry`, `park/lines`, `park/ends`): an entry gate, then up to
+  five lines, each starting a block lower than the last: flat, kinked and curved rails, a box line,
+  a kicker with table and landing, a quarter pipe pair, a jib line; ending in a bench and fence or
+  flags. Walking into one awards `park_rat`.
+- **Snow features** (`snow/features`): natural kickers, rollers and cornices built from snow.
+- **Templates** are written by `art/placeholder/generate_structures.py` (vanilla structure NBT),
+  so the pieces' block states (rail connections, legs, box ends, pipe indices) come from the same
+  rules as placing them by hand.
+- **Tests.** Unit tests for the planner on synthetic slopes (starts, stops at water and biome
+  edges, smoothing, the profile never climbing, 1000 random slopes within reach, markers, the
+  seed); game tests that every template is whole (park pieces 9 wide, jigsaws where the pools
+  expect them, rail flags as the rails' own rules set them, valid pipe cells, the lodge's chest
+  marker) and that the four structures, generated over real overworld noise for three seeds,
+  give over 1000 starts with every piece within 7 chunks of its start and inside the world's
+  height; a worldgen smoke run in a default world finds, builds, counts and pictures one of each
+  (`client-worldgen/screenshots`) and checks `park_rat`.
 
 ## What phase 6 delivers
 
@@ -520,8 +566,25 @@ covered by a test or noted in code.
 52. **The pair of skis is still drawn as one item between the feet**; skis that follow each leg
     remain for later.
 
-Not in phase 5 or 6, by design: lift statistics and the `lift_ridden` trigger (phase 8),
-`park_rat` (phase 7), line fill and waxing vanilla blocks (v1.1), PNG import of designs (v1.1).
+53. **Park pieces are rigid, on `beard_thin`**, rather than `terrain_matching` bases with snow cover
+    and gravity processors: each piece's snow pad drops one block over its first 8 blocks, so a
+    line steps down the hill, and the beard fills under and clears over every piece. The pads are
+    snow already, so no snow cover processor is needed.
+54. **`JigsawStructure` is final in 1.20.1**, so `ToggleableJigsawStructure` holds one built from
+    the same JSON fields and hands on its pieces after asking the switch.
+55. **A run starts uphill of its start chunk** (walking up the steepest rise for up to 88 blocks), so
+    it can use the 112-block reach on both sides of the chunk; a resort keeps 28 blocks of that
+    reach for its lodge. Every piece stays within 7 chunks of the start.
+56. **`ski_resort` uses no terrain adaptation**: its run shapes the ground itself, and a beard would
+    bury it. The lodge carves its own box and fills its own foundation instead.
+57. **Before planning, runs and resorts look for their biome** at the start chunk or 48 blocks away:
+    every candidate chunk of a structure set is asked, snowy or not, and planning costs height
+    samples. Water, for the planner, is a surface at or below sea level.
+58. **`worldgen.frequencyMul` thins starts** (below 1, by the start's own seed); spacing stays the
+    structure set's, since sets are data a pack may change.
+
+Not in phases 5 to 7, by design: lift statistics and the `lift_ridden` trigger, and the resort's
+lift line (phase 8), line fill and waxing vanilla blocks (v1.1), PNG import of designs (v1.1).
 Real animation clips, sounds and textures replace the placeholders file by file under the same
 names.
 

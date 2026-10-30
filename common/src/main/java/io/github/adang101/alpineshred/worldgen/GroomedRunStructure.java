@@ -36,10 +36,12 @@ public class GroomedRunStructure extends Structure {
         ChunkPos chunk = context.chunkPos();
         int cx = chunk.getMiddleBlockX(), cz = chunk.getMiddleBlockZ();
         GeneratorTerrain terrain = new GeneratorTerrain(context);
-        if (!terrain.allowedNear(cx, cz)) return null;
-        int sea = context.chunkGenerator().getSeaLevel();
-        int[] top = RunPlanner.uphillStart(terrain, cx, cz, UPHILL);
-        return RunPlanner.plan(terrain, sea, top[0], top[1], cx, cz, context.random().nextLong());
+        if (!terrain.allowedNear(cx, cz)) {
+            RunPlanner.noteFailure(RunPlanner.Failure.NOT_NEAR_BIOME);
+            return null;
+        }
+        return RunPlanner.planThrough(terrain, context.chunkGenerator().getSeaLevel(), cx, cz, UPHILL, context.random().nextLong(),
+                RunPlanner.MAX_REACH);
     }
 
     @Override

@@ -31,10 +31,12 @@ public class ResortStructure extends Structure {
         ChunkPos chunk = context.chunkPos();
         int cx = chunk.getMiddleBlockX(), cz = chunk.getMiddleBlockZ();
         GeneratorTerrain terrain = new GeneratorTerrain(context);
-        if (!terrain.allowedNear(cx, cz)) return Optional.empty();
-        int[] top = RunPlanner.uphillStart(terrain, cx, cz, GroomedRunStructure.UPHILL - LODGE_ROOM);
-        RunPlanner.Plan plan = RunPlanner.plan(terrain, context.chunkGenerator().getSeaLevel(), top[0], top[1], cx, cz,
-                context.random().nextLong(), RunPlanner.MAX_REACH - LODGE_ROOM);
+        if (!terrain.allowedNear(cx, cz)) {
+            RunPlanner.noteFailure(RunPlanner.Failure.NOT_NEAR_BIOME);
+            return Optional.empty();
+        }
+        RunPlanner.Plan plan = RunPlanner.planThrough(terrain, context.chunkGenerator().getSeaLevel(), cx, cz,
+                GroomedRunStructure.UPHILL - LODGE_ROOM, context.random().nextLong(), RunPlanner.MAX_REACH - LODGE_ROOM);
         if (plan == null) return Optional.empty();
         List<double[]> pts = plan.points();
         double[] end = pts.get(pts.size() - 1), before = pts.get(Math.max(0, pts.size() - 3));

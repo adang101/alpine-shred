@@ -74,6 +74,21 @@ public final class RunPlanner {
     public static final double FLAT_GRADE = 0.05;
     private static final int HEADINGS = 8;
     private static final double MAX_TURN = Math.toRadians(60);
+    /** Good starts tried, from the top of the uphill walk down, before a start chunk gives up. */
+    public static final int START_TRIES = 3;
+
+    /** Why the last plan on this thread came to nothing: for the game test's tally. */
+    public enum Failure {NONE, NOT_NEAR_BIOME, LOW, WATER, BIOME, GENTLE, STEEP, NO_GOOD_START, SHORT_BLOCKED, SHORT_REACH, SHORT_FLAT}
+
+    private static final ThreadLocal<Failure> LAST_FAILURE = ThreadLocal.withInitial(() -> Failure.NONE);
+
+    public static Failure lastFailure() {
+        return LAST_FAILURE.get();
+    }
+
+    static void noteFailure(Failure failure) {
+        LAST_FAILURE.set(failure);
+    }
 
     /**
      * A planned run: the smoothed centerline every 2 blocks as (x, z, y), where y is the groomed
@@ -100,10 +115,17 @@ public final class RunPlanner {
 
     /** True if (x, z) is a start the planner accepts: high enough and on a slope it can ride down. */
     public static boolean goodStart(Terrain t, int seaLevel, int x, int z) {
-        int h = t.height(x, z);
-        if (h < seaLevel + 20 || t.water(x, z) || !t.allowed(x, z)) return false;
+        return startFailure(t, seaLevel, x, z) == Failure.NONE;
+    }
+
+    private static Failure startFailure(Terrain t, int seaLevel, int x, int z) {
+        if (t.height(x, z) < seaLevel + 20) return Failure.LOW;
+        if (t.water(x, z)) return Failure.WATER;
+        if (!t.allowed(x, z)) return Failure.BIOME;
         double best = steepest(t, x, z)[1];
-        return best >= MIN_START_GRADE && best <= MAX_START_GRADE;
+        if (best < MIN_START_GRADE) return Failure.GENTLE;
+        if (best > MAX_START_GRADE) return Failure.STEEP;
+        return Failure.NONE;
     }
 
     /** {angle, grade} of the steepest of eight directions over one step. */
@@ -138,7 +160,9 @@ public final class RunPlanner {
 
     /** As above, within {@code maxReach} of the centre (a resort keeps room for its lodge). */
     public static Plan plan(Terrain t, int seaLevel, int startX, int startZ, int centerX, int centerZ, long seed, int maxReach) {
-        if (!goodStart(t, seaLevel, startX, startZ)) return null;
+        Failure start = startFailure(t, seaLevel, startX, startZ);
+        LAST_FAILURE.set(start);
+        if (start != Failure.NONE) return null;
         Random random = new Random(seed);
         Difficulty difficulty = Difficulty.values()[random.nextInt(3)];
         int target = MIN_LENGTH + random.nextInt(MAX_LENGTH - MIN_LENGTH + 1);
@@ -151,6 +175,7 @@ public final class RunPlanner {
         control.add(new double[]{x, z});
         double travelled = 0;
         int flat = 0;
+        Failure stop = Failure.NONE;
         while (travelled < target) {
             double bestCost = Double.MAX_VALUE, bestHeading = heading, bestGrade = 0;
             boolean bestBlocked = true;
@@ -172,16 +197,26 @@ public final class RunPlanner {
                     bestBlocked = blocked;
                 }
             }
-            if (bestCost == Double.MAX_VALUE || bestBlocked) break; // the edge of the reach, water or another biome
+            if (bestCost == Double.MAX_VALUE || bestBlocked) { // the edge of the reach, water or another biome
+                stop = bestCost == Double.MAX_VALUE ? Failure.SHORT_REACH : Failure.SHORT_BLOCKED;
+                break;
+            }
             heading = bestHeading;
             x += Math.cos(heading) * STEP;
             z += Math.sin(heading) * STEP;
             control.add(new double[]{x, z});
             travelled += STEP;
             flat = bestGrade < FLAT_GRADE ? flat + 1 : 0;
-            if (flat >= 2) break;
+            if (flat >= 2) {
+                stop = Failure.SHORT_FLAT;
+                break;
+            }
         }
-        if (travelled < MIN_BUILT_LENGTH) return null;
+        if (travelled < MIN_BUILT_LENGTH) {
+            LAST_FAILURE.set(stop);
+            return null;
+        }
+        LAST_FAILURE.set(Failure.NONE);
 
         // The run-out: flat, straight on, where it fits and stays dry.
         int runOutSteps = 0;
@@ -235,12 +270,44 @@ public final class RunPlanner {
     }
 
     /**
+     * A run through (centerX, centerZ), the structure's start: walks uphill from there
+     * ({@link #uphillWalk}) and plans from the highest good starts along the walk, at most
+     * {@link #START_TRIES} of them. A summit is often too steep or too flat to start on; a little
+     * below it usually is not. Null when none gives a run.
+     */
+    public static Plan planThrough(Terrain t, int seaLevel, int centerX, int centerZ, int maxUphill, long seed, int maxReach) {
+        List<int[]> walk = uphillWalk(t, centerX, centerZ, maxUphill);
+        Failure first = null;
+        int tries = 0;
+        for (int i = walk.size() - 1; i >= 0 && tries < START_TRIES; i--) {
+            int[] p = walk.get(i);
+            Failure f = startFailure(t, seaLevel, p[0], p[1]);
+            if (first == null) first = f;
+            if (f != Failure.NONE) continue;
+            tries++;
+            Plan plan = plan(t, seaLevel, p[0], p[1], centerX, centerZ, seed, maxReach);
+            if (plan != null) return plan;
+            first = lastFailure();
+        }
+        LAST_FAILURE.set(tries == 0 ? (first == null ? Failure.NO_GOOD_START : first) : first);
+        return null;
+    }
+
+    /**
      * The top of a run through (centerX, centerZ): walks uphill (the steepest rise, a step at a
      * time) up to {@code maxDistance} blocks, so a run from there can pass the structure's start
      * and use the reach on both sides of it. Returns {x, z}.
      */
     public static int[] uphillStart(Terrain t, int centerX, int centerZ, int maxDistance) {
+        List<int[]> walk = uphillWalk(t, centerX, centerZ, maxDistance);
+        return walk.get(walk.size() - 1);
+    }
+
+    /** The uphill walk from (centerX, centerZ): every point it stood on, the centre first and the top last. */
+    public static List<int[]> uphillWalk(Terrain t, int centerX, int centerZ, int maxDistance) {
+        List<int[]> walk = new ArrayList<>();
         int x = centerX, z = centerZ;
+        walk.add(new int[]{x, z});
         for (int walked = 0; walked + STEP <= maxDistance; walked += STEP) {
             int h = t.height(x, z);
             int bx = x, bz = z, best = h;
@@ -257,8 +324,9 @@ public final class RunPlanner {
             if (best == h) break;
             x = bx;
             z = bz;
+            walk.add(new int[]{x, z});
         }
-        return new int[]{x, z};
+        return walk;
     }
 
     private static double catmullRom(double p0, double p1, double p2, double p3, double u) {

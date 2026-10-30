@@ -69,12 +69,18 @@ public final class WorldgenGameTests {
             "jib_line", "end_bench", "end_flags"};
     static final String[] SNOW = {"kicker", "roller", "cornice"};
     static final long[] SEEDS = {20261029L, 1850301L, -4172144997902289642L};
-    /** Structure, its set, and the starts wanted from each seed (1020 in all). */
+    /** Structure and its set. */
     private static final String[][] KINDS = {{"ski_resort", "ski_resorts"}, {"groomed_run", "groomed_runs"},
             {"terrain_park", "terrain_parks"}, {"snow_feature", "snow_features"}};
-    private static final int[] WANTED = {20, 80, 90, 150};
-    /** Candidate regions searched per structure and seed before giving up. */
-    private static final int MAX_RING = 18;
+    /** Starts wanted from each seed, and candidate chunks tried per seed before giving up. */
+    private static final int[] WANTED = {10, 40, 200, 200}, MAX_TRIES = {1500, 1500, 6000, 6000};
+    /** At least this many of each over all seeds, and 1000 in all (section 20, phase 7's gate). */
+    private static final int[] REQUIRED = {6, 25, 150, 150};
+    /**
+     * Mean time to generate one start, in ms, over all seeds: twice section 19's budget (50 ms a
+     * structure, 150 ms a resort), for the CI machine.
+     */
+    private static final double[] MAX_MEAN_MS = {300, 100, 100, 100};
     private static final int MAX_CHUNKS_FROM_START = 7;
 
     private WorldgenGameTests() {
@@ -174,6 +180,7 @@ public final class WorldgenGameTests {
         long[] worstNanos = new long[KINDS.length];
         int farthest = 0;
         List<String> problems = new ArrayList<>();
+        Map<RunPlanner.Failure, Integer> runFailures = new java.util.EnumMap<>(RunPlanner.Failure.class);
         for (long seed : SEEDS) {
             RandomState random = RandomState.create(noise.value(), access.lookupOrThrow(Registries.NOISE), seed);
             Pair<BlockPos, Holder<Biome>> slopes = biomes.findClosestBiome3d(new BlockPos(0, 100, 0), 6400, 32, 64,
@@ -186,11 +193,12 @@ public final class WorldgenGameTests {
                 RandomSpreadStructurePlacement placement = (RandomSpreadStructurePlacement) set.placement();
                 int spacing = placement.spacing();
                 int rx0 = Math.floorDiv(centre.x, spacing), rz0 = Math.floorDiv(centre.z, spacing);
-                int here = 0;
-                for (int ring = 0; ring <= MAX_RING && here < WANTED[k]; ring++) {
-                    for (int dx = -ring; dx <= ring && here < WANTED[k]; dx++) {
-                        for (int dz = -ring; dz <= ring && here < WANTED[k]; dz++) {
+                int here = 0, triedHere = 0;
+                for (int ring = 0; here < WANTED[k] && triedHere < MAX_TRIES[k]; ring++) {
+                    for (int dx = -ring; dx <= ring && here < WANTED[k] && triedHere < MAX_TRIES[k]; dx++) {
+                        for (int dz = -ring; dz <= ring && here < WANTED[k] && triedHere < MAX_TRIES[k]; dz++) {
                             if (Math.max(Math.abs(dx), Math.abs(dz)) != ring) continue;
+                            triedHere++;
                             ChunkPos chunk = placement.getPotentialStructureChunk(seed, (rx0 + dx) * spacing, (rz0 + dz) * spacing);
                             long t0 = System.nanoTime();
                             StructureStart start;
@@ -204,6 +212,7 @@ public final class WorldgenGameTests {
                             long took = System.nanoTime() - t0;
                             tried[k]++;
                             nanos[k] += took;
+                            if (k <= 1 && !start.isValid()) runFailures.merge(RunPlanner.lastFailure(), 1, Integer::sum);
                             if (!start.isValid()) continue;
                             here++;
                             found[k]++;
@@ -222,12 +231,17 @@ public final class WorldgenGameTests {
                     found[k], tried[k], nanos[k] / 1.0e6 / Math.max(1, tried[k]), validNanos[k] / 1.0e6 / Math.max(1, found[k]),
                     worstNanos[k] / 1.0e6));
         }
-        AlpineShred.LOGGER.info("[worldgen test] {} starts over {} seeds: {}farthest piece {} chunks from its start", total, SEEDS.length,
-                summary, farthest);
+        AlpineShred.LOGGER.info("[worldgen test] {} starts over {} seeds: {}farthest piece {} chunks from its start; runs and resorts "
+                + "not started: {}", total, SEEDS.length, summary, farthest, runFailures);
         problems.stream().limit(20).forEach(p -> AlpineShred.LOGGER.error("[worldgen test] {}", p));
         check(problems.isEmpty(), problems.size() + " out-of-bounds starts, the first: " + (problems.isEmpty() ? "" : problems.get(0)));
         check(total >= 1000, "only " + total + " starts: " + summary);
-        for (int k = 0; k < KINDS.length; k++) check(found[k] >= WANTED[k], "only " + found[k] + " " + KINDS[k][0] + " starts: " + summary);
+        for (int k = 0; k < KINDS.length; k++) {
+            check(found[k] >= REQUIRED[k], "only " + found[k] + " " + KINDS[k][0] + " starts: " + summary);
+            double mean = validNanos[k] / 1.0e6 / Math.max(1, found[k]);
+            check(mean <= MAX_MEAN_MS[k], String.format(Locale.ROOT, "%s takes %.0f ms a start (limit %.0f): %s", KINDS[k][0], mean,
+                    MAX_MEAN_MS[k], summary));
+        }
         helper.succeed();
     }
 
