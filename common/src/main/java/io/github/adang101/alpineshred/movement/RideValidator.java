@@ -67,9 +67,20 @@ public final class RideValidator {
     private long lastLaunchTick = Long.MIN_VALUE / 2;
     private double launchVelocity;
     private double airBudget;
+    /** The air budget one and two ticks before this one (see {@link #CLOCK_JITTER_TICKS}). */
+    private double airBudgetLag1, airBudgetLag2;
     private double validX, validY, validZ;
     private boolean hasValid;
     private int airClaimGroundTicks;
+
+    /**
+     * How far a reported launch may sit from the rise it starts, in rider ticks. An action packet's
+     * place among the move packets is known only to within a tick or two on a real connection
+     * (seen in the multiplayer smoke test: a kicker launch stamped ticks before its rise), so each
+     * tick in the air may rise at the ballistic budget of up to two ticks earlier; with the launch
+     * window that covers a stamp three ticks early. A launch gains at most two ticks of rise.
+     */
+    static final int CLOCK_JITTER_TICKS = 2;
 
     /** A pop ({@code c2s/ride_action}) the client reported; it rises in this same tick. */
     public void noteLaunch(long tick, double reportedVelocity, Limits limits) {
@@ -99,6 +110,8 @@ public final class RideValidator {
         lastTick = Long.MIN_VALUE / 2;
         hasValid = false;
         airBudget = 0;
+        airBudgetLag1 = 0;
+        airBudgetLag2 = 0;
         groundedLast = false;
         airClaimGroundTicks = 0;
     }
@@ -147,15 +160,18 @@ public final class RideValidator {
         // Rule 2: rise, allowed per elapsed tick.
         double rise = y - lastY;
         double allowed = 0;
-        double budget = airBudget;
+        double budget = airBudget, lag1 = airBudgetLag1, lag2 = airBudgetLag2;
         for (long i = 0; i < dt; i++) {
             long at = lastTick + 1 + i;
             boolean launchWindow = at - lastLaunchTick <= limits.launchGraceTicks();
+            double ballistic = Math.max(budget, Math.max(lag1, lag2));
             if (groundedLast || onGround) {
                 allowed += Math.max(limits.groundRise(), launchWindow ? launchVelocity : 0);
             } else {
-                allowed += Math.max(0, launchWindow ? Math.max(launchVelocity, budget) : budget);
+                allowed += Math.max(0, launchWindow ? Math.max(launchVelocity, ballistic) : ballistic);
             }
+            lag2 = lag1;
+            lag1 = budget;
             budget = Ballistics.nextVerticalVelocity(Math.max(budget, 0));
         }
         if (rise > allowed + RISE_TOLERANCE && reason == null) {
@@ -165,7 +181,10 @@ public final class RideValidator {
         // Standing ends the air budget, except in a launch's own window: a pipe's top launches while
         // the server still counts the rider as on the arc.
         boolean launching = tick - lastLaunchTick <= limits.launchGraceTicks();
-        airBudget = onGround && !launching ? 0 : budget;
+        boolean standing = onGround && !launching;
+        airBudget = standing ? 0 : budget;
+        airBudgetLag1 = standing ? 0 : lag1;
+        airBudgetLag2 = standing ? 0 : lag2;
 
         remember(tick, x, y, z, onGround);
         if (reason == null) {
