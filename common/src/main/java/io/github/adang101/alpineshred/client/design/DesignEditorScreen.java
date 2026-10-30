@@ -69,7 +69,7 @@ public class DesignEditorScreen extends Screen {
     // Layout, from init().
     private int scale, canvasX, canvasW;
     private final int[] canvasY = new int[2];
-    private int panelX, previewY, svX, svY, hueX, swatchY, paletteY, recentY;
+    private int panelX, previewY, previewH, svX, svY, hueX, swatchY, paletteY, recentY;
     private static final int SV = 56, HUE_W = 8, SWATCH = 13;
 
     private EditBox nameField, hexField;
@@ -116,59 +116,57 @@ public class DesignEditorScreen extends Screen {
 
     @Override
     protected void init() {
-        // Canvases: as large as fits, up to 8 (or 12, zoomed) screen pixels per design pixel.
-        int labelH = 10;
-        int bottomRows = AlpineConfig.CLIENT_HINTS.on() ? 3 : 2;
-        int availW = width - 3 * M - PANEL_W;
-        int availH = height - M - TOP_H - 2 * labelH - bottomRows * (ROW_H + 2) - 2 * M;
-        int preferred = state.zoom() ? 12 : 8;
-        scale = Math.max(1, Math.min(preferred, Math.min(availW / kind.width, availH / (2 * kind.height))));
-        canvasW = kind.width * scale;
-        canvasX = M + Math.max(0, (availW - canvasW) / 2);
-        canvasY[0] = M + TOP_H + labelH;
-        canvasY[1] = canvasY[0] + kind.height * scale + labelH + 2;
+        // Columns: the work area on the left, the panel (preview, picker, palette) on the right.
+        int leftW = width - 3 * M - PANEL_W;
+        boolean hints = AlpineConfig.CLIENT_HINTS.on();
+        int hintH = hints ? 11 : 0;
         panelX = width - M - PANEL_W;
         previewY = M;
+        int previewH = Math.max(30, Math.min(52, height - 210));
         svX = panelX;
-        svY = previewY + 56;
+        svY = previewY + previewH + 4;
         hueX = svX + SV + 4;
         swatchY = svY + SV + 4;
         paletteY = swatchY + 18;
         recentY = paletteY + 4 * SWATCH + 3;
+        this.previewH = previewH;
 
-        // Tools along the top.
+        // Tools along the top, as large as the row allows.
+        int b = Math.max(12, Math.min(18, (leftW - 12) / 14 - 2));
+        int step = b + 2;
         int x = M;
         for (EditorState.Tool tool : EditorState.Tool.values()) {
             EditorState.Tool t = tool;
-            addRenderableWidget(new ToggleButton(x, M, 18, 18, Component.literal(String.valueOf(tool.key)),
-                    () -> state.tool() == t, b -> state.setTool(t), Component.translatable("gui.alpineshred.design_editor.tool." + tool.id())));
-            x += 20;
+            addRenderableWidget(new ToggleButton(x, M, b, b, Component.literal(String.valueOf(tool.key)),
+                    () -> state.tool() == t, btn -> state.setTool(t), Component.translatable("gui.alpineshred.design_editor.tool." + tool.id())));
+            x += step;
         }
         x += 4;
-        addRenderableWidget(new ToggleButton(x, M, 18, 18, Component.literal("↔"), state::mirrorH, b -> state.toggleMirrorH(),
+        addRenderableWidget(new ToggleButton(x, M, b, b, Component.literal("\u2194"), state::mirrorH, btn -> state.toggleMirrorH(),
                 Component.translatable("gui.alpineshred.design_editor.mirror_h")));
-        x += 20;
-        addRenderableWidget(new ToggleButton(x, M, 18, 18, Component.literal("↕"), state::mirrorV, b -> state.toggleMirrorV(),
+        x += step;
+        addRenderableWidget(new ToggleButton(x, M, b, b, Component.literal("\u2195"), state::mirrorV, btn -> state.toggleMirrorV(),
                 Component.translatable("gui.alpineshred.design_editor.mirror_v")));
-        x += 24;
-        addRenderableWidget(small(x, M, 18, Component.literal("↶"), b -> state.undo(), "gui.alpineshred.design_editor.undo"));
-        x += 20;
-        addRenderableWidget(small(x, M, 18, Component.literal("↷"), b -> state.redo(), "gui.alpineshred.design_editor.redo"));
-        x += 20;
-        addRenderableWidget(new ToggleButton(x, M, 18, 18, Component.literal("#"), state::grid, b -> state.toggleGrid(),
+        x += step + 4;
+        addRenderableWidget(new TipButton(x, M, b, b, Component.literal("\u21b6"), btn -> state.undo(), Component.translatable("gui.alpineshred.design_editor.undo")));
+        x += step;
+        addRenderableWidget(new TipButton(x, M, b, b, Component.literal("\u21b7"), btn -> state.redo(), Component.translatable("gui.alpineshred.design_editor.redo")));
+        x += step;
+        addRenderableWidget(new ToggleButton(x, M, b, b, Component.literal("#"), state::grid, btn -> state.toggleGrid(),
                 Component.translatable("gui.alpineshred.design_editor.grid")));
-        x += 20;
-        addRenderableWidget(new ToggleButton(x, M, 18, 18, Component.literal("+"), state::zoom, b -> {
+        x += step;
+        addRenderableWidget(new ToggleButton(x, M, b, b, Component.literal("+"), state::zoom, btn -> {
             state.toggleZoom();
             rebuild();
         }, Component.translatable("gui.alpineshred.design_editor.zoom")));
+        int topBottom = M + b + 2;
 
-        // Hex field under the swatches.
+        // Hex field beside the swatches.
         hexField = new EditBox(font, panelX + 2 * SWATCH + 8, swatchY + 1, PANEL_W - 2 * SWATCH - 8, 14, Component.translatable("gui.alpineshred.design_editor.hex"));
         hexField.setMaxLength(7);
         hexField.setValue(Colors.hex(state.primary()));
-        hexField.setResponder(s -> {
-            int c = Colors.parseHex(s);
+        hexField.setResponder(str -> {
+            int c = Colors.parseHex(str);
             if (c >= 0 && hexField.isFocused()) {
                 state.setPrimary(c);
                 hue = Colors.rgbToHsv(c)[0];
@@ -176,8 +174,9 @@ public class DesignEditorScreen extends Screen {
         });
         addRenderableWidget(hexField);
 
-        // Bottom rows, laid out left to right and wrapping.
-        Flow flow = new Flow(M, height - M - (bottomRows) * (ROW_H + 2) + 2, width - 2 * M);
+        // Options and actions under the canvases, wrapping within the work area, then moved down
+        // to sit on the hint line (or the bottom margin).
+        Flow flow = new Flow(M, 0, leftW);
         optionButtons(flow);
         flow.newLine();
         nameField = new EditBox(font, 0, 0, 96, ROW_H, Component.translatable("gui.alpineshred.design_editor.name"));
@@ -187,17 +186,30 @@ public class DesignEditorScreen extends Screen {
         nameField.setResponder(state::setName);
         flow.place(nameField, 96);
         addRenderableWidget(nameField);
-        flow.button(this, 12, Component.literal("<"), b -> cycleTemplate(-1), "gui.alpineshred.design_editor.template_prev");
-        templateButton = flow.button(this, 64, Component.empty(), b -> applyTemplate(), "gui.alpineshred.design_editor.template_apply");
+        flow.button(this, 12, Component.literal("<"), btn -> cycleTemplate(-1), "gui.alpineshred.design_editor.template_prev");
+        templateButton = flow.button(this, 64, Component.empty(), btn -> applyTemplate(), "gui.alpineshred.design_editor.template_apply");
         templateButton.setMessage(templateLabel());
-        flow.button(this, 12, Component.literal(">"), b -> cycleTemplate(1), "gui.alpineshred.design_editor.template_next");
-        flow.button(this, 36, Component.translatable("gui.alpineshred.design_editor.copy_code"), b -> copyCode(), "gui.alpineshred.design_editor.copy_code.tip");
-        flow.button(this, 36, Component.translatable("gui.alpineshred.design_editor.paste_code"), b -> pasteCode(), "gui.alpineshred.design_editor.paste_code.tip");
-        flow.button(this, 40, Component.translatable("gui.alpineshred.design_editor.export"), b -> exportPng(), "gui.alpineshred.design_editor.export.tip");
-        resetButton = flow.button(this, 40, Component.translatable("gui.alpineshred.design_editor.reset"), b -> reset(), "gui.alpineshred.design_editor.reset.tip");
-        flow.button(this, 40, Component.translatable("gui.alpineshred.design_editor.back"), b -> onClose(), "gui.alpineshred.design_editor.back.tip");
-        flow.button(this, 44, Component.translatable("gui.alpineshred.design_editor.save").withStyle(ChatFormatting.GREEN), b -> save(),
+        flow.button(this, 12, Component.literal(">"), btn -> cycleTemplate(1), "gui.alpineshred.design_editor.template_next");
+        flow.button(this, 36, Component.translatable("gui.alpineshred.design_editor.copy_code"), btn -> copyCode(), "gui.alpineshred.design_editor.copy_code.tip");
+        flow.button(this, 36, Component.translatable("gui.alpineshred.design_editor.paste_code"), btn -> pasteCode(), "gui.alpineshred.design_editor.paste_code.tip");
+        flow.button(this, 40, Component.translatable("gui.alpineshred.design_editor.export"), btn -> exportPng(), "gui.alpineshred.design_editor.export.tip");
+        resetButton = flow.button(this, 40, Component.translatable("gui.alpineshred.design_editor.reset"), btn -> reset(), "gui.alpineshred.design_editor.reset.tip");
+        flow.button(this, 40, Component.translatable("gui.alpineshred.design_editor.back"), btn -> onClose(), "gui.alpineshred.design_editor.back.tip");
+        flow.button(this, 44, Component.translatable("gui.alpineshred.design_editor.save").withStyle(ChatFormatting.GREEN), btn -> save(),
                 "gui.alpineshred.design_editor.save.tip");
+        int flowTop = height - M - hintH - flow.height();
+        flow.shift(flowTop);
+
+        // Canvases: as large as fits between the top bar and the options, up to 8 (or 12, zoomed)
+        // screen pixels per design pixel.
+        int labelH = 10;
+        int availH = flowTop - topBottom - 2 * labelH - 8;
+        int preferred = state.zoom() ? 12 : 8;
+        scale = Math.max(1, Math.min(preferred, Math.min(leftW / kind.width, availH / (2 * kind.height))));
+        canvasW = kind.width * scale;
+        canvasX = M + Math.max(0, (leftW - canvasW) / 2);
+        canvasY[0] = topBottom + labelH + 2;
+        canvasY[1] = canvasY[0] + kind.height * scale + labelH + 4;
     }
 
     private void rebuild() {
@@ -581,9 +593,15 @@ public class DesignEditorScreen extends Screen {
         drawPicker(g);
         super.render(g, mouseX, mouseY, partialTick);
         // Status and hints.
-        int infoY = height - M - 10;
+        int infoY = height - M - 9;
         if (System.currentTimeMillis() < statusUntil) {
-            g.drawString(font, status, M, canvasY[1] + kind.height * scale + 4, statusColor);
+            // In the preview box, wrapped to its width.
+            var lines = font.split(status, PANEL_W - 6);
+            int ly = previewY + previewH - 2 - lines.size() * 9;
+            for (var line : lines) {
+                g.drawString(font, line, panelX + 3, ly, statusColor);
+                ly += 9;
+            }
         }
         if (AlpineConfig.CLIENT_HINTS.on()) {
             g.drawString(font, Component.translatable("gui.alpineshred.design_editor.hints").withStyle(ChatFormatting.GRAY), M, infoY, 0xA0A0A0);
@@ -685,11 +703,11 @@ public class DesignEditorScreen extends Screen {
             previewKey = key;
         }
         previewSpin += minecraft.getDeltaFrameTime() * 2.0f;
-        g.fill(panelX, previewY, panelX + PANEL_W, previewY + 52, 0xFF2A3340);
+        g.fill(panelX, previewY, panelX + PANEL_W, previewY + previewH, 0xFF2A3340);
         PoseStack pose = g.pose();
         pose.pushPose();
-        pose.translate(panelX + PANEL_W / 2f, previewY + 26, 150);
-        float s = kind == DesignKind.BOARD ? 5.0f : 4.2f;
+        pose.translate(panelX + PANEL_W / 2f, previewY + previewH / 2f, 150);
+        float s = (kind == DesignKind.BOARD ? 5.0f : 4.2f) * Math.min(1f, previewH / 52f);
         pose.scale(16 * s, -16 * s, 16 * s);
         pose.mulPose(Axis.XP.rotationDegrees(25));
         pose.mulPose(Axis.YP.rotationDegrees(previewSpin));
@@ -706,10 +724,6 @@ public class DesignEditorScreen extends Screen {
 
     interface Tipped {
         Component tip();
-    }
-
-    private static Button small(int x, int y, int w, Component label, Button.OnPress onPress, String tipKey) {
-        return new TipButton(x, y, w, 18, label, onPress, Component.translatable(tipKey));
     }
 
     /** A button with a hover tip. */
@@ -769,11 +783,17 @@ public class DesignEditorScreen extends Screen {
         private int x, y;
         private Button last;
 
+        private final int top;
+        private int lastY;
+        private final List<net.minecraft.client.gui.components.AbstractWidget> placed = new ArrayList<>();
+
         Flow(int left, int top, int width) {
             this.left = left;
             this.right = left + width;
             this.x = left;
             this.y = top;
+            this.top = top;
+            this.lastY = top;
         }
 
         void newLine() {
@@ -786,6 +806,19 @@ public class DesignEditorScreen extends Screen {
             w.setX(x);
             w.setY(y);
             x += width + 2;
+            placed.add(w);
+            lastY = y;
+        }
+
+        /** Height of what was placed. */
+        int height() {
+            return placed.isEmpty() ? 0 : lastY - top + ROW_H;
+        }
+
+        /** Moves everything placed so its first line starts at {@code newTop}. */
+        void shift(int newTop) {
+            int dy = newTop - top;
+            for (var w : placed) w.setY(w.getY() + dy);
         }
 
         Button button(DesignEditorScreen screen, int width, Component label, Button.OnPress onPress, String tipKey) {

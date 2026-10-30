@@ -28,3 +28,4 @@ Thumbs.db
 
 # Art sources are kept, exports are not
 art/**/*.bak
+__pycache__/

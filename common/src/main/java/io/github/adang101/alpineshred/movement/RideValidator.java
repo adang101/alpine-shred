@@ -159,8 +159,8 @@ public final class RideValidator {
             budget = Ballistics.nextVerticalVelocity(Math.max(budget, 0));
         }
         if (rise > allowed + RISE_TOLERANCE && reason == null) {
-            reason = String.format(java.util.Locale.ROOT, "rise %.3f > %.3f (ground %b, before %b, %d ticks)", rise, allowed,
-                    onGround, groundedLast, dt);
+            reason = String.format(java.util.Locale.ROOT, "rise %.3f > %.3f (ground %b, before %b, %d ticks; budget %.3f, last launch %d ticks ago at %.3f)",
+                    rise, allowed, onGround, groundedLast, dt, airBudget, tick - lastLaunchTick, launchVelocity);
         }
         // Standing ends the air budget, except in a launch's own window: a pipe's top launches while
         // the server still counts the rider as on the arc.

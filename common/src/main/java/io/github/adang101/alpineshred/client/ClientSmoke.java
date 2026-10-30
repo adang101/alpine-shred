@@ -132,6 +132,8 @@ public final class ClientSmoke {
      * with the wrong game time).
      */
     private static int quietUntil;
+    /** The design hash a watcher saw on the rider's board, or null. */
+    private static Integer sawDesign;
     private static int stageTicks;
     private static int frames;
     private static BlockPos origin;
@@ -779,6 +781,16 @@ public final class ClientSmoke {
             return false;
         }
         riderWasHere = true;
+        if (sawDesign == null) {
+            // Phase 6: the rider's board design arrived through the gear slot's sync.
+            ItemStack board = GearAccess.current().board(rider).orElse(ItemStack.EMPTY);
+            Integer hash = io.github.adang101.alpineshred.design.DesignNbt.hash(board);
+            if (hash != null) {
+                sawDesign = hash;
+                note(String.format(Locale.ROOT, "rider's board design %08x (expected %08x)", hash,
+                        io.github.adang101.alpineshred.smoke.SmokeCourse.smokeDesign().hash()));
+            }
+        }
         RideSnapshot snap = Riders.get(rider);
         RideState state = snap.state();
         seen.add(state);
@@ -803,6 +815,14 @@ public final class ClientSmoke {
 
     private static boolean endWatch(String who) {
         double travelled = Double.isNaN(riderMaxZ) ? 0 : riderMaxZ - riderStartZ;
+        check(sawDesign != null && sawDesign == io.github.adang101.alpineshred.smoke.SmokeCourse.smokeDesign().hash(),
+                who + ": the rider's board design did not arrive: " + sawDesign);
+        int textures = io.github.adang101.alpineshred.client.design.DesignTextureCache.size();
+        note(who + ": " + textures + " design textures held; " + io.github.adang101.alpineshred.client.design.DesignTextureCache.buildStats());
+        // The rider's board and the showcase's twenty designs (section 22's budget: 1 ms a build).
+        check(textures >= 12, who + ": only " + textures + " designs were drawn");
+        check(io.github.adang101.alpineshred.client.design.DesignTextureCache.meanBuildMillis() < 5,
+                who + ": design textures are slow to build: " + io.github.adang101.alpineshred.client.design.DesignTextureCache.buildStats());
         note(String.format(Locale.ROOT, "%s saw the rider in %s, %.0f blocks down the run, %s", who, seen, travelled, FeelStats.summary()));
         check(seen.containsAll(EnumSet.of(RideState.GLIDE, RideState.CARVE, RideState.AIR, RideState.BRAKE)), who + " saw only " + seen);
         check(travelled > 80, String.format(Locale.ROOT, "%s saw the rider go only %.0f blocks", who, travelled));

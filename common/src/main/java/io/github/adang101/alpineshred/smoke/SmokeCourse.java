@@ -58,13 +58,32 @@ public final class SmokeCourse {
 
     /** Snowboard, boots, goggles, mitts and helmet; out of creative flight. */
     public static void dressForBoard(ServerPlayer player) {
-        GearAccess.current().set(player, GearAccess.Slot.BOARD, new ItemStack(ModItems.SNOWBOARD.get()));
+        // Phase 6: the board carries a design, so every picture shows it and the watchers can
+        // check that the gear slot's sync brings the design to them.
+        ItemStack board = new ItemStack(ModItems.SNOWBOARD.get());
+        io.github.adang101.alpineshred.design.DesignNbt.write(board, smokeDesign().withAuthor(player.getGameProfile().getName(), player.getUUID()));
+        GearAccess.current().set(player, GearAccess.Slot.BOARD, board);
         GearAccess.current().set(player, GearAccess.Slot.GOGGLES, GogglesItem.withLens(new ItemStack(ModItems.GOGGLES.get()), Lens.AMBER));
         GearAccess.current().set(player, GearAccess.Slot.MITTS, new ItemStack(ModItems.MITTS.get()));
         player.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModItems.SNOWBOARD_BOOTS.get()));
         player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.SKI_HELMET.get()));
         player.getAbilities().flying = false;
         player.onUpdateAbilities();
+    }
+
+    /** The smoke runs' board design: a checker top with a red stripe, a gradient base, red edges. */
+    public static io.github.adang101.alpineshred.design.Design smokeDesign() {
+        var kind = io.github.adang101.alpineshred.design.DesignKind.BOARD;
+        var none = io.github.adang101.alpineshred.design.paint.PaintTools.Mirror.NONE;
+        var top = new io.github.adang101.alpineshred.design.paint.Canvas(kind);
+        var base = new io.github.adang101.alpineshred.design.paint.Canvas(kind);
+        io.github.adang101.alpineshred.design.paint.PaintTools.pattern(top, none,
+                io.github.adang101.alpineshred.design.paint.PaintTools.Pattern.CHECKER, 0xFF101010, 0xFFF4F4F4, 4, false);
+        io.github.adang101.alpineshred.design.paint.PaintTools.rect(top, none, 0, 6, 63, 9, true, 1, 0xFFD62828);
+        io.github.adang101.alpineshred.design.paint.PaintTools.gradient(base, none, new io.github.adang101.alpineshred.design.paint.PaintTools.Gradient(
+                io.github.adang101.alpineshred.design.paint.PaintTools.GradientType.LINEAR, 0, 8, 63, 8, 0xFFF77F00, 0xFF003049, -1, false, 0, false));
+        return new io.github.adang101.alpineshred.design.Design(kind, top.pixels(), base.pixels(), 0xD62828,
+                io.github.adang101.alpineshred.design.Design.Pair.SAME, "Smoke", "", null);
     }
 
     /** The start: on the platform, facing down the run. */

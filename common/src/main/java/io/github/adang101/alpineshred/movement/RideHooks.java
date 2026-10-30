@@ -72,6 +72,15 @@ public final class RideHooks {
         return !player.level().isClientSide && Riders.state(player).isControllerDriven();
     }
 
+    /**
+     * Vanilla's per-tick movement allowance ("moved too quickly", squared blocks) for this player:
+     * 64 times as much for a rider the controller moves, whose speed the ride validator checks on
+     * the rider clock instead, so a server stall does not teleport fast riders back.
+     */
+    public static float vanillaMoveAllowance(Player player, float allowance) {
+        return Riders.state(player).isControllerDriven() ? allowance * 64 : allowance;
+    }
+
     /** Edge back-off is off wherever a controller moves the player (see the class comment). */
     public static boolean suppressEdgeBackOff(Player player) {
         return controllerMovement(player);

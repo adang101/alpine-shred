@@ -8,7 +8,8 @@
     "LivingEntityMixin",
     "PlayerMixin",
     "PowderSnowBlockMixin",
-    "ServerGamePacketListenerAccessor"
+    "ServerGamePacketListenerAccessor",
+    "ServerGamePacketListenerMixin"
   ],
   "client": [],
   "injectors": {

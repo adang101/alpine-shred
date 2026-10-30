@@ -87,10 +87,44 @@ public final class ServerSmoke {
                 note("rider strapped: " + result);
             }
             // Hovering beside the slope and beside the kicker, both well inside tracking range.
-            case "watcher1" -> hover(player, base.getX() + 9.5, base.getY() + SmokeCourse.TOP, base.getZ() + 22.5, 90f);
-            case "watcher2" -> hover(player, base.getX() - 8.5, base.getY() + 5, base.getZ() + SmokeCourse.KICKER + 4.5, -90f);
+            case "watcher1" -> {
+                hover(player, base.getX() + 9.5, base.getY() + SmokeCourse.TOP, base.getZ() + 22.5, 90f);
+                // Section 22's budget: 20 different designs in view, a few blocks in front of each
+                // watcher toward the top of the run, where they look while the rider waits (items
+                // are drawn only within about 16 blocks).
+                showcase(player.serverLevel(), base.getX() + 7.5, base.getY() + SmokeCourse.TOP + 1, base.getZ() + 17.5);
+            }
+            case "watcher2" -> {
+                hover(player, base.getX() - 8.5, base.getY() + 5, base.getZ() + SmokeCourse.KICKER + 4.5, -90f);
+                showcase(player.serverLevel(), base.getX() - 7.5, base.getY() + 6, base.getZ() + SmokeCourse.KICKER - 1.5);
+            }
             default -> note("unexpected player " + name);
         }
+    }
+
+    /** Twenty boards and skis, each with its own design, floating in a 5 by 4 grid centred on (x, y, z). */
+    private static void showcase(ServerLevel level, double x, double y, double z) {
+        var templates = io.github.adang101.alpineshred.design.paint.DesignTemplates.all();
+        if (templates.isEmpty()) {
+            note("no design templates for the showcase");
+            return;
+        }
+        for (int i = 0; i < 20; i++) {
+            boolean skis = i % 3 == 2;
+            var kind = skis ? io.github.adang101.alpineshred.design.DesignKind.SKI : io.github.adang101.alpineshred.design.DesignKind.BOARD;
+            var t = templates.get(i % templates.size());
+            var d = t.design(kind, 0x101010 * (i % 15 + 1));
+            if (i >= templates.size()) d = new io.github.adang101.alpineshred.design.Design(kind, d.base(), d.top(), d.edge(), d.pair(), "Swap " + i, "", null);
+            var stack = new net.minecraft.world.item.ItemStack(skis ? io.github.adang101.alpineshred.registry.ModItems.SKIS.get()
+                    : io.github.adang101.alpineshred.registry.ModItems.SNOWBOARD.get());
+            io.github.adang101.alpineshred.design.DesignNbt.write(stack, d);
+            var item = new net.minecraft.world.entity.item.ItemEntity(level, x + (i % 5 - 2) * 0.8, y + (i / 5) * 0.6, z, stack, 0, 0, 0);
+            item.setNoGravity(true);
+            item.setNeverPickUp();
+            item.setUnlimitedLifetime();
+            level.addFreshEntity(item);
+        }
+        note("showcase of 20 designs at " + String.format(Locale.ROOT, "%.1f %.1f %.1f", x, y, z));
     }
 
     private static void hover(ServerPlayer player, double x, double y, double z, float yaw) {
@@ -100,9 +134,18 @@ public final class ServerSmoke {
         player.teleportTo(player.serverLevel(), x, y, z, yaw, 20f);
     }
 
+    private static long lastTickNanos;
+
     private static void tick(MinecraftServer server) {
         if (done || base == null) return;
         ticks++;
+        // Server stalls, for the multiplayer check: while the server stands still the watchers see
+        // the rider stand still, whatever the rider's own client does.
+        long now = System.nanoTime();
+        if (lastTickNanos != 0 && now - lastTickNanos > 150_000_000L) {
+            note(String.format(Locale.ROOT, "stall gt%d %d ms", server.overworld().getGameTime(), (now - lastTickNanos) / 1_000_000));
+        }
+        lastTickNanos = now;
         ServerPlayer rider = server.getPlayerList().getPlayerByName("rider");
         if (rider != null) {
             RideState state = Riders.state(rider);

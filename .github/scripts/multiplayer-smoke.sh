@@ -106,6 +106,6 @@ for f in "$B/smoke-server/alpineshred-server-smoke.txt" "$B/smoke-rider/alpinesh
   echo "=== $f"
   if [ -f "$f" ]; then grep -vE "^self gt|^watch gt" "$f" | tail -25; grep -q "^RESULT PASS" "$f" || status=1; else echo "missing"; status=1; fi
 done
-python3 .github/scripts/multiplayer-check.py "$B/smoke-rider/alpineshred-smoke.txt" \
+python3 .github/scripts/multiplayer-check.py "$B/smoke-server/alpineshred-server-smoke.txt" "$B/smoke-rider/alpineshred-smoke.txt" \
   "$B/smoke-watcher1/alpineshred-smoke.txt" "$B/smoke-watcher2/alpineshred-smoke.txt" || status=1
 exit $status

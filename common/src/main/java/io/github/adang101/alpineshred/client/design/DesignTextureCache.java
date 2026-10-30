@@ -42,6 +42,8 @@ public final class DesignTextureCache {
     private static long window = Long.MIN_VALUE;
     private static int builtInWindow;
     private static int created;
+    private static long buildNanos, maxBuildNanos;
+    private static int builds;
 
     private DesignTextureCache() {
     }
@@ -71,7 +73,12 @@ public final class DesignTextureCache {
             CACHE.put(key, fallback); // unreadable: remember to draw the default look
             return fallback;
         }
+        long start = System.nanoTime();
         ResourceLocation built = upload(kind, DesignAtlas.build(kind, design, defaults(item, kind), 0x808080));
+        long took = System.nanoTime() - start;
+        buildNanos += took;
+        maxBuildNanos = Math.max(maxBuildNanos, took);
+        builds++;
         CACHE.put(key, built);
         trim();
         return built;
@@ -155,6 +162,16 @@ public final class DesignTextureCache {
         for (ResourceLocation id : CACHE.values()) release(id);
         CACHE.clear();
         DEFAULTS.clear();
+    }
+
+    /** Section 22's budget read-out: textures built, their mean and longest build time in milliseconds. */
+    public static String buildStats() {
+        return String.format(java.util.Locale.ROOT, "%d built, mean %.3f ms, longest %.3f ms", builds,
+                builds == 0 ? 0 : buildNanos / 1.0e6 / builds, maxBuildNanos / 1.0e6);
+    }
+
+    public static double meanBuildMillis() {
+        return builds == 0 ? 0 : buildNanos / 1.0e6 / builds;
     }
 
     /** Textures held now (for the debug overlay and tests). */

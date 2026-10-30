@@ -31,6 +31,7 @@ Java 17 toolchain, which Gradle downloads if none is installed.
 | Regenerate placeholder art | `python3 art/placeholder/generate_textures.py && python3 art/placeholder/generate_models.py` |
 | Regenerate placeholder clips, sounds, particles, overlays | `python3 art/placeholder/generate_animations.py`, `generate_sounds.py` (needs ffmpeg), `generate_effects.py` |
 | Regenerate park blockstates, models and textures | `python3 art/placeholder/generate_park.py` |
+| Regenerate default gear looks and the Paint Bench | `python3 art/placeholder/generate_gear_atlases.py`, `generate_bench.py` |
 
 CI (`.github/workflows/build.yml`) runs all of the above except the play-test client, fails if
 committed generated data is stale, uploads the jars, and force-pushes logs, test reports, generated
@@ -86,7 +87,15 @@ common/   all game logic (Architectury); client code only under client/
               PipeBlock, PipeCopingBlock, ParkDecorBlock, ParkStates, ParkShapes, ParkCollision,
               GrindPaths (the GrindPathProvider registry), BoxMaterials, LevelParkView, ParkChecks
     item/     PipeItem (a whole pipe), ParkWrenchItem
-  trick/      GrabType, AirRotation (pure)
+  trick/      pure, unit-tested: AirRotation, TrickAngles, LandingQuality, TrickScorer, Combo,
+              TrickValidator, AirReport, GrindReport, TrickResult, TrickCodec
+              game side: TrickServer (sessions on the rider clock, reports, combos), TrickEvents,
+              advancement triggers
+  design/     pure, unit-tested: DesignKind, Outline, Design, DesignCodec, ShareCode,
+              DesignAtlas, GearMesh
+    paint/    pure, unit-tested: Canvas, PaintTools, EditorState, UndoStack, Colors,
+              DesignTemplate(s)
+              game side: DesignNbt, PaintBenchBlock, PaintBenchMenu, DesignServer, DesignEvents
   config/     ConfigSpec + AlpineConfig: both JSON files, every key from the doc
   data/       reload listeners for tuning, surface profiles and gear stats
   network/    ModNetwork (packets), SyncCodec (pure payloads), RideAction, PacketRateLimiter
@@ -98,6 +107,9 @@ common/   all game logic (Architectury); client code only under client/
               FeelStats
     particle/ snow spray, poof and trail particles, rail sparks
     park/     ParkOverlay: the rail ghost preview and the wrench's path overlay
+    trick/    TrickHud (the popup), TrickNames
+    design/   DesignedGearRenderer, DesignTextureCache, PaintBenchScreen, DesignEditorScreen,
+              DesignClient
   gametest/   game tests shared by both loaders; Course builds riding courses
   mixin/      PlayerMixin (synced state, travel, edge back-off, jump, footsteps), EntityMixin
               (step height, descending), PowderSnowBlockMixin, LivingEntityMixin (no sprint),
@@ -105,12 +117,54 @@ common/   all game logic (Architectury); client code only under client/
               GameRendererMixin (camera roll, FOV, screen effects under the GUI),
               ItemInHandRendererMixin (no first-person arms while sliding), ItemInHandLayerMixin
               (poles drawn by the gear layer), CameraMixin (CameraOrbit), LevelRendererMixin
-              (park overlays after the world)
+              (park overlays after the world), BlockEntityWithoutLevelRendererMixin (the built-in
+              item renderer hook)
 forge/    entry point, CuriosGearAccess, Curios slot data, platform hooks, game-test holder
 fabric/   entry points, TrinketsGearAccess, Trinkets slot data, datagen, game-test holder
 art/      placeholder generators: textures, models, rider clips, sounds, particles, overlays,
-          park blockstates and models
+          park blockstates and models, default gear atlases, the Paint Bench
 ```
+
+## What phase 6 delivers
+
+- **Paint Bench** (`paint_bench`, section 22): a crafting table plus red, blue and yellow dye. Its
+  menu has a slot for a board or skis and one for the dye a save costs; placing gear opens the
+  editor. Like a crafting table it keeps nothing: closing it hands both back.
+- **The editor** (`DesignEditorScreen`, logic in `design.paint.EditorState`): front and back
+  canvases (64 by 16 for boards, 64 by 8 for skis; pixels outside the gear's outline are locked),
+  pencil, eraser, fill, line, rectangle, gradient (linear or radial, middle stop, ordered dither,
+  lock transparent), pattern fill, eyedropper and mirror, with section 22's keys (B E F L R G P I
+  M, X, [ ], #, Tab, Ctrl+Z / Ctrl+Y, 32 undo steps, one per stroke); a turning 3D preview; a
+  hue-saturation-value picker with hex field, the 32-swatch palette and the 8 most recent colors;
+  edge color, ski pair (same or mirror), copy to the other face, a name, twelve templates, share
+  codes (`AS1:`), PNG export to `config/alpineshred/exports/`, Reset and Save.
+- **Saving** (`c2s/design_save`, `s2c/design_result`, `DesignServer`): the server checks the seven
+  rules (bench open with the item in it, sizes and strict inflation, alpha, outline, name, size
+  cap, permission, cooldown), writes the author itself, and takes the dye in the same step as the
+  write. `DesignEvents.BEFORE_SAVE` can refuse a save; `DesignEvents.SAVED` follows each one.
+- **Data** (`Design`, `DesignCodec`, `DesignNbt`): the `Design` tag of section 22 (deflated RGBA
+  faces, edge, pair, name, author, CRC32 hash); other keys untouched; an unknown version or bad
+  data draws the default look and is left as it is.
+- **Rendering** (`DesignedGearRenderer`, `GearMesh`, `DesignTextureCache`): boards and skis are
+  drawn procedurally (tail kick, flat middle, nose kick; walls that follow the outline) from one
+  atlas per design, in one cutout render type, everywhere: riding, carried on the back, held,
+  dropped, in inventories (a `builtin/entity` model through the built-in item renderer hook) and in
+  the bench preview. The cache keeps `client.designCacheSize` textures, builds at most two a frame,
+  and clears on a resource reload; `client.showCustomDesigns` hides other players' designs.
+  Default looks are `textures/gear/<item>.png` in the same atlas layout, so packs can re-skin them.
+- **Templates** (`data/<namespace>/design_templates/*.json`): twelve built in (solid, stripes,
+  pinstripe, checker, diagonal split, sunset, glow, camo, polka dots, racing stripe, two tone, retro
+  fade); packs add more, and the server sends its set to clients (`s2c/design_templates`).
+- **Moderation**: `design.enabled`, `design.minPermissionLevel`, `/alpineshred design info` and
+  `/alpineshred design clear <players>`, the author in every tooltip, and the advancement
+  `fresh_coat`.
+- **Tests.** Unit tests for the codec (round trips, wrong sizes, partial alpha, oversize data,
+  decompression bombs, the outline, names, share codes, the hash), the tools (fill, gradients and
+  dither, mirror, patterns, undo, the editor's strokes and faces), the templates and the color math,
+  the mesh, and the assets; game tests saving through the bench with and without dye, rejected
+  saves charging nothing, smithing and a save and load keeping the design; the smoke client paints
+  and saves through the real editor and checks the server's copy; in the multiplayer run the rider's
+  board carries a design, and both watchers must receive it through the gear slot and draw it.
 
 ## What phase 5 delivers
 
@@ -443,9 +497,29 @@ covered by a test or noted in code.
 44. **Landing slope on a quarter pipe** is the angle between the velocity and the arc where the rider
     comes down (straight down onto the top of the wall is a perfect match).
 
-Not in phase 5, by design: lift statistics and the `lift_ridden` trigger (phase 8), `park_rat`
-(phase 7), `fresh_coat` (phase 6), line fill and waxing vanilla blocks (v1.1). Real animation
-clips, sounds and textures replace the placeholders file by file under the same names.
+45. **A transparent pixel shows the gear's default look at that pixel**, not one flat core color, so
+    a design can paint over the stock graphics. Default looks are atlases in the design layout
+    (`textures/gear/<item>.png`) with steel edges; the design's edge color replaces the strip.
+46. **Each face is stored as seen from its own side with the nose to the right**, so the editor
+    shows both as they will read; "copy to other face" is a straight copy (which on the gear is the
+    mirror image across the length, as a flipped board is).
+47. **Reset** goes through the save packet with a reset flag: free, and under the same cooldown.
+48. **The built-in item renderer hook is one common mixin** into the vanilla built-in renderer,
+    which both loaders reach for `builtin/entity` models (Forge's default item extension and
+    Fabric's unregistered path), so `registerBuiltinItemRenderer` needs no per-loader code.
+49. **Templates are lists of painting operations** in face fractions (fill, rect, line, pattern,
+    gradient with optional posterize steps, seeded camo) with an `order` for the list, so one file
+    fits boards and skis. The server sends its set to clients, since the editor runs on the client.
+50. **The rate limit counts saves**, not attempts; attempts are bounded by the packet rate limit.
+51. **Outlines**: board corners are quarter ellipses 10 by 7 pixels at both ends; a ski has a 12 by
+    4 tip and 3 by 2 tail corners. The edge walls follow the outline pixel by pixel.
+52. **The pair of skis is still drawn as one item between the feet**; skis that follow each leg
+    remain for later.
+
+Not in phase 5 or 6, by design: lift statistics and the `lift_ridden` trigger (phase 8),
+`park_rat` (phase 7), line fill and waxing vanilla blocks (v1.1), PNG import of designs (v1.1).
+Real animation clips, sounds and textures replace the placeholders file by file under the same
+names.
 
 ## License
 
