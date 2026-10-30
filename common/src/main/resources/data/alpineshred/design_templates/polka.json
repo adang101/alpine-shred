@@ -1,0 +1,20 @@
+{
+  "name": "Polka dots",
+  "order": 80,
+  "edge": "#ffffff",
+  "top": [
+    {
+      "op": "pattern",
+      "pattern": "dots",
+      "primary": "#ffffff",
+      "secondary": "#e53e3e",
+      "size": 2
+    }
+  ],
+  "base": [
+    {
+      "op": "fill",
+      "color": "#e53e3e"
+    }
+  ]
+}

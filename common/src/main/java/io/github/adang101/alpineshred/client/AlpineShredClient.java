@@ -65,6 +65,7 @@ public final class AlpineShredClient {
         RiderTracker.register();
         RideEffects.register();
         io.github.adang101.alpineshred.client.trick.TrickHud.register();
+        io.github.adang101.alpineshred.client.design.DesignClient.register();
         ClientLifecycleEvent.CLIENT_SETUP.register(minecraft -> io.github.adang101.alpineshred.registry.ModStats.bindFormatters());
         ClientSmoke.register();
         ClientTickEvent.CLIENT_POST.register(AlpineShredClient::clientTick);

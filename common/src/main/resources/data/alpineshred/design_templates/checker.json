@@ -1,0 +1,15 @@
+{
+  "name": "Checker",
+  "order": 30,
+  "edge": "#000000",
+  "top": [
+    {
+      "op": "pattern",
+      "pattern": "checker",
+      "primary": "#111111",
+      "secondary": "#f0f0f0",
+      "size": 4
+    }
+  ],
+  "base": "top"
+}

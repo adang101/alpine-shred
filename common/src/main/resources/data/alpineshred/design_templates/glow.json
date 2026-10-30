@@ -1,0 +1,28 @@
+{
+  "name": "Glow",
+  "order": 60,
+  "edge": "#1a365d",
+  "top": [
+    {
+      "op": "gradient",
+      "type": "radial",
+      "from": [
+        0.5,
+        0.5
+      ],
+      "to": [
+        0.12,
+        0.5
+      ],
+      "primary": "#fefcbf",
+      "secondary": "#2c5282",
+      "dither": true
+    }
+  ],
+  "base": [
+    {
+      "op": "fill",
+      "color": "#2c5282"
+    }
+  ]
+}

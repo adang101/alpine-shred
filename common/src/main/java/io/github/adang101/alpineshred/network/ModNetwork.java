@@ -3,6 +3,11 @@ package io.github.adang101.alpineshred.network;
 import dev.architectury.networking.NetworkManager;
 import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.config.AlpineConfig;
+import io.github.adang101.alpineshred.design.Design;
+import io.github.adang101.alpineshred.design.DesignKind;
+import io.github.adang101.alpineshred.design.DesignServer;
+import io.github.adang101.alpineshred.design.DesignStatus;
+import io.github.adang101.alpineshred.design.paint.DesignTemplates;
 import io.github.adang101.alpineshred.gear.GearStatsRegistry;
 import io.github.adang101.alpineshred.movement.RideServer;
 import io.github.adang101.alpineshred.movement.RideState;
@@ -45,6 +50,13 @@ public final class ModNetwork {
     public static final ResourceLocation DEBUG_RIDE = AlpineShred.id("s2c/debug_ride");
     /** Validator read-out for the debug overlay, every {@value RideServer#DEBUG_INTERVAL_TICKS} ticks while it is on. */
     public static final ResourceLocation DEBUG_STATS = AlpineShred.id("s2c/debug_stats");
+    /** Section 22: a Paint Bench save (or reset), and what became of it. */
+    public static final ResourceLocation DESIGN_SAVE = AlpineShred.id("c2s/design_save");
+    public static final ResourceLocation DESIGN_RESULT = AlpineShred.id("s2c/design_result");
+    /** The server's design templates, for the editor (at login and after a reload). */
+    public static final ResourceLocation DESIGN_TEMPLATES = AlpineShred.id("s2c/design_templates");
+    /** Largest deflated face a save packet may carry; the server's own cap is checked after. */
+    public static final int MAX_FACE_BYTES = 16384;
 
     public static final int MAX_SYNC_BYTES = 1 << 20;
     public static final int MAX_REASON_CHARS = 96;
@@ -55,6 +67,8 @@ public final class ModNetwork {
     private static final PacketRateLimiter ACTION_LIMIT = new PacketRateLimiter(20, 20);
     /** Reports are once per landing or grind end: a few per second at the very most. */
     private static final PacketRateLimiter REPORT_LIMIT = new PacketRateLimiter(5, 8);
+    /** Saves: the cooldown is the real limit; this only bounds the decoding work. */
+    private static final PacketRateLimiter DESIGN_LIMIT = new PacketRateLimiter(2, 3);
 
     private ModNetwork() {
     }
@@ -123,10 +137,23 @@ public final class ModNetwork {
             });
         });
 
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, DESIGN_SAVE, (buf, context) -> {
+            DesignServer.SaveRequest request = readSave(buf);
+            context.queue(() -> {
+                if (!(context.getPlayer() instanceof ServerPlayer player)) return;
+                if (!DESIGN_LIMIT.tryAcquire(player)) {
+                    sendDesignResult(player, DesignStatus.RATE_LIMITED);
+                    return;
+                }
+                sendDesignResult(player, request == null ? DesignStatus.INVALID : DesignServer.handle(player, request));
+            });
+        });
+
         // Login and datapack reload: config first, then tuning (section 15, "Sync lifecycle").
         PlatformHooks.onDatapackSync(player -> {
             sendConfigSync(player);
             sendTuningSync(player);
+            sendDesignTemplates(player);
         });
     }
 
@@ -241,6 +268,59 @@ public final class ModNetwork {
             if (config) sendConfigSync(player);
             if (tuning) sendTuningSync(player);
         }
+    }
+
+    // ---- designs (section 22) ------------------------------------------------------------------------
+
+    /** Client side: save the editor's design (deflated faces) to the gear in the open bench, or reset it. */
+    public static void sendDesignSave(int containerId, boolean reset, DesignKind kind, byte[] top, byte[] base, int edge,
+                                      Design.Pair pair, String name) {
+        FriendlyByteBuf buf = buffer();
+        buf.writeVarInt(containerId);
+        buf.writeBoolean(reset);
+        buf.writeByte(kind.ordinal());
+        buf.writeByteArray(top);
+        buf.writeByteArray(base);
+        buf.writeInt(edge);
+        buf.writeByte(pair.ordinal());
+        buf.writeUtf(name, Design.NAME_MAX * 2);
+        NetworkManager.sendToServer(DESIGN_SAVE, buf);
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private static DesignServer.SaveRequest readSave(FriendlyByteBuf buf) {
+        try {
+            int container = buf.readVarInt();
+            boolean reset = buf.readBoolean();
+            int kind = buf.readUnsignedByte();
+            byte[] top = buf.readByteArray(MAX_FACE_BYTES);
+            byte[] base = buf.readByteArray(MAX_FACE_BYTES);
+            int edge = buf.readInt();
+            int pair = buf.readUnsignedByte();
+            String name = buf.readUtf(Design.NAME_MAX * 2);
+            if (kind >= DesignKind.values().length) return null;
+            return new DesignServer.SaveRequest(container, reset, DesignKind.values()[kind], top, base, edge,
+                    pair == 1 ? Design.Pair.MIRROR : Design.Pair.SAME, name);
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
+
+    public static void sendDesignResult(ServerPlayer player, DesignStatus status) {
+        FriendlyByteBuf buf = buffer();
+        buf.writeByte(status.ordinal());
+        NetworkManager.sendToPlayer(player, DESIGN_RESULT, buf);
+    }
+
+    /** The templates as one JSON object, {@code id -> template}, deflated like the tuning sync. */
+    public static void sendDesignTemplates(ServerPlayer player) {
+        com.google.gson.JsonObject all = new com.google.gson.JsonObject();
+        for (java.util.Map.Entry<String, String> e : DesignTemplates.sources().entrySet()) {
+            all.add(e.getKey(), com.google.gson.JsonParser.parseString(e.getValue()));
+        }
+        FriendlyByteBuf buf = buffer();
+        buf.writeByteArray(SyncCodec.deflate(all));
+        NetworkManager.sendToPlayer(player, DESIGN_TEMPLATES, buf);
     }
 
     public static void sendDebugToggle(ServerPlayer player, boolean on) {

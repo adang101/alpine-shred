@@ -57,6 +57,14 @@ public class SnowGearItem extends Item {
         tooltip.add(Component.translatable("tooltip.alpineshred.gear.edge", edge)
                 .withStyle(edge >= 60 ? ChatFormatting.GRAY : ChatFormatting.RED));
 
+        // Section 22: the design's name and author (cosmetic; stats never change).
+        io.github.adang101.alpineshred.design.Design design = io.github.adang101.alpineshred.design.DesignNbt.read(stack);
+        if (design != null) {
+            Component name = design.name().isEmpty() ? Component.translatable("tooltip.alpineshred.design.untitled") : Component.literal(design.name());
+            tooltip.add(design.author().isEmpty()
+                    ? Component.translatable("tooltip.alpineshred.design", name).withStyle(ChatFormatting.LIGHT_PURPLE)
+                    : Component.translatable("tooltip.alpineshred.design.by", name, design.author()).withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
         tooltip.add(Component.translatable("tooltip.alpineshred.gear.equip_hint",
                 Component.keybind("key.alpineshred.strap")).withStyle(ChatFormatting.DARK_GRAY));
     }

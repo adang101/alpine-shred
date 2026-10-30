@@ -45,8 +45,9 @@ import net.minecraft.world.item.ItemStack;
  * down, the face looks toward -z. Item models are authored y-up in a 16-pixel cube, so each
  * piece is flipped 180 degrees about x after positioning.
  *
- * <p>Phase 1 draws the pair-of-skis model once, centred between the feet; per-leg skis that follow
- * the leg animation come with the procedural {@code DesignedGearRenderer} (section 22).
+ * <p>Boards and skis are drawn by the procedural {@code DesignedGearRenderer} (section 22) through
+ * their built-in item renderer, so the item, the rider and the bench preview look alike; the pair of
+ * skis is drawn once, centred between the feet.
  *
  * <p>Ski poles are a pair: one pole in each hand, shaft down and a little back, drawn here from
  * boxes because the item's flat inventory sprite reads as a sword in the hand. The vanilla held
@@ -194,7 +195,13 @@ public class SnowGearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
             }
             pose.mulPose(Axis.XP.rotationDegrees(-90));
         }
-        draw(pose, buffers, light, player, stack, 3);
+        // Section 22: client.showCustomDesigns hides other players' designs (never your own).
+        io.github.adang101.alpineshred.client.design.DesignedGearRenderer.drawingOthers(player != Minecraft.getInstance().player);
+        try {
+            draw(pose, buffers, light, player, stack, 3);
+        } finally {
+            io.github.adang101.alpineshred.client.design.DesignedGearRenderer.drawingOthers(false);
+        }
         pose.popPose();
     }
 

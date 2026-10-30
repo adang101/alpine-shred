@@ -1,0 +1,15 @@
+{
+  "name": "Stripes",
+  "order": 10,
+  "edge": "#1a202c",
+  "top": [
+    {
+      "op": "pattern",
+      "pattern": "stripes_vertical",
+      "primary": "#f6e05e",
+      "secondary": "#2d3748",
+      "size": 4
+    }
+  ],
+  "base": "top"
+}

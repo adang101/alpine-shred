@@ -1,0 +1,29 @@
+{
+  "name": "Racing stripe",
+  "order": 90,
+  "edge": "#c53030",
+  "top": [
+    {
+      "op": "fill",
+      "color": "#f7fafc"
+    },
+    {
+      "op": "rect",
+      "from": [
+        0,
+        0.36
+      ],
+      "to": [
+        1,
+        0.64
+      ],
+      "color": "#c53030"
+    }
+  ],
+  "base": [
+    {
+      "op": "fill",
+      "color": "#c53030"
+    }
+  ]
+}

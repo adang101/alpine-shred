@@ -1,0 +1,31 @@
+{
+  "name": "Camo",
+  "order": 70,
+  "edge": "#2f3b1c",
+  "top": [
+    {
+      "op": "camo",
+      "colors": [
+        "#4a5d23",
+        "#2f3b1c",
+        "#7a6a4f",
+        "#1f1f1f"
+      ],
+      "seed": 42,
+      "blobs": 16
+    }
+  ],
+  "base": [
+    {
+      "op": "camo",
+      "colors": [
+        "#4a5d23",
+        "#2f3b1c",
+        "#7a6a4f",
+        "#1f1f1f"
+      ],
+      "seed": 7,
+      "blobs": 16
+    }
+  ]
+}

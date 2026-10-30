@@ -49,6 +49,12 @@ public final class AlpineCommands {
                         .executes(ctx -> stats(ctx, ctx.getSource().getPlayerOrException()))
                         .then(Commands.argument("player", EntityArgument.player())
                                 .executes(ctx -> stats(ctx, EntityArgument.getPlayer(ctx, "player")))))
+                .then(Commands.literal("design")
+                        .then(Commands.literal("info").executes(AlpineCommands::designInfo))
+                        .then(Commands.literal("clear")
+                                .requires(source -> source.hasPermission(2))
+                                .then(Commands.argument("players", EntityArgument.players())
+                                        .executes(ctx -> designClear(ctx, EntityArgument.getPlayers(ctx, "players"))))))
                 .then(Commands.literal("config")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("reload").executes(AlpineCommands::reloadConfig)))
@@ -60,6 +66,42 @@ public final class AlpineCommands {
                         .then(Commands.literal("ride")
                                 .then(Commands.literal("on").executes(ctx -> debugRide(ctx, true)))
                                 .then(Commands.literal("off").executes(ctx -> debugRide(ctx, false))))));
+    }
+
+    /** {@code /alpineshred design info}: the held item's design name, author and size (section 22). */
+    private static int designInfo(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        net.minecraft.world.item.ItemStack stack = player.getMainHandItem();
+        net.minecraft.nbt.CompoundTag tag = io.github.adang101.alpineshred.design.DesignNbt.tag(stack);
+        io.github.adang101.alpineshred.design.Design design = io.github.adang101.alpineshred.design.DesignNbt.read(stack);
+        if (tag == null) {
+            ctx.getSource().sendFailure(Component.translatable("commands.alpineshred.design.none"));
+            return 0;
+        }
+        int bytes = tag.getByteArray("top").length + tag.getByteArray("base").length;
+        if (design == null) {
+            ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.design.unreadable", tag.getInt("v"), bytes), false);
+            return 1;
+        }
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.design.info", design.name(),
+                design.author().isEmpty() ? "?" : design.author(), design.kind().id, bytes,
+                String.format(java.util.Locale.ROOT, "%08x", design.hash())), false);
+        return 1;
+    }
+
+    /** {@code /alpineshred design clear <players>}: strips the design from each player's main-hand item. */
+    private static int designClear(CommandContext<CommandSourceStack> ctx, java.util.Collection<ServerPlayer> players) {
+        int cleared = 0;
+        for (ServerPlayer player : players) {
+            net.minecraft.world.item.ItemStack stack = player.getMainHandItem();
+            if (io.github.adang101.alpineshred.design.DesignNbt.has(stack)) {
+                io.github.adang101.alpineshred.design.DesignNbt.clear(stack);
+                cleared++;
+            }
+        }
+        int n = cleared;
+        ctx.getSource().sendSuccess(() -> Component.translatable("commands.alpineshred.design.cleared", n), true);
+        return n;
     }
 
     /** {@code /alpineshred stats [player]}: best combo, total score, and the totals (section 18). */

@@ -25,6 +25,7 @@ public final class AlpineLootProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         dropSelf(ModBlocks.GROOMED_SNOW.get());
+        dropSelf(ModBlocks.PAINT_BENCH.get());
         for (RegistrySupplier<? extends Block> supplier : ModBlocks.parkBlocks()) {
             Block block = supplier.get();
             if (block == ModBlocks.QUARTER_PIPE.get()) continue;

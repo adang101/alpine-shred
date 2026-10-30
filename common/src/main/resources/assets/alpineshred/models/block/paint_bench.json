@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "alpineshred:block/paint_bench_side",
+    "north": "alpineshred:block/paint_bench_front",
+    "south": "alpineshred:block/paint_bench_side",
+    "east": "alpineshred:block/paint_bench_side",
+    "west": "alpineshred:block/paint_bench_front",
+    "up": "alpineshred:block/paint_bench_top",
+    "down": "minecraft:block/oak_planks"
+  }
+}

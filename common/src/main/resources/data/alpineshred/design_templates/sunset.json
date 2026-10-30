@@ -1,0 +1,23 @@
+{
+  "name": "Sunset",
+  "order": 50,
+  "edge": "#3c1053",
+  "top": [
+    {
+      "op": "gradient",
+      "type": "linear",
+      "from": [
+        0,
+        0.5
+      ],
+      "to": [
+        1,
+        0.5
+      ],
+      "primary": "#ff7e5f",
+      "middle": "#feb47b",
+      "secondary": "#6a3093"
+    }
+  ],
+  "base": "top"
+}

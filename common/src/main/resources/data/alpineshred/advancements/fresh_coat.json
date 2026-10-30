@@ -1,0 +1,30 @@
+{
+  "parent": "alpineshred:root",
+  "display": {
+    "icon": {
+      "item": "alpineshred:paint_bench"
+    },
+    "title": {
+      "translate": "advancements.alpineshred.fresh_coat.title"
+    },
+    "description": {
+      "translate": "advancements.alpineshred.fresh_coat.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "designed": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "nbt": "{Design:{v:1}}"
+          }
+        ]
+      }
+    }
+  }
+}

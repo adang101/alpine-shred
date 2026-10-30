@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * Blocks: {@code groomed_snow} (phase 1) and the park blocks (phase 4, design doc sections 10, 11
- * and the appendix). Lift and bench blocks arrive with their phases.
+ * and the appendix), and the Paint Bench (section 22). Lift blocks arrive with their phase.
  */
 public final class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(AlpineShred.MOD_ID, Registries.BLOCK);
@@ -39,6 +39,10 @@ public final class ModBlocks {
     /** Flattened, packed snow: the fastest, grippiest snow surface (section 7). */
     public static final RegistrySupplier<Block> GROOMED_SNOW = BLOCKS.register("groomed_snow",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.SNOW_BLOCK)));
+
+    /** Section 22: a crafting table for paint. */
+    public static final RegistrySupplier<io.github.adang101.alpineshred.design.PaintBenchBlock> PAINT_BENCH = BLOCKS.register("paint_bench",
+            () -> new io.github.adang101.alpineshred.design.PaintBenchBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)));
 
     // ---- rails (section 10) ---------------------------------------------------------------------------
     public static final RegistrySupplier<RailBlock> PIPE_RAIL = park("pipe_rail",

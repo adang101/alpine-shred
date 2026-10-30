@@ -163,6 +163,14 @@ public final class AlpineRecipeProvider extends FabricRecipeProvider {
                 .save(out);
 
         // ---- blocks ----
+        // Section 22: a crafting table plus red, blue and yellow dye.
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ModItems.PAINT_BENCH.get())
+                .requires(Items.CRAFTING_TABLE)
+                .requires(Items.RED_DYE)
+                .requires(Items.BLUE_DYE)
+                .requires(Items.YELLOW_DYE)
+                .unlockedBy(getHasName(Items.CRAFTING_TABLE), has(Items.CRAFTING_TABLE))
+                .save(out);
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.GROOMED_SNOW.get(), 4)
                 .pattern("SS")
                 .pattern("SS")

@@ -26,9 +26,10 @@ import java.util.Map;
 
 /**
  * Server data reload listeners (design doc section 18, "Data files"): {@code movement/tuning},
- * {@code surface_profiles}, {@code gear} and {@code box_materials.json}; {@code design_templates}
- * joins in phase 6. Clients receive them all through {@code s2c/tuning_sync}
- * ({@code ModNetwork}) at login and after every reload: the client-side slide controller reads them.
+ * {@code surface_profiles}, {@code gear}, {@code box_materials.json} and {@code design_templates}.
+ * Clients receive them through {@code s2c/tuning_sync} and {@code s2c/design_templates}
+ * ({@code ModNetwork}) at login and after every reload: the slide controller and the paint editor
+ * run on the client.
  */
 public final class AlpineDataLoaders {
     private static final Gson GSON = new GsonBuilder().create();
@@ -37,6 +38,7 @@ public final class AlpineDataLoaders {
     public static final SurfaceLoader SURFACES = new SurfaceLoader();
     public static final GearLoader GEAR = new GearLoader();
     public static final BoxMaterialLoader BOX_MATERIALS = new BoxMaterialLoader();
+    public static final TemplateLoader TEMPLATES = new TemplateLoader();
 
     private AlpineDataLoaders() {
     }
@@ -46,6 +48,7 @@ public final class AlpineDataLoaders {
         ReloadListenerRegistry.register(PackType.SERVER_DATA, SURFACES, AlpineShred.id("surface_profiles"));
         ReloadListenerRegistry.register(PackType.SERVER_DATA, GEAR, AlpineShred.id("gear"));
         ReloadListenerRegistry.register(PackType.SERVER_DATA, BOX_MATERIALS, AlpineShred.id("box_materials"));
+        ReloadListenerRegistry.register(PackType.SERVER_DATA, TEMPLATES, AlpineShred.id("design_templates"));
     }
 
     /** {@code /alpineshred tuning reload}: re-reads only this mod's data, without a full /reload. */
@@ -54,6 +57,7 @@ public final class AlpineDataLoaders {
         SURFACES.reloadNow(resources);
         GEAR.reloadNow(resources);
         BOX_MATERIALS.reloadNow(resources);
+        TEMPLATES.reloadNow(resources);
     }
 
     private abstract static class Loader extends SimpleJsonResourceReloadListener {
@@ -159,5 +163,20 @@ public final class AlpineDataLoaders {
     /** For game tests: ids the gear loader has seen. */
     public static List<String> loadedGearIds() {
         return List.copyOf(GearStatsRegistry.all().keySet());
+    }
+
+    /** {@code data/<namespace>/design_templates/*.json} (section 22): starter designs for the paint editor. */
+    public static final class TemplateLoader extends Loader {
+        TemplateLoader() {
+            super("design_templates");
+        }
+
+        @Override
+        protected void apply(Map<ResourceLocation, JsonElement> files, ResourceManager resources, ProfilerFiller profiler) {
+            Map<String, String> json = new LinkedHashMap<>();
+            for (Map.Entry<ResourceLocation, JsonElement> e : files.entrySet()) json.put(e.getKey().toString(), GSON.toJson(e.getValue()));
+            io.github.adang101.alpineshred.design.paint.DesignTemplates.set(json, AlpineShred.LOGGER::warn);
+            AlpineShred.LOGGER.debug("Loaded {} design templates", io.github.adang101.alpineshred.design.paint.DesignTemplates.all().size());
+        }
     }
 }

@@ -1,0 +1,23 @@
+{
+  "name": "Retro fade",
+  "order": 110,
+  "edge": "#322659",
+  "top": [
+    {
+      "op": "gradient",
+      "type": "linear",
+      "from": [
+        0,
+        0
+      ],
+      "to": [
+        1,
+        0
+      ],
+      "primary": "#00b5d8",
+      "secondary": "#805ad5",
+      "dither": true
+    }
+  ],
+  "base": "top"
+}

@@ -1,0 +1,20 @@
+{
+  "name": "Pinstripe",
+  "order": 20,
+  "edge": "#e2e8f0",
+  "top": [
+    {
+      "op": "pattern",
+      "pattern": "stripes_horizontal",
+      "primary": "#1a202c",
+      "secondary": "#e2e8f0",
+      "size": 2
+    }
+  ],
+  "base": [
+    {
+      "op": "fill",
+      "color": "#1a202c"
+    }
+  ]
+}

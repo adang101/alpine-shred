@@ -62,6 +62,25 @@ public final class ClientNetwork {
             });
         });
 
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.DESIGN_RESULT, (buf, context) -> {
+            io.github.adang101.alpineshred.design.DesignStatus status = io.github.adang101.alpineshred.design.DesignStatus.byId(buf.readUnsignedByte());
+            context.queue(() -> io.github.adang101.alpineshred.client.design.DesignClient.onResult(status));
+        });
+
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.DESIGN_TEMPLATES, (buf, context) -> {
+            byte[] payload = buf.readByteArray(ModNetwork.MAX_SYNC_BYTES);
+            context.queue(() -> {
+                try {
+                    com.google.gson.JsonObject all = SyncCodec.inflate(payload);
+                    java.util.Map<String, String> json = new java.util.LinkedHashMap<>();
+                    for (var e : all.entrySet()) json.put(e.getKey(), e.getValue().toString());
+                    io.github.adang101.alpineshred.design.paint.DesignTemplates.set(json, AlpineShred.LOGGER::warn);
+                } catch (IOException e) {
+                    AlpineShred.LOGGER.warn("Ignoring bad design_templates from server: {}", e.getMessage());
+                }
+            });
+        });
+
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.RIDE_CORRECT, (buf, context) -> {
             buf.readDouble();
             buf.readDouble();

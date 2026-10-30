@@ -75,6 +75,9 @@ public final class ModItems {
     // ---- block items -------------------------------------------------------------------------
     public static final RegistrySupplier<BlockItem> GROOMED_SNOW = ITEMS.register("groomed_snow",
             () -> new BlockItem(ModBlocks.GROOMED_SNOW.get(), new Item.Properties()));
+    /** Section 22: where boards and skis are painted. */
+    public static final RegistrySupplier<BlockItem> PAINT_BENCH = ITEMS.register("paint_bench",
+            () -> new BlockItem(ModBlocks.PAINT_BENCH.get(), new Item.Properties()));
 
     /** The park blocks' items (section 10, 11), in block registration order; the pipe's places a whole pipe. */
     private static final List<RegistrySupplier<? extends Item>> PARK = registerParkItems();

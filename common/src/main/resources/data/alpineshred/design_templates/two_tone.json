@@ -1,0 +1,41 @@
+{
+  "name": "Two tone",
+  "order": 100,
+  "edge": "#1a202c",
+  "top": [
+    {
+      "op": "fill",
+      "color": "#1a202c"
+    },
+    {
+      "op": "rect",
+      "from": [
+        0.5,
+        0
+      ],
+      "to": [
+        1,
+        1
+      ],
+      "color": "#ecc94b"
+    }
+  ],
+  "base": [
+    {
+      "op": "fill",
+      "color": "#ecc94b"
+    },
+    {
+      "op": "rect",
+      "from": [
+        0.5,
+        0
+      ],
+      "to": [
+        1,
+        1
+      ],
+      "color": "#1a202c"
+    }
+  ]
+}

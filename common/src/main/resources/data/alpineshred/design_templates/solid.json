@@ -1,0 +1,17 @@
+{
+  "name": "Solid",
+  "order": 0,
+  "edge": "#141414",
+  "top": [
+    {
+      "op": "fill",
+      "color": "#2b6cb0"
+    }
+  ],
+  "base": [
+    {
+      "op": "fill",
+      "color": "#1a202c"
+    }
+  ]
+}

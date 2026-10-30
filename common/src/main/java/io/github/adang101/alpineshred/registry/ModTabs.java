@@ -37,6 +37,7 @@ public final class ModTabs {
                 output.accept(ModItems.LIFT_LINKER.get());
                 output.accept(ModItems.LIFT_PASS.get());
                 output.accept(ModItems.GROOMED_SNOW.get());
+                output.accept(ModItems.PAINT_BENCH.get());
                 for (var item : ModItems.parkItems()) {
                     if (item.getId().getPath().equals("plastic_box")) {
                         for (DyeColor color : DyeColor.values()) output.accept(plasticBox(item.get(), color));
