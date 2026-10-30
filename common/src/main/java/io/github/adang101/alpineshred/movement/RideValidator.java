@@ -178,6 +178,12 @@ public final class RideValidator {
             reason = String.format(java.util.Locale.ROOT, "rise %.3f > %.3f (ground %b, before %b, %d ticks; budget %.3f, last launch %d ticks ago at %.3f)",
                     rise, allowed, onGround, groundedLast, dt, airBudget, tick - lastLaunchTick, launchVelocity);
         }
+        // Leaving the ground going up continues as an arc from the rise seen on the way off: a ramp's
+        // lip left after its reported launch's window has closed (the board stayed on the ramp a few
+        // ticks longer, as in the multiplayer smoke test), or a lip with no report at all.
+        if (groundedLast && !onGround && rise > 0) {
+            budget = Math.max(budget, Ballistics.nextVerticalVelocity(Math.min(rise / dt, limits.maxLaunchVy())));
+        }
         // Standing ends the air budget, except in a launch's own window: a pipe's top launches while
         // the server still counts the rider as on the arc.
         boolean launching = tick - lastLaunchTick <= limits.launchGraceTicks();
