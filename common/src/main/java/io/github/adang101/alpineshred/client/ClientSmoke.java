@@ -806,8 +806,22 @@ public final class ClientSmoke {
             tourTicks = 0;
             return false;
         }
-        if (++tourTicks >= TOUR_WAIT) view(mc, "worldgen_" + result.stops().get(tourStop).name(), CameraType.FIRST_PERSON);
+        if (++tourTicks == 20) mc.options.setCameraType(CameraType.FIRST_PERSON);
+        if (tourTicks >= TOUR_WAIT) grabNow(mc, "worldgen_" + result.stops().get(tourStop).name());
         return false;
+    }
+
+    /**
+     * A picture of the last frame drawn, now: with the GUI hidden no HUD frames are counted, so the
+     * tour does not wait for one ({@link #takePending}); it has already waited for the chunks.
+     */
+    private static void grabNow(Minecraft mc, String name) {
+        if (shots.contains(name)) return;
+        Screenshot.grab(mc.gameDirectory, "smoke_" + name + ".png", mc.getMainRenderTarget(), message -> {
+        });
+        shots.add(name);
+        LocalPlayer player = mc.player;
+        note("screenshot " + name + (player == null ? "" : " from " + player.blockPosition()));
     }
 
     private static int parkRatTicks = -1;
@@ -829,7 +843,7 @@ public final class ClientSmoke {
             return false;
         }
         if (++parkRatTicks == 80) {
-            view(mc, "worldgen_park_inside", CameraType.FIRST_PERSON);
+            grabNow(mc, "worldgen_park_inside");
             onServer(mc, p -> {
                 var adv = p.server.getAdvancements().getAdvancement(AlpineShred.id("park_rat"));
                 boolean done = adv != null && p.getAdvancements().getOrStartProgress(adv).isDone();
