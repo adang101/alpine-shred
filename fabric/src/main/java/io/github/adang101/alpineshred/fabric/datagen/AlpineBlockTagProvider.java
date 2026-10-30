@@ -45,6 +45,8 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
         getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE_VANILLA).forceAddTag(BlockTags.FENCES).forceAddTag(BlockTags.WALLS);
 
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_SHOVEL).add(ModBlocks.GROOMED_SNOW.get());
+        // Section 12: snow never piles up on a groomed run, from world generation or weather.
+        getOrCreateTagBuilder(BlockTags.SNOW_LAYER_CANNOT_SURVIVE_ON).add(ModBlocks.GROOMED_SNOW.get());
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.PAINT_BENCH.get());
         var pickaxe = getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
         rails().forEach(pickaxe::add);

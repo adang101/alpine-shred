@@ -100,6 +100,22 @@ jobs:
           cat forge/build/smoke-mountain/alpineshred-smoke.txt
           grep -q "^RESULT PASS" forge/build/smoke-mountain/alpineshred-smoke.txt
 
+      # Phase 7's visual review: a default world with structures on; the server finds, builds and
+      # counts the nearest of each Alpine Shred structure and the client pictures it from above.
+      - name: Worldgen tour (Forge client, default world)
+        if: success() || failure()
+        timeout-minutes: 25
+        env:
+          LIBGL_ALWAYS_SOFTWARE: "1"
+        run: |
+          mkdir -p forge/build/smoke-worldgen/config
+          cp forge/build/smoke/options.txt forge/build/smoke-worldgen/options.txt
+          printf 'earlyWindowControl = false\n' > forge/build/smoke-worldgen/config/fml.toml
+          xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew :forge:runWorldgenClient $GRADLE_ARGS 2>&1 \
+            | tee "$RUNNER_TEMP/ci-logs/7b-worldgen.log"
+          cat forge/build/smoke-worldgen/alpineshred-smoke.txt
+          grep -q "^RESULT PASS" forge/build/smoke-worldgen/alpineshred-smoke.txt
+
       # Phase 4: the client rides a park line (rail, boxes, quarter pipe) and pictures the tools.
       - name: Park ride (Forge client)
         if: success() || failure()
@@ -162,6 +178,10 @@ jobs:
           copy forge/build/smoke-mountain/crash-reports client-mountain
           copy forge/build/smoke-mountain/screenshots client-mountain
           copy forge/build/smoke-mountain/alpineshred-smoke.txt client-mountain
+          copy forge/build/smoke-worldgen/logs client-worldgen
+          copy forge/build/smoke-worldgen/crash-reports client-worldgen
+          copy forge/build/smoke-worldgen/screenshots client-worldgen
+          copy forge/build/smoke-worldgen/alpineshred-smoke.txt client-worldgen
           copy forge/build/smoke-park/logs client-park
           copy forge/build/smoke-park/crash-reports client-park
           copy forge/build/smoke-park/screenshots client-park

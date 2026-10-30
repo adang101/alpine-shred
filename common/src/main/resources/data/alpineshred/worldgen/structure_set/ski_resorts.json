@@ -1,0 +1,18 @@
+{
+  "structures": [
+    {
+      "structure": "alpineshred:ski_resort",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 56,
+    "separation": 24,
+    "salt": 1850303,
+    "exclusion_zone": {
+      "other_set": "alpineshred:groomed_runs",
+      "chunk_count": 6
+    }
+  }
+}

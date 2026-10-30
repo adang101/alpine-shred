@@ -96,6 +96,8 @@ public final class ClientSmoke {
     private static final boolean ENABLED = Boolean.getBoolean("alpineshred.smoke");
     private static final boolean MOUNTAIN = "mountain".equals(System.getProperty("alpineshred.smoke.scenario"));
     private static final boolean PARK = "park".equals(System.getProperty("alpineshred.smoke.scenario"));
+    /** Phase 7's visual review: a default world with structures, a picture of each kind. */
+    private static final boolean WORLDGEN = "worldgen".equals(System.getProperty("alpineshred.smoke.scenario"));
     /** Multiplayer (phase 2's exit gate): this client joins a dedicated server as the rider or a watcher. */
     private static final boolean MULTI = "multi".equals(System.getProperty("alpineshred.smoke.scenario"));
     private static final boolean WATCHER = "watcher".equals(System.getProperty("alpineshred.smoke.role"));
@@ -115,7 +117,7 @@ public final class ClientSmoke {
     private static final float OFFSIDE = 90f;
 
     private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS, PAINT,
-        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, DONE}
+        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, TOUR, DONE}
 
     private record Shot(String name, int frame) {
     }
@@ -192,7 +194,7 @@ public final class ClientSmoke {
         stageTicks++;
         if (stage == Stage.DONE) return;
         takePending(mc);
-        if (ticks > TIMEOUT_TICKS) {
+        if (ticks > (WORLDGEN ? 3 * TIMEOUT_TICKS : TIMEOUT_TICKS)) {
             failures.add("timed out in stage " + stage);
             finish(mc);
             return;
@@ -224,6 +226,12 @@ public final class ClientSmoke {
                     if (MOUNTAIN) {
                         onServer(mc, ClientSmoke::findMountain);
                         next(Stage.FINDING);
+                    } else if (WORLDGEN) {
+                        mc.options.renderDistance().set(10);
+                        mc.options.hideGui = true;
+                        RideDebugOverlay.setEnabled(false);
+                        onServer(mc, ClientSmoke::survey);
+                        next(Stage.TOUR);
                     } else if (PARK) {
                         onServer(mc, ClientSmoke::buildPark);
                         next(Stage.BUILDING);
@@ -309,6 +317,9 @@ public final class ClientSmoke {
             case PARK_TOOLS -> {
                 if (parkTools(mc)) finish(mc);
             }
+            case TOUR -> {
+                if (tour(mc)) finish(mc);
+            }
             default -> {
             }
         }
@@ -341,10 +352,10 @@ public final class ClientSmoke {
     private static void createWorld(Minecraft mc) {
         LevelSettings settings = new LevelSettings("Alpine Shred smoke test", GameType.CREATIVE, false, Difficulty.PEACEFUL,
                 true, new GameRules(), WorldDataConfiguration.DEFAULT);
-        WorldOptions options = new WorldOptions(20261029L, false, false);
+        WorldOptions options = new WorldOptions(20261029L, WORLDGEN, false);
         mc.createWorldOpenFlows().createFreshLevel("alpineshred-smoke-" + System.currentTimeMillis(), settings, options,
                 access -> access.registryOrThrow(Registries.WORLD_PRESET)
-                        .getHolderOrThrow(MOUNTAIN ? WorldPresets.NORMAL : WorldPresets.FLAT).value().createWorldDimensions());
+                        .getHolderOrThrow(MOUNTAIN || WORLDGEN ? WorldPresets.NORMAL : WorldPresets.FLAT).value().createWorldDimensions());
     }
 
     /** Server thread: build the run, dress the player for snowboarding, put them at the top and strap in. */
@@ -747,6 +758,56 @@ public final class ClientSmoke {
         check(distance > 60, String.format(Locale.ROOT, "rode only %.0f blocks", distance));
         check(states.contains(RideState.GLIDE) || states.contains(RideState.CARVE), "never glided: " + states);
         return true;
+    }
+
+    // ---- world generation (phase 7's visual review) -------------------------------------------------
+
+    private static volatile io.github.adang101.alpineshred.smoke.WorldgenSurvey.Result survey;
+    private static int tourStop = -1, tourTicks;
+    /** Ticks at each viewpoint before the picture: the chunks round it arrive and are drawn. */
+    private static final int TOUR_WAIT = 400;
+
+    /** Server thread: find, build and count one of each structure (WorldgenSurvey), flying above the world. */
+    private static void survey(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
+        level.setDayTime(6000);
+        level.setWeatherParameters(6000, 0, false, false);
+        player.getAbilities().flying = true;
+        player.onUpdateAbilities();
+        long t0 = System.currentTimeMillis();
+        var result = io.github.adang101.alpineshred.smoke.WorldgenSurvey.run(level);
+        result.notes().forEach(ClientSmoke::note);
+        failures.addAll(result.failures());
+        note("survey: " + result.stops().size() + " structures in " + (System.currentTimeMillis() - t0) + " ms");
+        survey = result;
+    }
+
+    /** One tick of the tour: to each structure's viewpoint, wait for the chunks, take its picture. */
+    private static boolean tour(Minecraft mc) {
+        var result = survey;
+        if (result == null) {
+            if (stageTicks > 20 * 600) {
+                failures.add("the structure survey never finished");
+                return true;
+            }
+            return false;
+        }
+        if (tourStop < 0 || shots.contains("worldgen_" + result.stops().get(tourStop).name())) {
+            tourStop++;
+            if (tourStop >= result.stops().size()) return true;
+            var stop = result.stops().get(tourStop);
+            onServer(mc, p -> {
+                p.teleportTo(p.serverLevel(), stop.x(), stop.y(), stop.z(), stop.yaw(), stop.pitch());
+                p.getAbilities().flying = true;
+                p.onUpdateAbilities();
+            });
+            note(String.format(Locale.ROOT, "to the %s: %.0f %.0f %.0f, yaw %.0f pitch %.0f", stop.name(), stop.x(), stop.y(), stop.z(),
+                    stop.yaw(), stop.pitch()));
+            tourTicks = 0;
+            return false;
+        }
+        if (++tourTicks >= TOUR_WAIT) view(mc, "worldgen_" + result.stops().get(tourStop).name(), CameraType.FIRST_PERSON);
+        return false;
     }
 
     // ---- multiplayer (phase 2's exit gate) -------------------------------------------------------------
