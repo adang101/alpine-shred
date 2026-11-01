@@ -1,0 +1,36 @@
+{
+  "parent": "alpineshred:root",
+  "display": {
+    "icon": {
+      "item": "alpineshred:start_gate"
+    },
+    "title": {
+      "translate": "advancements.alpineshred.park_rat.title"
+    },
+    "description": {
+      "translate": "advancements.alpineshred.park_rat.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "in_park": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "structure": "alpineshred:terrain_park"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

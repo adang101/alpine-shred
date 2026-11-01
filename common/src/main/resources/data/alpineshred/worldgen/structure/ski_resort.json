@@ -1,0 +1,7 @@
+{
+  "type": "alpineshred:ski_resort",
+  "biomes": "#alpineshred:has_ski_resort",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {}
+}

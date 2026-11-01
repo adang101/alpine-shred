@@ -42,6 +42,14 @@ loom {
             property 'alpineshred.smoke.scenario', 'mountain'
             runDir 'build/smoke-mountain'
         }
+        // A default world with structures on: a picture of each Alpine Shred structure (phase 7).
+        worldgenClient {
+            client()
+            name 'Worldgen Smoke Test'
+            property 'alpineshred.smoke', 'true'
+            property 'alpineshred.smoke.scenario', 'worldgen'
+            runDir 'build/smoke-worldgen'
+        }
         // Multiplayer (phase 2's exit gate, three clients see correct state): a dedicated server
         // that builds the run and stages the players, and three clients joining it by quick play.
         smokeServer {

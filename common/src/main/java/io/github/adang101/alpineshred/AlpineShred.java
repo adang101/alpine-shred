@@ -46,6 +46,7 @@ public final class AlpineShred {
         ModSounds.register();
         ModParticles.register();
         ModStats.register();
+        io.github.adang101.alpineshred.worldgen.ModStructures.register();
         io.github.adang101.alpineshred.trick.advancement.ModTriggers.register();
         dev.architectury.event.events.common.LifecycleEvent.SETUP.register(ModStats::bindFormatters);
 

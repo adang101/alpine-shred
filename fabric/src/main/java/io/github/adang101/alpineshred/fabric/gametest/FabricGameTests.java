@@ -283,4 +283,14 @@ public final class FabricGameTests implements FabricGameTest {
     public static void aDesignSurvivesSaveAndLoad(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.DesignGameTests.aDesignSurvivesSaveAndLoad(helper);
     }
+
+    @GameTest(template = LARGE)
+    public static void templatesAreWhole(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.WorldgenGameTests.templatesAreWhole(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public static void structuresGenerateWithinBounds(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.WorldgenGameTests.structuresGenerateWithinBounds(helper);
+    }
 }

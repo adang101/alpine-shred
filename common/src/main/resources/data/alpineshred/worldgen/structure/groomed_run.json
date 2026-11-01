@@ -1,0 +1,7 @@
+{
+  "type": "alpineshred:groomed_run",
+  "biomes": "#alpineshred:has_groomed_run",
+  "step": "surface_structures",
+  "terrain_adaptation": "none",
+  "spawn_overrides": {}
+}
