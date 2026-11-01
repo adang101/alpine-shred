@@ -88,6 +88,27 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         // ---- messages ----
         t.add("message.alpineshred.strap.in", "Strapped in");
         t.add("message.alpineshred.lift.station_clearance", "Lift station: solid blocks within 2 blocks may be in the way of the cable and chairs");
+        t.add("message.alpineshred.linker.started", "Lift line started at %s. Right-click the tower heads in order, then the return station");
+        t.add("message.alpineshred.linker.added", "Head %s linked at %s");
+        t.add("message.alpineshred.linker.need_drive", "Right-click a drive station first");
+        t.add("message.alpineshred.linker.other_dimension", "The line you started is in another dimension; start again at a drive station");
+        t.add("message.alpineshred.linker.duplicate", "Already in this line: %s");
+        t.add("message.alpineshred.linker.already_linked", "Already linked to a working lift: %s. Sneak and right-click its tower head to unlink it");
+        t.add("message.alpineshred.linker.node_missing", "Not the right lift block any more: %s");
+        t.add("message.alpineshred.linker.too_far", "Too far from the last node: %s blocks (at most %s)");
+        t.add("message.alpineshred.linker.too_steep", "Too steep: %s degrees (at most %s)");
+        t.add("message.alpineshred.linker.same_place", "Two nodes stand in the same place near %s");
+        t.add("message.alpineshred.linker.blocked_loaded", "The loaded cable is blocked by a solid block at %s");
+        t.add("message.alpineshred.linker.blocked_return", "The return cable is blocked by a solid block at %s");
+        t.add("message.alpineshred.linker.too_many_heads", "Too many tower heads: %s (at most %s)");
+        t.add("message.alpineshred.linker.too_long", "The lift is too long: %s blocks of cable (at most %s)");
+        t.add("message.alpineshred.linker.level_full", "This world already has the most lift lines allowed (%s)");
+        t.add("message.alpineshred.linker.same_station", "The drive and return stations must be different blocks");
+        t.add("message.alpineshred.linker.create_failed", "The lift could not be created");
+        t.add("message.alpineshred.linker.created", "Lift linked: %s tower heads, %s blocks of cable, %s chairs");
+        t.add("message.alpineshred.linker.unlinked", "Lift unlinked");
+        t.add("message.alpineshred.linker.not_linked", "This tower head is not part of a lift");
+        t.add("tooltip.alpineshred.lift_linker.chain", "Line in progress: drive at %s, %s heads");
         t.add("message.alpineshred.strap.out", "Unstrapped");
         t.add("message.alpineshred.strap.disabled", "Riding is disabled on this server");
         t.add("message.alpineshred.strap.spectator", "Spectators can't strap in");

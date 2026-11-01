@@ -93,6 +93,32 @@ public final class LiftPath {
         return new LiftPath(List.copyOf(nodes), out.xs(), out.ys(), out.zs(), out.dist(), loadedEnd, returnStart, returnEnd);
     }
 
+    /**
+     * Where the cable passes node {@code i} of {@code nodes}: {@link #CABLE_HEIGHT} above it and
+     * {@link #WHEEL_RADIUS} (a station) or {@link #HEAD_OFFSET} (a head) to its left (the loaded
+     * cable) or right (the return cable). The direction through the node is previous to next, the
+     * ends using themselves. Same arithmetic as {@link #of}; the link validator uses it so that its
+     * cable cannot drift from the real one.
+     */
+    static V3 anchor(List<V3> nodes, int i, boolean station, boolean loaded) {
+        int count = nodes.size();
+        V3 prev = nodes.get(Math.max(0, i - 1)), next = nodes.get(Math.min(count - 1, i + 1));
+        double dx = next.x() - prev.x(), dz = next.z() - prev.z(), len = Math.sqrt(dx * dx + dz * dz);
+        if (len < 1.0e-9) throw new IllegalArgumentException("nodes " + (i - 1) + " and " + (i + 1) + " stand at the same place");
+        V3 dir = new V3(dx / len, 0, dz / len);
+        V3 left = new V3(-dir.z(), 0, dir.x());
+        double off = station ? WHEEL_RADIUS : HEAD_OFFSET;
+        V3 top = nodes.get(i).add(0, CABLE_HEIGHT, 0);
+        return top.add(left.scale(loaded ? off : -off));
+    }
+
+    /** The point at {@code t} (0 to 1) along the sagging span from {@code a} to {@code b}, as {@link #of} samples it. */
+    static V3 spanPoint(V3 a, V3 b, double t) {
+        double h = Math.sqrt((b.x() - a.x()) * (b.x() - a.x()) + (b.z() - a.z()) * (b.z() - a.z()));
+        double sag = sag(h);
+        return new V3(a.x() + (b.x() - a.x()) * t, a.y() + (b.y() - a.y()) * t - sag * 4 * t * (1 - t), a.z() + (b.z() - a.z()) * t);
+    }
+
     /** The sag at the middle of a span {@code length} blocks long. */
     public static double sag(double length) {
         return Math.min(MAX_SAG, length * length / SAG_DIVISOR);

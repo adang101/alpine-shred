@@ -2,6 +2,13 @@ package io.github.adang101.alpineshred.gametest;
 
 import io.github.adang101.alpineshred.lift.LiftDriveStationBlockEntity;
 import io.github.adang101.alpineshred.lift.LiftLine;
+import io.github.adang101.alpineshred.lift.LiftLinkerItem;
+import io.github.adang101.alpineshred.registry.ModItems;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.phys.BlockHitResult;
 import io.github.adang101.alpineshred.lift.LiftManager;
 import io.github.adang101.alpineshred.lift.LiftMotion;
 import io.github.adang101.alpineshred.lift.LiftSavedData;
@@ -249,6 +256,133 @@ public final class LiftGameTests {
         } finally {
             LiftManager.remove(level, id);
             b.clear(level);
+        }
+        helper.succeed();
+    }
+
+    // ---- work package 3: the linker ----
+
+    /** Uses the player's linker on the block at {@code pos}, as a right-click on its top does. */
+    private static void useLinker(Player player, BlockPos pos) {
+        BlockHitResult hit = new BlockHitResult(Vec3.atCenterOf(pos).add(0, 0.5, 0), Direction.UP, pos, false);
+        player.getItemInHand(InteractionHand.MAIN_HAND).useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, hit));
+    }
+
+    /** A drive, three heads and a return station, 10 blocks apart along +z, with a gentle sideways wander. */
+    private static List<BlockPos> linkerNodes(GameTestHelper helper) {
+        // The test worlds have real terrain (hills, snow), so stand well above the highest ground under the line.
+        BlockPos flat = helper.absolutePos(new BlockPos(3, 2, 1));
+        int top = Integer.MIN_VALUE;
+        for (int dx = -8; dx <= 8; dx += 2) {
+            for (int dz = -2; dz <= 42; dz += 2) {
+                top = Math.max(top, helper.getLevel().getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, flat.getX() + dx, flat.getZ() + dz));
+            }
+        }
+        BlockPos base = new BlockPos(flat.getX(), Math.max(flat.getY(), top) + 8, flat.getZ());
+        return List.of(base, base.offset(1, 0, 10), base.offset(-1, 0, 20), base.offset(1, 0, 30), base.offset(0, 0, 40));
+    }
+
+    private static void placeNodes(ServerLevel level, List<BlockPos> nodes) {
+        for (int i = 0; i < nodes.size(); i++) {
+            var block = i == 0 ? ModBlocks.LIFT_DRIVE_STATION : i == nodes.size() - 1 ? ModBlocks.LIFT_RETURN_STATION : ModBlocks.LIFT_TOWER_HEAD;
+            level.setBlock(nodes.get(i), block.get().defaultBlockState(), 3);
+        }
+    }
+
+    /** What the validator says about a chain, with the blocks it blocked on, for failure messages. */
+    private static String diagnose(ServerLevel level, List<BlockPos> chain) {
+        List<io.github.adang101.alpineshred.park.V3> v = new ArrayList<>();
+        for (BlockPos p : chain) v.add(LiftLine.node(p));
+        var r = io.github.adang101.alpineshred.lift.LinkValidator.checkAdd(v, (x, y, z) -> {
+            BlockPos p = new BlockPos(x, y, z);
+            return !level.hasChunkAt(p) || !level.getBlockState(p).getCollisionShape(level, p).isEmpty();
+        }, new io.github.adang101.alpineshred.lift.LinkValidator.Limits(64, 48, 1200, 64));
+        return r + (r.ok() ? "" : " block " + level.getBlockState(new BlockPos(r.bx(), r.by(), r.bz())) + " loaded=" + level.hasChunkAt(new BlockPos(r.bx(), r.by(), r.bz())));
+    }
+
+    private static LiftNodeBlockEntity nodeBe(ServerLevel level, BlockPos pos) {
+        return (LiftNodeBlockEntity) level.getBlockEntity(pos);
+    }
+
+    public static void linkerBuildsALine(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        List<BlockPos> nodes = linkerNodes(helper);
+        placeNodes(level, nodes);
+        Player player = helper.makeMockPlayer();
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.LIFT_LINKER.get()));
+        UUID id = null;
+        try {
+            int before = LiftManager.lines(level).size();
+            for (int i = 0; i < nodes.size(); i++) {
+                useLinker(player, nodes.get(i));
+                ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+                if (i < nodes.size() - 1) {
+                    check(LiftLinkerItem.chain(stack).equals(nodes.subList(0, i + 1)), "chain after click " + i + ": " + LiftLinkerItem.chain(stack)
+                            + ", validator says " + diagnose(level, nodes.subList(0, i + 1)));
+                    check(LiftManager.lines(level).size() == before, "a line exists before the return station");
+                }
+            }
+            check(LiftLinkerItem.chain(player.getItemInHand(InteractionHand.MAIN_HAND)).isEmpty(), "the chain was not cleared");
+            check(LiftManager.lines(level).size() == before + 1, "expected one new line, got " + (LiftManager.lines(level).size() - before));
+            id = nodeBe(level, nodes.get(0)).lineId();
+            check(id != null, "the drive has no line id");
+            LiftLine line = LiftManager.get(level, id);
+            check(line != null && line.nodePositions().equals(nodes), "the line's nodes: " + (line == null ? null : line.nodePositions()));
+            check(!line.faulted, "the new line is faulted");
+            for (int i = 0; i < nodes.size(); i++) {
+                LiftNodeBlockEntity be = nodeBe(level, nodes.get(i));
+                check(id.equals(be.lineId()), "node " + i + " holds the wrong line id");
+                if (be instanceof LiftTowerHeadBlockEntity head) {
+                    check(nodes.get(i - 1).equals(head.prev()), "head " + i + " prev " + head.prev());
+                    check(nodes.get(i + 1).equals(head.next()), "head " + i + " next " + head.next());
+                }
+            }
+            // The load check agrees with what the linker wrote.
+            for (BlockPos p : nodes) nodeBe(level, p).loadCheck(level);
+            check(!line.faulted, "a load check faulted the line: " + line.faultReason);
+
+            // A healthy line is not linked over, but sneak-using a head unlinks it.
+            player.setShiftKeyDown(true);
+            useLinker(player, nodes.get(2));
+            player.setShiftKeyDown(false);
+            check(LiftManager.get(level, id) == null, "unlinking did not remove the line");
+            for (BlockPos p : nodes) check(nodeBe(level, p).lineId() == null, "a node kept its line id after unlinking");
+        } finally {
+            if (id != null) LiftManager.remove(level, id);
+            for (BlockPos p : nodes) level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+        }
+        helper.succeed();
+    }
+
+    public static void linkerRejectsABlockedSpan(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        List<BlockPos> nodes = linkerNodes(helper);
+        placeNodes(level, nodes);
+        // A stone wall across the first span, at the height of the cable.
+        List<BlockPos> wall = new ArrayList<>();
+        for (int dx = -6; dx <= 6; dx++) {
+            for (int dy = -1; dy <= 6; dy++) {
+                for (int dz = 4; dz <= 6; dz++) wall.add(nodes.get(0).offset(dx, dy, dz));
+            }
+        }
+        for (BlockPos p : wall) level.setBlock(p, Blocks.STONE.defaultBlockState(), 3);
+        Player player = helper.makeMockPlayer();
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.LIFT_LINKER.get()));
+        try {
+            int before = LiftManager.lines(level).size();
+            useLinker(player, nodes.get(0));
+            useLinker(player, nodes.get(1));
+            check(LiftLinkerItem.chain(player.getItemInHand(InteractionHand.MAIN_HAND)).size() == 2, "the first head should be accepted until the next node fixes its direction");
+            useLinker(player, nodes.get(2)); // checks the span through the wall
+            List<BlockPos> chain = LiftLinkerItem.chain(player.getItemInHand(InteractionHand.MAIN_HAND));
+            check(chain.size() == 2, "the second head should have been rejected, chain: " + chain);
+            // Going straight to the return station is rejected too.
+            useLinker(player, nodes.get(4));
+            check(LiftManager.lines(level).size() == before, "a line was created through a wall");
+            for (BlockPos p : nodes) check(nodeBe(level, p).lineId() == null, "a node was linked despite the wall");
+        } finally {
+            for (BlockPos p : wall) level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
+            for (BlockPos p : nodes) level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
         }
         helper.succeed();
     }

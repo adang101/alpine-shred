@@ -12,6 +12,7 @@ import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.gear.MittsItem;
 import io.github.adang101.alpineshred.gear.SkiPolesItem;
 import io.github.adang101.alpineshred.gear.SnowGearItem;
+import io.github.adang101.alpineshred.lift.LiftLinkerItem;
 import io.github.adang101.alpineshred.park.item.ParkWrenchItem;
 import io.github.adang101.alpineshred.park.item.PipeItem;
 import net.minecraft.core.registries.Registries;
@@ -67,8 +68,8 @@ public final class ModItems {
             () -> new EdgeTunerItem(new Item.Properties().durability(64)));
     public static final RegistrySupplier<ParkWrenchItem> PARK_WRENCH = ITEMS.register("park_wrench",
             () -> new ParkWrenchItem(new Item.Properties().stacksTo(1)));
-    public static final RegistrySupplier<DescribedItem> LIFT_LINKER = ITEMS.register("lift_linker",
-            () -> new DescribedItem("tooltip.alpineshred.lift_linker", new Item.Properties().stacksTo(1)));
+    public static final RegistrySupplier<LiftLinkerItem> LIFT_LINKER = ITEMS.register("lift_linker",
+            () -> new LiftLinkerItem("tooltip.alpineshred.lift_linker", new Item.Properties().stacksTo(1)));
     public static final RegistrySupplier<DescribedItem> LIFT_PASS = ITEMS.register("lift_pass",
             () -> new DescribedItem("tooltip.alpineshred.lift_pass", new Item.Properties()));
 
