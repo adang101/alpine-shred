@@ -6,11 +6,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
@@ -56,12 +58,17 @@ public final class LiftChairs {
 
     /** One spawn and despawn pass. Public so tests can run it directly. */
     public static void update(ServerLevel level, Collection<LiftLine> lines) {
+        update(level, lines, level.players());
+    }
+
+    /** As {@link #update(ServerLevel, Collection)}, but distance is measured only to {@code players}. */
+    public static void update(ServerLevel level, Collection<LiftLine> lines, List<? extends Player> players) {
         Map<Key, ChairEntity> map = chairs(level);
         for (Iterator<ChairEntity> it = map.values().iterator(); it.hasNext(); ) {
             if (it.next().isRemoved()) it.remove();
         }
         for (LiftLine line : lines) {
-            double near = nearestPlayerSqr(level, line);
+            double near = nearestPlayerSqr(players, line);
             int count = line.chairCount();
             if (near <= SPAWN_RADIUS * SPAWN_RADIUS) {
                 for (int i = 0; i < count; i++) {
@@ -83,10 +90,10 @@ public final class LiftChairs {
         }
     }
 
-    /** Squared distance from the closest player of {@code level} to the closest node of {@code line}. */
-    private static double nearestPlayerSqr(ServerLevel level, LiftLine line) {
+    /** Squared distance from the closest player of {@code players} to the closest node of {@code line}. */
+    private static double nearestPlayerSqr(List<? extends Player> players, LiftLine line) {
         double best = Double.MAX_VALUE;
-        for (ServerPlayer player : level.players()) {
+        for (Player player : players) {
             for (BlockPos node : line.nodePositions()) {
                 best = Math.min(best, player.distanceToSqr(node.getX() + 0.5, node.getY() + 0.5, node.getZ() + 0.5));
             }

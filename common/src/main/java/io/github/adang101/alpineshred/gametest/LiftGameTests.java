@@ -493,12 +493,12 @@ public final class LiftGameTests {
         try {
             BlockPos drive = line.drive;
             player.setPos(drive.getX() + 2000, drive.getY(), drive.getZ());
-            LiftChairs.update(level, LiftManager.lines(level));
+            LiftChairs.update(level, List.of(line), List.of(player));
             for (int i = 0; i < line.chairCount(); i++) check(LiftChairs.find(level, line.id, i) == null, "chair " + i + " spawned with nobody near");
 
             player.setPos(drive.getX(), drive.getY(), drive.getZ());
-            LiftChairs.update(level, LiftManager.lines(level));
-            LiftChairs.update(level, LiftManager.lines(level));
+            LiftChairs.update(level, List.of(line), List.of(player));
+            LiftChairs.update(level, List.of(line), List.of(player));
             int spawned = 0;
             for (int i = 0; i < line.chairCount(); i++) {
                 V3 p = line.path().chairPos(line.travel, i, line.chairCount());
@@ -512,7 +512,7 @@ public final class LiftGameTests {
             check(present == spawned, present + " chair entities for " + spawned + " chairs: duplicates");
 
             player.setPos(drive.getX() + 2000, drive.getY(), drive.getZ());
-            LiftChairs.update(level, LiftManager.lines(level));
+            LiftChairs.update(level, List.of(line), List.of(player));
             for (int i = 0; i < line.chairCount(); i++) check(LiftChairs.find(level, line.id, i) == null, "chair " + i + " stayed with nobody near");
         } finally {
             RideGameTests.removeServerPlayer(player);
