@@ -25,6 +25,7 @@ that need people go into `docs/playtest-phase8.md`.
 | WP2: six lift blocks, `LiftNodeBlockEntity` (head, drive, return), first-tick load check, datagen, 4 game tests (60 per loader) | Done (`59c9a4d`) |
 | WP3: `LiftLinkerItem`, pure `LinkValidator` sharing `LiftPath` geometry (`anchor`, `spanPoint`), 14 unit tests, 2 game tests | Done (merged after WP4) |
 | WP4: `ChairEntity`, `LineView`, `PassengerRule`, `LiftChairs` spawning, re-attach pieces, `MobAccessor` mixin, 8 game tests | Done (`293f73f`) |
+| WP5: `LiftLineSync` packet, `LiftSync` (40/100-tick passes, change listener), `ClientLiftLines`/`ClientLine`, shared `LiftMotion.targetFor`, 2 game tests (72 per loader) | Done (`c266445`) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |
@@ -419,6 +420,13 @@ WP5.
   - On the dedicated server: `save-all`, stop, restart with the same world, and the clients reconnect.
   - If this makes CI too slow or flaky, keep a game-test version (`liftSurvivesSaveReload`: the saved data plus
     the rider NBT round trip) and move the full restart into `docs/playtest-phase8.md`.
+- **Sync timing to measure** (from WP5):
+  - **A sync from the client's "future":** if the client's game time lags the server's, the catch-up is clamped
+    to 0, which leaves the client a few ticks ahead until the next 100-tick resend. If the watchers' chair
+    positions exceed the 0.25 tolerance, make `ClientLine.apply` rewind by `speed/20` per tick for small negative
+    gaps.
+  - **New lines:** a new line reaches nearby players at the next 40-tick scan, up to 2 s after linking. If that
+    looks wrong in play, send the line on `create` to the players in range.
 - **Budgets:** a game test `liftManagerBudget` runs 5 lines with 50 chairs each for 200 ticks and logs the mean
   manager time and the per-chair tick time.
   - Assert at 3× the budget (0.9 ms per tick, 15 µs per chair). Record the real numbers in the README.
