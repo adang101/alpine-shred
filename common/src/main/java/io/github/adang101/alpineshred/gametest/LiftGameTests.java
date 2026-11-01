@@ -649,8 +649,13 @@ public final class LiftGameTests {
 
     public static void groundSearchIsCapped(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        BlockPos high = helper.absolutePos(new BlockPos(1, 2, 1)).above(200);
-        check(LiftChairs.findGround(level, high) == null, "found ground more than 64 blocks down");
+        // 100 blocks over the terrain of this column: where a test sits depends on the test order, and on
+        // Forge the grid reaches hills, so a fixed offset from the test floor can come within 64 of the ground.
+        BlockPos column = helper.absolutePos(new BlockPos(1, 2, 1));
+        int top = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, column.getX(), column.getZ());
+        BlockPos high = new BlockPos(column.getX(), Math.min(top + 100, level.getMaxBuildHeight() - 3), column.getZ());
+        BlockPos found = LiftChairs.findGround(level, high);
+        check(found == null, "found ground more than 64 blocks down: " + found + " from " + high + ", block below " + (found == null ? null : level.getBlockState(found.below())));
         helper.succeed();
     }
 
