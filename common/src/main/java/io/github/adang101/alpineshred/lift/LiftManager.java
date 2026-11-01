@@ -37,6 +37,7 @@ public final class LiftManager {
             if (!runUnloaded && !anyNodeLoaded(level, line)) continue;
             stepLine(data, line);
         }
+        LiftChairs.tick(level, data.lines());
     }
 
     private static boolean anyNodeLoaded(ServerLevel level, LiftLine line) {

@@ -25,7 +25,7 @@ import java.util.UUID;
  * does. The path, chair count, spacing and station intervals are cached and rebuilt by
  * {@link #rebuild()}; they are not saved.
  */
-public final class LiftLine {
+public final class LiftLine implements LineView {
     public final UUID id;
     public final BlockPos drive;
     public final BlockPos returnStation;
@@ -83,10 +83,17 @@ public final class LiftLine {
         this.stations = LiftStations.compute(path, drive.getY());
     }
 
+    @Override
+    public double travel() {
+        return travel;
+    }
+
+    @Override
     public LiftPath path() {
         return path;
     }
 
+    @Override
     public int chairCount() {
         return chairCount;
     }

@@ -326,4 +326,44 @@ public final class ForgeGameTests {
     public static void everyLiftBlockDropsItself(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.everyLiftBlockDropsItself(helper);
     }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void chairPositionsAtFixedTicks(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.chairPositionsAtFixedTicks(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void chairsSpawnNearPlayersAndDespawnFar(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.chairsSpawnNearPlayersAndDespawnFar(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void blockedMobCannotBoard(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.blockedMobCannotBoard(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void mobBoardsAndIsPersistent(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.mobBoardsAndIsPersistent(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void seatsAreLimited(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.seatsAreLimited(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void duplicateChairKeepsTheOneWithRiders(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.duplicateChairKeepsTheOneWithRiders(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void staleChairEjectsItsRiders(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.staleChairEjectsItsRiders(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void groundSearchIsCapped(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.groundSearchIsCapped(helper);
+    }
 }

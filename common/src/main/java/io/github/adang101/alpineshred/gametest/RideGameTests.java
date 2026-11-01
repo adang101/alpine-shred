@@ -593,7 +593,7 @@ public final class RideGameTests {
      * {@code placeNewPlayer} cannot handle (it installs packet filters on the channel pipeline);
      * an {@link EmbeddedChannel} works on both loaders and simply collects what the server sends.
      */
-    private static ServerPlayer newServerPlayer(GameTestHelper helper) {
+    static ServerPlayer newServerPlayer(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         MinecraftServer server = level.getServer();
         ServerPlayer player = new ServerPlayer(server, level, new GameProfile(UUID.randomUUID(), "alpine-rider"));

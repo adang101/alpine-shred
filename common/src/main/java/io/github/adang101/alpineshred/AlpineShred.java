@@ -40,6 +40,7 @@ public final class AlpineShred {
 
         ModBlocks.register();
         io.github.adang101.alpineshred.registry.ModBlockEntities.register();
+        io.github.adang101.alpineshred.registry.ModEntities.register();
         ModItems.register();
         io.github.adang101.alpineshred.registry.ModMenus.register();
         ModTabs.register();

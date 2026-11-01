@@ -75,6 +75,7 @@
   "direction.alpineshred.north": "north",
   "direction.alpineshred.south": "south",
   "direction.alpineshred.west": "west",
+  "entity.alpineshred.lift_chair": "Lift Chair",
   "gui.alpineshred.design_editor": "Paint Editor",
   "gui.alpineshred.design_editor.back": "Back",
   "gui.alpineshred.design_editor.back.tip": "Back to the bench's slots",

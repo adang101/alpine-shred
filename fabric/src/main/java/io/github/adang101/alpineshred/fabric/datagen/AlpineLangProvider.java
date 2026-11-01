@@ -33,6 +33,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add(ModItems.BOARD_WAX.get(), "Board Wax");
         t.add(ModItems.EDGE_TUNER.get(), "Edge Tuner");
         t.add(ModItems.PARK_WRENCH.get(), "Park Wrench");
+        t.add(io.github.adang101.alpineshred.registry.ModEntities.LIFT_CHAIR.get(), "Lift Chair");
         t.add(ModItems.LIFT_LINKER.get(), "Lift Linker");
         t.add(ModItems.LIFT_PASS.get(), "Lift Pass");
         t.add(ModBlocks.GROOMED_SNOW.get(), "Groomed Snow");
