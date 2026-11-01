@@ -22,6 +22,7 @@ that need people go into `docs/playtest-phase8.md`.
 | Item | State |
 |---|---|
 | WP1: `LiftLine`, `LiftStations`, `PendingLine`, `LiftSavedData`, `LiftManager`, with unit and game tests | Done (`9d99b9f`) |
+| WP2: six lift blocks, `LiftNodeBlockEntity` (head, drive, return), first-tick load check, datagen, 4 game tests (60 per loader) | Done (`59c9a4d`) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |
@@ -187,6 +188,9 @@ WP5.
 - **Messages:** every rejection names its reason (lang keys `message.alpineshred.linker.*`).
 - **Relinking** a faulted line through the same nodes rebuilds it and clears the fault.
 
+- **Writing node data:** write it through `LiftTowerHeadBlockEntity.setLink(prev, next)` and the BEs'
+  `setLineId`, the hooks WP2 provided.
+
 **Tests:**
 - Unit `LinkValidatorTest`:
   - each rejection reason, in isolation: too far, too steep, cable blocked on the loaded side, cable blocked on the
@@ -323,6 +327,8 @@ WP5.
   triggers `emergencyStop`. A redstone signal coming back, or right-clicking the drive, clears it.
 - **Commands** (permission level 2): `/alpineshred lift list | info <id> | stop <id> | start <id> | remove <id>`.
   - `info` prints the nodes, loop length, chairs, speed, flags and rider count.
+  - `remove` must call `clearLine()` on every loaded node BE of the line. Unloaded ones clear themselves on their
+    next load check, because the line is missing.
   - `remove` deletes the line, clears the BEs' data, discards its chairs (ejecting riders safely) and sends the
     removal sync.
 
@@ -372,7 +378,9 @@ WP5.
   lodge, and towers about every 40 blocks along the run's side, offset so the cable clears the run.
   - The line must pass `LinkValidator` against the generated terrain. If it does not, skip the lift and log at
     debug level. Never place a broken line.
-  - Each piece places its blocks with `PendingLine` NBT (decision 5).
+  - Each piece places its blocks with `PendingLine` NBT (decision 5). The node positions must be **absolute
+    world positions, computed after the piece's rotation and placement**. Template NBT is not transformed, so the
+    piece writes the BE data in code when it places the blocks.
   - The stations get small platforms built from ordinary blocks.
   - The line spans about 200 blocks (from the doc).
 - Generated lines start powered at the normal speed when `lift.driveNeedsRedstone` is off. Otherwise they get a
