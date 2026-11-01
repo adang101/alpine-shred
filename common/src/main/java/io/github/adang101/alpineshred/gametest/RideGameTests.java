@@ -594,9 +594,14 @@ public final class RideGameTests {
      * an {@link EmbeddedChannel} works on both loaders and simply collects what the server sends.
      */
     static ServerPlayer newServerPlayer(GameTestHelper helper) {
+        return newServerPlayer(helper, new GameProfile(UUID.randomUUID(), "alpine-rider"));
+    }
+
+    /** Like {@link #newServerPlayer(GameTestHelper)} for a given profile, so a test can log the same player in twice. */
+    static ServerPlayer newServerPlayer(GameTestHelper helper, GameProfile profile) {
         ServerLevel level = helper.getLevel();
         MinecraftServer server = level.getServer();
-        ServerPlayer player = new ServerPlayer(server, level, new GameProfile(UUID.randomUUID(), "alpine-rider"));
+        ServerPlayer player = new ServerPlayer(server, level, profile);
         Connection connection = new Connection(PacketFlow.SERVERBOUND);
         new EmbeddedChannel(connection); // registers and activates the connection on the channel
         connection.setProtocol(ConnectionProtocol.PLAY);

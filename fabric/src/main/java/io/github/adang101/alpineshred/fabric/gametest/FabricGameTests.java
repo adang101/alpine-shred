@@ -385,4 +385,44 @@ public final class FabricGameTests implements FabricGameTest {
     public static void syncSetTracksPlayers(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.syncSetTracksPlayers(helper);
     }
+
+    @GameTest(template = TEMPLATE)
+    public static void boardAndRideToTheTop(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.boardAndRideToTheTop(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void boardingRefusedTooFastFullOrNoPass(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.boardingRefusedTooFastFullOrNoPass(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void sneakDismountRules(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.sneakDismountRules(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void leashedMobsBoard(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.leashedMobsBoard(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void petFollowsOwner(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.petFollowsOwner(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void riderSurvivesRelog(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.riderSurvivesRelog(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void riderEjectedWhenLineGone(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.riderEjectedWhenLineGone(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void staysStrappedOnChair(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.staysStrappedOnChair(helper);
+    }
 }
