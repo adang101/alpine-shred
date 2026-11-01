@@ -27,7 +27,8 @@ import java.util.List;
 /**
  * {@code /alpineshred} (design doc section 18, "Commands"): {@code strap}, {@code config reload},
  * {@code tuning reload} (both resync clients), {@code debug ride on|off} and {@code stats [player]}.
- * {@code lift}, the other {@code debug} targets and {@code design} arrive with their systems.
+ * {@code lift} is in {@link io.github.adang101.alpineshred.lift.LiftCommands}.
+ * the other {@code debug} targets and {@code design} arrive with their systems.
  */
 public final class AlpineCommands {
     private AlpineCommands() {
@@ -55,6 +56,7 @@ public final class AlpineCommands {
                                 .requires(source -> source.hasPermission(2))
                                 .then(Commands.argument("players", EntityArgument.players())
                                         .executes(ctx -> designClear(ctx, EntityArgument.getPlayers(ctx, "players"))))))
+                .then(io.github.adang101.alpineshred.lift.LiftCommands.build())
                 .then(Commands.literal("config")
                         .requires(source -> source.hasPermission(2))
                         .then(Commands.literal("reload").executes(AlpineCommands::reloadConfig)))

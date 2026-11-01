@@ -646,8 +646,265 @@ public final class LiftGameTests {
 
     public static void groundSearchIsCapped(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
-        BlockPos high = helper.absolutePos(new BlockPos(1, 2, 1)).above(200);
-        check(LiftChairs.findGround(level, high) == null, "found ground more than 64 blocks down");
+        // 100 blocks over the terrain of this column: where a test sits depends on the test order, and on
+        // Forge the grid reaches hills, so a fixed offset from the test floor can come within 64 of the ground.
+        BlockPos column = helper.absolutePos(new BlockPos(1, 2, 1));
+        int top = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, column.getX(), column.getZ());
+        BlockPos high = new BlockPos(column.getX(), Math.min(top + 100, level.getMaxBuildHeight() - 3), column.getZ());
+        BlockPos found = LiftChairs.findGround(level, high);
+        check(found == null, "found ground more than 64 blocks down: " + found + " from " + high + ", block below " + (found == null ? null : level.getBlockState(found.below())));
+        helper.succeed();
+    }
+
+    // ---- work package 7: drive, stop button, commands ----
+
+    private static BlockHitResult topHit(BlockPos pos) {
+        return new BlockHitResult(Vec3.atCenterOf(pos).add(0, 0.5, 0), Direction.UP, pos, false);
+    }
+
+    /** The block's own {@code use}, as vanilla calls it before the held item's {@code useOn}. */
+    private static net.minecraft.world.InteractionResult useBlock(ServerLevel level, Player player, BlockPos pos) {
+        return level.getBlockState(pos).use(level, player, InteractionHand.MAIN_HAND, topHit(pos));
+    }
+
+    public static void redstoneDrivesTheLine(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        Built b = place(helper);
+        LiftLine line = LiftManager.create(level, b.nodes());
+        check(line != null, "the line was not created");
+        BlockPos redstone = b.drive.east();
+        try {
+            link(level, b, line);
+            check(!line.powered && !line.emergency, "an unpowered drive started the line");
+            level.setBlock(redstone, Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
+            check(line.powered && line.targetSpeed == 2.5, "redstone did not power the line at 2.5: " + line.powered + " " + line.targetSpeed);
+            check(!line.emergency, "powering set an emergency");
+            double loop = line.path().loopLength();
+            double[] up = LiftMotion.advance(0, 0, 2.5, false, loop, 130);
+            for (int i = 0; i < 130; i++) LiftManager.tick(level);
+            check(Math.abs(line.speed - up[0]) < 1e-9 && Math.abs(line.travel - up[1]) < 1e-9, "ramp differs from LiftMotion: " + line.speed + " vs " + up[0]);
+            check(line.speed == 2.5, "the line did not reach 2.5 b/s: " + line.speed);
+
+            level.setBlock(redstone, Blocks.AIR.defaultBlockState(), 3);
+            check(line.emergency, "losing redstone while running was not an emergency stop");
+            check(!line.powered, "losing redstone left the line powered");
+            double speed = line.speed, travel = line.travel;
+            double[] down = LiftMotion.advance(speed, travel, 0, true, loop, 10);
+            for (int i = 0; i < 10; i++) LiftManager.tick(level);
+            check(Math.abs(line.speed - (speed - 10 * LiftMotion.EMERGENCY_DECELERATION / LiftMotion.TICKS_PER_SECOND)) < 1e-9,
+                    "speed did not fall at 2.0 b/s^2: " + line.speed);
+            check(Math.abs(line.speed - down[0]) < 1e-9 && Math.abs(line.travel - down[1]) < 1e-9, "stop differs from LiftMotion");
+
+            // Redstone coming back clears the emergency and powers the line again.
+            level.setBlock(redstone, Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
+            check(!line.emergency && line.powered, "regained redstone did not clear the emergency and power the line");
+        } finally {
+            level.setBlock(redstone, Blocks.AIR.defaultBlockState(), 3);
+            LiftManager.remove(level, line.id);
+            b.clear(level);
+        }
+        helper.succeed();
+    }
+
+    public static void stopButtonStopsTheNearestLine(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        Built b = place(helper);
+        LiftLine near = LiftManager.create(level, b.nodes());
+        // A second line whose drive is 7 blocks from the button, the first line's 1 block away.
+        LiftLine other = LiftManager.create(level, b.nodes().stream().map(p -> p.offset(6, 0, 0)).toList());
+        check(near != null && other != null, "the lines were not created");
+        BlockPos button = b.drive.west();
+        BlockPos farButton = b.drive.above(30);
+        Player player = helper.makeMockPlayer();
+        try {
+            level.setBlock(button, ModBlocks.LIFT_STOP_BUTTON.get().defaultBlockState(), 3);
+            level.setBlock(farButton, ModBlocks.LIFT_STOP_BUTTON.get().defaultBlockState(), 3);
+            check(io.github.adang101.alpineshred.lift.LiftStopButtonBlock.nearestLine(level, button) == near, "the nearest line is the wrong one");
+            useBlock(level, player, button);
+            check(near.emergency, "the button did not stop the nearest line");
+            check(!other.emergency, "the button stopped a farther line too");
+
+            near.emergency = false;
+            useBlock(level, player, farButton);
+            check(!near.emergency && !other.emergency, "a button with no station in range stopped a line");
+        } finally {
+            level.setBlock(button, Blocks.AIR.defaultBlockState(), 3);
+            level.setBlock(farButton, Blocks.AIR.defaultBlockState(), 3);
+            LiftManager.remove(level, near.id);
+            LiftManager.remove(level, other.id);
+        }
+        helper.succeed();
+    }
+
+    public static void speedLevelsCycle(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        Built b = place(helper);
+        LiftLine line = LiftManager.create(level, b.nodes());
+        check(line != null, "the line was not created");
+        BlockPos redstone = b.drive.east();
+        Player player = helper.makeMockPlayer();
+        try {
+            link(level, b, line);
+            List<Double> levels = AlpineConfig.LIFT_SPEED_LEVELS.get();
+            check(levels.equals(List.of(1.5, 2.5, 4.0)), "unexpected default speed levels " + levels);
+            check(line.targetSpeed == 2.5, "a new line does not start at the normal level: " + line.targetSpeed);
+            double[] expected = {4.0, 1.5, 2.5};
+            for (double want : expected) {
+                check(useBlock(level, player, b.drive).consumesAction(), "the drive did not take the right-click");
+                check(line.targetSpeed == want, "target " + line.targetSpeed + ", expected " + want);
+                check(b.driveBe(level).targetSpeed() == want, "drive speed " + b.driveBe(level).targetSpeed());
+            }
+            check(!line.powered, "cycling the speed powered a drive without redstone");
+
+            // With redstone the speed change reaches a running line, and a click resets an emergency.
+            level.setBlock(redstone, Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
+            check(line.powered, "no power");
+            useBlock(level, player, b.drive);
+            check(line.powered && line.targetSpeed == 4.0, "a powered line did not take the new speed: " + line.targetSpeed);
+            LiftManager.emergencyStop(level, line.id);
+            useBlock(level, player, b.drive);
+            check(!line.emergency, "right-clicking the drive did not clear the emergency");
+            check(line.targetSpeed == 4.0 && b.driveBe(level).speedLevel() == 2, "clearing the emergency also changed the speed");
+        } finally {
+            level.setBlock(redstone, Blocks.AIR.defaultBlockState(), 3);
+            LiftManager.remove(level, line.id);
+            b.clear(level);
+        }
+        helper.succeed();
+    }
+
+    public static void linkerPassesThroughTheDrive(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        Built b = place(helper);
+        Player player = helper.makeMockPlayer();
+        player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.LIFT_LINKER.get()));
+        try {
+            int before = b.driveBe(level).speedLevel();
+            // What vanilla does for a right-click on a block: the block's use, and if that passes, the item's useOn.
+            var result = useBlock(level, player, b.drive);
+            check(result == net.minecraft.world.InteractionResult.PASS, "the drive swallowed the linker click: " + result);
+            check(b.driveBe(level).speedLevel() == before, "the speed level changed");
+            useLinker(player, b.drive);
+            check(LiftLinkerItem.chain(player.getItemInHand(InteractionHand.MAIN_HAND)).equals(List.of(b.drive)), "the linker did not record the drive");
+            check(b.driveBe(level).speedLevel() == before, "the speed level changed");
+        } finally {
+            b.clear(level);
+        }
+        helper.succeed();
+    }
+
+    /** Collects what a command source is sent. */
+    private static final class Sink implements net.minecraft.commands.CommandSource {
+        final List<net.minecraft.network.chat.Component> messages = new ArrayList<>();
+
+        @Override
+        public void sendSystemMessage(net.minecraft.network.chat.Component message) {
+            messages.add(message);
+        }
+
+        @Override
+        public boolean acceptsSuccess() {
+            return true;
+        }
+
+        @Override
+        public boolean acceptsFailure() {
+            return true;
+        }
+
+        @Override
+        public boolean shouldInformAdmins() {
+            return false;
+        }
+
+        /** The translatable part of message {@code i}; failures arrive wrapped in an empty red component. */
+        private net.minecraft.network.chat.contents.TranslatableContents translatable(int i) {
+            net.minecraft.network.chat.Component c = messages.get(i);
+            if (!(c.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents) && !c.getSiblings().isEmpty()) {
+                c = c.getSiblings().get(0);
+            }
+            return c.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents t ? t : null;
+        }
+
+        String key(int i) {
+            var t = translatable(i);
+            return t == null ? "?" : t.getKey();
+        }
+
+        Object[] args(int i) {
+            return translatable(i).getArgs();
+        }
+    }
+
+    private static Sink run(ServerLevel level, int permission, String command) {
+        Sink sink = new Sink();
+        var source = level.getServer().createCommandSourceStack().withSource(sink).withLevel(level).withPermission(permission);
+        level.getServer().getCommands().performPrefixedCommand(source, command);
+        return sink;
+    }
+
+    public static void liftCommands(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        Built b = place(helper);
+        UUID idA = UUID.fromString("deadbeef-0000-4000-8000-000000000001");
+        UUID idB = UUID.fromString("deadbeef-1111-4000-8000-000000000002");
+        LiftLine line = LiftManager.create(level, idA, b.nodes());
+        LiftLine twin = LiftManager.create(level, idB, b.nodes().stream().map(p -> p.offset(100, 0, 0)).toList());
+        check(line != null && twin != null, "the lines were not created");
+        Cow cow = null;
+        try {
+            link(level, b, line);
+            ChairEntity chair = LiftChairs.spawn(level, line, 0);
+            check(chair != null, "no chair");
+            cow = cow(level, chair.position());
+            check(level.addFreshEntity(cow) && cow.startRiding(chair), "the cow could not board");
+
+            // list and info
+            Sink sink = run(level, 2, "alpineshred lift list");
+            int entries = 0;
+            for (int i = 0; i < sink.messages.size(); i++) {
+                if (sink.key(i).equals("commands.alpineshred.lift.list.entry") && "deadbeef".equals(sink.args(i)[0])) {
+                    entries++;
+                    check(Integer.valueOf(3).equals(sink.args(i)[1]), "list entry args: " + java.util.Arrays.toString(sink.args(i)));
+                }
+            }
+            check(entries == 2, "list shows " + entries + " of our two lines: " + sink.messages);
+            sink = run(level, 2, "alpineshred lift info " + idA);
+            check(sink.messages.size() == 1 && sink.key(0).equals("commands.alpineshred.lift.info"), "info output: " + sink.messages);
+            check(idA.toString().equals(sink.args(0)[0]) && Integer.valueOf(1).equals(sink.args(0)[8]), "info args (id, riders): " + java.util.Arrays.toString(sink.args(0)));
+
+            // ids: a shared prefix is ambiguous, a unique one works, a short or unknown one is refused
+            sink = run(level, 2, "alpineshred lift stop deadbeef");
+            check(sink.key(0).equals("commands.alpineshred.lift.ambiguous") && !line.emergency, "ambiguous prefix: " + sink.messages);
+            sink = run(level, 2, "alpineshred lift stop dea");
+            check(sink.key(0).equals("commands.alpineshred.lift.too_short") && !line.emergency, "short prefix: " + sink.messages);
+            sink = run(level, 2, "alpineshred lift stop zzzzzz");
+            check(sink.key(0).equals("commands.alpineshred.lift.no_line"), "unknown id: " + sink.messages);
+
+            // permission
+            run(level, 0, "alpineshred lift stop deadbeef-0");
+            check(!line.emergency, "a level-0 source stopped the line");
+
+            // stop and start
+            run(level, 2, "alpineshred lift stop deadbeef-0");
+            check(line.emergency && !twin.emergency, "stop");
+            run(level, 2, "alpineshred lift start deadbeef-0");
+            check(!line.emergency && line.powered && line.targetSpeed == b.driveBe(level).targetSpeed(), "start: " + line.emergency + " " + line.powered + " " + line.targetSpeed);
+
+            // remove
+            run(level, 2, "alpineshred lift remove deadbeef-0");
+            check(LiftManager.get(level, idA) == null, "the line is still there");
+            check(LiftManager.get(level, idB) == twin, "the other line went too");
+            for (int i = 0; i < 3; i++) check(nodeBe(level, b.nodes().get(i)).lineId() == null, "node " + i + " kept its line id");
+            check(chair.isRemoved(), "the chair is still there");
+            check(!cow.isPassenger(), "the rider stayed aboard");
+            check(cow.getY() > level.getMinBuildHeight(), "the rider was put below the world");
+        } finally {
+            if (cow != null) cow.discard();
+            LiftManager.remove(level, idA);
+            LiftManager.remove(level, idB);
+            b.clear(level);
+        }
         helper.succeed();
     }
 }
