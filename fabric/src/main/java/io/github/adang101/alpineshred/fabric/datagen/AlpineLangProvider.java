@@ -87,6 +87,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
 
         // ---- messages ----
         t.add("message.alpineshred.strap.in", "Strapped in");
+        t.add("message.alpineshred.lift.station_clearance", "Lift station: solid blocks within 2 blocks may be in the way of the cable and chairs");
         t.add("message.alpineshred.strap.out", "Unstrapped");
         t.add("message.alpineshred.strap.disabled", "Riding is disabled on this server");
         t.add("message.alpineshred.strap.spectator", "Spectators can't strap in");
@@ -226,6 +227,12 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
 
         // ---- designs (section 22) ----
         t.add(ModBlocks.PAINT_BENCH.get(), "Paint Bench");
+        t.add(ModBlocks.LIFT_TOWER_POLE.get(), "Lift Tower Pole");
+        t.add(ModBlocks.LIFT_TOWER_HEAD.get(), "Lift Tower Head");
+        t.add(ModBlocks.LIFT_DRIVE_STATION.get(), "Lift Drive Station");
+        t.add(ModBlocks.LIFT_RETURN_STATION.get(), "Lift Return Station");
+        t.add(ModBlocks.LIFT_LOADING_GATE.get(), "Lift Loading Gate");
+        t.add(ModBlocks.LIFT_STOP_BUTTON.get(), "Lift Stop Button");
         t.add("container.alpineshred.paint_bench", "Paint Bench");
         t.add("gui.alpineshred.paint_bench.paint", "Paint");
         t.add("gui.alpineshred.paint_bench.gear", "Gear");

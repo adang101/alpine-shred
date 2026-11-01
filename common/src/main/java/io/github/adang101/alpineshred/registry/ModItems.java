@@ -79,10 +79,27 @@ public final class ModItems {
     public static final RegistrySupplier<BlockItem> PAINT_BENCH = ITEMS.register("paint_bench",
             () -> new BlockItem(ModBlocks.PAINT_BENCH.get(), new Item.Properties()));
 
+    // Lift parts (section 13).
+    public static final RegistrySupplier<BlockItem> LIFT_TOWER_POLE = liftItem("lift_tower_pole", ModBlocks.LIFT_TOWER_POLE);
+    public static final RegistrySupplier<BlockItem> LIFT_TOWER_HEAD = liftItem("lift_tower_head", ModBlocks.LIFT_TOWER_HEAD);
+    public static final RegistrySupplier<BlockItem> LIFT_DRIVE_STATION = liftItem("lift_drive_station", ModBlocks.LIFT_DRIVE_STATION);
+    public static final RegistrySupplier<BlockItem> LIFT_RETURN_STATION = liftItem("lift_return_station", ModBlocks.LIFT_RETURN_STATION);
+    public static final RegistrySupplier<BlockItem> LIFT_LOADING_GATE = liftItem("lift_loading_gate", ModBlocks.LIFT_LOADING_GATE);
+    public static final RegistrySupplier<BlockItem> LIFT_STOP_BUTTON = liftItem("lift_stop_button", ModBlocks.LIFT_STOP_BUTTON);
+
     /** The park blocks' items (section 10, 11), in block registration order; the pipe's places a whole pipe. */
     private static final List<RegistrySupplier<? extends Item>> PARK = registerParkItems();
 
     private ModItems() {
+    }
+
+    private static RegistrySupplier<BlockItem> liftItem(String id, RegistrySupplier<? extends Block> block) {
+        return ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    /** The lift block items, in creative tab order. */
+    public static List<RegistrySupplier<BlockItem>> liftItems() {
+        return List.of(LIFT_TOWER_POLE, LIFT_TOWER_HEAD, LIFT_DRIVE_STATION, LIFT_RETURN_STATION, LIFT_LOADING_GATE, LIFT_STOP_BUTTON);
     }
 
     private static List<RegistrySupplier<? extends Item>> registerParkItems() {

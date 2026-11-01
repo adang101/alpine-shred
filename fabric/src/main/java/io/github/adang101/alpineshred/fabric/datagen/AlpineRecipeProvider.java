@@ -178,6 +178,48 @@ public final class AlpineRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.SNOW_BLOCK), has(Items.SNOW_BLOCK))
                 .save(out);
 
+        // ---- lifts (section 13); the costs are provisional until the phase 9 balance pass ----
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.LIFT_TOWER_POLE.get(), 4)
+                .pattern("B")
+                .pattern("I")
+                .pattern("B")
+                .define('B', Items.IRON_BARS)
+                .define('I', Items.IRON_INGOT)
+                .unlockedBy(getHasName(Items.IRON_BARS), has(Items.IRON_BARS))
+                .save(out);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.LIFT_TOWER_HEAD.get())
+                .pattern("BLB")
+                .pattern("III")
+                .define('B', Items.IRON_BARS)
+                .define('L', Items.LIGHTNING_ROD)
+                .define('I', Items.IRON_INGOT)
+                .unlockedBy(getHasName(Items.LIGHTNING_ROD), has(Items.LIGHTNING_ROD))
+                .save(out);
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModItems.LIFT_DRIVE_STATION.get())
+                .pattern("RPR")
+                .pattern("RIR")
+                .define('R', Items.REDSTONE)
+                .define('P', Items.PISTON)
+                .define('I', Items.IRON_BLOCK)
+                .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
+                .save(out);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ModItems.LIFT_RETURN_STATION.get())
+                .requires(Items.IRON_BLOCK)
+                .requires(Items.PISTON)
+                .unlockedBy(getHasName(Items.IRON_BLOCK), has(Items.IRON_BLOCK))
+                .save(out);
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.LIFT_LOADING_GATE.get())
+                .pattern("IGI")
+                .define('G', Items.OAK_FENCE_GATE)
+                .define('I', Items.IRON_INGOT)
+                .unlockedBy(getHasName(Items.IRON_INGOT), has(Items.IRON_INGOT))
+                .save(out);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, ModItems.LIFT_STOP_BUTTON.get())
+                .requires(Items.STONE_BUTTON)
+                .requires(Items.REDSTONE)
+                .unlockedBy(getHasName(Items.STONE_BUTTON), has(Items.STONE_BUTTON))
+                .save(out);
+
         // ---- park (sections 10 and 11) ----
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.PIPE_RAIL.get(), 6)
                 .pattern("III")

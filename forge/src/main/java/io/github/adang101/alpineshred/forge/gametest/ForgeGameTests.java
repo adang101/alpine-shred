@@ -306,4 +306,24 @@ public final class ForgeGameTests {
     public static void travelAtFixedTicks(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.travelAtFixedTicks(helper);
     }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void breakingAHeadFaultsTheLine(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.breakingAHeadFaultsTheLine(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void mismatchedBlockEntityFaultsTheLine(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.mismatchedBlockEntityFaultsTheLine(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void pendingLineAdoptedOnce(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.pendingLineAdoptedOnce(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void everyLiftBlockDropsItself(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.everyLiftBlockDropsItself(helper);
+    }
 }

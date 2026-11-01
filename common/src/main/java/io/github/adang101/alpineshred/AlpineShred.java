@@ -39,6 +39,7 @@ public final class AlpineShred {
         AlpineConfig.loadCommon(Platform.getConfigFolder(), LOGGER::warn);
 
         ModBlocks.register();
+        io.github.adang101.alpineshred.registry.ModBlockEntities.register();
         ModItems.register();
         io.github.adang101.alpineshred.registry.ModMenus.register();
         ModTabs.register();
