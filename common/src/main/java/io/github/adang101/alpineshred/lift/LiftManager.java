@@ -107,7 +107,10 @@ public final class LiftManager {
     /** The line for a pending one, creating it only if its UUID is not yet a line. */
     public static LiftLine adoptPending(ServerLevel level, PendingLine pending) {
         LiftLine existing = LiftSavedData.get(level).get(pending.id());
-        return existing != null ? existing : create(level, pending.id(), pending.nodes());
+        if (existing != null) return existing;
+        LiftLine created = create(level, pending.id(), pending.nodes());
+        if (created != null && pending.powered()) setDrive(level, created.id, true, pending.targetSpeed());
+        return created;
     }
 
     public static boolean remove(ServerLevel level, UUID id) {
