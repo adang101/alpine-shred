@@ -383,6 +383,11 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void driveKeepsItsCommandOnLoad(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.driveKeepsItsCommandOnLoad(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
     public static void stopButtonStopsTheNearestLine(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.stopButtonStopsTheNearestLine(helper);
     }

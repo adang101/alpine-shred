@@ -19,10 +19,10 @@ import java.util.UUID;
  *
  * <p>{@link #refresh} pushes the drive's command into the saved line ({@code powered} and
  * {@code targetSpeed}), so an unloaded drive keeps its last command. It runs on a redstone neighbour
- * change ({@link LiftStationBlock}), after the load check, when the speed level changes, and when the
+ * change ({@link LiftStationBlock}), when the speed level changes, and when the
  * block entity gets its line id ({@link #setLineId}, which the linker calls), so a new line starts in
  * the state the drive is in. The previous state is read from the line itself ({@code powered}), so it
- * survives a reload.
+ * survives a reload. Nothing runs on load: the saved line state stands (a signal across an unloaded chunk border reads false on the first tick, which would be a false emergency stop).
  */
 public class LiftDriveStationBlockEntity extends LiftNodeBlockEntity implements LiftDriveSource {
     public static final int DEFAULT_SPEED_LEVEL = 1;
@@ -83,12 +83,6 @@ public class LiftDriveStationBlockEntity extends LiftNodeBlockEntity implements 
     public void setLineId(UUID lineId) {
         super.setLineId(lineId);
         if (lineId != null && level instanceof ServerLevel serverLevel) refresh(serverLevel);
-    }
-
-    @Override
-    public void loadCheck(ServerLevel level) {
-        super.loadCheck(level);
-        refresh(level);
     }
 
     /**

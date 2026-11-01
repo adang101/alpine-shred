@@ -706,6 +706,33 @@ public final class LiftGameTests {
         helper.succeed();
     }
 
+    public static void driveKeepsItsCommandOnLoad(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        Built b = place(helper);
+        LiftLine line = LiftManager.create(level, b.nodes());
+        check(line != null, "the line was not created");
+        BlockPos redstone = b.drive.east();
+        try {
+            link(level, b, line);
+            level.setBlock(redstone, Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
+            for (int i = 0; i < 50; i++) LiftManager.tick(level);
+            check(line.powered && line.speed > 0, "the line is not running");
+            double target = line.targetSpeed, speed = line.speed;
+            // The source vanishes with no neighbour update, as if it sat in a chunk that is not loaded yet.
+            level.setBlock(redstone, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+            check(!b.driveBe(level).enabled(), "the drive still sees a signal");
+            b.driveBe(level).loadCheck(level);
+            check(line.powered, "the load check unpowered the line");
+            check(!line.emergency, "the load check stopped the line");
+            check(line.targetSpeed == target && line.speed == speed, "the load check changed the command");
+        } finally {
+            level.setBlock(redstone, Blocks.AIR.defaultBlockState(), 3);
+            LiftManager.remove(level, line.id);
+            b.clear(level);
+        }
+        helper.succeed();
+    }
+
     public static void stopButtonStopsTheNearestLine(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         Built b = place(helper);

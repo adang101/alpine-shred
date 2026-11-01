@@ -382,6 +382,11 @@ public final class FabricGameTests implements FabricGameTest {
     }
 
     @GameTest(template = TEMPLATE)
+    public static void driveKeepsItsCommandOnLoad(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.driveKeepsItsCommandOnLoad(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
     public static void stopButtonStopsTheNearestLine(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.stopButtonStopsTheNearestLine(helper);
     }
