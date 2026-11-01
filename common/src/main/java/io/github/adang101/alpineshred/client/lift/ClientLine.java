@@ -4,6 +4,7 @@ import io.github.adang101.alpineshred.lift.LiftLine;
 import io.github.adang101.alpineshred.lift.LiftLineSync;
 import io.github.adang101.alpineshred.lift.LiftMotion;
 import io.github.adang101.alpineshred.lift.LiftPath;
+import io.github.adang101.alpineshred.lift.LiftStations;
 import io.github.adang101.alpineshred.lift.LineView;
 import io.github.adang101.alpineshred.park.V3;
 import net.minecraft.core.BlockPos;
@@ -20,6 +21,7 @@ public final class ClientLine implements LineView {
     private List<BlockPos> nodes = List.of();
     private LiftPath path;
     private int chairCount;
+    private LiftStations.Result stations;
 
     public double travel;
     public double speed;
@@ -43,6 +45,7 @@ public final class ClientLine implements LineView {
             for (BlockPos p : sync.nodes()) v.add(LiftLine.node(p));
             path = LiftPath.of(v);
             nodes = List.copyOf(sync.nodes());
+            stations = LiftStations.compute(path, nodes.get(0).getY());
         }
         chairCount = LiftPath.chairCount(path.loopLength(), sync.spacing());
         travel = sync.travel();
@@ -88,5 +91,20 @@ public final class ClientLine implements LineView {
     @Override
     public int chairCount() {
         return chairCount;
+    }
+
+    @Override
+    public LiftStations.Result stations() {
+        return stations;
+    }
+
+    @Override
+    public double speed() {
+        return speed;
+    }
+
+    @Override
+    public boolean faulted() {
+        return faulted;
     }
 }

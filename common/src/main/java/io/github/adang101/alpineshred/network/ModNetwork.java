@@ -54,6 +54,8 @@ public final class ModNetwork {
     public static final ResourceLocation DESIGN_SAVE = AlpineShred.id("c2s/design_save");
     public static final ResourceLocation DESIGN_RESULT = AlpineShred.id("s2c/design_result");
     public static final ResourceLocation LIFT_LINE_SYNC = AlpineShred.id("s2c/lift_line_sync");
+    /** Auto-board (section 13): the entity id of the chair a strapped player is about to board. */
+    public static final ResourceLocation LIFT_BOARD = AlpineShred.id("c2s/lift_board");
     /** The server's design templates, for the editor (at login and after a reload). */
     public static final ResourceLocation DESIGN_TEMPLATES = AlpineShred.id("s2c/design_templates");
     /** Largest deflated face a save packet may carry; the server's own cap is checked after. */
@@ -70,6 +72,8 @@ public final class ModNetwork {
     private static final PacketRateLimiter REPORT_LIMIT = new PacketRateLimiter(5, 8);
     /** Saves: the cooldown is the real limit; this only bounds the decoding work. */
     private static final PacketRateLimiter DESIGN_LIMIT = new PacketRateLimiter(2, 3);
+    /** Auto-board is sent once per chair approach; a chair passes every second or two at most. */
+    private static final PacketRateLimiter LIFT_BOARD_LIMIT = new PacketRateLimiter(2, 4);
 
     private ModNetwork() {
     }
@@ -138,6 +142,16 @@ public final class ModNetwork {
             });
         });
 
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, LIFT_BOARD, (buf, context) -> {
+            int chairId = buf.readVarInt();
+            context.queue(() -> {
+                if (!(context.getPlayer() instanceof ServerPlayer player)) return;
+                if (!LIFT_BOARD_LIMIT.tryAcquire(player)) return;
+                if (player.level().getEntity(chairId) instanceof io.github.adang101.alpineshred.lift.ChairEntity chair) {
+                    io.github.adang101.alpineshred.lift.Boarding.autoBoard(player, chair);
+                }
+            });
+        });
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, DESIGN_SAVE, (buf, context) -> {
             DesignServer.SaveRequest request = readSave(buf);
             context.queue(() -> {
@@ -223,6 +237,13 @@ public final class ModNetwork {
         FriendlyByteBuf buf = buffer();
         buf.writeInt(bits);
         NetworkManager.sendToServer(RIDE_STATE, buf);
+    }
+
+    /** Client side: ask the server to board a chair as an auto-board (a strapped player in the boarding stretch). */
+    public static void sendLiftBoard(int chairEntityId) {
+        FriendlyByteBuf buf = buffer();
+        buf.writeVarInt(chairEntityId);
+        NetworkManager.sendToServer(LIFT_BOARD, buf);
     }
 
     public static void sendRideAction(RideAction action, int value) {

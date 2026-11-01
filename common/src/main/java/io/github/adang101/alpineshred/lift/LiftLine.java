@@ -98,10 +98,21 @@ public final class LiftLine implements LineView {
         return chairCount;
     }
 
+    @Override
+    public double speed() {
+        return speed;
+    }
+
+    @Override
+    public boolean faulted() {
+        return faulted;
+    }
+
     public int spacing() {
         return spacing;
     }
 
+    @Override
     public LiftStations.Result stations() {
         return stations;
     }

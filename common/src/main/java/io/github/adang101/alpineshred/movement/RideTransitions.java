@@ -5,7 +5,8 @@ package io.github.adang101.alpineshred.movement;
  * validation rule 3). Strapping in and out goes through {@code c2s/strap_toggle}. Grinds and box
  * slides are allowed here and checked against the world by the server ({@link #needsWorldCheck}):
  * {@code GRIND} needs a grindable block in the capture zone, {@code SLIDE} a slideable block. Lift
- * seating (phase 8) is refused until lifts exist.
+ * seating is never a client's claim: the server alone moves a rider into and out of {@code LIFT}
+ * ({@link #serverMay}).
  */
 public final class RideTransitions {
     private RideTransitions() {
@@ -17,6 +18,15 @@ public final class RideTransitions {
             case IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR, WIPEOUT, GRIND, SLIDE -> true;
             case OFF, LIFT -> false;
         };
+    }
+
+    /**
+     * Changes the server makes by itself (never on a client's say-so): a strapped rider sits on a lift chair
+     * ({@code -> LIFT}, only when the vehicle is a chair), and leaves it for any ground state.
+     */
+    public static boolean serverMay(RideState from, RideState to, boolean onChair) {
+        if (to == RideState.LIFT) return onChair && from.isStrapped();
+        return from == RideState.LIFT; // off the chair: unloading sets GLIDE, a dismount IDLE, unstrapping OFF
     }
 
     /** States the server accepts only when the world backs them: a rail for GRIND, a box for SLIDE. */

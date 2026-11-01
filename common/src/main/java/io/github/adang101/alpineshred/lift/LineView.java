@@ -11,4 +11,13 @@ public interface LineView {
     double travel();
 
     int chairCount();
+
+    /** The boarding and unload intervals of the loaded cable. */
+    LiftStations.Result stations();
+
+    /** Current speed in blocks per second (never negative). */
+    double speed();
+
+    /** Whether the line is faulted: its riders may then get off anywhere. */
+    boolean faulted();
 }

@@ -4,6 +4,7 @@ import dev.architectury.platform.Platform;
 import io.github.adang101.alpineshred.config.AlpineConfig;
 import io.github.adang101.alpineshred.gear.GearKind;
 import io.github.adang101.alpineshred.gear.GearProfile;
+import io.github.adang101.alpineshred.lift.ChairEntity;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -44,8 +45,8 @@ public final class StrapCheck {
     public static Result check(Player player, GearProfile gear) {
         if (!ridingEnabled()) return Result.DISABLED;
         if (player.isSpectator()) return Result.SPECTATOR;
-        // Lift chairs (phase 8) will be allowed here.
-        if (player.isPassenger()) return Result.VEHICLE;
+        // A lift chair is allowed: strapping in while seated puts the rider in LIFT.
+        if (player.isPassenger() && !(player.getVehicle() instanceof ChairEntity)) return Result.VEHICLE;
         if (player.isInWater() || player.isInLava()) return Result.FLUID;
         if (player.isFallFlying()) return Result.ELYTRA;
         if (!gear.hasGear()) return Result.NO_GEAR;
