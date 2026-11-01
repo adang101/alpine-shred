@@ -204,6 +204,19 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("advancements.alpineshred.spin_cycle.description", "Land a 360");
 
         // ---- commands ----
+        t.add("commands.alpineshred.lift.no_line", "No lift line with the id %s");
+        t.add("commands.alpineshred.lift.ambiguous", "More than one lift line starts with %s; type more of the id");
+        t.add("commands.alpineshred.lift.too_short", "Lift line id %s is too short (at least %s characters)");
+        t.add("commands.alpineshred.lift.list.none", "No lift lines in this dimension");
+        t.add("commands.alpineshred.lift.list.entry", "%s: %s nodes, %s blocks of cable, speed %s b/s, flags %s");
+        t.add("commands.alpineshred.lift.info", "Lift %s: %s nodes (%s), %s blocks of cable, %s chairs, speed %s of %s b/s, flags %s, %s riders");
+        t.add("commands.alpineshred.lift.stop", "Emergency stop on lift %s");
+        t.add("commands.alpineshred.lift.start", "Lift %s started at %s b/s");
+        t.add("commands.alpineshred.lift.remove", "Removed lift %s");
+        t.add("message.alpineshred.lift.speed", "Lift speed: %s blocks/s");
+        t.add("message.alpineshred.lift.emergency_cleared", "Lift emergency stop cleared");
+        t.add("message.alpineshred.lift.stop_button.stopped", "Lift emergency stop");
+        t.add("message.alpineshred.lift.stop_button.no_station", "No lift station within 8 blocks");
         t.add("commands.alpineshred.stats", "%s: best combo %s, total score %s, tricks landed %s, %s s in the air, %s blocks ground, %s blocks ridden, %s lift rides");
         t.add("commands.alpineshred.strap.done", "Changed strap state for %s player(s)");
         t.add("commands.alpineshred.strap.failed", "Could not strap in: %s");

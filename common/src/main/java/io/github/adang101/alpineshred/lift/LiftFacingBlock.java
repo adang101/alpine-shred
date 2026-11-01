@@ -16,7 +16,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * A lift block with a horizontal facing and no block entity: the {@code lift_loading_gate} and the
- * {@code lift_stop_button}. Neither does anything yet (the button arrives with work package 7). The
+ * {@code lift_stop_button}. The gate does nothing yet; the button is {@link LiftStopButtonBlock}. The
  * model faces north; the shapes are given for north and turned for the other facings.
  */
 public class LiftFacingBlock extends Block {

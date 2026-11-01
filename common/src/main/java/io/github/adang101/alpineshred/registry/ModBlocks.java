@@ -16,6 +16,7 @@ import io.github.adang101.alpineshred.park.block.RailPostBlock;
 import io.github.adang101.alpineshred.park.block.RampBlock;
 import io.github.adang101.alpineshred.lift.LiftBlocks;
 import io.github.adang101.alpineshred.lift.LiftFacingBlock;
+import io.github.adang101.alpineshred.lift.LiftStopButtonBlock;
 import io.github.adang101.alpineshred.lift.LiftStationBlock;
 import io.github.adang101.alpineshred.lift.LiftTowerHeadBlock;
 import io.github.adang101.alpineshred.lift.LiftTowerPoleBlock;
@@ -60,8 +61,8 @@ public final class ModBlocks {
             () -> new LiftStationBlock(LiftBlocks.steel(), false));
     public static final RegistrySupplier<LiftFacingBlock> LIFT_LOADING_GATE = BLOCKS.register("lift_loading_gate",
             () -> new LiftFacingBlock(LiftBlocks.steel(), 0, 0, 6, 16, 14, 10));
-    public static final RegistrySupplier<LiftFacingBlock> LIFT_STOP_BUTTON = BLOCKS.register("lift_stop_button",
-            () -> new LiftFacingBlock(LiftBlocks.steel(), 5, 5, 14, 11, 11, 16));
+    public static final RegistrySupplier<LiftStopButtonBlock> LIFT_STOP_BUTTON = BLOCKS.register("lift_stop_button",
+            () -> new LiftStopButtonBlock(LiftBlocks.steel(), 5, 5, 14, 11, 11, 16));
 
     // ---- rails (section 10) ---------------------------------------------------------------------------
     public static final RegistrySupplier<RailBlock> PIPE_RAIL = park("pipe_rail",

@@ -386,4 +386,34 @@ public final class ForgeGameTests {
     public static void syncSetTracksPlayers(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.syncSetTracksPlayers(helper);
     }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void redstoneDrivesTheLine(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.redstoneDrivesTheLine(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void driveKeepsItsCommandOnLoad(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.driveKeepsItsCommandOnLoad(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void stopButtonStopsTheNearestLine(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.stopButtonStopsTheNearestLine(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void speedLevelsCycle(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.speedLevelsCycle(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void linkerPassesThroughTheDrive(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.linkerPassesThroughTheDrive(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void liftCommands(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.liftCommands(helper);
+    }
 }
