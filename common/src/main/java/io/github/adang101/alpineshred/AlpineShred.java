@@ -57,6 +57,7 @@ public final class AlpineShred {
         RideServer.register();
         AlpineCommands.register();
         io.github.adang101.alpineshred.design.DesignServer.register();
+        io.github.adang101.alpineshred.lift.LiftManager.register();
         io.github.adang101.alpineshred.smoke.ServerSmoke.register();
 
         LOGGER.info("Alpine Shred initialized on {}", Platform.isForge() ? "Forge" : "Fabric");

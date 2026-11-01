@@ -294,4 +294,16 @@ public final class ForgeGameTests {
     public static void structuresGenerateWithinBounds(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.WorldgenGameTests.structuresGenerateWithinBounds(helper);
     }
+
+    // ---- phase 8: lifts ----
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void savedDataRoundTrip(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.savedDataRoundTrip(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void travelAtFixedTicks(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.travelAtFixedTicks(helper);
+    }
 }
