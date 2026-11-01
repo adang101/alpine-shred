@@ -323,6 +323,16 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void linkerBuildsALine(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.linkerBuildsALine(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void linkerRejectsABlockedSpan(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.linkerRejectsABlockedSpan(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
     public static void everyLiftBlockDropsItself(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.everyLiftBlockDropsItself(helper);
     }
