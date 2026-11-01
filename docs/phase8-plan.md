@@ -21,6 +21,7 @@ that need people go into `docs/playtest-phase8.md`.
 
 | Item | State |
 |---|---|
+| WP1: `LiftLine`, `LiftStations`, `PendingLine`, `LiftSavedData`, `LiftManager`, with unit and game tests | Done (`9d99b9f`) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |
@@ -66,8 +67,10 @@ that need people go into `docs/playtest-phase8.md`.
    blocks. A button with no station in range does nothing and says so in the action bar.
 4. **Boarding and unload intervals.**
    - The boarding stretch is `s ∈ [0, 4]`: the first 4 blocks of loaded cable after the return wheel.
-   - The unload stretch is the last part of the loaded cable before `loadedEnd` where the seat is at most 3 blocks
-     above the drive station's platform. That platform is the station block's Y.
+   - The unload stretch is the last part of the loaded cable before `loadedEnd` where the seat is within 3 blocks
+     of the drive station's platform, above or below. That platform is the station block's Y. (The doc says "at
+     most 3 blocks above", but on a climbing line that covers the whole loaded cable, so the band is two-sided.
+     This was settled in WP1.)
    - The ejection point is 1 block before `loadedEnd`.
    - Both stretches are computed in a pure `LiftStations` class and stored on the line.
 5. **Generated lifts.** Structure pieces cannot touch `SavedData` during generation. Instead the resort piece
@@ -77,6 +80,9 @@ that need people go into `docs/playtest-phase8.md`.
 6. **Sneak dismount.** A mixin on `Player#wantsToStopRiding`, or the equivalent in `rideTick`, refuses the
    dismount while riding a `ChairEntity` unless the dismount rules in section 13 allow it. Add the mixin to
    `alpineshred.mixins.json` and to the doc's mixin inventory list in the README.
+
+7. **Speeds are doubles** (settled in WP1). `LiftLine.speed` and `targetSpeed` are `double`, so the server's
+   stepping matches `LiftMotion.advance` exactly. Packets and caches carry them as doubles.
 
 ## 3. Work packages
 
@@ -235,7 +241,8 @@ WP5.
 ### WP5: Sync (section 15)
 
 **Build:**
-- **`s2c/lift_line_sync`** carries: id, node positions, travel (a double), speed, target, game time, the faulted,
+- **`s2c/lift_line_sync`** carries: id, node positions, the chair spacing (`lift.spacing` is server config, and
+  clients must use the server's value to get the same chair count), travel (a double), speed, target, game time, the faulted,
   running and emergency flags, and `removed` (decision 2).
 - **When it is sent:**
   - once when a player comes within `lift.syncRadius` of any node (checked every 40 ticks against a per-player
