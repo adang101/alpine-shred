@@ -23,6 +23,8 @@ that need people go into `docs/playtest-phase8.md`.
 |---|---|
 | WP1: `LiftLine`, `LiftStations`, `PendingLine`, `LiftSavedData`, `LiftManager`, with unit and game tests | Done (`9d99b9f`) |
 | WP2: six lift blocks, `LiftNodeBlockEntity` (head, drive, return), first-tick load check, datagen, 4 game tests (60 per loader) | Done (`59c9a4d`) |
+| WP3: `LiftLinkerItem`, pure `LinkValidator` sharing `LiftPath` geometry (`anchor`, `spanPoint`), 14 unit tests, 2 game tests | Done (merged after WP4) |
+| WP4: `ChairEntity`, `LineView`, `PassengerRule`, `LiftChairs` spawning, re-attach pieces, `MobAccessor` mixin, 8 game tests | Done (`293f73f`) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |
@@ -255,6 +257,9 @@ WP5.
   - every 100 ticks to players in range;
   - on removal.
 - The per-player set clears on logout and dimension change.
+- **Chair hook:** set `ChairEntity.clientLineLookup` (`Function<UUID, LineView>`) from `ClientLiftLines`, and make
+  the client line class implement `LineView`. Until this lands, client chairs move only from vanilla move packets,
+  which arrive every 20 ticks.
 - **`ClientLiftLines`:** a cache of `LiftPath`s and states. Each client tick it steps each line with
   `LiftMotion`. When a sync arrives, it catches up from the packet's game time to the client's level game time
   with `advance`, then replaces its state.
@@ -320,7 +325,9 @@ WP5.
 **Build:**
 - **`LiftDriveSource`** interface: `enabled()`, `targetSpeed()`. `DriveStationBE` implements it.
   - It is enabled by a redstone signal, or always when `lift.driveNeedsRedstone` is false.
-  - Right-click cycles through `lift.speedLevels`.
+  - Right-click cycles through `lift.speedLevels`. The exception is a player holding a `lift_linker`: the drive's
+    `use` must return `PASS`, because vanilla runs the block's `use` before the item's `useOn`, and otherwise the
+    drive would swallow linker clicks. A game test must cover this.
   - Every change writes `powered` and `targetSpeed` into the line. Unloaded drives keep their last command.
   - Nothing else may know which class implements it: phase 9 adds the Create variant.
 - **Emergency stop:** a stop button press, or losing redstone while running when `driveNeedsRedstone` is on,
@@ -351,6 +358,8 @@ WP5.
   - It overrides `shouldRenderOffScreen` to true, with a view distance of 256.
   - Light is sampled at each span's midpoint.
 - **`BullwheelBER`** on both stations: the wheel rotates by `travel / WHEEL_RADIUS`.
+- **Passenger seat height:** WP4 seats passengers at chair Y + 0.1 + `getMyRidingOffset()`. The 0.1 is a
+  placeholder; tune it against the chair model so riders sit on the seat.
 - **`ChairEntityRenderer`:** draws the hanger, seat, backrest and bar. The bar eases over 6 ticks. Light is sampled
   at the chair. The model is placeholder geometry, at most 60 cuboids, with a 64×64 texture.
 - **Animation clips** `lift_mount`, `lift_sit_board`, `lift_sit_skis`, `lift_dismount` (placeholders like the
@@ -426,6 +435,9 @@ WP5.
     - lifts with Sodium/Embeddium and Iris/Oculus;
     - a NeoForge server;
     - building a lift by hand in survival.
+    - The linker checks that the cable clears terrain, but not the chairs hanging 1.6 blocks below it. Check by
+      hand that chairs on a valid line don't clip through hills. If they do, add a chair-clearance sample to
+      `LinkValidator`.
 
 ## 4. Test inventory (what "done" means for phase 8)
 
