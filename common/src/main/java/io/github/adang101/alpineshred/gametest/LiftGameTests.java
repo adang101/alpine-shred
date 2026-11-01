@@ -819,6 +819,12 @@ public final class LiftGameTests {
         return chair;
     }
 
+    /** Air in the chair's block column from {@code below} blocks under the seat to two above it. */
+    private static void clearColumn(ServerLevel level, ChairEntity chair, int below) {
+        BlockPos seat = chair.blockPosition();
+        for (int dy = -below; dy <= 2; dy++) level.setBlock(seat.offset(0, dy, 0), Blocks.AIR.defaultBlockState(), 3);
+    }
+
     /** A strapped survival player standing so that {@code chair} is at their side. */
     private static ServerPlayer riderBeside(GameTestHelper helper, ChairEntity chair) {
         return RideGameTests.serverRider(helper, new Vec3(chair.getX(), chair.getY() - 0.5, chair.getZ()));
@@ -964,7 +970,8 @@ public final class LiftGameTests {
         boolean anywhere = AlpineConfig.LIFT_DISMOUNT_ANYWHERE.on();
         try {
             AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(false);
-            ChairEntity chair = chairAtS(level, line, 70.0);
+            ChairEntity chair = chairAtS(level, line, line.path().loadedEnd() - 10);
+            clearColumn(level, chair, 12); // neighbouring tests may have built under the line
             player = riderBeside(helper, chair);
             check(chair.heightAboveGround() > DismountRule.MAX_HEIGHT, "the chair is only " + chair.heightAboveGround() + " above the ground");
 
@@ -1167,7 +1174,11 @@ public final class LiftGameTests {
         check(line != null, "the line was not created");
         ServerPlayer player = null;
         try {
-            ChairEntity chair = chairAtS(level, line, 70.0);
+            ChairEntity chair = chairAtS(level, line, line.path().loadedEnd() - 10);
+            // Ground for the rider to be put on: one stone block 8 blocks under the seat, air above it.
+            clearColumn(level, chair, 12);
+            BlockPos stone = chair.blockPosition().below(8);
+            level.setBlock(stone, Blocks.STONE.defaultBlockState(), 3);
             player = riderBeside(helper, chair);
             check(player.startRiding(chair), "could not sit");
             check(Riders.state(player) == RideState.LIFT, "not in LIFT");
@@ -1177,7 +1188,7 @@ public final class LiftGameTests {
             check(chair.isRemoved(), "the chair of a removed line stayed");
             check(!player.isPassenger(), "the rider is still aboard");
             check(player.getY() < seatY - 1, "the rider was left floating at " + player.getY() + " (seat " + seatY + ")");
-            check(!level.getBlockState(player.blockPosition().below()).isAir(), "the rider was put down on air at " + player.blockPosition());
+            check(player.blockPosition().equals(stone.above()), "the rider was put at " + player.blockPosition() + ", not on the stone at " + stone);
             check(Riders.state(player) == RideState.IDLE, "state after losing the line " + Riders.state(player));
             check(Riders.isStrapped(player), "unstrapped");
         } finally {
