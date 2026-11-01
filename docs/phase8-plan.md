@@ -26,6 +26,9 @@ that need people go into `docs/playtest-phase8.md`.
 | WP3: `LiftLinkerItem`, pure `LinkValidator` sharing `LiftPath` geometry (`anchor`, `spanPoint`), 14 unit tests, 2 game tests | Done (merged after WP4) |
 | WP4: `ChairEntity`, `LineView`, `PassengerRule`, `LiftChairs` spawning, re-attach pieces, `MobAccessor` mixin, 8 game tests | Done (`293f73f`) |
 | WP5: `LiftLineSync` packet, `LiftSync` (40/100-tick passes, change listener), `ClientLiftLines`/`ClientLine`, shared `LiftMotion.targetFor`, 2 game tests (72 per loader) | Done (`c266445`) |
+| WP6: boarding (right-click, auto-board, `c2s/lift_board`), bar, unloading and ejection, sneak-dismount mixin, leads and pets, `lift_rides`, `lift_ridden` and `bluebird_day`, board prompt, 8 game tests | Done (merging) |
+| WP7: `LiftDriveSource`, redstone drive with emergency on loss, speed cycling (the linker passes through), drive keeps its command across a reload, stop button, `/alpineshred lift` commands, 6 game tests | Done (`31bb9b1`) |
+| WP9: `ResortLiftPlanner` (pure, validated), `LiftLinePiece` (per-chunk, absolute `PendingLine` with an initial drive state), 18 of 28 test resorts get a lift, `resortHasALinkedLift`, survey checks | Done (merging; the worldgen tour is verified in CI) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |
@@ -446,6 +449,19 @@ WP5.
     - The linker checks that the cable clears terrain, but not the chairs hanging 1.6 blocks below it. Check by
       hand that chairs on a valid line don't clip through hills. If they do, add a chair-clearance sample to
       `LinkValidator`.
+
+## 3b. Carried forward (found during WP1–WP9)
+
+- **Concurrent game tests share one level.** A test must never assume it is the only player near its blocks.
+  Lift tests pass their own player list to `LiftChairs.update` (fixed after
+  `chairsSpawnNearPlayersAndDespawnFar` failed intermittently).
+- **Resort generation time:** about 200 ms a start against the doc's 150 ms budget. It was already about 190 ms in
+  phase 7, before lifts; the run planner's noise sampling dominates. This goes to phase 9's optimization pass.
+- **Client-side copies of server config:** `lift.maxBoardSpeed` and `lift.dismountAnywhere` are not in
+  `config_sync`, so a client's board prompt or dismount prediction can disagree with a server that changed them.
+  The server always decides. Phase 9 adds them to `config_sync` with a protocol bump.
+- **Playtest additions:** trees grown after generation can reach a generated cable. Decide in playtest whether
+  generated lifts need a clearing pass.
 
 ## 4. Test inventory (what "done" means for phase 8)
 
