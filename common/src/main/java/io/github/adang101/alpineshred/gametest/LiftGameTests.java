@@ -504,7 +504,7 @@ public final class LiftGameTests {
             BlockPos drive = line.drive;
             player.setPos(drive.getX() + 2000, drive.getY(), drive.getZ());
             LiftChairs.update(level, LiftManager.lines(level));
-            for (int i = 0; i < line.chairCount(); i++) check(LiftChairs.find(level, line.id, i) == null, "chair " + i + " spawned with nobody near");
+            for (int i = 0; i < line.chairCount(); i++) check(LiftChairs.find(level, line.id, i) == null, "chair " + i + " spawned with nobody near; players " + level.players().stream().map(p -> p.getName().getString() + p.position()).toList() + " nodes " + line.nodePositions());
 
             player.setPos(drive.getX(), drive.getY(), drive.getZ());
             LiftChairs.update(level, LiftManager.lines(level));
