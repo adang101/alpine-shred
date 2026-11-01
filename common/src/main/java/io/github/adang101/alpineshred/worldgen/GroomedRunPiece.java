@@ -115,7 +115,7 @@ public class GroomedRunPiece extends StructurePiece {
      * The first block above the ground at (x, z): below any tree that a neighbouring chunk's
      * decoration has already grown into this one, and below plants and snow layers.
      */
-    private static int groundAt(WorldGenLevel level, BlockPos.MutableBlockPos pos, int x, int z) {
+    static int groundAt(WorldGenLevel level, BlockPos.MutableBlockPos pos, int x, int z) {
         int y = level.getHeight(Heightmap.Types.OCEAN_FLOOR_WG, x, z);
         int floor = Math.max(level.getMinBuildHeight(), y - 40);
         while (y > floor) {

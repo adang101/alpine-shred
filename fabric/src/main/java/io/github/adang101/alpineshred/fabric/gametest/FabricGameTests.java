@@ -294,6 +294,11 @@ public final class FabricGameTests implements FabricGameTest {
         io.github.adang101.alpineshred.gametest.WorldgenGameTests.structuresGenerateWithinBounds(helper);
     }
 
+    @GameTest(template = LARGE, timeoutTicks = 600)
+    public static void resortHasALinkedLift(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.WorldgenGameTests.resortHasALinkedLift(helper);
+    }
+
     // ---- phase 8: lifts ----
 
     @GameTest(template = TEMPLATE)

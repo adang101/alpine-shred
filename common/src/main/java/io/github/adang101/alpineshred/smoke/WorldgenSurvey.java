@@ -2,10 +2,14 @@ package io.github.adang101.alpineshred.smoke;
 
 import com.mojang.datafixers.util.Pair;
 import io.github.adang101.alpineshred.AlpineShred;
+import io.github.adang101.alpineshred.lift.LiftLine;
+import io.github.adang101.alpineshred.lift.LiftManager;
+import io.github.adang101.alpineshred.lift.LiftNodeBlockEntity;
 import io.github.adang101.alpineshred.park.block.BoxBlock;
 import io.github.adang101.alpineshred.park.block.RailBlock;
 import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.worldgen.GroomedRunPiece;
+import io.github.adang101.alpineshred.worldgen.LiftLinePiece;
 import io.github.adang101.alpineshred.worldgen.LodgePiece;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -85,13 +89,14 @@ public final class WorldgenSurvey {
             }
             BoundingBox box = start.getBoundingBox();
             int far = 0;
-            int runs = 0, lodges = 0;
+            int runs = 0, lodges = 0, liftPieces = 0;
             for (StructurePiece piece : start.getPieces()) {
                 BoundingBox b = piece.getBoundingBox();
                 far = Math.max(far, Math.max(Math.max(Math.abs((b.minX() >> 4) - chunk.x), Math.abs((b.maxX() >> 4) - chunk.x)),
                         Math.max(Math.abs((b.minZ() >> 4) - chunk.z), Math.abs((b.maxZ() >> 4) - chunk.z))));
                 if (piece instanceof GroomedRunPiece) runs++;
                 if (piece instanceof LodgePiece) lodges++;
+                if (piece instanceof LiftLinePiece) liftPieces++;
             }
             if (far > MAX_CHUNKS_FROM_START) failures.add(name + ": a piece " + far + " chunks from its start");
             // Build everything it touches (and a chunk round it, so the edges are decorated too).
@@ -104,6 +109,7 @@ public final class WorldgenSurvey {
             }
             long built = System.nanoTime();
             Map<String, Integer> counts = count(level, box);
+            if (name.equals("ski_resort")) checkLift(level, box, liftPieces, counts, notes, failures);
             notes.add(String.format(Locale.ROOT, "%s at chunk %s: box %d..%d, %d..%d, %d..%d; %d pieces (%d runs, %d lodges), farthest %d chunks; "
                             + "located in %d ms, %d chunks built in %d ms; %s", name, chunk, box.minX(), box.maxX(), box.minY(), box.maxY(),
                     box.minZ(), box.maxZ(), start.getPieces().size(), runs, lodges, far, (located - t0) / 1_000_000, chunks,
@@ -136,6 +142,45 @@ public final class WorldgenSurvey {
             stops.add(viewpoint(level, name, box, inside));
         }
         return new Result(stops, notes, failures);
+    }
+
+    /**
+     * A resort's lift: the pieces and the blocks agree (a drive, a return station, a head and a pole under each head),
+     * and once every node's load check has run (the chunks here are built but not ticked, so it is run by hand,
+     * as the first tick does) the one line exists and is not faulted. A resort may legitimately have no lift
+     * (its plan was skipped); that is a note, not a failure.
+     */
+    private static void checkLift(ServerLevel level, BoundingBox box, int liftPieces, Map<String, Integer> counts, List<String> notes, List<String> failures) {
+        int drives = counts.getOrDefault("lift_drives", 0), returns = counts.getOrDefault("lift_returns", 0);
+        int heads = counts.getOrDefault("lift_heads", 0), poles = counts.getOrDefault("lift_poles", 0);
+        if (liftPieces == 0) {
+            notes.add("ski_resort: no lift planned (resort lifts: 0)");
+            check(failures, drives + returns + heads + poles == 0, "ski_resort: lift blocks without a lift piece");
+            return;
+        }
+        check(failures, drives == 1 && returns == 1, "ski_resort: " + drives + " drive stations and " + returns + " return stations");
+        check(failures, heads >= 1 && poles >= heads, "ski_resort: " + heads + " heads on " + poles + " poles");
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int x = box.minX(); x <= box.maxX(); x++) {
+            for (int z = box.minZ(); z <= box.maxZ(); z++) {
+                for (int y = box.minY(); y <= box.maxY(); y++) {
+                    if (level.getBlockState(pos.set(x, y, z)).hasBlockEntity() && level.getBlockEntity(pos) instanceof LiftNodeBlockEntity be) {
+                        be.loadCheck(level);
+                    }
+                }
+            }
+        }
+        List<LiftLine> lines = new ArrayList<>();
+        for (LiftLine line : LiftManager.lines(level)) {
+            if (box.isInside(line.drive)) lines.add(line);
+        }
+        check(failures, lines.size() == 1, "ski_resort: " + lines.size() + " lift lines in its bounds");
+        for (LiftLine line : lines) {
+            check(failures, !line.faulted, "ski_resort: generated lift " + line.id + " is faulted: " + line.faultReason);
+            check(failures, line.heads.size() == heads, "ski_resort: the line has " + line.heads.size() + " heads, the world " + heads);
+            notes.add(String.format(Locale.ROOT, "ski_resort lift: resort lifts: 1, %d heads, loop %.0f blocks, faulted %b, powered %b", line.heads.size(),
+                    line.path().loopLength(), line.faulted, line.powered));
+        }
     }
 
     private static void check(List<String> failures, boolean ok, String message) {
@@ -175,6 +220,10 @@ public final class WorldgenSurvey {
                     else if (b == ModBlocks.PARK_RAMP.get()) key = "ramps";
                     else if (b == ModBlocks.QUARTER_PIPE.get()) key = "pipes";
                     else if (b == ModBlocks.START_GATE.get()) key = "start_gates";
+                    else if (b == ModBlocks.LIFT_TOWER_HEAD.get()) key = "lift_heads";
+                    else if (b == ModBlocks.LIFT_TOWER_POLE.get()) key = "lift_poles";
+                    else if (b == ModBlocks.LIFT_DRIVE_STATION.get()) key = "lift_drives";
+                    else if (b == ModBlocks.LIFT_RETURN_STATION.get()) key = "lift_returns";
                     else if (b == Blocks.SNOW_BLOCK) key = "snow_blocks";
                     else if (b == Blocks.SPRUCE_PLANKS) key = "spruce_planks";
                     else if (b == Blocks.CHEST) {

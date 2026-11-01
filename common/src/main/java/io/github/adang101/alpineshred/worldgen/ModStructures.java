@@ -27,6 +27,8 @@ public final class ModStructures {
 
     public static final RegistrySupplier<StructurePieceType> GROOMED_RUN_PIECE = PIECES.register("groomed_run",
             () -> (StructurePieceType) GroomedRunPiece::new);
+    public static final RegistrySupplier<StructurePieceType> LIFT_LINE_PIECE = PIECES.register("lift_line",
+            () -> (StructurePieceType) LiftLinePiece::new);
     public static final RegistrySupplier<StructurePieceType> LODGE_PIECE = PIECES.register("lodge",
             () -> (StructurePieceType.StructureTemplateType) LodgePiece::new);
 
