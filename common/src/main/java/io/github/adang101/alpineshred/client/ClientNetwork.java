@@ -67,6 +67,11 @@ public final class ClientNetwork {
             context.queue(() -> io.github.adang101.alpineshred.client.design.DesignClient.onResult(status));
         });
 
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.LIFT_LINE_SYNC, (buf, context) -> {
+            io.github.adang101.alpineshred.lift.LiftLineSync sync = io.github.adang101.alpineshred.lift.LiftLineSync.read(buf);
+            if (sync != null) context.queue(() -> io.github.adang101.alpineshred.client.lift.ClientLiftLines.accept(sync));
+        });
+
         NetworkManager.registerReceiver(NetworkManager.Side.S2C, ModNetwork.DESIGN_TEMPLATES, (buf, context) -> {
             byte[] payload = buf.readByteArray(ModNetwork.MAX_SYNC_BYTES);
             context.queue(() -> {

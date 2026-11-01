@@ -375,4 +375,14 @@ public final class FabricGameTests implements FabricGameTest {
     public static void groundSearchIsCapped(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.groundSearchIsCapped(helper);
     }
+
+    @GameTest(template = TEMPLATE)
+    public static void clientCatchUpMatchesServer(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.clientCatchUpMatchesServer(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void syncSetTracksPlayers(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.syncSetTracksPlayers(helper);
+    }
 }

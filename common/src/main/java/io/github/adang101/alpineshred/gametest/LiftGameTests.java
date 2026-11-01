@@ -9,6 +9,9 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.phys.BlockHitResult;
+import io.github.adang101.alpineshred.client.lift.ClientLine;
+import io.github.adang101.alpineshred.lift.LiftLineSync;
+import io.github.adang101.alpineshred.lift.LiftSync;
 import io.github.adang101.alpineshred.lift.LiftManager;
 import io.github.adang101.alpineshred.lift.LiftMotion;
 import io.github.adang101.alpineshred.lift.LiftSavedData;
@@ -648,6 +651,141 @@ public final class LiftGameTests {
         ServerLevel level = helper.getLevel();
         BlockPos high = helper.absolutePos(new BlockPos(1, 2, 1)).above(200);
         check(LiftChairs.findGround(level, high) == null, "found ground more than 64 blocks down");
+        helper.succeed();
+    }
+
+    // ---- work package 5: syncing lines to clients ----
+
+    private static void closeEnough(double got, double want, String what) {
+        check(Math.abs(got - want) < 1e-6, what + " " + got + " vs " + want);
+    }
+
+    /**
+     * Syncs {@code line} as the server would at its current state, lets a client copy catch up 137
+     * ticks (by one {@code apply} and by 137 client ticks) while the manager runs 137 more ticks, and
+     * compares travel and speed.
+     */
+    private static void catchUpCheck(ServerLevel level, LiftLine line, String label) {
+        long t = level.getGameTime();
+        LiftLineSync sync = LiftLineSync.of(line, t);
+        ClientLine caught = new ClientLine(sync, t + 137);
+        ClientLine stepped = new ClientLine(sync, t);
+        check(caught.chairCount() == line.chairCount() && stepped.chairCount() == line.chairCount(),
+                label + ": chair count " + caught.chairCount() + " vs " + line.chairCount());
+        check(caught.path().loopLength() == line.path().loopLength(), label + ": loop length");
+        for (int i = 0; i < 137; i++) stepped.tick();
+        for (int i = 0; i < 137; i++) LiftManager.tick(level);
+        closeEnough(caught.travel, line.travel, label + " travel (catch-up)");
+        closeEnough(caught.speed, line.speed, label + " speed (catch-up)");
+        closeEnough(stepped.travel, line.travel, label + " travel (ticked)");
+        closeEnough(stepped.speed, line.speed, label + " speed (ticked)");
+        // A sync from the future never runs a line backward.
+        ClientLine early = new ClientLine(sync, t - 50);
+        closeEnough(early.travel, sync.travel(), label + " early travel");
+        closeEnough(early.speed, sync.speed(), label + " early speed");
+    }
+
+    public static void clientCatchUpMatchesServer(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, nodes(helper, 3));
+        check(line != null, "the line was not created");
+        try {
+            // A sync of a line that has not started.
+            LiftManager.setDrive(level, line.id, true, 2.5);
+            catchUpCheck(level, line, "from standstill");
+            // Mid-ramp: 137 ticks is 3.4 seconds, so the next sync is still short of 2.5.
+            LiftManager.setDrive(level, line.id, false, 2.5);
+            for (int i = 0; i < 400; i++) LiftManager.tick(level);
+            check(line.speed == 0, "the line did not stop");
+            LiftManager.setDrive(level, line.id, true, 2.5);
+            for (int i = 0; i < 30; i++) LiftManager.tick(level);
+            check(line.speed > 0 && line.speed < 2.5, "not mid-ramp: " + line.speed);
+            catchUpCheck(level, line, "mid-ramp");
+            // Steady running.
+            for (int i = 0; i < 100; i++) LiftManager.tick(level);
+            check(line.speed == 2.5, "not at speed: " + line.speed);
+            catchUpCheck(level, line, "steady");
+            // A faulted line: the client slows it at the emergency rate to a stop.
+            LiftManager.fault(level, line.id, "test");
+            for (int i = 0; i < 3; i++) LiftManager.tick(level);
+            check(line.speed > 0, "stopped too soon");
+            catchUpCheck(level, line, "faulted");
+            check(line.speed == 0, "a faulted line did not stop");
+            // An emergency stop that was cleared and a drive that was switched off.
+            LiftSavedData.get(level).get(line.id).faulted = false;
+            LiftManager.setDrive(level, line.id, true, 2.0);
+            for (int i = 0; i < 20; i++) LiftManager.tick(level);
+            LiftManager.emergencyStop(level, line.id);
+            catchUpCheck(level, line, "emergency");
+        } finally {
+            LiftManager.remove(level, line.id);
+        }
+        helper.succeed();
+    }
+
+    public static void syncSetTracksPlayers(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, shortLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer near = RideGameTests.newServerPlayer(helper);
+        ServerPlayer far = RideGameTests.newServerPlayer(helper);
+        List<LiftLineSync> toNear = new ArrayList<>();
+        List<LiftLineSync> toFar = new ArrayList<>();
+        try {
+            LiftSync.reset();
+            LiftSync.setPlayers(l -> List.of(near, far));
+            LiftSync.setSender((player, sync) -> (player == near ? toNear : toFar).add(sync));
+            BlockPos drive = line.drive;
+            near.setPos(drive.getX() + 20, drive.getY(), drive.getZ());
+            far.setPos(drive.getX() + 5000, drive.getY(), drive.getZ());
+
+            LiftSync.pass(level, 39);
+            check(toNear.isEmpty() && LiftSync.synced(near.getUUID()).isEmpty(), "synced off the 40-tick beat");
+            LiftSync.pass(level, 40);
+            check(LiftSync.synced(near.getUUID()).contains(line.id), "the player in range was not synced");
+            check(LiftSync.synced(far.getUUID()).isEmpty() && toFar.isEmpty(), "the player out of range was synced");
+            check(toNear.size() == 1 && !toNear.get(0).removed() && toNear.get(0).id().equals(line.id)
+                    && toNear.get(0).nodes().equals(line.nodePositions()) && toNear.get(0).gameTime() == 40
+                    && toNear.get(0).spacing() == line.spacing(), "the full sync is wrong");
+
+            LiftSync.pass(level, 80);
+            check(toNear.size() == 1, "a line already synced was sent again at 80");
+            LiftSync.pass(level, 100);
+            check(toNear.size() == 2 && toFar.isEmpty(), "no 100-tick resend, or sent to the wrong player");
+
+            // A change goes to everyone who has the line, and only them.
+            LiftManager.setDrive(level, line.id, true, 2.5);
+            check(toNear.size() == 3 && toNear.get(2).powered() && toNear.get(2).targetSpeed() == 2.5 && toFar.isEmpty(),
+                    "the drive change was not sent to the player with the line");
+            LiftManager.setDrive(level, line.id, true, 2.5);
+            check(toNear.size() == 3, "an unchanged drive command was sent");
+            LiftManager.emergencyStop(level, line.id);
+            check(toNear.size() == 4 && toNear.get(3).emergency(), "the emergency stop was not sent");
+
+            // A player who moves in range gets the line at the next scan.
+            far.setPos(drive.getX(), drive.getY(), drive.getZ() + 200);
+            LiftSync.pass(level, 120);
+            check(LiftSync.synced(far.getUUID()).contains(line.id) && toFar.size() == 1, "the player who came in range was not synced");
+            // A line that leaves the radius stays in the set.
+            near.setPos(drive.getX() + 5000, drive.getY(), drive.getZ());
+            LiftSync.pass(level, 160);
+            check(LiftSync.synced(near.getUUID()).contains(line.id), "the line left the set when out of range");
+
+            // Removal reaches everyone with the line and empties their sets.
+            int nearBefore = toNear.size(), farBefore = toFar.size();
+            LiftManager.remove(level, line.id);
+            check(toNear.size() == nearBefore + 1 && toNear.get(nearBefore).removed() && toNear.get(nearBefore).id().equals(line.id),
+                    "removal was not sent to the first player");
+            check(toFar.size() == farBefore + 1 && toFar.get(farBefore).removed(), "removal was not sent to the second player");
+            check(LiftSync.synced(near.getUUID()).isEmpty() && LiftSync.synced(far.getUUID()).isEmpty(), "sets kept the removed line");
+
+            // Logout and dimension change forget the set.
+            LiftSync.forget(far.getUUID());
+            check(LiftSync.synced(far.getUUID()).isEmpty(), "forget kept the set");
+        } finally {
+            LiftSync.reset();
+            LiftManager.remove(level, line.id);
+        }
         helper.succeed();
     }
 }

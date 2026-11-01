@@ -21,6 +21,25 @@ import java.util.UUID;
 public final class LiftManager {
     public static final int SAVE_INTERVAL = 200;
 
+    /** Told when a line's speed target or a flag changes, or when a line is made or removed. */
+    public interface Listener {
+        void changed(ServerLevel level, LiftLine line);
+
+        void removed(ServerLevel level, UUID id);
+    }
+
+    private static volatile Listener listener;
+
+    /** Sets the one listener (networking sets it; the manager itself does not depend on it). */
+    public static void setListener(Listener l) {
+        listener = l;
+    }
+
+    private static void changed(ServerLevel level, LiftLine line) {
+        Listener l = listener;
+        if (l != null) l.changed(level, line);
+    }
+
     private LiftManager() {
     }
 
@@ -48,8 +67,8 @@ public final class LiftManager {
     }
 
     private static void stepLine(LiftSavedData data, LiftLine line) {
-        boolean stopping = line.faulted || line.emergency;
-        double target = line.powered && !stopping ? line.targetSpeed : 0;
+        boolean stopping = LiftMotion.isStopping(line.faulted, line.emergency);
+        double target = LiftMotion.targetFor(line.powered, line.faulted, line.emergency, line.targetSpeed);
         double[] next = LiftMotion.step(line.speed, line.travel, target, stopping, line.path().loopLength());
         boolean speedChanged = next[0] != line.speed;
         line.speed = next[0];
@@ -80,7 +99,9 @@ public final class LiftManager {
             AlpineShred.LOGGER.warn("Cannot make a lift line: {}", e.getMessage());
             return null;
         }
-        return LiftSavedData.get(level).add(line) ? line : null;
+        if (!LiftSavedData.get(level).add(line)) return null;
+        changed(level, line);
+        return line;
     }
 
     /** The line for a pending one, creating it only if its UUID is not yet a line. */
@@ -90,7 +111,10 @@ public final class LiftManager {
     }
 
     public static boolean remove(ServerLevel level, UUID id) {
-        return LiftSavedData.get(level).remove(id) != null;
+        boolean removed = LiftSavedData.get(level).remove(id) != null;
+        Listener l = listener;
+        if (removed && l != null) l.removed(level, id);
+        return removed;
     }
 
     public static LiftLine get(ServerLevel level, UUID id) {
@@ -111,10 +135,12 @@ public final class LiftManager {
         LiftSavedData data = LiftSavedData.get(level);
         LiftLine line = data.get(id);
         if (line == null) return;
-        if (!line.faulted) AlpineShred.LOGGER.info("Lift line {} faulted: {}", id, reason);
+        boolean was = line.faulted;
+        if (!was) AlpineShred.LOGGER.info("Lift line {} faulted: {}", id, reason);
         line.faulted = true;
         line.faultReason = reason;
         data.setDirty();
+        if (!was) changed(level, line);
     }
 
     /** Sets the drive's command: whether it is running and the speed it wants. */
@@ -126,6 +152,7 @@ public final class LiftManager {
             line.powered = powered;
             line.targetSpeed = target;
             data.setDirty();
+            changed(level, line);
         }
     }
 
@@ -135,6 +162,7 @@ public final class LiftManager {
         if (line == null || line.emergency) return;
         line.emergency = true;
         data.setDirty();
+        changed(level, line);
     }
 
     public static void clearEmergency(ServerLevel level, UUID id) {
@@ -143,5 +171,6 @@ public final class LiftManager {
         if (line == null || !line.emergency) return;
         line.emergency = false;
         data.setDirty();
+        changed(level, line);
     }
 }

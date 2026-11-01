@@ -53,6 +53,7 @@ public final class ModNetwork {
     /** Section 22: a Paint Bench save (or reset), and what became of it. */
     public static final ResourceLocation DESIGN_SAVE = AlpineShred.id("c2s/design_save");
     public static final ResourceLocation DESIGN_RESULT = AlpineShred.id("s2c/design_result");
+    public static final ResourceLocation LIFT_LINE_SYNC = AlpineShred.id("s2c/lift_line_sync");
     /** The server's design templates, for the editor (at login and after a reload). */
     public static final ResourceLocation DESIGN_TEMPLATES = AlpineShred.id("s2c/design_templates");
     /** Largest deflated face a save packet may carry; the server's own cap is checked after. */
@@ -304,6 +305,12 @@ public final class ModNetwork {
         } catch (RuntimeException e) {
             return null;
         }
+    }
+
+    public static void sendLiftLineSync(ServerPlayer player, io.github.adang101.alpineshred.lift.LiftLineSync sync) {
+        FriendlyByteBuf buf = buffer();
+        sync.write(buf);
+        NetworkManager.sendToPlayer(player, LIFT_LINE_SYNC, buf);
     }
 
     public static void sendDesignResult(ServerPlayer player, DesignStatus status) {

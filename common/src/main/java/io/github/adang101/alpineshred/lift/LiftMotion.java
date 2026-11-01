@@ -14,6 +14,19 @@ public final class LiftMotion {
     private LiftMotion() {
     }
 
+    /** Faulted and emergency lines slow at the emergency rate. */
+    public static boolean isStopping(boolean faulted, boolean emergency) {
+        return faulted || emergency;
+    }
+
+    /**
+     * The speed a line steers toward: the drive's {@code targetSpeed} while it is powered and neither
+     * faulted nor in emergency, else 0. The server's manager and the clients' copies both use this.
+     */
+    public static double targetFor(boolean powered, boolean faulted, boolean emergency, double targetSpeed) {
+        return powered && !isStopping(faulted, emergency) ? targetSpeed : 0;
+    }
+
     /** The speed one tick later, in blocks per second. */
     public static double nextSpeed(double speed, double target, boolean emergency) {
         double rate = (emergency ? EMERGENCY_DECELERATION : ACCELERATION) / TICKS_PER_SECOND;
