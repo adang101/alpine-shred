@@ -6,6 +6,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 public final class ModTriggers {
     public static final TrickLandedTrigger TRICK_LANDED = CriteriaTriggers.register(new TrickLandedTrigger());
     public static final GrindCompletedTrigger GRIND_COMPLETED = CriteriaTriggers.register(new GrindCompletedTrigger());
+    public static final LiftRiddenTrigger LIFT_RIDDEN = CriteriaTriggers.register(new LiftRiddenTrigger());
 
     private ModTriggers() {
     }

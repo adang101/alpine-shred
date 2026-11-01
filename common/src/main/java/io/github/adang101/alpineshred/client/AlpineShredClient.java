@@ -64,6 +64,7 @@ public final class AlpineShredClient {
                 net.minecraft.client.renderer.entity.NoopRenderer::new);
         ClientNetwork.register();
         io.github.adang101.alpineshred.client.lift.ClientLiftLines.register();
+        io.github.adang101.alpineshred.client.lift.LiftBoardClient.register();
         RideDriver.INSTANCE.register();
         RideDebugOverlay.register();
         SnowParticles.register();

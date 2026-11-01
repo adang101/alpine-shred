@@ -94,6 +94,16 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("message.alpineshred.linker.need_drive", "Right-click a drive station first");
         t.add("message.alpineshred.linker.other_dimension", "The line you started is in another dimension; start again at a drive station");
         t.add("message.alpineshred.linker.duplicate", "Already in this line: %s");
+        t.add("message.alpineshred.lift.board_prompt", "Right-click the chair to board");
+        t.add("message.alpineshred.lift.board_full", "This chair is full");
+        t.add("message.alpineshred.lift.board_too_far", "That chair is too far away");
+        t.add("message.alpineshred.lift.board_too_fast", "The lift is running too fast to board");
+        t.add("message.alpineshred.lift.board_no_pass", "You need a lift pass to ride this lift");
+        t.add("message.alpineshred.lift.board_refused", "This chair cannot take that passenger");
+        t.add("message.alpineshred.lift.bar_down", "Safety bar down");
+        t.add("message.alpineshred.lift.bar_up", "Safety bar up");
+        t.add("message.alpineshred.lift.dismount_refused", "Raise the safety bar to get off, or wait for the top");
+        t.add("message.alpineshred.lift.no_leashed", "No leashed animals within reach");
         t.add("message.alpineshred.linker.already_linked", "Already linked to a working lift: %s. Sneak and right-click its tower head to unlink it");
         t.add("message.alpineshred.linker.node_missing", "Not the right lift block any more: %s");
         t.add("message.alpineshred.linker.too_far", "Too far from the last node: %s blocks (at most %s)");
@@ -202,6 +212,8 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("advancements.alpineshred.first_air.description", "Land a trick worth 100 points");
         t.add("advancements.alpineshred.spin_cycle.title", "Spin Cycle");
         t.add("advancements.alpineshred.spin_cycle.description", "Land a 360");
+        t.add("advancements.alpineshred.bluebird_day.title", "Bluebird Day");
+        t.add("advancements.alpineshred.bluebird_day.description", "Ride a ski lift at least 100 blocks to the top");
 
         // ---- commands ----
         t.add("commands.alpineshred.lift.no_line", "No lift line with the id %s");

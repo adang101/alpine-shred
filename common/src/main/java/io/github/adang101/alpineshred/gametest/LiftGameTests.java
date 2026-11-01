@@ -1,5 +1,15 @@
 package io.github.adang101.alpineshred.gametest;
 
+import com.mojang.authlib.GameProfile;
+import io.github.adang101.alpineshred.lift.Boarding;
+import io.github.adang101.alpineshred.lift.DismountRule;
+import io.github.adang101.alpineshred.movement.RideServer;
+import io.github.adang101.alpineshred.movement.RideState;
+import io.github.adang101.alpineshred.movement.Riders;
+import io.github.adang101.alpineshred.movement.StrapController;
+import io.github.adang101.alpineshred.registry.ModStats;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.Wolf;
 import io.github.adang101.alpineshred.lift.LiftDriveStationBlockEntity;
 import io.github.adang101.alpineshred.lift.LiftLine;
 import io.github.adang101.alpineshred.lift.LiftLinkerItem;
@@ -1069,6 +1079,435 @@ public final class LiftGameTests {
         } finally {
             LiftSync.reset();
             LiftManager.remove(level, line.id);
+        }
+        helper.succeed();
+    }
+
+    // ---- work package 6: boarding, riding, unloading ----
+
+    /**
+     * A climbing line about 150 blocks of cable long that stays within 50 blocks of the test: the drive
+     * (top) first, the return station (bottom) last.
+     */
+    private static List<BlockPos> climbingLine(GameTestHelper helper) {
+        BlockPos base = helper.absolutePos(new BlockPos(1, 2, 1));
+        return List.of(base.offset(0, 20, 0), base.offset(36, 16, 12), base.offset(2, 12, 24), base.offset(38, 8, 36), base.offset(4, 4, 48));
+    }
+
+    /** Spawns chair 0 of {@code line} at loop distance {@code s} (chair 0's {@code s} is the line's travel). */
+    private static ChairEntity chairAtS(ServerLevel level, LiftLine line, double s) {
+        line.travel = s;
+        ChairEntity chair = LiftChairs.spawn(level, line, 0);
+        check(chair != null, "chair 0 was not spawned");
+        chair.tick(); // claims its slot
+        return chair;
+    }
+
+    /** Air in the chair's block column from {@code below} blocks under the seat to two above it. */
+    private static void clearColumn(ServerLevel level, ChairEntity chair, int below) {
+        BlockPos seat = chair.blockPosition();
+        for (int dy = -below; dy <= 2; dy++) level.setBlock(seat.offset(0, dy, 0), Blocks.AIR.defaultBlockState(), 3);
+    }
+
+    /** A strapped survival player standing so that {@code chair} is at their side. */
+    private static ServerPlayer riderBeside(GameTestHelper helper, ChairEntity chair) {
+        return RideGameTests.serverRider(helper, new Vec3(chair.getX(), chair.getY() - 0.5, chair.getZ()));
+    }
+
+    private static void tickLine(ServerLevel level, ChairEntity chair, int ticks) {
+        for (int i = 0; i < ticks; i++) {
+            LiftManager.tick(level);
+            chair.tick();
+        }
+    }
+
+    public static void boardAndRideToTheTop(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer player = null;
+        Cow cow = null;
+        try {
+            LiftManager.setDrive(level, line.id, true, 2.5);
+            line.speed = 2.5;
+            double boardS = 1.0;
+            ChairEntity chair = chairAtS(level, line, boardS);
+            player = riderBeside(helper, chair);
+            int rides = ModStats.value(player, ModStats.LIFT_RIDES);
+            check(Riders.state(player) == RideState.IDLE, "the rider should start strapped in IDLE, was " + Riders.state(player));
+
+            Boarding.Result result = Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH);
+            check(result.ok(), "boarding was refused: " + result);
+            check(player.getVehicle() == chair, "the player is not on the chair");
+            check(Riders.state(player) == RideState.LIFT, "state after boarding " + Riders.state(player));
+            check(!chair.barDown(), "the bar was down at once");
+            cow = cow(level, chair.position());
+            check(level.addFreshEntity(cow) && cow.startRiding(chair), "the cow could not take the second seat");
+
+            tickLine(level, chair, 25);
+            check(chair.barDown(), "the bar did not close 20 ticks after boarding");
+            check(player.getVehicle() == chair, "the player left the chair on the way");
+
+            double ejectS = line.stations().ejectS();
+            check(ejectS - boardS >= 100, "the test line is too short for the advancement: " + (ejectS - boardS));
+            check(line.stations().inUnload(ejectS), "the ejection point is not in the unload stretch");
+            // Skip the middle of the ride; the ejection itself is crossed by ticks.
+            line.travel = ejectS - 6;
+            tickLine(level, chair, 1);
+            check(!chair.barDown(), "the bar did not open in the unload stretch");
+            check(player.getVehicle() == chair, "ejected early");
+            int ticks = 0;
+            while (player.isPassenger() && ticks < 200) {
+                tickLine(level, chair, 1);
+                ticks++;
+            }
+            check(!player.isPassenger(), "the player was never ejected");
+            check(ticks > 20 && ticks < 120, "ejection after " + ticks + " ticks");
+            check(!cow.isPassenger(), "the cow stayed aboard");
+            check(cow.getDeltaMovement().lengthSqr() < 1.0e-9, "the cow was ejected with speed " + cow.getDeltaMovement());
+            check(Riders.state(player) == RideState.GLIDE, "state after the top: " + Riders.state(player));
+            check(Riders.isStrapped(player), "no longer strapped");
+            V3 t = line.path().tangent(ejectS);
+            Vec3 v = player.getDeltaMovement();
+            check(Math.abs(v.x - t.x() * 0.35) < 0.02 && Math.abs(v.z - t.z() * 0.35) < 0.02,
+                    "velocity " + v + ", tangent*0.35 is (" + t.x() * 0.35 + ", " + t.z() * 0.35 + ")");
+            check(Math.hypot(v.x, v.z) > 0.1, "the ejected rider is not moving");
+            check(ModStats.value(player, ModStats.LIFT_RIDES) == rides + 1, "lift_rides " + ModStats.value(player, ModStats.LIFT_RIDES));
+            var advancement = level.getServer().getAdvancements().getAdvancement(new ResourceLocation("alpineshred", "bluebird_day"));
+            check(advancement != null, "bluebird_day is not loaded");
+            check(player.getAdvancements().getOrStartProgress(advancement).isDone(), "bluebird_day was not granted");
+        } finally {
+            if (cow != null) cow.discard();
+            RideGameTests.removeServerPlayer(player);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    public static void boardingRefusedTooFastFullOrNoPass(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer player = null;
+        Cow a = null, b = null;
+        int seats = AlpineConfig.LIFT_SEATS.get();
+        boolean requirePass = AlpineConfig.LIFT_REQUIRE_PASS.on();
+        try {
+            AlpineConfig.LIFT_SEATS.set(2);
+            AlpineConfig.LIFT_REQUIRE_PASS.set(false);
+            ChairEntity chair = chairAtS(level, line, 1.0);
+            player = riderBeside(helper, chair);
+
+            // Too fast.
+            line.speed = AlpineConfig.LIFT_MAX_BOARD_SPEED.get() + 0.5;
+            Boarding.Result fast = Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH);
+            check(fast == Boarding.Result.TOO_FAST && !player.isPassenger(), "too fast gave " + fast);
+            line.speed = 2.5;
+
+            // Too far.
+            Boarding.Result far = Boarding.tryBoard(player, chair, 0.0);
+            check(far == Boarding.Result.TOO_FAR && !player.isPassenger(), "reach 0 gave " + far);
+
+            // Full.
+            a = cow(level, chair.position());
+            b = cow(level, chair.position());
+            check(level.addFreshEntity(a) && level.addFreshEntity(b), "no cows");
+            check(a.startRiding(chair) && b.startRiding(chair), "the cows could not board");
+            Boarding.Result full = Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH);
+            check(full == Boarding.Result.FULL && !player.isPassenger(), "full gave " + full);
+            a.stopRiding();
+            b.stopRiding();
+
+            // No pass: refused without one, boards with one, and the pass is kept.
+            AlpineConfig.LIFT_REQUIRE_PASS.set(true);
+            Boarding.Result noPass = Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH);
+            check(noPass == Boarding.Result.NO_PASS && !player.isPassenger(), "no pass gave " + noPass);
+            player.getInventory().add(new ItemStack(ModItems.LIFT_PASS.get()));
+            Boarding.Result withPass = Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH);
+            check(withPass.ok() && player.getVehicle() == chair, "with a pass gave " + withPass);
+            check(Boarding.hasPass(player), "the pass was consumed");
+        } finally {
+            AlpineConfig.LIFT_SEATS.set(seats);
+            AlpineConfig.LIFT_REQUIRE_PASS.set(requirePass);
+            if (a != null) a.discard();
+            if (b != null) b.discard();
+            RideGameTests.removeServerPlayer(player);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    /** Sneaks the player off the chair as the server does each tick; true if they are still aboard afterwards. */
+    private static boolean sneakAndStay(ServerPlayer player) {
+        player.setShiftKeyDown(true);
+        player.rideTick();
+        boolean aboard = player.isPassenger();
+        player.setShiftKeyDown(false);
+        return aboard;
+    }
+
+    public static void sneakDismountRules(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer player = null;
+        boolean anywhere = AlpineConfig.LIFT_DISMOUNT_ANYWHERE.on();
+        try {
+            AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(false);
+            ChairEntity chair = chairAtS(level, line, line.path().loadedEnd() - 10);
+            clearColumn(level, chair, 12); // neighbouring tests may have built under the line
+            player = riderBeside(helper, chair);
+            check(chair.heightAboveGround() > DismountRule.MAX_HEIGHT, "the chair is only " + chair.heightAboveGround() + " above the ground");
+
+            // Mid-span, bar closed, high up, line healthy: refused.
+            check(player.startRiding(chair), "could not sit");
+            chair.setBarDown(true);
+            check(Riders.state(player) == RideState.LIFT, "not in LIFT");
+            check(sneakAndStay(player), "sneaking got the rider off a closed bar mid-span");
+            check(Riders.state(player) == RideState.LIFT, "state changed by a refused dismount");
+
+            // Bar open: allowed, and the rider is back to IDLE.
+            chair.setBarDown(false);
+            check(!sneakAndStay(player), "an open bar did not let the rider off");
+            check(Riders.state(player) == RideState.IDLE, "state after a sneak dismount " + Riders.state(player));
+
+            // Faulted line: allowed.
+            check(player.startRiding(chair, true), "could not sit again");
+            chair.setBarDown(true);
+            check(sneakAndStay(player), "refused again");
+            line.faulted = true;
+            check(!sneakAndStay(player), "a faulted line did not let the rider off");
+            line.faulted = false;
+
+            // dismountAnywhere: allowed.
+            check(player.startRiding(chair, true), "could not sit the third time");
+            check(sneakAndStay(player), "refused the third time");
+            AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(true);
+            check(!sneakAndStay(player), "dismountAnywhere did not let the rider off");
+        } finally {
+            AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(anywhere);
+            RideGameTests.removeServerPlayer(player);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    private static int countLeads(Player player) {
+        int n = 0;
+        for (ItemStack stack : player.getInventory().items) if (stack.is(Items.LEAD)) n += stack.getCount();
+        return n;
+    }
+
+    public static void leashedMobsBoard(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer player = null;
+        List<Cow> cows = new ArrayList<>();
+        int seats = AlpineConfig.LIFT_SEATS.get();
+        boolean mobs = AlpineConfig.LIFT_MOBS_ALLOWED.on();
+        try {
+            AlpineConfig.LIFT_SEATS.set(2);
+            ChairEntity chair = chairAtS(level, line, 1.0);
+            player = riderBeside(helper, chair);
+            player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.LEAD));
+            for (int i = 0; i < 3; i++) {
+                Cow cow = cow(level, chair.position().add(i - 1, 0, 2));
+                check(level.addFreshEntity(cow), "no cow");
+                cow.setLeashedTo(player, true);
+                cows.add(cow);
+            }
+            check(countLeads(player) == 1, "setup: " + countLeads(player) + " leads");
+            chair.interact(player, InteractionHand.MAIN_HAND);
+            long aboard = cows.stream().filter(c -> c.getVehicle() == chair).count();
+            Player owner = player;
+            long stillLeashed = cows.stream().filter(c -> c.isLeashed() && c.getLeashHolder() == owner).count();
+            check(aboard == 2, aboard + " cows boarded a two-seat chair");
+            check(stillLeashed == 1, stillLeashed + " cows still leashed, expected the one that did not fit");
+            check(cows.stream().filter(c -> c.getVehicle() == chair).noneMatch(Cow::isLeashed), "a boarded cow kept its lead");
+            check(countLeads(player) == 3, "the leads did not come back: " + countLeads(player));
+            check(!player.isPassenger(), "the player boarded too");
+
+            // With mobs not allowed nobody boards and the leads stay on.
+            for (Cow cow : cows) cow.stopRiding();
+            for (Cow cow : cows) cow.setLeashedTo(player, true);
+            AlpineConfig.LIFT_MOBS_ALLOWED.set(false);
+            chair.interact(player, InteractionHand.MAIN_HAND);
+            check(cows.stream().noneMatch(Entity::isPassenger), "a mob boarded with mobsAllowed off");
+            check(cows.stream().allMatch(Cow::isLeashed), "a lead was taken though nobody boarded");
+        } finally {
+            AlpineConfig.LIFT_SEATS.set(seats);
+            AlpineConfig.LIFT_MOBS_ALLOWED.set(mobs);
+            for (Cow cow : cows) cow.discard();
+            RideGameTests.removeServerPlayer(player);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    private static Wolf wolfOf(ServerLevel level, Player owner, Vec3 at) {
+        Wolf wolf = EntityType.WOLF.create(level);
+        check(wolf != null, "no wolf");
+        wolf.setPos(at.x, at.y, at.z);
+        wolf.tame(owner);
+        check(level.addFreshEntity(wolf), "could not add the wolf");
+        return wolf;
+    }
+
+    public static void petFollowsOwner(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer player = null;
+        List<Wolf> wolves = new ArrayList<>();
+        int seats = AlpineConfig.LIFT_SEATS.get();
+        boolean pets = AlpineConfig.LIFT_PETS_AUTO_BOARD.on();
+        boolean mobs = AlpineConfig.LIFT_MOBS_ALLOWED.on();
+        try {
+            AlpineConfig.LIFT_SEATS.set(2);
+            ChairEntity chair = chairAtS(level, line, 1.0);
+            player = riderBeside(helper, chair);
+            Wolf near = wolfOf(level, player, chair.position().add(5, 0, 0));
+            Wolf far = wolfOf(level, player, chair.position().add(12, 0, 0));
+            Wolf second = wolfOf(level, player, chair.position().add(4, 0, 0));
+            wolves.addAll(List.of(near, far, second));
+            check(near.isTame() && player.getUUID().equals(near.getOwnerUUID()), "the wolf is not tamed");
+
+            // Pets off: the owner boards alone.
+            AlpineConfig.LIFT_PETS_AUTO_BOARD.set(false);
+            check(Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH).ok(), "the owner could not board");
+            check(wolves.stream().noneMatch(Entity::isPassenger), "a pet boarded with petsAutoBoard off");
+            chair.ejectPassengers();
+
+            // Mobs not allowed at all: pets stay too.
+            AlpineConfig.LIFT_PETS_AUTO_BOARD.set(true);
+            AlpineConfig.LIFT_MOBS_ALLOWED.set(false);
+            check(Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH).ok(), "the owner could not board");
+            check(wolves.stream().noneMatch(Entity::isPassenger), "a pet boarded with mobsAllowed off");
+            chair.ejectPassengers();
+            AlpineConfig.LIFT_MOBS_ALLOWED.set(true);
+
+            // On: one pet within 8 blocks fits in the free seat; the far one and the one without a seat stay.
+            check(Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH).ok(), "the owner could not board");
+            long aboard = wolves.stream().filter(w -> w.getVehicle() == chair).count();
+            check(aboard == 1, aboard + " pets followed their owner onto a chair with one free seat");
+            check(far.getVehicle() == null, "a pet 12 blocks away boarded");
+            check(chair.getPassengers().size() == 2, "passengers " + chair.getPassengers().size());
+        } finally {
+            AlpineConfig.LIFT_SEATS.set(seats);
+            AlpineConfig.LIFT_PETS_AUTO_BOARD.set(pets);
+            AlpineConfig.LIFT_MOBS_ALLOWED.set(mobs);
+            for (Wolf w : wolves) w.discard();
+            RideGameTests.removeServerPlayer(player);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    public static void riderSurvivesRelog(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "alpine-relog");
+        ServerPlayer first = null, second = null;
+        try {
+            line.travel = 40;
+            ChairEntity chair = chairAtS(level, line, 40);
+            first = RideGameTests.newServerPlayer(helper, profile);
+            first.moveTo(chair.getX(), chair.getY() - 0.5, chair.getZ());
+            check(first.startRiding(chair), "could not sit");
+            chair.setBarDown(true);
+            CompoundTag saved = new CompoundTag();
+            first.saveWithoutId(saved);
+            check(saved.contains("RootVehicle"), "the player's data has no root vehicle");
+            CompoundTag vehicle = saved.getCompound("RootVehicle").getCompound("Entity");
+            check(vehicle.hasUUID("Line") && vehicle.getUUID("Line").equals(line.id) && vehicle.getInt("Index") == 0,
+                    "the saved chair lost its line or index: " + vehicle);
+
+            // A real log out and in: the server saves the player, drops the chair with them and loads both back.
+            level.getServer().getPlayerList().remove(first);
+            check(chair.isRemoved(), "the chair outlived its only rider's logout");
+            first = null;
+            second = RideGameTests.newServerPlayer(helper, profile);
+            check(second.getVehicle() instanceof ChairEntity, "the rider was not put back on a chair");
+            ChairEntity back = (ChairEntity) second.getVehicle();
+            check(back != chair, "the old chair came back");
+            check(line.id.equals(back.lineId()) && back.chairIndex() == 0, "the chair's slot changed");
+            check(back.barDown(), "the bar was not saved");
+            back.tick();
+            check(LiftChairs.find(level, line.id, 0) == back, "the reloaded chair did not claim its slot");
+            check(back.getPassengers().contains(second), "the rider is not a passenger of the chair");
+            V3 want = line.path().chairPos(line.travel, 0, line.chairCount());
+            check(Math.abs(back.getX() - want.x()) < 1e-6 && Math.abs(back.getY() - want.y()) < 1e-6, "the chair is at " + back.position() + ", wanted " + want);
+            // The line spawns the other chairs without making a second chair 0.
+            LiftChairs.update(level, LiftManager.lines(level));
+            int zero = level.getEntities(ModEntities.LIFT_CHAIR.get(), new AABB(line.drive).inflate(200),
+                    e -> line.id.equals(e.lineId()) && e.chairIndex() == 0 && !e.isRemoved()).size();
+            check(zero == 1, zero + " chairs for slot 0");
+        } finally {
+            RideGameTests.removeServerPlayer(first);
+            RideGameTests.removeServerPlayer(second);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    public static void riderEjectedWhenLineGone(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer player = null;
+        try {
+            ChairEntity chair = chairAtS(level, line, line.path().loadedEnd() - 10);
+            // Ground for the rider to be put on: one stone block 8 blocks under the seat, air above it.
+            clearColumn(level, chair, 12);
+            BlockPos stone = chair.blockPosition().below(8);
+            level.setBlock(stone, Blocks.STONE.defaultBlockState(), 3);
+            player = riderBeside(helper, chair);
+            check(player.startRiding(chair), "could not sit");
+            check(Riders.state(player) == RideState.LIFT, "not in LIFT");
+            double seatY = chair.getY();
+            LiftManager.remove(level, line.id);
+            chair.tick();
+            check(chair.isRemoved(), "the chair of a removed line stayed");
+            check(!player.isPassenger(), "the rider is still aboard");
+            check(player.getY() < seatY - 1, "the rider was left floating at " + player.getY() + " (seat " + seatY + ")");
+            check(player.blockPosition().equals(stone.above()), "the rider was put at " + player.blockPosition() + ", not on the stone at " + stone);
+            check(Riders.state(player) == RideState.IDLE, "state after losing the line " + Riders.state(player));
+            check(Riders.isStrapped(player), "unstrapped");
+        } finally {
+            RideGameTests.removeServerPlayer(player);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    public static void staysStrappedOnChair(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        ServerPlayer player = null;
+        Cow cow = null;
+        try {
+            ChairEntity chair = chairAtS(level, line, 1.0);
+            player = riderBeside(helper, chair);
+            check(Boarding.tryBoard(player, chair, Boarding.MANUAL_REACH).ok(), "could not board");
+            check(Riders.isStrapped(player) && Riders.state(player) == RideState.LIFT, "state " + Riders.state(player));
+            check(StrapController.autoUnstrapReason(player) == null, "auto-unstrap says " + StrapController.autoUnstrapReason(player));
+            for (int i = 0; i < 40; i++) StrapController.serverTick(player);
+            check(Riders.isStrapped(player) && Riders.state(player) == RideState.LIFT, "state after ticks " + Riders.state(player));
+            check(RideServer.violations(player) == 0 && RideServer.corrections(player) == 0, "the validator flagged a rider on a chair");
+
+            // Any other vehicle still unstraps.
+            player.stopRiding();
+            check(Riders.state(player) == RideState.IDLE, "state after getting off " + Riders.state(player));
+            cow = cow(level, chair.position());
+            check(level.addFreshEntity(cow) && player.startRiding(cow, true), "could not ride the cow");
+            check(StrapController.autoUnstrapReason(player) == StrapController.UnstrapReason.VEHICLE, "a cow did not unstrap");
+        } finally {
+            if (cow != null) cow.discard();
+            RideGameTests.removeServerPlayer(player);
+            cleanUp(level, line);
         }
         helper.succeed();
     }
