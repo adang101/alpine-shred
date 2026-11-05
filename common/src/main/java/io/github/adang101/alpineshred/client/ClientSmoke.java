@@ -14,9 +14,8 @@ import io.github.adang101.alpineshred.lift.ChairEntity;
 import io.github.adang101.alpineshred.lift.LiftChairs;
 import io.github.adang101.alpineshred.lift.LiftLine;
 import io.github.adang101.alpineshred.lift.LiftManager;
-import io.github.adang101.alpineshred.lift.LiftNodeBlockEntity;
-import io.github.adang101.alpineshred.lift.LiftTowerHeadBlockEntity;
 import io.github.adang101.alpineshred.client.lift.ClientLiftLines;
+import io.github.adang101.alpineshred.client.lift.ClientLine;
 import io.github.adang101.alpineshred.client.lift.LiftRenderStats;
 import io.github.adang101.alpineshred.client.lift.LiftSoundManager;
 import io.github.adang101.alpineshred.park.V3;
@@ -138,7 +137,7 @@ public final class ClientSmoke {
     private static final float OFFSIDE = 90f;
 
     private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS, PAINT,
-        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, TOUR, LIFT_VIEWS, LIFT_RIDE, DONE}
+        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, MULTI_LIFT, TOUR, LIFT_VIEWS, LIFT_RIDE, DONE}
 
     private record Shot(String name, int frame) {
     }
@@ -216,7 +215,7 @@ public final class ClientSmoke {
         stageTicks++;
         if (stage == Stage.DONE) return;
         takePending(mc);
-        if (ticks > (WORLDGEN ? 3 * TIMEOUT_TICKS : TIMEOUT_TICKS)) {
+        if (ticks > (WORLDGEN || MULTI ? 3 * TIMEOUT_TICKS : TIMEOUT_TICKS)) {
             failures.add("timed out in stage " + stage);
             finish(mc);
             return;
@@ -227,6 +226,7 @@ public final class ClientSmoke {
                     // Quick play (--quickPlayMultiplayer) joins the server on its own.
                     if (mc.player != null && mc.level != null && mc.player.tickCount > 40) {
                         playerId = mc.player.getUUID();
+                        myName = mc.player.getName().getString();
                         mc.options.setCameraType(WATCHER ? CameraType.FIRST_PERSON : CameraType.THIRD_PERSON_BACK);
                         RideDebugOverlay.setEnabled(!WATCHER);
                         note("joined as " + mc.player.getName().getString());
@@ -331,10 +331,13 @@ public final class ClientSmoke {
                 }
             }
             case RIDE_MULTI -> {
-                if (ride(mc, false)) finish(mc);
+                if (ride(mc, false)) next(Stage.MULTI_LIFT);
             }
             case WATCH -> {
-                if (watch(mc)) finish(mc);
+                if (watch(mc)) next(Stage.MULTI_LIFT);
+            }
+            case MULTI_LIFT -> {
+                if (multiLift(mc)) finish(mc);
             }
             case RIDE_PARK -> {
                 if (ridePark(mc)) next(Stage.PARK_TOOLS);
@@ -919,34 +922,10 @@ public final class ClientSmoke {
         origin = base;
         BlockPos ret = base.offset(0, 0, 8), low = base.offset(0, 8, 36), high = base.offset(0, 15, 62), drive = base.offset(0, 21, 86);
         List<BlockPos> nodes = List.of(drive, high, low, ret);
-        BlockState groomed = ModBlocks.GROOMED_SNOW.get().defaultBlockState();
-        for (BlockPos station : List.of(ret, drive)) {
-            for (int dx = -4; dx <= 4; dx++) {
-                for (int dz = -4; dz <= 4; dz++) level.setBlock(station.offset(dx, -1, dz), groomed, 2);
-            }
-        }
-        for (BlockPos tower : List.of(low, high, drive.below())) {
-            for (int y = base.getY(); y < tower.getY(); y++) {
-                level.setBlock(new BlockPos(tower.getX(), y, tower.getZ()), ModBlocks.LIFT_TOWER_POLE.get().defaultBlockState(), 2);
-            }
-        }
-        level.setBlock(drive.below(), Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
-        for (int i = 0; i < nodes.size(); i++) {
-            var block = i == 0 ? ModBlocks.LIFT_DRIVE_STATION : i == nodes.size() - 1 ? ModBlocks.LIFT_RETURN_STATION : ModBlocks.LIFT_TOWER_HEAD;
-            level.setBlock(nodes.get(i), block.get().defaultBlockState(), 3);
-        }
-        LiftLine line = LiftManager.create(level, nodes);
+        LiftLine line = SmokeCourse.buildLift(level, nodes);
         if (line == null) {
-            failures.add("lift: the line was not created");
+            failures.add("lift: the line was not created, or a node has no block entity");
             return;
-        }
-        for (int i = 0; i < nodes.size(); i++) {
-            if (!(level.getBlockEntity(nodes.get(i)) instanceof LiftNodeBlockEntity node)) {
-                failures.add("lift: no block entity at node " + i);
-                return;
-            }
-            if (node instanceof LiftTowerHeadBlockEntity head) head.setLink(line.id, nodes.get(i - 1), nodes.get(i + 1));
-            else node.setLineId(line.id); // the drive reads its redstone here and powers the line
         }
         liftId = line.id;
         V3 spot = line.path().pos(2.0);
@@ -1191,6 +1170,89 @@ public final class ClientSmoke {
         check(FeelStats.clipsPlayed > 3, who + ": the rider's animation barely changed: " + FeelStats.summary());
         check(FeelStats.loopsStarted > 0, who + ": no riding sounds from the rider");
         return true;
+    }
+
+    // ---- multiplayer lift stage (phase 8) ---------------------------------------------------------------
+
+    private static String myName = "";
+    /** Ticks spent aboard a chair; the sample gt last written; the ticks before which no chair is written. */
+    private static int liftOnboard, sampleFrom;
+    private static long lastSampleGt = -1;
+    /** 0 not disconnected, 1 waiting to reconnect, 2 connecting, 3 back (watcher1 only; the server kicks it mid-ride). */
+    private static int relogState, relogTicks;
+    private static boolean sneakingOff;
+
+    /**
+     * After the run the server builds a lift and the three players ride it (ServerSmoke does the staging): this
+     * client writes where it sees every chair (nearby, with a synced line) each ten game ticks as
+     * {@code lchair gt<time> <index> x y z}; watcher1 reconnects when the server kicks it; and a rider on a line
+     * that has faulted sneaks, which must let it off. True when the server has closed the session.
+     */
+    private static boolean multiLift(Minecraft mc) {
+        LocalPlayer self = mc.player;
+        if (self == null || mc.level == null) return liftOffline(mc);
+        if (relogState == 2) {
+            relogState = 3;
+            // The chairs jump to their synced places once the line arrives; leave that out of the samples.
+            sampleFrom = ticks + 200;
+            note("lift: " + myName + " is back after " + relogTicks + " ticks, vehicle " + self.getVehicle());
+        }
+        if (self.getVehicle() instanceof ChairEntity chair) {
+            liftOnboard++;
+            ClientLine view = chair.lineId() == null ? null : ClientLiftLines.get(chair.lineId());
+            boolean sneak = view != null && view.faulted();
+            if (sneak && !sneakingOff) note(String.format(Locale.ROOT, "lift: %s sees its line faulted at gt%d (speed %.2f), sneaking to get off", myName,
+                    mc.level.getGameTime(), view.speed()));
+            sneakingOff = sneak;
+            hold(mc.options.keyShift, sneak);
+        } else if (sneakingOff) {
+            sneakingOff = false;
+            hold(mc.options.keyShift, false);
+            note("lift: " + myName + " is off the chair at gt" + mc.level.getGameTime());
+        }
+        long gt = mc.level.getGameTime();
+        if (gt % 10 == 0 && gt > lastSampleGt) {
+            lastSampleGt = gt;
+            if (ticks >= sampleFrom && ticks >= quietUntil) {
+                for (ChairEntity chair : mc.level.getEntitiesOfClass(ChairEntity.class, self.getBoundingBox().inflate(100))) {
+                    if (chair.lineId() == null || ClientLiftLines.get(chair.lineId()) == null) continue;
+                    note(String.format(Locale.ROOT, "lchair gt%d %d %.3f %.3f %.3f", gt, chair.chairIndex(), chair.getX(), chair.getY(), chair.getZ()));
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Not in a world: the server stopped (done), or, for watcher1 after riding, it was kicked and reconnects. */
+    private static boolean liftOffline(Minecraft mc) {
+        if (relogState == 0) {
+            if (!"watcher1".equals(myName) || liftOnboard == 0) {
+                check(liftOnboard > 0, "lift: " + myName + " never rode a chair");
+                return true;
+            }
+            relogState = 1;
+            relogTicks = 0;
+            note("lift: disconnected after " + liftOnboard + " ticks aboard; reconnecting in 3 seconds");
+        } else if (relogState == 1) {
+            if (++relogTicks >= 60) {
+                String address = "localhost:25565";
+                net.minecraft.client.gui.screens.ConnectScreen.startConnecting(
+                        mc.screen != null ? mc.screen : new net.minecraft.client.gui.screens.TitleScreen(), mc,
+                        net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
+                        new net.minecraft.client.multiplayer.ServerData("smoke", address, false), false);
+                relogState = 2;
+                relogTicks = 0;
+            }
+        } else if (relogState == 2) {
+            if (++relogTicks > 20 * 90) {
+                failures.add("lift: " + myName + " could not reconnect");
+                return true;
+            }
+        } else {
+            check(liftOnboard > 0, "lift: " + myName + " never rode a chair");
+            return true;
+        }
+        return false;
     }
 
     // ---- park (phase 4) -----------------------------------------------------------------------------

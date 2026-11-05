@@ -17,6 +17,66 @@ import sys
 SELF = re.compile(r"^self gt(\d+) (\w+) (\S+) (\S+) (\S+)")
 WATCH = re.compile(r"^watch gt(\d+) (\w+) (\S+) (\S+) (\S+)")
 STALL = re.compile(r"^stall gt(\d+) (\d+) ms")
+CHAIR = re.compile(r"^chair gt(\d+) (\d+) (\S+) (\S+) (\S+)")
+LCHAIR = re.compile(r"^lchair gt(\d+) (\d+) (\S+) (\S+) (\S+)")
+CHAIR_TOLERANCE = 0.25
+
+
+def chairs(path, pattern):
+    """(game time, chair index) to its position."""
+    out = {}
+    try:
+        with open(path) as f:
+            for line in f:
+                m = pattern.match(line)
+                if m:
+                    out[(int(m.group(1)), int(m.group(2)))] = (float(m.group(3)), float(m.group(4)), float(m.group(5)))
+    except FileNotFoundError:
+        pass
+    return out
+
+
+def lift_lines(path):
+    try:
+        with open(path) as f:
+            return [line.rstrip() for line in f if line.startswith("lift: ")]
+    except FileNotFoundError:
+        return []
+
+
+def check_chairs(server_path, client_paths, after_stall):
+    """Compares what each client saw of the chairs with the server's own, by game time. True if they agree."""
+    server = chairs(server_path, CHAIR)
+    for line in lift_lines(server_path):
+        print("multiplayer check: " + line)
+    if not server:
+        print("multiplayer check: no lift chairs in the server transcript")
+        return False
+    ok = True
+    for path in client_paths:
+        devs = []
+        shifted = 0
+        for (t, i), (x, y, z) in chairs(path, LCHAIR).items():
+            if after_stall(t) or (t, i) not in server:
+                continue
+            d = math.dist((x, y, z), server[(t, i)])
+            devs.append(d)
+            # Diagnostic only: would the sample agree with the server's chair a tick earlier or later?
+            if d > CHAIR_TOLERANCE and any(math.dist((x, y, z), server[(t + dt, i)]) <= CHAIR_TOLERANCE for dt in (-2, -1, 1, 2) if (t + dt, i) in server):
+                shifted += 1
+        if not devs:
+            print(f"multiplayer check: {path}: no chair samples that match the server's")
+            ok = False
+            continue
+        devs.sort()
+        bad = sum(1 for d in devs if d > CHAIR_TOLERANCE)
+        print(f"multiplayer check: {path}: {len(devs)} chair samples, max deviation {devs[-1]:.3f}, median {devs[len(devs) // 2]:.3f}, "
+              f"{bad} over {CHAIR_TOLERANCE} ({shifted} of them within it a tick or two off in time)")
+        for line in lift_lines(path):
+            print("multiplayer check:   " + line)
+        if len(devs) < 50 or bad > 0.05 * len(devs):
+            ok = False
+    return ok
 
 
 def read(path, pattern):
@@ -78,6 +138,9 @@ def main():
         n = max(1, len(moving))
         print(f"multiplayer check: {path}: {len(moving)} samples while riding, {far} off the track, {wrong} in a state the rider was not in")
         if len(moving) < 20 or far > 0.05 * n or wrong > 0.05 * n:
+            ok = False
+    if server:
+        if not check_chairs(server[0], args, after_stall):
             ok = False
     print("multiplayer check:", "PASS" if ok else "FAIL")
     return 0 if ok else 1

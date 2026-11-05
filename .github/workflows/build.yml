@@ -16,7 +16,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     defaults:
       run:
         # Explicit bash turns on pipefail, so piping Gradle through tee keeps its exit code.
@@ -151,10 +151,11 @@ jobs:
           grep -q "^RESULT PASS" forge/build/smoke-lift/alpineshred-smoke.txt
 
       # Phase 2's exit gate: a dedicated server and three clients (a rider, two watchers) on one
-      # machine; the watchers must see the rider's state, track and animation.
+      # machine; the watchers must see the rider's state, track and animation. Phase 8 adds a lift
+      # stage: all three ride a lift of over 400 blocks, watcher1 relogs mid-ride, a head is broken.
       - name: Multiplayer (Forge dedicated server, three clients)
         if: success() || failure()
-        timeout-minutes: 25
+        timeout-minutes: 45
         env:
           LIBGL_ALWAYS_SOFTWARE: "1"
         run: .github/scripts/multiplayer-smoke.sh "$RUNNER_TEMP/ci-logs" $GRADLE_ARGS

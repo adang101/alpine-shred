@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Phase 2's exit gate, "three clients see correct state": a Forge dedicated server and three Forge
-# clients (a rider and two watchers) on one machine, each its own Gradle run. Usage:
+# clients (a rider and two watchers) on one machine, each its own Gradle run. After the run the
+# three ride a 400-block ski lift (phase 8's exit gate). Usage:
 #   multiplayer-smoke.sh <log dir> [gradle args...]
 set -uo pipefail
 LOGS="$1"; shift
@@ -82,9 +83,9 @@ for role in rider watcher1 watcher2; do
   sleep 10
 done
 
-# The server's smoke ends the session (and stops the server) when the watchers are done or it
-# times out; clients get a minute after that to write their transcripts, then are stopped.
-for _ in $(seq 1 180); do kill -0 $SERVER 2>/dev/null || break; sleep 5; done
+# The server's smoke ends the session (and stops the server) when the lift stage is done or it
+# times out; clients notice the disconnect and write their transcripts, then are stopped.
+for _ in $(seq 1 300); do kill -0 $SERVER 2>/dev/null || break; sleep 5; done
 kill $SERVER 2>/dev/null
 wait $SERVER 2>/dev/null
 for _ in $(seq 1 12); do
@@ -104,7 +105,7 @@ status=0
 for f in "$B/smoke-server/alpineshred-server-smoke.txt" "$B/smoke-rider/alpineshred-smoke.txt" \
          "$B/smoke-watcher1/alpineshred-smoke.txt" "$B/smoke-watcher2/alpineshred-smoke.txt"; do
   echo "=== $f"
-  if [ -f "$f" ]; then grep -vE "^self gt|^watch gt" "$f" | tail -25; grep -q "^RESULT PASS" "$f" || status=1; else echo "missing"; status=1; fi
+  if [ -f "$f" ]; then grep -vE "^self gt|^watch gt|^chair gt|^lchair gt" "$f" | tail -25; grep -q "^RESULT PASS" "$f" || status=1; else echo "missing"; status=1; fi
 done
 python3 .github/scripts/multiplayer-check.py "$B/smoke-server/alpineshred-server-smoke.txt" "$B/smoke-rider/alpineshred-smoke.txt" \
   "$B/smoke-watcher1/alpineshred-smoke.txt" "$B/smoke-watcher2/alpineshred-smoke.txt" || status=1
