@@ -1,0 +1,148 @@
+{
+ "version": 3,
+ "name": "lift_mount",
+ "author": "Alpine Shred placeholder",
+ "description": "Sitting back onto a chair",
+ "emote": {
+  "beginTick": 0,
+  "endTick": 10,
+  "stopTick": 11,
+  "isLoop": false,
+  "returnTick": 0,
+  "degrees": true,
+  "moves": [
+   {
+    "tick": 0,
+    "easing": "OUTQUAD",
+    "torso": {
+     "x": 0,
+     "y": 0.5,
+     "z": 0,
+     "pitch": 4,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 2.5,
+     "z": 0,
+     "pitch": -5,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 2.5,
+     "z": 0,
+     "pitch": -5,
+     "yaw": 0,
+     "roll": -10
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": 10
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": 0,
+     "yaw": 0,
+     "roll": -10
+    }
+   },
+   {
+    "tick": 5,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 2.0,
+     "z": 0,
+     "pitch": 14,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -40,
+     "yaw": 0,
+     "roll": 8
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 4.0,
+     "z": 0,
+     "pitch": -40,
+     "yaw": 0,
+     "roll": -8
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -45,
+     "yaw": 0,
+     "roll": 6
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -45,
+     "yaw": 0,
+     "roll": -6
+    }
+   },
+   {
+    "tick": 10,
+    "easing": "INOUTSINE",
+    "torso": {
+     "x": 0,
+     "y": 0,
+     "z": 0,
+     "pitch": -3,
+     "yaw": 0,
+     "roll": 0
+    },
+    "rightArm": {
+     "x": -5,
+     "y": 2,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": 8
+    },
+    "leftArm": {
+     "x": 5,
+     "y": 2,
+     "z": 0,
+     "pitch": -30,
+     "yaw": 0,
+     "roll": -8
+    },
+    "rightLeg": {
+     "x": -1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -82,
+     "yaw": 0,
+     "roll": 4
+    },
+    "leftLeg": {
+     "x": 1.9,
+     "y": 12,
+     "z": 0.1,
+     "pitch": -82,
+     "yaw": 0,
+     "roll": -4
+    }
+   }
+  ]
+ }
+}

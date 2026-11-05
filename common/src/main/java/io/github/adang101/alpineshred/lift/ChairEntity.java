@@ -34,6 +34,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,8 +63,20 @@ public class ChairEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_INDEX = SynchedEntityData.defineId(ChairEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> DATA_BAR_DOWN = SynchedEntityData.defineId(ChairEntity.class, EntityDataSerializers.BOOLEAN);
 
-    /** Height of a rider's seat above the chair's position (the seat). */
-    public static final double SEAT_HEIGHT = 0.1;
+    /**
+     * Height of a mob's feet above the chair's position, the top of the seat plank (the chair model's origin).
+     */
+    public static final double SEAT_HEIGHT = 0.02;
+    /**
+     * Height of a player's feet above the chair's position, before the player's riding offset of -0.35 is
+     * added. A seated player's hips are 0.75 above the feet, so the hips land on the plank: 0.35 - 0.75.
+     */
+    public static final double PLAYER_SEAT_HEIGHT = -0.4;
+    /** Ticks the safety bar takes to swing down or up on the client. */
+    public static final int BAR_EASE_TICKS = 6;
+    /** Client-side hook: told when a chair's bar closes (true) or opens (false); the sound manager sets it. */
+    public static volatile java.util.function.BiConsumer<ChairEntity, Boolean> clientBarHook = (chair, down) -> {
+    };
 
     /** Passenger uuid to the persistence flag the mob had before it boarded. */
     private final Map<UUID, Boolean> originalPersistence = new HashMap<>();
@@ -78,6 +91,8 @@ public class ChairEntity extends Entity {
     private double lastS = Double.NaN;
     /** Ticks until the bar closes; 0 when no closing is pending. */
     private int barTicks;
+    /** Client only: how far down the bar is drawn, 0 (raised) to 1 (lowered), and the value a tick ago; NaN before the first tick. */
+    private float barProgress = Float.NaN, barProgressO;
     private boolean wasInUnload;
     /** Passenger uuid to the loop distance where the passenger boarded (players only). */
     private final Map<UUID, Double> boardedAt = new HashMap<>();
@@ -110,6 +125,31 @@ public class ChairEntity extends Entity {
         entityData.set(DATA_BAR_DOWN, down);
     }
 
+    /** Client only: how far down the bar is, 0 to 1, between ticks. It eases over {@link #BAR_EASE_TICKS} ticks. */
+    public float barProgress(float partialTick) {
+        if (Float.isNaN(barProgress)) return barDown() ? 1f : 0f;
+        return Mth.lerp(partialTick, barProgressO, barProgress);
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> accessor) {
+        super.onSyncedDataUpdated(accessor);
+        // Not on the update that comes with the spawn: a chair coming into view with its bar down is silent.
+        if (level().isClientSide && tickCount > 1 && DATA_BAR_DOWN.equals(accessor)) clientBarHook.accept(this, barDown());
+    }
+
+    /** A chair hangs 1.6 blocks below its carriage, outside the 1.2 x 0.5 box it is picked with. */
+    @Override
+    public AABB getBoundingBoxForCulling() {
+        return getBoundingBox().expandTowards(0, LiftPath.CHAIR_HANG, 0);
+    }
+
+    /** Chairs are drawn out to the distance they are spawned at, not the 60 blocks a box this small would give. */
+    @Override
+    public boolean shouldRenderAtSqrDistance(double distanceSqr) {
+        return distanceSqr < LiftChairs.SPAWN_RADIUS * LiftChairs.SPAWN_RADIUS;
+    }
+
     public void setLine(UUID lineId, int index) {
         entityData.set(DATA_LINE, Optional.ofNullable(lineId));
         entityData.set(DATA_INDEX, index);
@@ -138,6 +178,10 @@ public class ChairEntity extends Entity {
             UUID id = lineId();
             LineView view = id == null ? null : clientLineLookup.apply(id);
             if (view != null && chairIndex() < view.chairCount()) place(view);
+            float target = barDown() ? 1f : 0f;
+            if (Float.isNaN(barProgress)) barProgress = target;
+            barProgressO = barProgress;
+            barProgress += Mth.clamp(target - barProgress, -1f / BAR_EASE_TICKS, 1f / BAR_EASE_TICKS);
             return;
         }
         ServerLevel level = (ServerLevel) level();
@@ -327,17 +371,41 @@ public class ChairEntity extends Entity {
         double offset = PassengerRule.seatOffset(Math.max(0, getPassengers().indexOf(passenger)), seats);
         double yaw = Math.toRadians(getYRot());
         // Sideways is perpendicular to the facing (-sin yaw, cos yaw).
-        move.accept(passenger, getX() + Math.cos(yaw) * offset, getY() + SEAT_HEIGHT + passenger.getMyRidingOffset(), getZ() + Math.sin(yaw) * offset);
-        if (!(passenger instanceof Player)) {
+        double seat = passenger instanceof Player ? PLAYER_SEAT_HEIGHT : SEAT_HEIGHT;
+        move.accept(passenger, getX() + Math.cos(yaw) * offset, getY() + seat + passenger.getMyRidingOffset(), getZ() + Math.sin(yaw) * offset);
+        if (passenger instanceof Player) {
+            clampRotation(passenger);
+        } else {
             passenger.setYRot(getYRot());
             passenger.setYHeadRot(getYRot());
             if (passenger instanceof LivingEntity living) living.setYBodyRot(getYRot());
         }
     }
 
+    /** As {@code Boat.clampRotation}: the body faces along the cable and the head may turn 105 degrees either way. */
+    private void clampRotation(Entity passenger) {
+        passenger.setYBodyRot(getYRot());
+        float diff = Mth.wrapDegrees(passenger.getYRot() - getYRot());
+        float clamped = Mth.clamp(diff, -105f, 105f);
+        passenger.yRotO += clamped - diff;
+        passenger.setYRot(passenger.getYRot() + clamped - diff);
+        passenger.setYHeadRot(passenger.getYRot());
+    }
+
+    @Override
+    public void onPassengerTurned(Entity passenger) {
+        if (passenger instanceof Player) clampRotation(passenger);
+    }
+
     @Override
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
+        if (passenger instanceof Player) {
+            // A boarding player starts out looking along the cable.
+            passenger.setYRot(getYRot());
+            passenger.yRotO = getYRot();
+            passenger.setYHeadRot(getYRot());
+        }
         if (!level().isClientSide && passenger instanceof ServerPlayer player) {
             if (!barDown()) barTicks = BAR_DELAY;
             double s = currentS();

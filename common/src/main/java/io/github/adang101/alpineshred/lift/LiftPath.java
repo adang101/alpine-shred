@@ -97,10 +97,10 @@ public final class LiftPath {
      * Where the cable passes node {@code i} of {@code nodes}: {@link #CABLE_HEIGHT} above it and
      * {@link #WHEEL_RADIUS} (a station) or {@link #HEAD_OFFSET} (a head) to its left (the loaded
      * cable) or right (the return cable). The direction through the node is previous to next, the
-     * ends using themselves. Same arithmetic as {@link #of}; the link validator uses it so that its
-     * cable cannot drift from the real one.
+     * ends using themselves. Same arithmetic as {@link #of}; the link validator and the cable renderer use it so that
+     * their cable cannot drift from the real one.
      */
-    static V3 anchor(List<V3> nodes, int i, boolean station, boolean loaded) {
+    public static V3 anchor(List<V3> nodes, int i, boolean station, boolean loaded) {
         int count = nodes.size();
         V3 prev = nodes.get(Math.max(0, i - 1)), next = nodes.get(Math.min(count - 1, i + 1));
         double dx = next.x() - prev.x(), dz = next.z() - prev.z(), len = Math.sqrt(dx * dx + dz * dz);
@@ -113,7 +113,7 @@ public final class LiftPath {
     }
 
     /** The point at {@code t} (0 to 1) along the sagging span from {@code a} to {@code b}, as {@link #of} samples it. */
-    static V3 spanPoint(V3 a, V3 b, double t) {
+    public static V3 spanPoint(V3 a, V3 b, double t) {
         double h = Math.sqrt((b.x() - a.x()) * (b.x() - a.x()) + (b.z() - a.z()) * (b.z() - a.z()));
         double sag = sag(h);
         return new V3(a.x() + (b.x() - a.x()) * t, a.y() + (b.y() - a.y()) * t - sag * 4 * t * (1 - t), a.z() + (b.z() - a.z()) * t);

@@ -85,6 +85,14 @@ loom {
             programArgs '--username', 'watcher2', '--quickPlayMultiplayer', 'localhost:25565'
             runDir 'build/smoke-watcher2'
         }
+        // A powered ski lift beside spawn: pictures, then a rider boards, rides and is ejected (phase 8).
+        liftClient {
+            client()
+            name 'Lift Smoke Test'
+            property 'alpineshred.smoke', 'true'
+            property 'alpineshred.smoke.scenario', 'lift'
+            runDir 'build/smoke-lift'
+        }
         // A park line: rail, boxes, quarter pipe, then the wrench overlay and rail ghost (phase 4).
         parkClient {
             client()

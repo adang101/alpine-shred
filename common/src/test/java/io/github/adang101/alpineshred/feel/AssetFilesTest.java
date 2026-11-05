@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -54,6 +55,19 @@ class AssetFilesTest {
             for (JsonElement t : def.getAsJsonArray("textures")) {
                 String[] id = t.getAsString().split(":", 2);
                 exists("/assets/" + id[0] + "/textures/particle/" + id[1] + ".png");
+            }
+        }
+    }
+
+    @Test
+    void liftRendererTexturesExist() throws IOException {
+        // The chair, sheaves and bullwheels sample the 64x64 hardware sheet; the cable strip is 16x16.
+        for (String[] texture : new String[][]{{"hardware", "64"}, {"cable", "16"}}) {
+            try (InputStream in = AssetFilesTest.class.getResourceAsStream("/assets/alpineshred/textures/lift/" + texture[0] + ".png")) {
+                assertNotNull(in, "missing lift texture " + texture[0]);
+                java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(in);
+                assertEquals(Integer.parseInt(texture[1]), image.getWidth(), texture[0]);
+                assertEquals(Integer.parseInt(texture[1]), image.getHeight(), texture[0]);
             }
         }
     }

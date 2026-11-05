@@ -258,6 +258,11 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("subtitles.alpineshred.grind.catch", "Rail catches");
         t.add("subtitles.alpineshred.trick.combo_bank", "Combo banked");
         t.add("subtitles.alpineshred.trick.bail", "Rider bails");
+        t.add("subtitles.alpineshred.lift.motor", "Lift motor hums");
+        t.add("subtitles.alpineshred.lift.cable_creak", "Cable creaks");
+        t.add("subtitles.alpineshred.lift.bar_close", "Safety bar closes");
+        t.add("subtitles.alpineshred.lift.bar_open", "Safety bar opens");
+        t.add("subtitles.alpineshred.lift.e_stop", "Lift stops suddenly");
         t.add("subtitles.alpineshred.gear.strap_in", "Bindings click");
         t.add("subtitles.alpineshred.gear.strap_out", "Bindings release");
         t.add("subtitles.alpineshred.gear.wax_apply", "Wax rubs on");

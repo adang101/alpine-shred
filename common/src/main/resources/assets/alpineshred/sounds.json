@@ -190,5 +190,45 @@
         "name": "alpineshred:trick/bail"
       }
     ]
+  },
+  "lift.motor_loop": {
+    "subtitle": "subtitles.alpineshred.lift.motor",
+    "sounds": [
+      {
+        "name": "alpineshred:lift/motor_loop"
+      }
+    ]
+  },
+  "lift.cable_creak": {
+    "subtitle": "subtitles.alpineshred.lift.cable_creak",
+    "sounds": [
+      {
+        "name": "alpineshred:lift/cable_creak"
+      }
+    ]
+  },
+  "lift.bar_close": {
+    "subtitle": "subtitles.alpineshred.lift.bar_close",
+    "sounds": [
+      {
+        "name": "alpineshred:lift/bar_close"
+      }
+    ]
+  },
+  "lift.bar_open": {
+    "subtitle": "subtitles.alpineshred.lift.bar_open",
+    "sounds": [
+      {
+        "name": "alpineshred:lift/bar_open"
+      }
+    ]
+  },
+  "lift.e_stop": {
+    "subtitle": "subtitles.alpineshred.lift.e_stop",
+    "sounds": [
+      {
+        "name": "alpineshred:lift/e_stop"
+      }
+    ]
   }
 }

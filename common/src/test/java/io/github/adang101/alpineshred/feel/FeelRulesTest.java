@@ -189,6 +189,20 @@ class FeelRulesTest {
     }
 
     @Test
+    void liftRidersSitAndMountAndDismountOnce() {
+        assertEquals(RiderClips.LIFT_SIT_BOARD, RiderClips.base(RideState.LIFT, RideMode.BOARD, false, 0));
+        assertEquals(RiderClips.LIFT_SIT_SKIS, RiderClips.base(RideState.LIFT, RideMode.SKIS, false, 0));
+        RiderClips.Director d = new RiderClips.Director();
+        d.tick(RideState.IDLE, RideMode.BOARD, false, 0, 0);
+        assertEquals(RiderClips.LIFT_MOUNT, d.tick(RideState.LIFT, RideMode.BOARD, false, 0, 0));
+        for (int i = 1; i < RiderClips.LIFT_MOUNT_TICKS; i++) d.tick(RideState.LIFT, RideMode.BOARD, false, 0, 0);
+        assertEquals(RiderClips.LIFT_SIT_BOARD, d.tick(RideState.LIFT, RideMode.BOARD, false, 0, 0));
+        assertEquals(RiderClips.LIFT_DISMOUNT, d.tick(RideState.GLIDE, RideMode.BOARD, false, 0.4, 0));
+        for (int i = 1; i < RiderClips.LIFT_DISMOUNT_TICKS; i++) d.tick(RideState.GLIDE, RideMode.BOARD, false, 0.4, 0);
+        assertEquals(RiderClips.GLIDE_BOARD_REGULAR, d.tick(RideState.GLIDE, RideMode.BOARD, false, 0.4, 0));
+    }
+
+    @Test
     void tuckHasHysteresis() {
         RiderClips.Director d = new RiderClips.Director();
         assertEquals(RiderClips.TUCK_BOARD, d.tick(RideState.GLIDE, RideMode.BOARD, false, 1.12, 0));

@@ -185,6 +185,33 @@ def trick_sounds():
     return s
 
 
+def lift_sounds():
+    """Lift motor loop, cable creak, safety bar clicks and the emergency stop (phase 8), from their own generator."""
+    global rng
+    saved, rng = rng, np.random.default_rng(20261108)
+    s = {}
+    sec = 2.0
+    t = np.arange(int(RATE * sec)) / RATE
+    hum = sum(a * np.sin(2 * np.pi * round(f * sec) / sec * t) for f, a in ((55, 0.5), (110, 0.35), (165, 0.15)))
+    s["lift/motor_loop"] = normalize(hum * periodic(sec, 3, 0.15) + band_noise(sec, 80, 900, tilt=-3) * 0.35, 0.55)
+    sec = 0.9
+    n = int(RATE * sec)
+    creak = tone(sec, 420, 260, 0.35) * 0.5 + band_noise(sec, 300, 2200, tilt=-2) * np.sin(np.linspace(0, np.pi, n)) ** 2 * (0.5 + 0.5 * np.sin(2 * np.pi * 23 * np.arange(n) / RATE))
+    s["lift/cable_creak"] = normalize(creak, 0.5)
+    sec = 0.4
+    n = int(RATE * sec)
+    s["lift/bar_close"] = normalize(click(sec, 0.01, brightness=3500) + tone(sec, 180, 120, 0.05) * 0.6
+                                    + click(sec, 0.12, brightness=5000) * 0.7, 0.8)
+    s["lift/bar_open"] = normalize(click(sec, 0.01, brightness=5000) * 0.8 + tone(sec, 130, 190, 0.04) * 0.5
+                                   + band_noise(sec, 1500, 5000) * envelope(n, 0.02, 0.05) * 0.2, 0.7)
+    sec = 1.2
+    n = int(RATE * sec)
+    s["lift/e_stop"] = normalize(tone(sec, 95, 40, 0.3) + band_noise(sec, 200, 4000, tilt=-1) * envelope(n, 0.004, 0.18) * 0.8
+                                 + tone(sec, 1180, 1100, 0.2) * 0.25, 0.9)
+    rng = saved
+    return s
+
+
 def write_ogg(path, samples):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     pcm = (np.clip(samples, -1, 1) * 32767).astype(np.int16)
@@ -226,13 +253,18 @@ EVENTS = {
     "grind.catch": (["grind/catch"], "grind.catch"),
     "trick.combo_bank": (["trick/combo_bank"], "trick.combo_bank"),
     "trick.bail": (["trick/bail"], "trick.bail"),
+    "lift.motor_loop": (["lift/motor_loop"], "lift.motor"),
+    "lift.cable_creak": (["lift/cable_creak"], "lift.cable_creak"),
+    "lift.bar_close": (["lift/bar_close"], "lift.bar_close"),
+    "lift.bar_open": (["lift/bar_open"], "lift.bar_open"),
+    "lift.e_stop": (["lift/e_stop"], "lift.e_stop"),
 }
 
 
 def main():
     if not os.path.isdir(ROOT):
         sys.exit("run from the repository root")
-    audio = {**loops(), **one_shots(), **park_sounds(), **trick_sounds()}
+    audio = {**loops(), **one_shots(), **park_sounds(), **trick_sounds(), **lift_sounds()}
     for name, samples in audio.items():
         write_ogg(os.path.join(SOUNDS, name + ".ogg"), samples)
     sounds_json = {}

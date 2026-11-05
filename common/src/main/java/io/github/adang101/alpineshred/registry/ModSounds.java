@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Sound events (design doc section 17). Ids use dots ({@code alpineshred:ride.glide.snow}); each
  * has an entry with a subtitle in {@code assets/alpineshred/sounds.json}. Grind and box-slide sounds
- * arrived in phase 4; trick and lift sounds join with their phases.
+ * arrived in phase 4; trick sounds came with phase 5 and lift sounds with phase 8.
  */
 public final class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(AlpineShred.MOD_ID, Registries.SOUND_EVENT);
@@ -44,6 +44,11 @@ public final class ModSounds {
     public static final RegistrySupplier<SoundEvent> GRIND_CATCH = sound("grind.catch");
     public static final RegistrySupplier<SoundEvent> COMBO_BANK = sound("trick.combo_bank");
     public static final RegistrySupplier<SoundEvent> BAIL = sound("trick.bail");
+    public static final RegistrySupplier<SoundEvent> LIFT_MOTOR_LOOP = sound("lift.motor_loop");
+    public static final RegistrySupplier<SoundEvent> LIFT_CABLE_CREAK = sound("lift.cable_creak");
+    public static final RegistrySupplier<SoundEvent> LIFT_BAR_CLOSE = sound("lift.bar_close");
+    public static final RegistrySupplier<SoundEvent> LIFT_BAR_OPEN = sound("lift.bar_open");
+    public static final RegistrySupplier<SoundEvent> LIFT_E_STOP = sound("lift.e_stop");
 
     private ModSounds() {
     }
