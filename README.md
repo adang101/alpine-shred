@@ -4,7 +4,17 @@ Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1
 NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
 truth; this README covers how to build the code and where it stands against that document.
 
-**Status:** Phase 6 (board and ski customization) is built: the Paint Bench, the paint editor,
+**Status:** Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
+that carry up to two riders (or mobs) and leave them at the top in a glide, lifts that generate at
+ski resorts, and `/alpineshred lift` commands. Its automated exit gate passes in CI: the lift game
+tests (line data and its save and reload, boarding, riding, unloading, faulted lines, relogs, the
+budgets), the `lift` client smoke, and the multiplayer smoke, in which all three clients ride a
+lift of over 400 blocks, the watchers' chairs match the server's, a rider logs out mid-ride and
+comes back on the same chair, and a broken head faults the line, which slows at 2.0 blocks per
+second squared and lets its riders off. The people part (three players on a real lift, a server
+restart with riders, render mods, a NeoForge server, a spark check) is in
+[docs/playtest-phase8.md](docs/playtest-phase8.md).
+Phase 6 (board and ski customization) is built: the Paint Bench, the paint editor,
 validated saves, share codes, templates, and procedurally drawn designed boards and skis. Its
 automated part passes in CI: the codec, tool and asset unit tests, saves through the bench on
 both loaders, a scripted client painting and saving through the real editor, and a three-client
@@ -120,11 +130,22 @@ common/   all game logic (Architectury); client code only under client/
     trick/    TrickHud (the popup), TrickNames
     design/   DesignedGearRenderer, DesignTextureCache, PaintBenchScreen, DesignEditorScreen,
               DesignClient
-  gametest/   game tests shared by both loaders; Course builds riding courses
-  smoke/      ServerSmoke (the multiplayer server's script), SmokeCourse, WorldgenSurvey (finds,
-              builds and counts one of each structure for the worldgen smoke run)
-  mixin/      PlayerMixin (synced state, travel, edge back-off, jump, footsteps), EntityMixin
-              (step height, descending), PowderSnowBlockMixin, LivingEntityMixin (no sprint),
+  lift/       pure, unit-tested: LiftPath (the cable loop), LiftMotion, LiftStations, LinkValidator,
+              PassengerRule, BoardingRule, AutoBoard, DismountRule, EjectCrossing, PendingLine
+              game side: LiftLine, LiftSavedData, LiftManager (steps every line), LiftChairs
+              (spawns chairs near players), ChairEntity, Boarding, LiftLinkerItem, the six lift
+              blocks and their block entities (LiftNodeBlockEntity and its three kinds),
+              LiftDriveSource, LiftSync and LiftLineSync (the packet), LiftCommands
+    client/lift/  ClientLiftLines and ClientLine (the synced lines, stepped each client tick),
+              TowerHeadBER, BullwheelBER, ChairEntityRenderer, Cables, LiftSoundManager,
+              LiftBoardClient (auto-board), LiftRenderStats
+  gametest/   game tests shared by both loaders; Course builds riding courses; LiftGameTests
+  smoke/      ServerSmoke (the multiplayer server's script, with the lift stage), SmokeCourse
+              (the run and the lifts), WorldgenSurvey (finds, builds and counts one of each
+              structure for the worldgen smoke run)
+  mixin/      PlayerMixin (synced state, travel, edge back-off, jump, footsteps, sneak dismount
+              from a lift chair), EntityMixin (step height, descending), PowderSnowBlockMixin,
+              LivingEntityMixin (no sprint), MobAccessor (persistence of boarded mobs),
               ServerGamePacketListenerAccessor; client/LocalPlayerMixin (no auto-jump),
               GameRendererMixin (camera roll, FOV, screen effects under the GUI),
               ItemInHandRendererMixin (no first-person arms while sliding), ItemInHandLayerMixin
@@ -136,6 +157,78 @@ fabric/   entry points, TrinketsGearAccess, Trinkets slot data, datagen, game-te
 art/      placeholder generators: textures, models, rider clips, sounds, particles, overlays,
           park blockstates and models, default gear atlases, the Paint Bench, structure templates
 ```
+
+## What phase 8 delivers
+
+- **Lift lines** (section 13): a drive station at the top, tower heads in link order and a return
+  station at the bottom, joined by one `LiftPath` (the cable loop: a sagging catenary-style span
+  between nodes, a half circle round each bullwheel, sampled every 0.25 blocks). A line is one
+  record in the level's `alpineshred_lifts` saved data (`LiftSavedData`): its nodes, `travel`,
+  `speed`, the drive's command and the `faulted` and `emergency` flags; the path, chair count and
+  boarding and unload intervals are rebuilt on load. `LiftManager` steps every line each server
+  tick with `LiftMotion` (a speed ramp of 0.5 b/s squared, 2.0 for a faulted or emergency stop;
+  `travel += speed / 20`) and runs lines whose chunks are unloaded when `lift.runUnloaded` is on.
+- **Six blocks** (`lift_tower_pole`, `lift_tower_head`, `lift_drive_station`,
+  `lift_return_station`, `lift_loading_gate`, `lift_stop_button`) and two items. The
+  `lift_linker` builds a line: right-click the drive, each head in order, then the return
+  station; `LinkValidator` (pure) checks span, slope, cable clearance on both sides, head count,
+  length and line count, and names its reason when it refuses. Breaking a node, or a node whose
+  stored data disagrees with its line when it first loads, faults the line, which stops at 2.0 b/s
+  squared and stays stopped until relinked. The drive is run by redstone (right-click cycles
+  `lift.speedLevels`; losing the signal while running is an emergency stop); the stop button
+  stops the nearest line. `/alpineshred lift list | info | stop | start | remove` (permission 2).
+- **Chairs** (`ChairEntity`): placed every tick from the line's `travel`, on both sides, so they
+  never depend on move packets. They spawn when a player is within 128 blocks of a node and empty
+  ones despawn past 192. A chair seats `lift.seats` riders (two by default); players and mobs
+  that pass `PassengerRule` can board (tags `lift_blocked` and `lift_passengers`), and a boarded
+  mob is persistent until it gets off.
+- **Boarding and riding** (sections 7, 8, 13, 17): right-click a chair, or stand strapped in the
+  boarding stretch (the first 4 blocks of loaded cable) and the client boards the next chair that
+  passes (`c2s/lift_board`; the server re-checks distance, seat, speed and `lift.requirePass`).
+  The strapped rider enters `LIFT`; the bar closes 20 ticks later and a right-click toggles it. At
+  the ejection point, one block before the end of the loaded cable, riders are put on the
+  platform and a strapped player is set going in `GLIDE`; that counts a `lift_rides` and
+  triggers `lift_ridden` (the `bluebird_day` advancement is 100 blocks). Sneaking off is allowed
+  with the bar open, within 4 blocks of the ground, on a faulted line, or with
+  `lift.dismountAnywhere`. Leads and tamed pets board with their owner. A rider who logs out is
+  saved with the chair and comes back on the same slot; if the line is gone they are put on safe
+  ground.
+- **Sync** (section 15): `s2c/lift_line_sync` (nodes, spacing, travel, speed, target, game time,
+  flags, `removed`) goes to a player within `lift.syncRadius` of any node, on a speed, target or
+  flag change, every 100 ticks, and on removal. `ClientLiftLines` steps each line with
+  `LiftMotion` and catches a synced one up to the client's game time.
+- **Rendering and sound** (sections 9, 16): cable, sheaves and bullwheels turning with travel,
+  chairs with a bar that eases down over 6 ticks, seated clips for boards and skis, motor, cable
+  creak, bar and e-stop sounds, all placeholder art.
+- **Generated lifts** (section 12): each ski resort gets a line of about 200 blocks from the top
+  of its run to the lodge, planned by `ResortLiftPlanner` against the generated terrain and
+  skipped if it would not pass `LinkValidator`. `LiftLinePiece` places its blocks with a
+  `PendingLine`, which the first block entity to load adopts, once.
+- **Tests.** Unit: `LiftPathTest`, `LiftMotionTest`, `LiftStationsTest`, `LinkValidatorTest`,
+  `PassengerRuleTest`, `BoardingRuleTest`, `AutoBoardTest`, `DismountRuleTest`,
+  `EjectCrossingTest`, `LiftSyncTest`. Game tests on both loaders (`LiftGameTests`): the saved
+  data round trip, travel at fixed ticks, the fault paths, drops, the linker, chair positions and
+  spawning, mobs, the catch-up of a client line, boarding, riding to the top, sneak dismount,
+  leads and pets, relog and line removal with riders, the redstone drive, the stop button, the
+  commands, a resort's generated line, and phase 8's last two: `liftSurvivesSaveReload` (the
+  saved data and the rider's NBT, through a real log out and in) and `liftManagerBudget`. The
+  `lift` client smoke builds a line, pictures it, rides it and checks the renderers' cost and
+  sounds. The multiplayer smoke gains a lift stage (below).
+
+### Three clients ride a 400-block lift (CI step 9)
+
+After the run, `ServerSmoke` builds a lift 30 blocks east (`SmokeCourse.longLift`: five nodes
+climbing 40 blocks over 208, a loop of over 400 blocks) and puts the three players on it one at
+a time, strapped in at the bottom station, 80 ticks apart so that each rides a chair alone; their
+own clients auto-board. Every ten game ticks the server logs where each chair is
+(`chair gt<time> <index> x y z`) and each client logs the chairs it sees (`lchair ...`);
+`multiplayer-check.py` compares them by game time and chair and fails if over 5% of a client's
+samples are off by more than 0.25 blocks or there are fewer than 50. The server kicks `watcher1`
+100 ticks after it boards; the client reconnects and the server checks that it is on a chair of
+the same line and slot again. Near the top (40 blocks of cable short of the ejection point) a
+`setblock` command removes the topmost head: the line must fault, slow at 2.0 b/s squared (the
+mean drop over the ticks above zero, within 0.01), and each rider's client sneaks off the faulted
+line. The server's validator must flag nobody on the lift.
 
 ## What phase 7 delivers
 
@@ -455,8 +548,9 @@ covered by a test or noted in code.
 12. **Skis on the player** are drawn as a pair under the feet and side by side on the back. Per-leg
     skis and the crossed back carry need per-ski geometry, which the procedural
     `DesignedGearRenderer` (section 22) provides.
-13. **Lift boarding** is capped at 3.5 b/s but the fast speed level is 4.0 b/s, so nobody can board
-    a fast lift by hand. To settle in phase 8.
+13. **Lift boarding** was capped at 3.5 b/s while the fast speed level is 4.0 b/s, so nobody could
+    board a fast lift by hand. The default `lift.maxBoardSpeed` is now 4.0, so every default level
+    can be boarded; a server can still lower it. (Phase 8, decision 1.)
 14. **Walking while strapped.** The controller rides on snow, ice and fast powder, and slides on
     other ground only above `scrapeSlideMinSpeed` (0.25); below it, or with scraping disabled,
     vanilla movement runs with the strapped modifier. Holding W on flat snow skates up to
@@ -588,8 +682,51 @@ covered by a test or noted in code.
     per candidate chunk (one per 22 by 22 chunk region) on a world generation thread, and away from
     snowy biomes a candidate costs five biome samples. The game test fails if the means pass 400 ms.
 
-Not in phases 5 to 7, by design: lift statistics and the `lift_ridden` trigger, and the resort's
-lift line (phase 8), line fill and waxing vanilla blocks (v1.1), PNG import of designs (v1.1).
+60. **A removed lift line is dropped on clients.** `s2c/lift_line_sync` carries a `removed` flag; a
+    client that gets it drops the line and, with it, its chairs.
+61. **"Beside a station."** A stop button controls the line whose drive or return station is nearest
+    within 8 blocks. With no station in range it does nothing and says so in the action bar.
+62. **Boarding and unloading stretches** are computed once, in a pure `LiftStations`, and stored on
+    the line. Boarding is the first 4 blocks of loaded cable after the return wheel. Unloading is
+    the last part of the loaded cable before its end where the seat is within 3 blocks of the
+    drive station's own Y, above or below: the doc's "at most 3 blocks above" would cover the whole
+    cable of a climbing line, since the drive is its highest point. The ejection point is 1 block
+    before the end.
+63. **Generated lifts place pending lines.** Structure pieces cannot touch saved data while a chunk
+    generates, so a resort piece writes each station and head with block-entity NBT holding a
+    `PendingLine` (absolute node positions and a line UUID). The first block entity of that line to
+    run its first tick makes the line (`LiftManager.adoptPending`); the others find it by UUID.
+    The load check runs on a block entity's first server tick, not on load, because a structure
+    template applies its NBT after the block entity is created.
+64. **Sneaking off a chair** goes through a mixin on `Player#wantsToStopRiding`: while the vehicle
+    is a `ChairEntity` it refuses unless `DismountRule` allows (bar open, within 4 blocks of the
+    ground, faulted line, `lift.dismountAnywhere`). Client and server make the same call; the
+    server is what dismounts.
+65. **Lift speeds are doubles** (`LiftLine.speed`, `targetSpeed`, and in the sync packet), so the
+    server steps exactly as `LiftMotion.advance` does on a client and a catch-up matches to 1e-6.
+66. **The drive's renderer draws span 0** (the cable between the drive and the first head, or the
+    return station on a line with no heads); each tower head draws the span to its next node.
+67. **A seat's height is split between players and mobs.** A chair's origin is the top of its seat
+    plank. A mob's feet are 0.02 above it; a player's are 0.4 below it before vanilla's riding
+    offset (so a seated player's hips, 0.75 above their feet, land on the plank).
+68. **Chairs render out to 128 blocks**, the distance they are spawned at, rather than the 60
+    blocks a box 1.2 by 0.5 would give.
+69. **The cable's frame budget is provisional.** The design doc's figure is not at hand; the `lift`
+    client smoke allows the cable 0.5 ms a frame and fails at three times that (1.5 ms), until the
+    doc's figure is confirmed.
+70. **Seated riders face along the cable.** The chair sets a seated player's body yaw each tick and
+    the rider tracker leaves it alone, so the third-person body does not swing against the chair;
+    the head may turn 105 degrees either side, as in a boat.
+71. **The lift budgets are asserted at three times the doc's** (section 22: 0.3 ms a tick for five
+    lines, 5 microseconds a chair), since CI hardware varies; the game test `liftManagerBudget`
+    runs five lines of 50 or more chairs for 200 ticks after 40 of warm-up and logs the means.
+    Measured on the CI machine: __BUDGET__.
+
+Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
+(v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
+`lift.dismountAnywhere` (`config_sync` carries neither, so a client's board prompt or dismount
+prediction can disagree with a server that changed them; the server always decides; phase 9 adds
+them with a protocol bump).
 Real animation clips, sounds and textures replace the placeholders file by file under the same
 names.
 

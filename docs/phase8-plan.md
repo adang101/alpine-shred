@@ -28,7 +28,9 @@ that need people go into `docs/playtest-phase8.md`.
 | WP5: `LiftLineSync` packet, `LiftSync` (40/100-tick passes, change listener), `ClientLiftLines`/`ClientLine`, shared `LiftMotion.targetFor`, 2 game tests (72 per loader) | Done (`c266445`) |
 | WP6: boarding (right-click, auto-board, `c2s/lift_board`), bar, unloading and ejection, sneak-dismount mixin, leads and pets, `lift_rides`, `lift_ridden` and `bluebird_day`, board prompt, 8 game tests | Done (merging) |
 | WP7: `LiftDriveSource`, redstone drive with emergency on loss, speed cycling (the linker passes through), drive keeps its command across a reload, stop button, `/alpineshred lift` commands, 6 game tests | Done (`31bb9b1`) |
+| WP8: `TowerHeadBER`, `BullwheelBER`, `ChairEntityRenderer`, `LiftSoundManager`, rider clips, five lift sounds, the `lift` client smoke scenario, and the seated-yaw fix in `ChairEntity` and `RiderTracker` | Done (merged `655309a`) |
 | WP9: `ResortLiftPlanner` (pure, validated), `LiftLinePiece` (per-chunk, absolute `PendingLine` with an initial drive state), 18 of 28 test resorts get a lift, `resortHasALinkedLift`, survey checks | Done (merging; the worldgen tour is verified in CI) |
+| WP10: the multiplayer smoke's lift stage (three riders on a 400-block lift, chair positions against the server's, a relog, a broken head), `liftSurvivesSaveReload`, `liftManagerBudget`, README and `docs/playtest-phase8.md` | Done on `wip/phase-8-wp10` (see the handback for CI numbers) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |
