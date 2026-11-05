@@ -990,6 +990,7 @@ public final class ClientSmoke {
         return false;
     }
 
+    private static double liftTopY;
     private static int liftTicks, liftRideTicks, liftTopTicks, liftStrapAt = -1;
     private static boolean liftRode, liftFallback, liftServerChecked;
     private static final Set<RideState> liftStates = EnumSet.noneOf(RideState.class);
@@ -1066,6 +1067,7 @@ public final class ClientSmoke {
         liftTopTicks++;
         liftAfter.add(synced);
         liftAfter.add(local);
+        if (liftTopTicks == 1) liftTopY = player.getY() - origin.getY();
         if (liftTopTicks == 1) note(String.format(Locale.ROOT, "lift: ejected after %d ticks, synced %s local %s, %s", liftRideTicks, synced, local, player.blockPosition()));
         if (liftTopTicks >= 25) back(mc, "lift_top");
         if (liftTopTicks == 30 && !liftServerChecked) {
@@ -1087,7 +1089,7 @@ public final class ClientSmoke {
         check(liftStates.contains(RideState.LIFT), "lift: never in LIFT while seated: " + liftStates);
         check(liftAfter.contains(RideState.GLIDE), "lift: not in GLIDE at the top: " + liftAfter);
         check(liftChairsSeen >= 2, "lift: only " + liftChairsSeen + " chairs ever drawn");
-        check(player.getY() - origin.getY() > 15, "lift: ejected only " + (player.getY() - origin.getY()) + " blocks up");
+        check(liftTopY > 15, "lift: ejected only " + liftTopY + " blocks up");
         for (LiftRenderStats.Part part : LiftRenderStats.Part.values()) {
             check(LiftRenderStats.frames(part) > 20, "lift: " + part + " drew in only " + LiftRenderStats.frames(part) + " frames");
         }
