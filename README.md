@@ -729,7 +729,10 @@ covered by a test or noted in code.
     otherwise sit ahead of the server's chairs until the next 100-tick resend: the multiplayer
     smoke measured the watchers' chairs a median 0.125 blocks (one tick at 2.5 b/s) ahead and up
     to 0.376 at worst, over the 0.25 tolerance. `ClientLine.apply` now rewinds `travel` by
-    `speed / 20` per tick for gaps of up to 10 ticks; a larger gap is taken as it is.
+    `speed / 20` per tick for gaps of up to 10 ticks; a larger gap is taken as it is. Between syncs
+    `ClientLiftLines` follows the level's game time instead of counting ticks, so when the server's
+    time packet moves a drifted client's clock the lines move with it (the first run with only the
+    rewind still showed clusters of 0.25 to 1.25 blocks, up to ten ticks, right after such jumps).
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and

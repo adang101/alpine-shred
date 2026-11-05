@@ -25,6 +25,8 @@ public final class ClientLiftLines {
     /** Node position to its line's id, for the block entity renderers (a node's block entity does not know its line on the client). */
     private static final Map<BlockPos, UUID> NODES = new HashMap<>();
     private static ClientLevel level;
+    /** The level's game time at the previous tick, or MIN_VALUE when there was none. */
+    private static long lastGameTime = Long.MIN_VALUE;
 
     private ClientLiftLines() {
     }
@@ -57,6 +59,7 @@ public final class ClientLiftLines {
         LINES.clear();
         NODES.clear();
         level = null;
+        lastGameTime = Long.MIN_VALUE;
     }
 
     /** Handles a sync on the main thread. */
@@ -96,8 +99,17 @@ public final class ClientLiftLines {
             LINES.clear();
             NODES.clear();
             level = minecraft.level;
+            lastGameTime = Long.MIN_VALUE;
         }
-        if (minecraft.isPaused()) return;
-        for (ClientLine line : LINES.values()) line.tick();
+        if (minecraft.isPaused() || level == null) return;
+        // Follow the level's game time rather than counting ticks: the server's time packet moves a drifted
+        // client's clock, and the lines must move with it or the chairs sit off by the drift until the next sync.
+        long now = level.getGameTime();
+        long delta = lastGameTime == Long.MIN_VALUE ? 1 : now - lastGameTime;
+        lastGameTime = now;
+        for (ClientLine line : LINES.values()) {
+            if (delta == 1) line.tick();
+            else line.shift(delta);
+        }
     }
 }

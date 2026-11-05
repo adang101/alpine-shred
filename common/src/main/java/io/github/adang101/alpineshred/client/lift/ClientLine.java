@@ -89,6 +89,16 @@ public final class ClientLine implements LineView {
         travel = next[1];
     }
 
+    /**
+     * The level's game time moved by {@code ticks} since the last client tick (one, normally; the server's
+     * time packet moves it by the amount the client had drifted): runs the line forward by that many ticks, or
+     * back by up to {@link #MAX_REWIND}, so the line stays where the server's was at the client's game time.
+     */
+    public void shift(long ticks) {
+        if (ticks > 0) advance(ticks);
+        else if (ticks < 0 && ticks >= -MAX_REWIND) rewind(-ticks);
+    }
+
     /** One client tick. */
     public void tick() {
         double[] next = LiftMotion.step(speed, travel, target(), LiftMotion.isStopping(faulted, emergency),
