@@ -58,10 +58,8 @@ public final class AlpineShredClient {
                 AlpineShred.id("lens"), (stack, level, entity, seed) -> GogglesItem.lens(stack).modelValue()));
 
         ClientPlatformHooks.registerPlayerRenderLayer(SnowGearLayer::new);
-        // No chair art yet (WP8 adds the renderer): draw nothing rather than crash.
-        dev.architectury.registry.client.level.entity.EntityRendererRegistry.register(
-                io.github.adang101.alpineshred.registry.ModEntities.LIFT_CHAIR,
-                net.minecraft.client.renderer.entity.NoopRenderer::new);
+        io.github.adang101.alpineshred.client.lift.LiftRenderers.register();
+        io.github.adang101.alpineshred.client.lift.LiftSoundManager.register();
         ClientNetwork.register();
         io.github.adang101.alpineshred.client.lift.ClientLiftLines.register();
         io.github.adang101.alpineshred.client.lift.LiftBoardClient.register();

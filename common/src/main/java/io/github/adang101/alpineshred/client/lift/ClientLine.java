@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A client's copy of a lift line: the path built from the synced nodes, the chair count from the
@@ -18,6 +19,7 @@ import java.util.List;
  * directly. The path is reused while the nodes are unchanged.
  */
 public final class ClientLine implements LineView {
+    public final UUID id;
     private List<BlockPos> nodes = List.of();
     private LiftPath path;
     private int chairCount;
@@ -32,6 +34,7 @@ public final class ClientLine implements LineView {
 
     /** Builds the line from a (non-removed) sync and catches it up to {@code now}. */
     public ClientLine(LiftLineSync sync, long now) {
+        this.id = sync.id();
         apply(sync, now);
     }
 
@@ -76,6 +79,16 @@ public final class ClientLine implements LineView {
 
     private double target() {
         return LiftMotion.targetFor(powered, faulted, emergency, targetSpeed);
+    }
+
+    /** The node positions, drive first, as last synced. */
+    public List<BlockPos> nodes() {
+        return nodes;
+    }
+
+    /** The loop distance run {@code partialTick} of a tick after the last client tick, for drawing between ticks. */
+    public double travelAt(float partialTick) {
+        return travel + speed / 20.0 * partialTick;
     }
 
     @Override
