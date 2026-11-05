@@ -889,7 +889,7 @@ public final class ClientSmoke {
     // ---- lift (phase 8) -------------------------------------------------------------------------------
 
     /** A picture of the lift: where to stand (blocks from the origin), where to look, and ticks to wait first. */
-    private record LiftView(String name, double dx, double dy, double dz, float yaw, float pitch, int wait) {
+    private record LiftView(String name, double dx, double dy, double dz, float yaw, float pitch, int delay) {
     }
 
     /** Yaw 90 looks toward -x, at the line from the east. */
@@ -976,7 +976,7 @@ public final class ClientSmoke {
                 sp.onUpdateAbilities();
                 sp.teleportTo(sp.serverLevel(), origin.getX() + 0.5 + v.dx(), origin.getY() + v.dy(), origin.getZ() + 0.5 + v.dz(), v.yaw(), v.pitch());
             });
-        } else if (liftViewTicks >= v.wait() && (liftView > 0 || (ClientLiftLines.size() > 0 && liftChairsSeen >= 2) || liftViewTicks > 600)) {
+        } else if (liftViewTicks >= v.delay() && (liftView > 0 || (ClientLiftLines.size() > 0 && liftChairsSeen >= 2) || liftViewTicks > 600)) {
             view(mc, v.name(), CameraType.FIRST_PERSON);
         }
         if (shots.contains(v.name())) {

@@ -18,7 +18,7 @@ import net.minecraft.core.BlockPos;
  * cable. The drive station also draws the cable of the span between itself and the first head (or the
  * return station, on a line with no heads).
  */
-public final class BullwheelBER implements BlockEntityRenderer<LiftNodeBlockEntity> {
+public final class BullwheelBER<T extends LiftNodeBlockEntity> implements BlockEntityRenderer<T> {
     private static final int RIM_PIECES = 16;
     private static final float RIM = (float) LiftPath.WHEEL_RADIUS - 0.15f;
 
@@ -26,7 +26,7 @@ public final class BullwheelBER implements BlockEntityRenderer<LiftNodeBlockEnti
     }
 
     @Override
-    public void render(LiftNodeBlockEntity station, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
+    public void render(T station, float partialTick, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         BlockPos pos = station.getBlockPos();
         ClientLine line = ClientLiftLines.lineAt(pos);
         if (line == null || station.getLevel() == null) return;
@@ -64,7 +64,7 @@ public final class BullwheelBER implements BlockEntityRenderer<LiftNodeBlockEnti
     }
 
     @Override
-    public boolean shouldRenderOffScreen(LiftNodeBlockEntity station) {
+    public boolean shouldRenderOffScreen(T station) {
         return true;
     }
 
