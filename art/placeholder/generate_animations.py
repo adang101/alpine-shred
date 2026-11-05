@@ -252,6 +252,23 @@ def build():
         push[arm].update(pitch=30)
         clips.append(clip(f"pole_push_{side}", [(0, carry, "OUTQUAD"), (3, reach, "INOUTSINE"), (6, push, "OUTQUAD"),
                                                 (10, carry, "INOUTSINE")], 10, False, f"Pole push, {side} arm"))
+    # ---- lift chairs (phase 8): seated, legs out over the footrest, hands on the bar ----
+    def sit(leg_pitch, arm_pitch, leg_roll):
+        return pose(0, torso=dict(pitch=-3), rarm=dict(pitch=arm_pitch, roll=8), larm=dict(pitch=arm_pitch, roll=-8),
+                    rleg=dict(pitch=leg_pitch, roll=leg_roll), lleg=dict(pitch=leg_pitch, roll=-leg_roll))
+
+    clips.append(breathing("lift_sit_board", sit(-82, -30, 4), sit(-77, -32, 5), 60, "Seated on a lift chair, on a board"))
+    clips.append(breathing("lift_sit_skis", sit(-84, -30, 2), sit(-79, -32, 2), 60, "Seated on a lift chair, on skis"))
+    standing = board_stance(0.5, 4, (-5, 10), (-5, 10), legs=10)
+    hop = pose(2.0, torso=dict(pitch=14), rarm=dict(pitch=-40, roll=8), larm=dict(pitch=-40, roll=-8),
+               rleg=dict(pitch=-45, roll=6), lleg=dict(pitch=-45, roll=-6))
+    clips.append(clip("lift_mount", [(0, standing, "OUTQUAD"), (5, hop, "INOUTSINE"), (10, sit(-82, -30, 4), "INOUTSINE")], 10, False,
+                      "Sitting back onto a chair"))
+    push_off = pose(2.0, torso=dict(pitch=14), rarm=dict(pitch=-20, roll=10), larm=dict(pitch=-20, roll=-10),
+                    rleg=dict(pitch=-40, roll=6), lleg=dict(pitch=-40, roll=-6))
+    clips.append(clip("lift_dismount", [(0, sit(-82, -30, 4), "OUTQUAD"), (4, push_off, "INOUTSINE"),
+                                         (8, board_stance(1.5, 12, (-15, 38), (-10, 24), legs=12), "INOUTSINE")], 8, False,
+                      "Pushing off the chair at the top"))
     return clips
 
 

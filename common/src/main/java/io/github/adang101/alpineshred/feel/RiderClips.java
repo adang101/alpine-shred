@@ -15,7 +15,7 @@ import java.util.List;
  * animator falls back to {@link #FALLBACK} if one is missing.
  *
  * <p>Grind and slide clips arrived with phase 4, grab and graded landing clips with phase 5; lift
- * clips join with phase 8.
+ * clips (sitting, mounting and dismounting) came with phase 8.
  */
 public final class RiderClips {
     public static final String IDLE_BOARD = "idle_board";
@@ -45,6 +45,10 @@ public final class RiderClips {
     public static final String GRIND_TAIL = "grind_tail";
     public static final String BOARDSLIDE = "boardslide";
     public static final String SLIDE_SKIS = "slide_skis";
+    public static final String LIFT_SIT_BOARD = "lift_sit_board";
+    public static final String LIFT_SIT_SKIS = "lift_sit_skis";
+    public static final String LIFT_MOUNT = "lift_mount";
+    public static final String LIFT_DISMOUNT = "lift_dismount";
 
     public static final String FALLBACK = GLIDE_BOARD_REGULAR;
 
@@ -54,7 +58,8 @@ public final class RiderClips {
             AIR_BOARD, AIR_SKIS, LAND_PERFECT, LAND_CLEAN, LAND_SKETCHY, WIPEOUT_FRONT, WIPEOUT_BACK,
             POLE_PUSH_LEFT, POLE_PUSH_RIGHT, POLE_CARRY, GRIND_5050, GRIND_NOSE, GRIND_TAIL, BOARDSLIDE, SLIDE_SKIS,
             "grab_indy", "grab_mute", "grab_nose", "grab_tail", "grab_method",
-            "grab_indy_skis", "grab_mute_skis", "grab_nose_skis", "grab_tail_skis", "grab_method_skis");
+            "grab_indy_skis", "grab_mute_skis", "grab_nose_skis", "grab_tail_skis", "grab_method_skis",
+            LIFT_SIT_BOARD, LIFT_SIT_SKIS, LIFT_MOUNT, LIFT_DISMOUNT);
 
     /** Section 9's grab clips, one set each for board and skis: {@code grab_indy}, {@code grab_indy_skis}. */
     public static String grab(GrabType grab, boolean skis) {
@@ -74,6 +79,8 @@ public final class RiderClips {
     public static final int POP_LAUNCH_TICKS = 5;
     public static final int LAND_TICKS = 10;
     public static final int POLE_PUSH_TICKS = 10;
+    public static final int LIFT_MOUNT_TICKS = 10;
+    public static final int LIFT_DISMOUNT_TICKS = 8;
 
     /** Above this speed (blocks per tick) gliding riders tuck. */
     public static final double TUCK_SPEED = 1.1;
@@ -112,7 +119,7 @@ public final class RiderClips {
             case BRAKE -> skis ? SNOWPLOW_SKIS : BRAKE_BOARD;
             case AIR -> skis ? AIR_SKIS : AIR_BOARD;
             case WIPEOUT -> WIPEOUT_FRONT;
-            case LIFT -> skis ? IDLE_SKIS : IDLE_BOARD;
+            case LIFT -> skis ? LIFT_SIT_SKIS : LIFT_SIT_BOARD;
         };
     }
 
@@ -169,6 +176,10 @@ public final class RiderClips {
                     start(POP_LAUNCH, POP_LAUNCH_TICKS);
                 } else if (last == RideState.AIR && state.isGroundRiding()) {
                     start(LAND_CLEAN, LAND_TICKS);
+                } else if (state == RideState.LIFT) {
+                    start(LIFT_MOUNT, LIFT_MOUNT_TICKS);
+                } else if (last == RideState.LIFT && state.isStrapped() && state != RideState.WIPEOUT) {
+                    start(LIFT_DISMOUNT, LIFT_DISMOUNT_TICKS);
                 } else if (state == RideState.WIPEOUT || !state.isStrapped()) {
                     oneShot = null;
                     oneShotTicks = 0;
