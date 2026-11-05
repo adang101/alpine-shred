@@ -373,16 +373,39 @@ public class ChairEntity extends Entity {
         // Sideways is perpendicular to the facing (-sin yaw, cos yaw).
         double seat = passenger instanceof Player ? PLAYER_SEAT_HEIGHT : SEAT_HEIGHT;
         move.accept(passenger, getX() + Math.cos(yaw) * offset, getY() + seat + passenger.getMyRidingOffset(), getZ() + Math.sin(yaw) * offset);
-        if (!(passenger instanceof Player)) {
+        if (passenger instanceof Player) {
+            clampRotation(passenger);
+        } else {
             passenger.setYRot(getYRot());
             passenger.setYHeadRot(getYRot());
             if (passenger instanceof LivingEntity living) living.setYBodyRot(getYRot());
         }
     }
 
+    /** As {@code Boat.clampRotation}: the body faces along the cable and the head may turn 105 degrees either way. */
+    private void clampRotation(Entity passenger) {
+        passenger.setYBodyRot(getYRot());
+        float diff = Mth.wrapDegrees(passenger.getYRot() - getYRot());
+        float clamped = Mth.clamp(diff, -105f, 105f);
+        passenger.yRotO += clamped - diff;
+        passenger.setYRot(passenger.getYRot() + clamped - diff);
+        passenger.setYHeadRot(passenger.getYRot());
+    }
+
+    @Override
+    public void onPassengerTurned(Entity passenger) {
+        if (passenger instanceof Player) clampRotation(passenger);
+    }
+
     @Override
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
+        if (passenger instanceof Player) {
+            // A boarding player starts out looking along the cable.
+            passenger.setYRot(getYRot());
+            passenger.yRotO = getYRot();
+            passenger.setYHeadRot(getYRot());
+        }
         if (!level().isClientSide && passenger instanceof ServerPlayer player) {
             if (!barDown()) barTicks = BAR_DELAY;
             double s = currentS();

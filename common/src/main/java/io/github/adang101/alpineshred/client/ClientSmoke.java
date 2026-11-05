@@ -902,6 +902,7 @@ public final class ClientSmoke {
      * The renderers' share of a frame, in milliseconds. The design doc's figure is not at hand; this is the
      * allowance for the cable of a line this size. CI hardware varies, so the smoke fails at three times it.
      */
+    // TODO: provisional. The design doc's figure is pending; replace 0.5 with it.
     private static final double CABLE_BUDGET_MS = 0.5;
 
     private static volatile UUID liftId;
@@ -990,7 +991,7 @@ public final class ClientSmoke {
         return false;
     }
 
-    private static double liftTopY;
+    private static double liftTopY, liftYawError;
     private static int liftTicks, liftRideTicks, liftTopTicks, liftStrapAt = -1;
     private static boolean liftRode, liftFallback, liftServerChecked;
     private static final Set<RideState> liftStates = EnumSet.noneOf(RideState.class);
@@ -1052,6 +1053,9 @@ public final class ClientSmoke {
             if (liftRideTicks % 40 == 1 && player.getVehicle() instanceof ChairEntity chair) {
                 note(String.format(Locale.ROOT, "lift: t%d synced %s local %s bar %b at y %.1f", liftRideTicks, synced, local, chair.barDown(), player.getY() - origin.getY()));
             }
+            if (liftRideTicks >= 20 && player.getVehicle() instanceof ChairEntity seat) {
+                liftYawError = Math.max(liftYawError, Math.abs(Mth.wrapDegrees(player.yBodyRot - seat.getYRot())));
+            }
             if (liftRideTicks >= 50) view(mc, "lift_seated_first_person", CameraType.FIRST_PERSON);
             if (liftRideTicks >= 90) back(mc, "lift_seated_back");
             if (liftRideTicks >= 130) view(mc, "lift_seated_front", CameraType.THIRD_PERSON_FRONT);
@@ -1089,6 +1093,8 @@ public final class ClientSmoke {
         check(liftStates.contains(RideState.LIFT), "lift: never in LIFT while seated: " + liftStates);
         check(liftAfter.contains(RideState.GLIDE), "lift: not in GLIDE at the top: " + liftAfter);
         check(liftChairsSeen >= 2, "lift: only " + liftChairsSeen + " chairs ever drawn");
+        note(String.format(Locale.ROOT, "lift: largest body yaw error against the chair %.3f degrees", liftYawError));
+        check(liftYawError < 1.0, String.format(Locale.ROOT, "lift: the seated body is %.2f degrees off the chair's heading", liftYawError));
         check(liftTopY > 15, "lift: ejected only " + liftTopY + " blocks up");
         for (LiftRenderStats.Part part : LiftRenderStats.Part.values()) {
             check(LiftRenderStats.frames(part) > 20, "lift: " + part + " drew in only " + LiftRenderStats.frames(part) + " frames");

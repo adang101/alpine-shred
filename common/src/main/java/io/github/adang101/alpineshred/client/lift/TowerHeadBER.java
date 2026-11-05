@@ -49,6 +49,15 @@ public final class TowerHeadBER implements BlockEntityRenderer<LiftTowerHeadBloc
         V3 prev = nodes.get(index - 1), next = nodes.get(index + 1);
         double dx = next.x() - prev.x(), dz = next.z() - prev.z();
         VertexConsumer vc = buffers.getBuffer(RenderType.entityCutoutNoCull(Boxes.TEXTURE));
+        // A post from the top of the block up to the axle the sheaves turn on, which spans both of them.
+        pose.pushPose();
+        pose.translate(0.5, 0, 0.5);
+        float axle = (float) (0.5 + LiftPath.CABLE_HEIGHT - SHEAVE_RADIUS - 0.02);
+        Boxes.box(pose, vc, Boxes.STEEL, -0.08f, 1f, -0.08f, 0.08f, axle - 0.03f, 0.08f, light, overlay);
+        pose.mulPose(Axis.YP.rotation((float) Math.atan2(-dx, -dz)));
+        float reach = (float) LiftPath.HEAD_OFFSET + 0.1f;
+        Boxes.box(pose, vc, Boxes.DARK, -reach, axle - 0.03f, -0.04f, reach, axle + 0.03f, 0.04f, light, overlay);
+        pose.popPose();
         // The loaded cable runs over the left sheave toward the drive, the return cable over the right one away from it.
         sheave(pose, vc, dx, dz, LiftPath.HEAD_OFFSET, travel / SHEAVE_RADIUS, light, overlay);
         sheave(pose, vc, dx, dz, -LiftPath.HEAD_OFFSET, -travel / SHEAVE_RADIUS, light, overlay);

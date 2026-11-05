@@ -83,12 +83,15 @@ public final class LiftSoundManager {
         if (minecraft.isPaused()) return;
         MOTORS.values().removeIf(MotorSound::isStopped);
         Set<UUID> live = new HashSet<>();
+        Set<BlockPos> checked = new HashSet<>();
         for (ClientLine line : ClientLiftLines.all()) {
             live.add(line.id);
             drive(level, player, line);
-            heads(level, player, line);
+            heads(level, player, line, checked);
         }
         STOPPED.retainAll(live);
+        // A head not looked at this tick (far, or its line stopped or gone) forgets its countdown.
+        CREAKS.keySet().retainAll(checked);
     }
 
     private static void drive(ClientLevel level, LocalPlayer player, ClientLine line) {
@@ -111,12 +114,13 @@ public final class LiftSoundManager {
         }
     }
 
-    private static void heads(ClientLevel level, LocalPlayer player, ClientLine line) {
+    private static void heads(ClientLevel level, LocalPlayer player, ClientLine line, Set<BlockPos> checked) {
         if (line.speed <= CREAK_MIN_SPEED) return;
         for (int i = 1; i < line.nodes().size() - 1; i++) {
             BlockPos head = line.nodes().get(i);
             double dx = player.getX() - (head.getX() + 0.5), dy = player.getY() - head.getY(), dz = player.getZ() - (head.getZ() + 0.5);
             if (dx * dx + dy * dy + dz * dz > CREAK_RANGE * CREAK_RANGE || !(level.getBlockEntity(head) instanceof LiftTowerHeadBlockEntity)) continue;
+            checked.add(head);
             int wait = CREAKS.getOrDefault(head, RANDOM.nextInt(CREAK_MAX_TICKS));
             if (--wait > 0) {
                 CREAKS.put(head, wait);
