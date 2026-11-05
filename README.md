@@ -720,7 +720,16 @@ covered by a test or noted in code.
 71. **The lift budgets are asserted at three times the doc's** (section 22: 0.3 ms a tick for five
     lines, 5 microseconds a chair), since CI hardware varies; the game test `liftManagerBudget`
     runs five lines of 50 or more chairs for 200 ticks after 40 of warm-up and logs the means.
-    Measured on the CI machine: __BUDGET__.
+    Measured on the CI machine, with the budgets met many times over: the manager takes 0.003 ms a
+    tick (Forge) and 0.005 ms (Fabric) for five lines, and a chair 2.9 and 3.4 microseconds a tick
+    (the chairs are loose entities, so this is the chair's own work, without the entity manager's
+    move bookkeeping).
+72. **A sync stamped a few ticks after the client's game time is rewound, not clamped.** A client
+    that lags the server's clock by a tick or three (software-rendered CI clients do) would
+    otherwise sit ahead of the server's chairs until the next 100-tick resend: the multiplayer
+    smoke measured the watchers' chairs a median 0.125 blocks (one tick at 2.5 b/s) ahead and up
+    to 0.376 at worst, over the 0.25 tolerance. `ClientLine.apply` now rewinds `travel` by
+    `speed / 20` per tick for gaps of up to 10 ticks; a larger gap is taken as it is.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and

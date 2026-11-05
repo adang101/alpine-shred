@@ -975,10 +975,16 @@ public final class LiftGameTests {
         closeEnough(caught.speed, line.speed, label + " speed (catch-up)");
         closeEnough(stepped.travel, line.travel, label + " travel (ticked)");
         closeEnough(stepped.speed, line.speed, label + " speed (ticked)");
-        // A sync from the future never runs a line backward.
+        // A sync from far in the future is taken as it is; one a few ticks ahead is rewound at its own speed.
         ClientLine early = new ClientLine(sync, t - 50);
         closeEnough(early.travel, sync.travel(), label + " early travel");
         closeEnough(early.speed, sync.speed(), label + " early speed");
+        ClientLine slightlyEarly = new ClientLine(sync, t - 3);
+        double loop = sync.speed() == 0 ? 0 : slightlyEarly.path().loopLength();
+        double back = sync.travel() - sync.speed() / 20.0 * 3;
+        if (loop > 0) back = ((back % loop) + loop) % loop;
+        closeEnough(slightlyEarly.travel, sync.speed() == 0 ? sync.travel() : back, label + " travel rewound by 3 ticks");
+        closeEnough(slightlyEarly.speed, sync.speed(), label + " speed after a rewind");
     }
 
     public static void clientCatchUpMatchesServer(GameTestHelper helper) {
