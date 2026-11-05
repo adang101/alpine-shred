@@ -992,6 +992,7 @@ public final class ClientSmoke {
     }
 
     private static double liftTopY, liftYawError;
+    private static int liftYawNotes;
     private static int liftTicks, liftRideTicks, liftTopTicks, liftStrapAt = -1;
     private static boolean liftRode, liftFallback, liftServerChecked;
     private static final Set<RideState> liftStates = EnumSet.noneOf(RideState.class);
@@ -1054,7 +1055,12 @@ public final class ClientSmoke {
                 note(String.format(Locale.ROOT, "lift: t%d synced %s local %s bar %b at y %.1f", liftRideTicks, synced, local, chair.barDown(), player.getY() - origin.getY()));
             }
             if (liftRideTicks >= 20 && player.getVehicle() instanceof ChairEntity seat) {
-                liftYawError = Math.max(liftYawError, Math.abs(Mth.wrapDegrees(player.yBodyRot - seat.getYRot())));
+                double error = Math.abs(Mth.wrapDegrees(player.yBodyRot - seat.getYRot()));
+                if (error > 1.0 && liftYawNotes++ < 12) {
+                    note(String.format(Locale.ROOT, "lift: t%d body yaw %.1f, chair yaw %.1f, player yaw %.1f, pending shot %s", liftRideTicks,
+                            player.yBodyRot, seat.getYRot(), player.getYRot(), pending == null ? "none" : pending.name()));
+                }
+                liftYawError = Math.max(liftYawError, error);
             }
             if (liftRideTicks >= 50) view(mc, "lift_seated_first_person", CameraType.FIRST_PERSON);
             if (liftRideTicks >= 90) back(mc, "lift_seated_back");
