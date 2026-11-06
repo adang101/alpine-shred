@@ -788,7 +788,11 @@ covered by a test or noted in code.
     syncs arriving with them ("clock moved -1 since the last tick"). Result (CI run 42260553304,
     sha fa0b582, chair positions against the server's): rider 1749 samples, max deviation 0.126,
     0 over 0.25; watcher1 1419, max 0.251, 8 over (one sample time, gt5640); watcher2 1725, max
-    0.126, 0 over; the check passed.
+    0.126, 0 over; the check passed. A second run (CI run 42268884498, sha 4a2f654) passed too: rider 1776
+    samples, 0 over; watcher1 1422, 18 over (two sample times with 9 chairs each: gt6480 at 0.251,
+    and gt5280 at 1.001, the one tick in which a stall made the client's clock jump by 9; the chair
+    is positioned before the post-tick line shift, so it lags a jump by one tick); watcher2 1756,
+    0 over. No windows of 0.375 or more.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
