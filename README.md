@@ -4,7 +4,8 @@ Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1
 NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
 truth; this README covers how to build the code and where it stands against that document.
 
-**Status:** Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
+**Status:** Phases 1 to 8 are merged into `main`; phase 9, the last, is next
+([docs/phase9-plan.md](docs/phase9-plan.md)). Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
 that carry up to two riders (or mobs) and leave them at the top in a glide, lifts that generate at
 ski resorts, and `/alpineshred lift` commands. Its automated exit gate passes in CI: the lift game
 tests (line data and its save and reload, boarding, riding, unloading, faulted lines, relogs, the
@@ -27,6 +28,27 @@ smoke client's popup banks exactly what the server banks. Phases 1 to 4 are comp
 ([docs/playtest-phase3.md](docs/playtest-phase3.md)), and the hand checks in
 [docs/playtest-phase4.md](docs/playtest-phase4.md). Still to check by hand: the jar on a NeoForge
 1.20.1 server, and Trinkets (Fabric) syncing designs, which CI cannot run.
+
+## Phases
+
+The design document's roadmap (section 20) in nine phases. Each phase merges into `main` once
+the automated part of its exit gate passes in CI; the parts that need people are listed in its
+playtest page.
+
+| Phase | What it delivers | State | Plan and playtest |
+| --- | --- | --- | --- |
+| 1 | Gear: the appendix items, recipes, the `alpine` armor material, config, Curios and Trinkets slots | Done | |
+| 2 | Riding: `SlideController`, slopes, carving, jumps, server validation | Done | |
+| 3 | Feel: rider animation, lean, camera, sounds and particles | Done, except the outside-tester gate | [playtest](docs/playtest-phase3.md) |
+| 4 | Terrain park: rails, boxes, ramps, pipes, the park wrench, grinding | Done, hand checks open | [playtest](docs/playtest-phase4.md) |
+| 5 | Tricks and scoring: spins, flips, grabs, grinds, combos, the server's validation | Done | |
+| 6 | Board and ski customization: the Paint Bench, editor, share codes | Done, playtest open | [playtest](docs/playtest-phase6.md) |
+| 7 | World generation: groomed runs, resorts, parks, snow features | Done, playtest open | [playtest](docs/playtest-phase7.md) |
+| 8 | Ski lifts: lines, chairs, boarding, sync, generated resort lifts | Done (merged 2026-11-06), playtest open | [plan](docs/phase8-plan.md), [playtest](docs/playtest-phase8.md) |
+| 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | **Next** | [plan](docs/phase9-plan.md) |
+
+The project's exit (phase 9): section 19's compatibility matrix passes, and a release candidate
+runs for two weeks with no open blockers.
 
 ## Build and test
 
@@ -741,7 +763,10 @@ covered by a test or noted in code.
     samples, max deviation 0.251 (6 over 0.25); watcher1 1565 samples, max 0.251 (18 over);
     watcher2 1864 samples, max 0.251 (16 over). The remaining outliers all sit at 0.250 to 0.251
     (two ticks at 2.5 b/s, just over the tolerance), a few sample times per client rather than a
-    cluster around the relog; the check prints them by game time.
+    cluster around the relog; the check prints them by game time. The merge run on `wip/phase-8`
+    (CI run 42209693937, sha 2eb24c8) passed too: rider 1811 samples, max 0.251 (13 over);
+    watcher1 1507, max 0.126 (none over); watcher2 1790, max 0.251 (54 over, 3.0%, the closest to
+    the 5% limit; spread over the ride, so watch it for flakiness).
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
