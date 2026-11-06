@@ -832,13 +832,15 @@ covered by a test or noted in code.
       the `create_forge_version=6.0.0` pin in `gradle.properties` was not a published build. Fabric compiles
       against Create Fabric `6.0.8.1+build.1744-mc1.20.1` from Modrinth's maven (the version pinned earlier;
       `mvn.devos.one` stops at 6.0.7), whose jar carries Flywheel, Ponder, Registrate and Porting Lib inside
-      it (the Create column copies those nested jars out of it for the dev runtime, since Loom does not).
+      it. Loom does not unpack that jar-in-jar content for the dev runtime, so the Create job downloads the
+      jar, checks it against a pinned sha256, unzips the nested jars into `fabric/build/create-nested`, and
+      `fabric/build.gradle` adds them as runtime mods (and fails with a clear message if the folder is empty).
       All are `modCompileOnly` normally; none is bundled, and the jars' `mods.toml` / `fabric.mod.json` still list
       Create as optional.
     - *The Create column.* `-PwithCreate` turns the same coordinates into `modImplementation` and sets
       `-Dalpineshred.create=true` on the game-test runs; on Fabric it also raises Loader to 0.17.2, which
       Create Fabric 6.0.8.1 requires. CI runs it as a second job (`create`) beside the existing one, so the
-      main job's 120-minute limit is untouched; it writes its logs to `ci-logs-create`.
+      main job's 120-minute limit is untouched; it writes its logs to the `ci-logs-create` branch (with its own `RUN.txt`), so they never overwrite `ci-logs`.
     - *The bridge.* Common code sees Create only through `compat.create.CreateBridge` (`live()`,
       `version()`), held in `CreateCompat` and empty (`ABSENT`) until a loader installs one. Each loader's
       `compat.create` package has the bridge and an `init()`, called from the entry point only when

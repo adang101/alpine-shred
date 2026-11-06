@@ -53,34 +53,21 @@ configurations {
     }
 }
 
-// The Create jar as published (unremapped), only to read the jars nested inside it. Create column only.
-// Loom does not unpack that jar-in-jar content for the dev runtime and reads mod dependencies while the
-// project is configured, so the nested jars are copied out right here, then added as runtime mods below.
+// The Create column runs Create Fabric in the dev runtime, and Loom does not unpack its jar-in-jar content
+// (Flywheel, Ponder, Registrate, Porting Lib, ...). The CI step "Unpack Create's nested jars" copies them,
+// flattened, into this folder before Gradle starts; they become runtime mods below. It is read here, not
+// produced here, because Loom rejects resolving a configuration while the project is configured.
 def createNestedJars = []
 if (withCreate) {
-    configurations {
-        createFabricJar {
-            canBeResolved = true
-            canBeConsumed = false
-            transitive = false
-        }
-    }
-    dependencies {
-        createFabricJar "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
-    }
     def nestedDir = layout.buildDirectory.dir('create-nested').get().asFile
-    copy {
-        from(zipTree(configurations.createFabricJar.singleFile)) {
-            include 'META-INF/jars/*.jar'
-            eachFile { it.path = it.name }
-            includeEmptyDirs = false
-        }
-        into nestedDir
-    }
     // core, toml and jsr305 are plain libraries, not mods.
-    createNestedJars = (nestedDir.listFiles() as List).findAll {
+    createNestedJars = ((nestedDir.listFiles() ?: new File[0]) as List).findAll {
         it.name.endsWith('.jar') && !['core-', 'toml-', 'jsr305-'].any { prefix -> it.name.startsWith(prefix) }
     }.sort { it.name }
+    if (createNestedJars.isEmpty()) {
+        throw new GradleException("-PwithCreate needs ${nestedDir} filled with the jars nested inside Create Fabric: " +
+                "run the CI step that unpacks Create's nested jars first (.github/workflows/build.yml, job 'create').")
+    }
 }
 
 dependencies {

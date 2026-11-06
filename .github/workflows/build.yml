@@ -270,6 +270,21 @@ jobs:
       - name: Prepare log folder
         run: mkdir -p "$RUNNER_TEMP/ci-logs"
 
+      # Loom does not unpack Create Fabric's jar-in-jar content for the dev runtime, so the jars nested inside the
+      # pinned Create Fabric release are copied into fabric/build/create-nested, which fabric/build.gradle reads
+      # under -PwithCreate. The download is pinned by sha256 (gradle.properties, create_fabric_version).
+      - name: Unpack Create's nested jars (Fabric)
+        env:
+          CREATE_FABRIC_VERSION: 6.0.8.1+build.1744-mc1.20.1
+          CREATE_FABRIC_SHA256: a613603fb08d967c5a4138d1adb7374c4a347b91e489fe21579a4cff4f40105a
+        run: |
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/create-fabric.jar" \
+            "https://api.modrinth.com/maven/maven/modrinth/create-fabric/$CREATE_FABRIC_VERSION/create-fabric-$CREATE_FABRIC_VERSION.jar"
+          echo "$CREATE_FABRIC_SHA256  $RUNNER_TEMP/create-fabric.jar" | sha256sum -c -
+          mkdir -p fabric/build/create-nested
+          unzip -jo "$RUNNER_TEMP/create-fabric.jar" 'META-INF/jars/*.jar' -d fabric/build/create-nested
+          ls fabric/build/create-nested
+
       - name: Fabric game tests with Create (headless dedicated server)
         timeout-minutes: 20
         run: ./gradlew :fabric:runGametest $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/3-fabric-gametest-create.log"
