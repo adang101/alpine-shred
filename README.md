@@ -840,7 +840,10 @@ covered by a test or noted in code.
     - *The Create column.* `-PwithCreate` turns the same coordinates into `modImplementation` and sets
       `-Dalpineshred.create=true` on the game-test runs; on Fabric it also raises Loader to 0.17.2, which
       Create Fabric 6.0.8.1 requires. CI runs it as a second job (`create`) beside the existing one, so the
-      main job's 120-minute limit is untouched; it writes its logs to the `ci-logs-create` branch (with its own `RUN.txt`), so they never overwrite `ci-logs`.
+      main job's 120-minute limit is untouched; Create's own Fabric game tests run in that column too (Fabric
+      runs every mod's), so `.github/scripts/gametest-junit-check.py` judges the step from `junit.xml` on our
+      tests alone and only reports Create's failures (Forge filters them out by namespace). The job writes its
+      logs to the `ci-logs-create` branch (with its own `RUN.txt`), so they never overwrite `ci-logs`.
     - *The bridge.* Common code sees Create only through `compat.create.CreateBridge` (`live()`,
       `version()`), held in `CreateCompat` and empty (`ABSENT`) until a loader installs one. Each loader's
       `compat.create` package has the bridge and an `init()`, called from the entry point only when

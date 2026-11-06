@@ -297,9 +297,19 @@ jobs:
           ls "$D"
           test "$(ls "$D" | wc -l)" -ge 15
 
+      # Create Fabric registers its own game tests, and Fabric API runs every mod's, so Gradle's exit code also
+      # reflects Create's (README 77). The run is allowed to fail; gametest-junit-check.py then judges only ours:
+      # junit.xml must exist, at least as many of our tests as FabricGameTests declares must have run, none failed.
       - name: Fabric game tests with Create (headless dedicated server)
         timeout-minutes: 20
-        run: ./gradlew :fabric:runGametest $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/3-fabric-gametest-create.log"
+        run: |
+          set +e
+          ./gradlew :fabric:runGametest $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/3-fabric-gametest-create.log"
+          echo "gradle exit code ${PIPESTATUS[0]} (Create's own tests may fail it; the check below decides)"
+          EXPECTED=$(grep -c '^ *@GameTest(' fabric/src/main/java/io/github/adang101/alpineshred/fabric/gametest/FabricGameTests.java)
+          python3 .github/scripts/gametest-junit-check.py fabric/build/gametest/junit.xml fabricgametests. "$EXPECTED" \
+            | tee "$RUNNER_TEMP/ci-logs/3b-fabric-gametest-create-check.log"
+          exit ${PIPESTATUS[0]}
 
       - name: Forge game tests with Create (headless game-test server)
         if: success() || failure()
