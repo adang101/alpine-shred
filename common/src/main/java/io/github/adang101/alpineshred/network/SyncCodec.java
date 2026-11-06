@@ -130,6 +130,9 @@ public final class SyncCodec {
 
     // ---- config_sync ----------------------------------------------------------------------------
 
+    /** The range of {@code lift.seats}. */
+    public static final int MIN_SEATS = 1, MAX_SEATS = 4;
+
     /**
      * The server-authoritative settings the client-side controller needs. The protocol version
      * travels outside the compressed JSON (a VarInt in front), so a client can always read it.
@@ -139,9 +142,6 @@ public final class SyncCodec {
      * @param dismountAnywhere {@code lift.dismountAnywhere}: the client's sneak-dismount prediction
      * @param liftSeats {@code lift.seats}: the client's free-seat check on a chair (no protocol bump: a missing key keeps the default, README 76)
      */
-    /** The range of {@code lift.seats}. */
-    public static final int MIN_SEATS = 1, MAX_SEATS = 4;
-
     public record Settings(boolean ridingEnabled, double maxSpeedMul, boolean scrapeEnabled, double maxBoardSpeed, boolean dismountAnywhere, int liftSeats) {
         /** What a client assumes before the server says otherwise (the config defaults). */
         public static final Settings DEFAULTS = new Settings(true, 1.0, true, 4.0, false, 2);
