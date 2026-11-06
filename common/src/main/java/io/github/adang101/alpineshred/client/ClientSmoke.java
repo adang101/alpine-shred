@@ -1190,6 +1190,7 @@ public final class ClientSmoke {
      */
     private static boolean multiLift(Minecraft mc) {
         LocalPlayer self = mc.player;
+        ClientLiftLines.trace = ClientSmoke::note;
         if (self == null || mc.level == null) return liftOffline(mc);
         if (relogState == 2) {
             relogState = 3;

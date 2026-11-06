@@ -25,8 +25,11 @@ public final class ClientLiftLines {
     /** Node position to its line's id, for the block entity renderers (a node's block entity does not know its line on the client). */
     private static final Map<BlockPos, UUID> NODES = new HashMap<>();
     private static ClientLevel level;
-    /** The level's game time at the previous tick, or MIN_VALUE when there was none. */
-    private static long lastGameTime = Long.MIN_VALUE;
+    /** Follows the level's game time; see {@link LineClock}. */
+    private static final LineClock CLOCK = new LineClock();
+
+    /** Smoke diagnostics only (null otherwise): receives a line for each sync and each client tick whose game time moved by other than one. */
+    public static volatile java.util.function.Consumer<String> trace;
 
     private ClientLiftLines() {
     }
@@ -59,7 +62,7 @@ public final class ClientLiftLines {
         LINES.clear();
         NODES.clear();
         level = null;
-        lastGameTime = Long.MIN_VALUE;
+        CLOCK.reset();
     }
 
     /** Handles a sync on the main thread. */
@@ -70,6 +73,7 @@ public final class ClientLiftLines {
             LINES.clear();
             NODES.clear();
             level = current;
+            CLOCK.reset();
         }
         if (sync.removed()) {
             LINES.remove(sync.id());
@@ -77,6 +81,10 @@ public final class ClientLiftLines {
             return;
         }
         long now = current.getGameTime();
+        // Move the other lines over any clock jump that came with this sync, so the next tick does not repeat it.
+        long moved = CLOCK.follow(LINES.values(), now, 0);
+        java.util.function.Consumer<String> t = trace;
+        if (t != null) t.accept("lift: sync stamp " + sync.gameTime() + " at client gt" + now + ", clock moved " + moved + " since the last tick");
         ClientLine line = LINES.get(sync.id());
         if (line == null) {
             try {
@@ -99,17 +107,13 @@ public final class ClientLiftLines {
             LINES.clear();
             NODES.clear();
             level = minecraft.level;
-            lastGameTime = Long.MIN_VALUE;
+            CLOCK.reset();
         }
         if (minecraft.isPaused() || level == null) return;
         // Follow the level's game time rather than counting ticks: the server's time packet moves a drifted
         // client's clock, and the lines must move with it or the chairs sit off by the drift until the next sync.
-        long now = level.getGameTime();
-        long delta = lastGameTime == Long.MIN_VALUE ? 1 : now - lastGameTime;
-        lastGameTime = now;
-        for (ClientLine line : LINES.values()) {
-            if (delta == 1) line.tick();
-            else line.shift(delta);
-        }
+        long moved = CLOCK.follow(LINES.values(), level.getGameTime(), 1);
+        java.util.function.Consumer<String> t = trace;
+        if (moved != 1 && t != null) t.accept("lift: client clock moved " + moved + " ticks in one tick, now gt" + level.getGameTime());
     }
 }
