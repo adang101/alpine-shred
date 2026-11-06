@@ -1,0 +1,22 @@
+# TEMPORARY (WP2): print the sha256 of the pinned Create Fabric jar. Deleted in the next commit.
+name: create-probe
+on:
+  push:
+    branches: ['wip/phase-9-wp2']
+    paths: ['.github/workflows/create-probe.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          set +e
+          V='6.0.8.1+build.1744-mc1.20.1'
+          curl -sS -m 90 -L -o cf.jar "https://api.modrinth.com/maven/maven/modrinth/create-fabric/$V/create-fabric-$V.jar"
+          echo "SHA256 JAR: $(sha256sum cf.jar)"
+          curl -sS -m 30 "https://api.modrinth.com/v2/project/create-fabric/version?game_versions=%5B%221.20.1%22%5D&loaders=%5B%22fabric%22%5D" | python3 -c "
+          import json,sys
+          for v in json.load(sys.stdin):
+              if v['version_number']=='$V':
+                  for f in v['files']: print('API', f['filename'], f['hashes']['sha256'])
+          "
