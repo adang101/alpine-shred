@@ -257,6 +257,14 @@ line twice. `LineClock` fixes it (README clarification 73), with `LineClockTest`
 followed (CI runs 42260553304 and 42268884498). Merged into `wip/phase-9`.
 
 ### WP1: Carry-overs from phase 8 (small)
+
+**Done.** Merged into `wip/phase-9` (CI run 42293537234 on `5629994`, all green; chair check 0/0/0 over 0.25, max
+0.126 on every client). The catch-up runs at `CLIENT_PRE` and follows `gameTime + 1`. The flake's cause: the test
+places a start planned on its own seed into the game-test level, whose terrain comes from a random seed and could rise
+above a tower head; the test now sets each head's column to what the plan assumed (README 74, 75). Also fixed:
+`liftSurvivesSaveReload` took chair 0 when a concurrent test's player had already spawned it. Left over: `lift.seats`
+is not synced (moved to WP2).
+
 - Make `ClientLiftLines` import `Consumer` instead of naming it in full (WP0 review note).
 - Move the line catch-up before entity ticks (the client's tick start), so chairs don't lag a large clock jump
   by one tick. WP0 saw a single 1.0-block sample right after a 485 ms server stall. Check it with the
@@ -274,6 +282,8 @@ followed (CI runs 42260553304 and 42268884498). Merged into `wip/phase-9`.
 
 ### WP2: Create groundwork
 
+- Add `lift.seats` to `config_sync` (WP1 leftover; the client's free-seat check reads it). No protocol bump: a
+  missing key keeps its default, and protocol 2 has not shipped.
 - Add the Gradle dependencies (decision 1), the `compat.create` packages, `CreateBridge` and its two loader
   implementations, registered behind `isCreatePresent`.
 - Add the CI column with Create (decision 4), with one trivial game test that proves Create loaded and the
