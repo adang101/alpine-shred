@@ -31,7 +31,7 @@ import java.util.function.Function;
  * set gets it. Speed changes during a ramp are deterministic and need no packet.</li>
  * <li>On removal, everyone with the line gets a {@code removed} sync and drops it.</li>
  * </ul>
- * A line that leaves a player radius stays in their set. Sets clear on logout and dimension change.
+ * A line that leaves a player radius stays in their set. Sets clear on logout and dimension change, and a joining player is sent its lines at once ({@link #join}).
  * Server thread only. The sender and the player source can be replaced so tests need no connections.
  */
 public final class LiftSync implements LiftManager.Listener {
@@ -57,6 +57,7 @@ public final class LiftSync implements LiftManager.Listener {
         // Registered after LiftManager's own post-tick, so the state sent is this tick's.
         TickEvent.SERVER_LEVEL_POST.register(level -> pass(level, level.getGameTime()));
         PlayerEvent.PLAYER_QUIT.register(player -> forget(player.getUUID()));
+        PlayerEvent.PLAYER_JOIN.register(player -> join(player, player.serverLevel()));
         PlayerEvent.CHANGE_DIMENSION.register((player, oldLevel, newLevel) -> forget(player.getUUID()));
     }
 
@@ -84,6 +85,29 @@ public final class LiftSync implements LiftManager.Listener {
 
     public static void forget(UUID player) {
         SYNCED.remove(player);
+    }
+
+    /**
+     * Sends a player who just joined every line in range at once, instead of at the next 40-tick scan: until the
+     * line arrives the client has no state for it and its chairs sit where the entity packets last put them. The
+     * set starts from nothing, so a rejoin never relies on what the previous session was sent.
+     */
+    public static void join(ServerPlayer player, ServerLevel level) {
+        forget(player.getUUID());
+        List<LiftLine> lines = LiftManager.snapshot(level);
+        if (lines.isEmpty()) return;
+        Set<UUID> set = SYNCED.computeIfAbsent(player.getUUID(), k -> new HashSet<>());
+        scan(player, set, lines, AlpineConfig.LIFT_SYNC_RADIUS.get(), level.getGameTime());
+    }
+
+    private static void scan(ServerPlayer player, Set<UUID> set, List<LiftLine> lines, double radius, long gameTime) {
+        double x = player.getX(), z = player.getZ();
+        for (LiftLine line : lines) {
+            if (!set.contains(line.id) && inRange(line, x, z, radius)) {
+                sender.send(player, LiftLineSync.of(line, gameTime));
+                set.add(line.id);
+            }
+        }
     }
 
     // ---- the periodic passes ----
@@ -116,14 +140,7 @@ public final class LiftSync implements LiftManager.Listener {
                     }
                 }
             }
-            if (scan) {
-                for (LiftLine line : lines) {
-                    if (!set.contains(line.id) && inRange(line, x, z, radius)) {
-                        sender.send(player, LiftLineSync.of(line, gameTime));
-                        set.add(line.id);
-                    }
-                }
-            }
+            if (scan) scan(player, set, lines, radius, gameTime);
         }
     }
 

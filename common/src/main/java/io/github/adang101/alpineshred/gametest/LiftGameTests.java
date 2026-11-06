@@ -1,6 +1,7 @@
 package io.github.adang101.alpineshred.gametest;
 
 import com.mojang.authlib.GameProfile;
+import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.lift.Boarding;
 import io.github.adang101.alpineshred.lift.DismountRule;
 import io.github.adang101.alpineshred.movement.RideServer;
@@ -55,6 +56,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import static io.github.adang101.alpineshred.gametest.RideGameTests.check;
@@ -973,10 +975,16 @@ public final class LiftGameTests {
         closeEnough(caught.speed, line.speed, label + " speed (catch-up)");
         closeEnough(stepped.travel, line.travel, label + " travel (ticked)");
         closeEnough(stepped.speed, line.speed, label + " speed (ticked)");
-        // A sync from the future never runs a line backward.
+        // A sync from far in the future is taken as it is; one a few ticks ahead is rewound at its own speed.
         ClientLine early = new ClientLine(sync, t - 50);
         closeEnough(early.travel, sync.travel(), label + " early travel");
         closeEnough(early.speed, sync.speed(), label + " early speed");
+        ClientLine slightlyEarly = new ClientLine(sync, t - 3);
+        double loop = sync.speed() == 0 ? 0 : slightlyEarly.path().loopLength();
+        double back = sync.travel() - sync.speed() / 20.0 * 3;
+        if (loop > 0) back = ((back % loop) + loop) % loop;
+        closeEnough(slightlyEarly.travel, sync.speed() == 0 ? sync.travel() : back, label + " travel rewound by 3 ticks");
+        closeEnough(slightlyEarly.speed, sync.speed(), label + " speed after a rewind");
     }
 
     public static void clientCatchUpMatchesServer(GameTestHelper helper) {
@@ -1064,6 +1072,15 @@ public final class LiftGameTests {
             near.setPos(drive.getX() + 5000, drive.getY(), drive.getZ());
             LiftSync.pass(level, 160);
             check(LiftSync.synced(near.getUUID()).contains(line.id), "the line left the set when out of range");
+
+            // A joining player gets the line at once, from an empty set, whatever the beat.
+            LiftSync.forget(far.getUUID());
+            int farJoin = toFar.size();
+            LiftSync.join(far, level);
+            check(toFar.size() == farJoin + 1 && !toFar.get(farJoin).removed() && toFar.get(farJoin).id().equals(line.id)
+                    && LiftSync.synced(far.getUUID()).contains(line.id), "a joining player was not sent the line at once");
+            LiftSync.join(far, level);
+            check(toFar.size() == farJoin + 2, "a rejoin did not resend the line");
 
             // Removal reaches everyone with the line and empties their sets.
             int nearBefore = toNear.size(), farBefore = toFar.size();
@@ -1508,6 +1525,127 @@ public final class LiftGameTests {
             if (cow != null) cow.discard();
             RideGameTests.removeServerPlayer(player);
             cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    // ---- work package 10: save and reload, budgets ----
+
+    /**
+     * A line and a rider survive a save and reload: the line comes back from its saved data (the way a restart
+     * loads it) in the state it was saved in, the rider logs out (the server saves them with their chair) and
+     * back in, and they are on a chair of the same slot, which follows the reloaded line. The full restart of a
+     * dedicated server with riders is a hand check ({@code docs/playtest-phase8.md}); this is its data path.
+     */
+    public static void liftSurvivesSaveReload(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        LiftLine line = LiftManager.create(level, climbingLine(helper));
+        check(line != null, "the line was not created");
+        GameProfile profile = new GameProfile(UUID.randomUUID(), "alpine-reload");
+        ServerPlayer first = null, second = null;
+        try {
+            UUID id = line.id;
+            LiftManager.setDrive(level, id, true, 2.5);
+            for (int i = 0; i < 120; i++) LiftManager.tick(level);
+            check(line.speed > 1.0 && line.travel > 0, "the line did not get going: speed " + line.speed + ", travel " + line.travel);
+            ChairEntity chair = LiftChairs.spawn(level, line, 0);
+            check(chair != null, "chair 0 was not spawned");
+            chair.tick();
+            first = RideGameTests.newServerPlayer(helper, profile);
+            first.moveTo(chair.getX(), chair.getY() - 0.5, chair.getZ());
+            check(first.startRiding(chair), "could not sit");
+            chair.setBarDown(true);
+            double speed = line.speed, travel = line.travel;
+
+            // The save: the level's lift data, and the rider with the chair (a log out saves both).
+            CompoundTag savedLines = LiftSavedData.get(level).save(new CompoundTag());
+            level.getServer().getPlayerList().remove(first);
+            first = null;
+            check(chair.isRemoved(), "the chair outlived its only rider's logout");
+
+            // The reload: the line is replaced by the one loaded from the saved data.
+            LiftManager.remove(level, id);
+            LiftLine loaded = LiftSavedData.load(savedLines).get(id);
+            check(loaded != null && loaded != line, "the line did not load from its saved data");
+            check(LiftSavedData.get(level).add(loaded), "the loaded line could not be added");
+            check(loaded.travel == travel && loaded.speed == speed, "loaded travel " + loaded.travel + " and speed " + loaded.speed + ", saved " + travel + " and " + speed);
+            check(loaded.powered && loaded.targetSpeed == 2.5 && !loaded.faulted && !loaded.emergency, "the drive's command was lost");
+            for (int i = 0; i < 60; i++) LiftManager.tick(level);
+            check(loaded.travel > travel, "the reloaded line did not carry on: " + loaded.travel);
+
+            second = RideGameTests.newServerPlayer(helper, profile);
+            check(second.getVehicle() instanceof ChairEntity, "the rider was not put back on a chair");
+            ChairEntity back = (ChairEntity) second.getVehicle();
+            back.tick();
+            check(id.equals(back.lineId()) && back.chairIndex() == 0 && back.barDown(), "the chair's slot or bar changed");
+            check(LiftChairs.find(level, id, 0) == back && back.getPassengers().contains(second), "the reloaded chair is not the tracked one, or lost the rider");
+            for (int i = 0; i < 100; i++) {
+                LiftManager.tick(level);
+                back.tick();
+            }
+            V3 want = loaded.path().chairPos(loaded.travel, 0, loaded.chairCount());
+            check(Math.abs(back.getX() - want.x()) < 1e-6 && Math.abs(back.getY() - want.y()) < 1e-6 && Math.abs(back.getZ() - want.z()) < 1e-6,
+                    "the chair is at " + back.position() + ", wanted " + want);
+            check(second.getVehicle() == back, "the rider left the chair");
+        } finally {
+            RideGameTests.removeServerPlayer(first);
+            RideGameTests.removeServerPlayer(second);
+            cleanUp(level, line);
+        }
+        helper.succeed();
+    }
+
+    /** The doc's budgets (section 22): 0.3 ms a tick for five lines and 5 microseconds a chair; the test fails at three times each. */
+    static final double MANAGER_BUDGET_MS = 0.3, CHAIR_BUDGET_US = 5.0;
+
+    /**
+     * Five lines of about fifty chairs each, run for 200 ticks after 40 of warm-up: the mean time of
+     * {@link LiftManager#tick} and the mean time of a chair's tick. The chairs are loose entities (never added to
+     * the level), so the number is the chair's own work, without the entity manager's bookkeeping when it moves.
+     */
+    public static void liftManagerBudget(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        BlockPos base = helper.absolutePos(new BlockPos(1, 1, 1));
+        List<LiftLine> lines = new ArrayList<>();
+        List<ChairEntity> chairs = new ArrayList<>();
+        try {
+            for (int k = 0; k < 5; k++) {
+                List<BlockPos> nodes = new ArrayList<>();
+                for (int i = 0; i < 6; i++) nodes.add(base.offset(16 * k, 100 - 6 * i, 125 * i));
+                LiftLine line = LiftManager.create(level, nodes);
+                check(line != null, "line " + k + " was not created");
+                lines.add(line);
+                LiftManager.setDrive(level, line.id, true, 2.5);
+                check(line.chairCount() >= 50, "line " + k + " has only " + line.chairCount() + " chairs");
+                for (int i = 0; i < line.chairCount(); i++) {
+                    ChairEntity chair = looseChair(level);
+                    chair.setLine(line.id, i);
+                    chair.tick(); // claims its slot, so the manager does not spawn one beside it
+                    chairs.add(chair);
+                }
+            }
+            int warmUp = 40, measured = 200;
+            long managerNanos = 0, chairNanos = 0;
+            for (int tick = 0; tick < warmUp + measured; tick++) {
+                long start = System.nanoTime();
+                LiftManager.tick(level);
+                long mid = System.nanoTime();
+                for (ChairEntity chair : chairs) chair.tick();
+                long end = System.nanoTime();
+                if (tick >= warmUp) {
+                    managerNanos += mid - start;
+                    chairNanos += end - mid;
+                }
+            }
+            double managerMs = managerNanos / 1.0e6 / measured;
+            double chairUs = chairNanos / 1.0e3 / measured / chairs.size();
+            AlpineShred.LOGGER.info(String.format(Locale.ROOT,
+                    "[lift budget] %d lines, %d chairs, %d ticks: manager %.4f ms a tick (budget %.1f), chair %.3f us a tick (budget %.1f)",
+                    lines.size(), chairs.size(), measured, managerMs, MANAGER_BUDGET_MS, chairUs, CHAIR_BUDGET_US));
+            check(managerMs < 3 * MANAGER_BUDGET_MS, String.format(Locale.ROOT, "the manager takes %.4f ms a tick, over 3x the %.1f ms budget", managerMs, MANAGER_BUDGET_MS));
+            check(chairUs < 3 * CHAIR_BUDGET_US, String.format(Locale.ROOT, "a chair takes %.3f us a tick, over 3x the %.1f us budget", chairUs, CHAIR_BUDGET_US));
+        } finally {
+            for (LiftLine line : lines) cleanUp(level, line);
         }
         helper.succeed();
     }

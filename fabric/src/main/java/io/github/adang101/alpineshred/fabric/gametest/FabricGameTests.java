@@ -460,4 +460,14 @@ public final class FabricGameTests implements FabricGameTest {
     public static void staysStrappedOnChair(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.staysStrappedOnChair(helper);
     }
+
+    @GameTest(template = TEMPLATE)
+    public static void liftSurvivesSaveReload(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.liftSurvivesSaveReload(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void liftManagerBudget(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.liftManagerBudget(helper);
+    }
 }

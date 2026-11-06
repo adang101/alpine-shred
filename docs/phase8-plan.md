@@ -17,6 +17,68 @@ that need people go into `docs/playtest-phase8.md`.
 
 ---
 
+## Resume here (paused 2026-11-06)
+
+Development was paused at the user's request to add an ASCII gameplay visualizer, a text view of the game
+state that lets the orchestrator review gameplay without reading screenshots. Nothing is running. This section is
+everything a fresh session needs.
+
+**Branches**
+- `main` (`d6cfd8b`): phase 7 plus this plan. Phase 8 has not been merged.
+- `wip/phase-8`: WP1 to WP9 merged; the last merge is WP8 (`655309a`). The WP8 branch tip, its last commit
+  before the merge (`7402ea2`), passed every CI step.
+- `wip/phase-8-wp10` (this branch; WP10 so far): all of its work is pushed; CI is green at `3f8af2b` (docs commits follow it).
+  It is not merged into `wip/phase-8` yet.
+- `wip/phase-8-wp8`: already merged, so it can be deleted.
+
+**How CI works here.** The cloud container cannot reach the Fabric, Forge or Architectury mavens, so
+`./gradlew` does not run locally. CI is the build:
+- Push the branch, and the run takes 40 to 80 minutes.
+- When it finishes, it force-pushes its logs to the `ci-logs` branch, and `RUN.txt` there names the run and
+  its sha. Read the logs with `git show origin/ci-logs:<path>`.
+- Runs on different branches overwrite each other's `ci-logs`, so run one branch at a time.
+
+**Last CI run on `wip/phase-8-wp10`:** run 42203872917, sha `3f8af2b`, conclusion success. Every step passed,
+including the multiplayer chair comparison (max deviation 0.251 for rider, watcher1 and watcher2, 0.25 tolerance
+and 5% limit unchanged; README clarification 72).
+
+**Root cause of the earlier watcher1 failure (run 42131303522):** a client's line state is dropped on logout and
+the server forgets its synced set, but the lines only came back at the next 40-tick scan, so a rejoining client
+had chairs without line state in the meantime. Fixed by `LiftSync.join` (clear the set, send every line in range
+on `PLAYER_JOIN`), covered by `syncSetTracksPlayers`. `multiplayer-check.py` now also prints outliers by game time.
+
+**History of the chair-sync fix:**
+- `29fd83d` rewinds a sync stamped up to 10 ticks ahead of the client's clock (`ClientLine.apply`,
+  `MAX_REWIND`).
+- `961dd23` makes `ClientLiftLines` step lines by the change in the level's game time.
+- `3f8af2b` sends lines on join.
+
+**Next steps for WP10:**
+1. Orchestrator review of WP10. Check:
+   - the CI timeouts raised from 90 to 120 minutes for the job, and from 25 to 45 for the multiplayer step;
+   - the dedicated-server restart moved to the playtest doc. The plan allows that, with `liftSurvivesSaveReload`
+     plus the real relog in the smoke as the automated cover.
+   - `cda15c9` is a temporary API-probe commit, and its file was removed in `29fd83d`. It's fine to leave it in
+     history.
+2. Merge `wip/phase-8-wp10` into `wip/phase-8` and wait for a green CI run on it. Then merge `wip/phase-8` into
+   `main` (exit gate: plan section 5).
+
+**WP10 measurements so far** (in README clarification 71):
+- `liftManagerBudget`, 5 lines and 260 chairs: Forge 0.0032 ms per tick and 2.9 µs per chair; Fabric 0.0054 ms
+  and 3.4 µs. The budget is 0.3 ms and 5 µs.
+- WP8's renderer costs in the `lift` smoke: cable 0.28 ms per frame, wheel 0.32 ms, chair 0.30 ms. Mean values,
+  measured under software GL.
+
+**Open items for the user:**
+- The design doc's cable frame budget. `CABLE_BUDGET_MS` in `ClientSmoke` is a provisional 0.5 ms (failing at
+  3×).
+- Playtest checks are listed in `docs/playtest-phase8.md`: sounds by ear, the safety-bar height, a full server
+  restart with riders, and render mods.
+
+**Working model** (to keep tokens down): Sonnet subagents implement each package on its own branch and drive
+their own CI loop. Opus only reviews the diffs and the screenshots, sends fixes back, and merges. Once the
+ASCII visualizer exists, prefer its text output to screenshots in reviews.
+
 ## 0. Where it stands (2026-11-01)
 
 | Item | State |
@@ -28,7 +90,9 @@ that need people go into `docs/playtest-phase8.md`.
 | WP5: `LiftLineSync` packet, `LiftSync` (40/100-tick passes, change listener), `ClientLiftLines`/`ClientLine`, shared `LiftMotion.targetFor`, 2 game tests (72 per loader) | Done (`c266445`) |
 | WP6: boarding (right-click, auto-board, `c2s/lift_board`), bar, unloading and ejection, sneak-dismount mixin, leads and pets, `lift_rides`, `lift_ridden` and `bluebird_day`, board prompt, 8 game tests | Done (merging) |
 | WP7: `LiftDriveSource`, redstone drive with emergency on loss, speed cycling (the linker passes through), drive keeps its command across a reload, stop button, `/alpineshred lift` commands, 6 game tests | Done (`31bb9b1`) |
+| WP8: `TowerHeadBER`, `BullwheelBER`, `ChairEntityRenderer`, `LiftSoundManager`, rider clips, five lift sounds, the `lift` client smoke scenario, and the seated-yaw fix in `ChairEntity` and `RiderTracker` | Done (merged `655309a`) |
 | WP9: `ResortLiftPlanner` (pure, validated), `LiftLinePiece` (per-chunk, absolute `PendingLine` with an initial drive state), 18 of 28 test resorts get a lift, `resortHasALinkedLift`, survey checks | Done (merging; the worldgen tour is verified in CI) |
+| WP10: the multiplayer smoke's lift stage (three riders on a 400-block lift, chair positions against the server's, a relog, a broken head), `liftSurvivesSaveReload`, `liftManagerBudget`, README and `docs/playtest-phase8.md` | **Done on `wip/phase-8-wp10`, awaiting orchestrator review** (green CI run 42203872917, sha `3f8af2b`) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |

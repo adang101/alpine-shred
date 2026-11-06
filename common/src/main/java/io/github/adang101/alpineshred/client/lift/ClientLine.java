@@ -39,8 +39,16 @@ public final class ClientLine implements LineView {
     }
 
     /**
+     * The most ticks a sync from the client's future is rewound by. A client whose game time lags the server's
+     * by a few ticks would otherwise stay ahead of the server's chairs until the next sync; a larger gap is a
+     * clock that is wrong, and the state is taken as it is.
+     */
+    public static final long MAX_REWIND = 10;
+
+    /**
      * Takes the packet's state, then runs it forward from the packet's game time to {@code now} with
-     * {@link LiftMotion#advance}, never by a negative number of ticks.
+     * {@link LiftMotion#advance}. A packet stamped a few ticks after {@code now} (see {@link #MAX_REWIND})
+     * is rewound at its own speed instead, so the line is where the server's was at the client's game time.
      */
     public void apply(LiftLineSync sync, long now) {
         if (path == null || !nodes.equals(sync.nodes())) {
@@ -57,8 +65,20 @@ public final class ClientLine implements LineView {
         powered = sync.powered();
         faulted = sync.faulted();
         emergency = sync.emergency();
-        long ticks = Math.max(0, now - sync.gameTime());
-        if (ticks > 0) advance(ticks);
+        long gap = now - sync.gameTime();
+        if (gap > 0) advance(gap);
+        else if (gap < 0 && gap >= -MAX_REWIND) rewind(-gap);
+    }
+
+    /** Moves {@code travel} back by {@code ticks} ticks at the current speed. */
+    private void rewind(long ticks) {
+        double t = travel - speed / LiftMotion.TICKS_PER_SECOND * ticks;
+        double loop = path.loopLength();
+        if (loop > 0) {
+            t %= loop;
+            if (t < 0) t += loop;
+        }
+        travel = t;
     }
 
     /** {@code ticks} ticks of this line, as the server's manager runs them. */
@@ -67,6 +87,16 @@ public final class ClientLine implements LineView {
                 path.loopLength(), ticks);
         speed = next[0];
         travel = next[1];
+    }
+
+    /**
+     * The level's game time moved by {@code ticks} since the last client tick (one, normally; the server's
+     * time packet moves it by the amount the client had drifted): runs the line forward by that many ticks, or
+     * back by up to {@link #MAX_REWIND}, so the line stays where the server's was at the client's game time.
+     */
+    public void shift(long ticks) {
+        if (ticks > 0) advance(ticks);
+        else if (ticks < 0 && ticks >= -MAX_REWIND) rewind(-ticks);
     }
 
     /** One client tick. */
