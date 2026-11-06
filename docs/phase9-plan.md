@@ -249,7 +249,21 @@ start after WP1. WP9 closes the phase.
 Since only one branch runs CI at a time (section 1a), "in parallel" means the work overlaps but the pushes take
 turns. Opus schedules them.
 
+### WP0: The chair-sync fix (done)
+
+The multiplayer chair check failed intermittently on `main`'s code. The cause: the server's time packet and
+the 100-tick resend arrive between the same two client ticks, and the jump was applied to the freshly synced
+line twice. `LineClock` fixes it (README clarification 73), with `LineClockTest`. Two green multiplayer runs
+followed (CI runs 42260553304 and 42268884498). Merged into `wip/phase-9`.
+
 ### WP1: Carry-overs from phase 8 (small)
+- Make `ClientLiftLines` import `Consumer` instead of naming it in full (WP0 review note).
+- Move the line catch-up before entity ticks (the client's tick start), so chairs don't lag a large clock jump
+  by one tick. WP0 saw a single 1.0-block sample right after a 485 ms server stall. Check it with the
+  multiplayer smoke's `lift:` trace lines.
+- `resortHasALinkedLift` failed once on Forge ("no pole under the head", run 42260553304) and passed on the
+  rerun. Find the cause (concurrent tests sharing the level, or chunk generation order; see "Carried forward" in
+  the phase 8 plan, section 3b) and fix it. Don't retry it away.
 
 - Add `lift.maxBoardSpeed` and `lift.dismountAnywhere` to `config_sync` and bump the protocol (decision 3). The
   client's board prompt and dismount prediction read the synced values.
