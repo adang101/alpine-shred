@@ -1,23 +1,36 @@
 # Phase 9 plan: Create compatibility and polish
 
-This is the work plan for phase 9, the last phase. The design document is the source of truth. Section 14 covers
-the kinetic drive, section 19 the compatibility matrix and budgets, and section 20 the roadmap. When this plan and
-the doc disagree, the doc wins, unless the plan records a clarification (see "Decisions"). Every clarification
-also goes into the README under "Design clarifications made while building". The README's "Phases" table is the
-project-wide overview. Update its phase 9 row when this phase merges.
+This is the work plan for phase 9, the last phase of development. There is no separate design document. What
+the game does is defined by this plan, the earlier phase plans, and the README ("What phase N delivers" and
+"Design clarifications made while building"). Older text that cites "the design doc" or its section numbers refers
+to that record. When something isn't covered, Opus decides it by the direction below and records it as a README
+clarification. The README's "Phases" table is the project-wide overview. Update its phase 9 row when this phase
+merges.
 
-**Exit gate** (section 20):
-- Section 19's compatibility matrix passes.
-- A release candidate runs for two weeks with no open blockers.
+**Direction: real-feeling, but blocky, fun and simple.** It's Minecraft:
+- Things should behave the way a player expects a ski lift, a Create machine or a snowboard to behave.
+- Art stays pixel art and chunky models in vanilla's style.
+- Numbers are chosen for fun and readability over realism.
+- When in doubt, pick the simpler rule with fewer special cases.
 
-**Deliverables** (section 20):
-- the kinetic drive (`KineticLiftDriveBE implements LiftDriveSource`; section 14),
-- wrench support,
+This applies to every deliverable and every review.
+
+**Deliverables:**
+- the kinetic drive (`KineticLiftDriveBE implements LiftDriveSource`), a Create-powered way to run a lift,
+- wrench support (Create's wrench on our blocks),
 - tags,
 - recipes and the balance pass,
 - the server guide,
 - optimization,
-- the release pipeline.
+- the release pipeline, built and dry-run only: publishing comes after development.
+
+**Exit gate (end of development):**
+- The compatibility matrix (WP9) passes in CI and by hand.
+- Every budget is met.
+- The release pipeline's dry run builds correct jars for all three targets.
+
+The release itself follows at the user's call, after development: a release candidate, a two-week soak with no
+open blockers, then publishing to Modrinth, CurseForge and GitHub Releases. That isn't part of this phase's merge.
 
 ---
 
@@ -36,7 +49,9 @@ Two roles. Neither does the other's job.
   fixes back to the same Sonnet agent, which keeps its context.
 - It merges approved WPs into `wip/phase-9`.
 - It reviews `wip/phase-9` as a whole before the merge to `main` (section 2, "Final review").
-- It asks the user before merging into `main`, and whenever the design doc isn't at hand for a decision.
+- It settles open design questions by the direction above, records each as a README clarification, and asks the
+  user only about taste calls that a player would notice, before the WP that needs them.
+- It asks the user before merging into `main`.
 - It writes code only for one-line fixes that cost less than another round trip. It records those in the merge
   commit.
 
@@ -94,8 +109,12 @@ Opus:   final review of wip/phase-9 against main  ->  user confirms  ->  merge i
   with `.github/scripts/run-datagen.sh` and commit `common/src/main/generated`. CI fails on stale data.
 - **Placeholder art.** Generate it with a Python script in `art/placeholder/`, and commit both the script and its
   output.
-- **Comments.** Write a javadoc for each public class and each non-obvious method, giving the doc section and the
-  reason. Don't narrate what the code does.
+- **Comments.** Write a javadoc for each public class and each non-obvious method, giving its reason (and the
+  README clarification, if one applies). Don't narrate what the code does.
+- **Art and feel.**
+  - Textures are 16×16 pixel art in vanilla's palette, and models are chunky boxes.
+  - Sounds are short and readable.
+  - Every new behaviour is something a player can predict after trying it once.
 
 ### 1c. Game performance (reviewed on every WP)
 
@@ -105,7 +124,7 @@ Opus:   final review of wip/phase-9 against main  ->  user confirms  ->  merge i
 - **Cache whatever is derived.** Rebuild it only when its input changes. `LiftPath` and the station intervals are
   the model.
 - **Budgets are asserted in tests.** Measure every new per-tick system the way `liftManagerBudget` does, at three
-  times the doc's figure (README clarification 71), and report the measured number in the handback.
+  times the figure in decision 6 (README clarification 71), and report the measured number in the handback.
 - **Sync traffic stays event-driven.** Send on change plus a slow resend, as `LiftSync` does. Never send every
   tick.
 - **Without Create, the cost is zero.** No Create class loads, no extra block entity ticks, and no extra packet.
@@ -130,7 +149,7 @@ Built:        <bullets: what, with file paths>
 Tests added:  <unit / game test / smoke names>
 CI:           <run id, sha, result> per round
 Measured:     <budget numbers, where relevant>
-Deviations:   <from this plan or the doc, each with its reason>  (or "none")
+Deviations:   <from this plan, each with its reason>  (or "none")
 Open:         <anything Opus must decide>                       (or "none")
 Branch tip:   <sha>
 ```
@@ -147,19 +166,22 @@ Branch tip:   <sha>
 Read the handback, then `git diff wip/phase-9...wip/phase-9-wpN`. Read whole files only where the diff isn't
 enough. Approve only when every item below holds:
 
-1. **Correct against the doc and this plan.** Each deliverable of the WP is there, and each deviation is
-   justified and recorded as a README clarification.
-2. **Tests prove it.** The new behaviour has a unit or game test that would fail without it. No test was
+1. **Correct against this plan.** Each deliverable of the WP is there, and each deviation is justified and
+   recorded as a README clarification.
+2. **Blocky, fun, simple.** It feels like Minecraft: the art is in vanilla's style, the rules are few and
+   predictable, and the numbers are easy to read. There is no realism that costs fun or adds settings nobody
+   needs.
+3. **Tests prove it.** The new behaviour has a unit or game test that would fail without it. No test was
    weakened, skipped or retimed to pass. CI is green on the handback sha (`RUN.txt`).
-3. **Reuse.** Nothing duplicates an existing helper (section 1b). New helpers are general enough for the next WP.
-4. **Performance.**
+4. **Reuse.** Nothing duplicates an existing helper (section 1b). New helpers are general enough for the next WP.
+5. **Performance.**
    - There are no allocations in hot paths.
    - Budgets are asserted and the measured numbers reported.
    - Without Create, nothing extra runs (section 1c).
-5. **Isolation.** No Create import outside `compat.create`. The mod still loads without Create; the existing CI
+6. **Isolation.** No Create import outside `compat.create`. The mod still loads without Create; the existing CI
    runs are the "without Create" column.
-6. **Determinism and data.** Ordering is fixed where it matters, and generated data is regenerated and committed.
-7. **Scope.** There are no unrelated changes, no debug leftovers, and no probe files.
+7. **Determinism and data.** Ordering is fixed where it matters, and generated data is regenerated and committed.
+8. **Scope.** There are no unrelated changes, no debug leftovers, and no probe files.
 
 Fixes go back as a numbered list, most severe first, each with the file, the line and the expected outcome. A
 finding is either **must fix** (it blocks the merge) or **note** (record it, don't block). Keep each review
@@ -185,12 +207,20 @@ round to one message.
      `PlatformHooks.isCreatePresent()`.
    - No Create type appears in a common class's signature, a mixin or an interface our blocks implement, so the
      mod never fails class loading without Create.
-2. **The kinetic drive is a separate block.** `kinetic_lift_drive` sits beside a drive station and has a
-   `KineticLiftDriveBE` that implements `LiftDriveSource`. It is registered only when Create is present, and its
-   recipe is conditional on Create. The drive station's behaviour without it is unchanged.
-   - Its rpm maps to a target speed in a pure class, clamped to `lift.kineticMaxSpeed` (4.0 by default).
-   - Losing rotation while running is an emergency stop, as losing redstone is (README "What phase 8 delivers").
-   - Its stress impact comes from the doc. If section 14 isn't at hand, Opus asks the user before WP3 starts.
+2. **The kinetic drive is a separate block.** `kinetic_lift_drive` is a chunky gearbox block that sits beside a
+   drive station and has a `KineticLiftDriveBE` that implements `LiftDriveSource`. It is registered only when
+   Create is present, and its recipe is conditional on Create. The drive station's behaviour without it is
+   unchanged.
+   - **Speed:** `|rpm| / 64` blocks per second, clamped to `lift.kineticMaxSpeed` (4.0 by default). So 64 rpm is
+     1 b/s and 256 rpm, Create's top speed, is the 4 b/s cap. Below 8 rpm it counts as stopped. The direction of
+     rotation doesn't matter; the cable always runs up.
+   - **Stress:** a flat impact of `lift.kineticStress` per rpm, 4.0 by default. That puts a full-speed lift at
+     1024 su, about a big water wheel setup. It doesn't depend on the chair count: simple, and predictable from
+     the tooltip.
+   - **Losing rotation** while running, or overstress, is an emergency stop, as losing redstone is (README "What
+     phase 8 delivers").
+   - **Which drive wins:** while a kinetic drive is attached, it is the source and redstone is ignored. Remove it,
+     and the redstone drive takes over again.
 3. **Server config that the client predicts goes into `config_sync`.** `lift.maxBoardSpeed` and
    `lift.dismountAnywhere` join it, and `SyncCodec.PROTOCOL_VERSION` goes from 1 to 2. A client on another
    protocol already ignores the sync, as phase 8 does today.
@@ -202,13 +232,13 @@ round to one message.
 5. **The balance pass changes data, not code.** Recipe costs and gear stats change in the datagen providers and
    the data-driven stats files. Every changed number is listed in one README clarification, with the reason.
 
-Open, for the user (Opus asks before the WP that needs it):
-- Section 14 (kinetic drive: rpm range, stress impact) and section 19 (the compatibility matrix rows) aren't in
-  the repo. **Please commit the design doc, or paste those sections.**
-- `CABLE_BUDGET_MS` is a provisional 0.5 ms in `ClientSmoke` (README clarification 69). It needs the doc's
-  figure.
-- Release targets (WP8): Modrinth, CurseForge or GitHub Releases only, and the tokens they need. Tokens go in
-  repository secrets, never in the repo or the chat.
+6. **Budgets are the project's own.** The phase 8 figures stand: the lift manager at 0.3 ms a tick for five lines,
+   5 µs a chair, and resort generation at 150 ms a start. The cable's frame budget becomes final at 0.5 ms a frame
+   (measured 0.28 ms, README clarification 69). The kinetic drive's budget is 0.02 ms a tick per drive. Tests
+   assert each at three times, as before.
+7. **Release targets:** Modrinth, CurseForge and GitHub Releases, all three. WP8 builds the pipeline with a dry
+   run only. Real publishing, and the tokens it needs (repository secrets, never in the repo or the chat), come
+   after development, at the user's call.
 
 ## 4. Work packages
 
@@ -239,41 +269,48 @@ turns. Opus schedules them.
 - Done when: both columns are green, the mod loads without Create (the existing runs), and the probe results are
   in the handback for WP3 and WP4.
 
-### WP3: The kinetic drive (section 14)
+### WP3: The kinetic drive (decision 2)
 
 - `kinetic_lift_drive` and `KineticLiftDriveBE implements LiftDriveSource`, in the loaders' `compat.create`
   packages on Create's kinetic base. The pure rpm-to-speed mapping lives in common.
 - The drive station takes its `LiftDriveSource` from an adjacent kinetic drive when there is one, and otherwise
-  from redstone. Which one wins when both are present follows the doc, or a clarification if it is silent.
+  from redstone (decision 2).
 - Ramping and emergency stops reuse `LiftMotion`. There is no new motion code.
-- Datagen: the block, its item, lang, a conditional recipe, loot, and the `create:` tags it needs. Placeholder
-  art goes in a script.
+- Datagen: the block, its item, lang (with a tooltip that shows the stress), a conditional recipe, loot, and the
+  `create:` tags it needs. Placeholder art (a gearbox with a cable wheel face) goes in a script.
 - Tests:
   - unit: rpm to speed, the clamp, direction;
   - game tests (Create column): rotation drives the line; losing rotation is an emergency stop; overstress stops
     it; the speed follows rpm within the ramp; the drive survives a save and reload;
-  - a budget test: the kinetic drive adds less than 3× the doc's figure per line per tick.
+  - a budget test: under 3× 0.02 ms a tick per drive (decision 6).
 - Done when: both columns are green, the `lift` smoke is unchanged, and the measured numbers are reported.
 
 ### WP4: Wrench support
 
-- Create's wrench on our blocks: what rotates, what is picked up, and what is refused, per the doc. Lift nodes
-  are already in `create:non_breakable`, so contraptions leave them alone. Breaking a node by wrench must fault
-  the line exactly as breaking it by hand does.
+Create's wrench on our blocks, kept to rules a player can guess:
+- **Park pieces** (rails, boxes, ramps, pipes): a click does what the park wrench does (cycle the shape, or turn
+  it when sneaking) by calling the same code. Sneak-clicking with Create's wrench picks the piece up, as Create
+  does for its own blocks.
+- **Lift blocks:** a plain click does nothing, and the action bar says to use the lift linker. Sneak-clicking
+  picks up a pole, a head, a station or the kinetic drive, and that faults the line exactly as breaking it by
+  hand does. Lift nodes are already in `create:non_breakable`, so contraptions leave them alone.
 - Use tags and Create's events or registries from `compat.create`, never an interface on our block classes
   (decision 1).
 - Check that the park wrench and the lift linker still work as before, and don't add Create behaviour to them
-  unless the doc asks for it.
+  (the park wrench stays the park tool).
 - Tests: game tests in the Create column for each rule above, and one test that the faulting path is shared.
 
 ### WP5: Tags, recipes and the balance pass
 
-- **Tags:** common tags (`c:` on Fabric, `forge:` on Forge) for our materials and tools where the doc lists them,
-  plus `lift_blocked` and `lift_passengers` reviewed against vanilla mobs. Everything goes through datagen.
+- **Tags:** common tags (`c:` on Fabric, `forge:` on Forge) wherever another mod would look for them (tools,
+  armor, dyeable gear, snow blocks), plus `lift_blocked` and `lift_passengers` reviewed against vanilla mobs.
+  Everything goes through datagen.
 - **Recipes:** retire the "provisional until the phase 9 balance pass" note in `AlpineRecipeProvider`. Settle the
   lift costs, the kinetic drive recipe and the Create-conditional recipes.
-- **Balance:** go over the gear stats and costs against the doc's tables, and list every change in one README
-  clarification (decision 5).
+- **Balance**, for fun and fair progression rather than realism:
+  - starter gear is cheap, so a new player is riding within minutes;
+  - better gear and lifts cost mid-game materials (iron, copper, redstone), and nothing needs end-game items;
+  - list every changed number in one README clarification (decision 5).
 - Tests: a datagen check that every item has a recipe or a reason, and every block has a loot table and a
   mineable tag (a unit test over the generated JSON, or a game test).
 
@@ -285,7 +322,7 @@ turns. Opus schedules them.
 - **Hot-path audit:** go over every per-tick and per-frame path added in phases 5 to 8 (`LiftManager`,
   `LiftChairs`, `ClientLiftLines`, the lift renderers, `RiderTracker`) for allocations and repeated work (section
   1c). Fix each one with its before and after numbers.
-- **Cable budget:** set `CABLE_BUDGET_MS` once the user gives the doc's figure, and make the renderer meet it.
+- **Cable budget:** make `CABLE_BUDGET_MS` final at 0.5 ms (decision 6), and update README clarification 69.
 - Don't change behaviour: every smoke and game test stays green with unchanged results.
 
 ### WP7: The server guide
@@ -308,41 +345,51 @@ turns. Opus schedules them.
 - A workflow triggered by a `v*` tag:
   - build both jars with the version from the tag;
   - attach them and a changelog to a GitHub release;
-  - publish to the targets the user picks (section 3, "Open"), with tokens from repository secrets;
-  - support a dry-run that publishes nothing (`workflow_dispatch`).
+  - publish steps for Modrinth, CurseForge and GitHub Releases (decision 7), reading their tokens from repository
+    secrets and skipped when a token is missing;
+  - a dry run (`workflow_dispatch`) that builds everything and publishes nothing. That dry run is all phase 9
+    runs.
 - Mod metadata: the version, the loader and Minecraft ranges, Create as an optional dependency on both loaders,
   and the Forge jar marked for NeoForge too.
 - A `CHANGELOG.md`, built from the phase summaries in the README.
-- Done when: a dry run on the WP branch produces both jars with the right metadata. No real publish happens
-  until the release candidate, and only with the user's go-ahead.
+- Done when: a dry run on the WP branch produces both jars with the right metadata. No real publish happens in
+  development.
 
-### WP9: The compatibility matrix and the release candidate
+### WP9: The compatibility matrix
 
-- Turn section 19's matrix into a table in `docs/playtest-phase9.md`. Mark each row as CI (with the step that
-  covers it) or by hand. The CI columns are at least: Forge and Fabric, each with and without Create; with
-  Curios or Trinkets; and the dedicated server with three clients.
-- Fill whatever CI gaps are cheap, such as the multiplayer smoke with Create present if the matrix asks for it.
-- Record the playtest items still open from phases 3, 4, 6, 7 and 8 in one list, so the RC soak covers them:
+- Write the matrix in `docs/playtest-phase9.md`. Mark each row as CI (with the step that covers it) or by hand.
+  - **CI rows:** Forge and Fabric, each with and without Create; Curios (Forge) and Trinkets (Fabric); a dedicated
+    server with three clients.
+  - **By hand:** the Forge jar on a NeoForge 1.20.1 server; Sodium or Embeddium, and Iris or Oculus, for the
+    renderers; a survival playthrough from new gear to a working kinetic lift.
+- Fill whatever CI gaps are cheap, such as the multiplayer smoke with Create present.
+- Collect the playtest items still open from phases 3, 4, 6, 7 and 8 into one list, so they're tracked in one
+  place:
   - the generated-lift clearing pass;
   - the real server restart with riders;
   - render mods;
   - a NeoForge server.
-- Tag `v1.0.0-rc1` once the user agrees, and start the two-week soak. Blockers found go to fix WPs, and each fix
-  restarts the clock.
+- Done when: every CI row is green, and the hand rows are written so that someone can tick them off.
+
+### After phase 9: the release (at the user's call)
+
+1. Run the hand rows of the matrix and the open playtest list.
+2. Tag `v1.0.0-rc1`, and soak it for two weeks. Blockers become fix WPs, and each fix restarts the clock.
+3. Add the three tokens as repository secrets, and tag `v1.0.0` to publish to Modrinth, CurseForge and GitHub
+   Releases.
 
 ## 5. Exit gate mapping
 
 | Gate item | Covered by |
 |---|---|
-| Kinetic drive works (section 14) | WP3 game tests (Create column), budget test |
+| Kinetic drive works (decision 2) | WP3 game tests (Create column), budget test |
 | Mod works with and without Create on both loaders | both CI columns (decision 4), WP2's load test |
 | Wrench support | WP4 game tests |
 | Tags, recipes, balance | WP5 datagen checks, README balance clarification |
 | Budgets met, including resort generation 150 ms | `liftManagerBudget`, the kinetic budget test, the worldgen tour timing, the smoke renderer timings, a spark check by hand |
 | Server guide | `docs/server-guide.md`, reviewed against the code |
-| Release pipeline | WP8 dry run, then the `rc1` release |
-| Section 19 compatibility matrix | `docs/playtest-phase9.md`: each row green in CI or checked by hand |
-| Two-week RC with no open blockers | the soak log in `docs/playtest-phase9.md` |
+| Release pipeline | WP8 dry run: correct jars and metadata for all three targets |
+| Compatibility matrix | `docs/playtest-phase9.md`: every CI row green; hand rows written up |
 
 ## 6. Test inventory (what "done" means for phase 9)
 
@@ -354,4 +401,4 @@ turns. Opus schedules them.
 | Client smoke runs | unchanged scenarios stay green, with the cable budget enforced once it's set |
 | Worldgen tour | resort start time measured against 150 ms |
 | Release | the dry-run workflow |
-| Manual (`docs/playtest-phase9.md`) | the compatibility matrix rows marked by hand, the open playtest items from earlier phases, the RC soak |
+| Manual (`docs/playtest-phase9.md`) | the compatibility matrix rows marked by hand, the open playtest items from earlier phases (run at release time) |

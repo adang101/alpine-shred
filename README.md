@@ -1,8 +1,11 @@
 # Alpine Shred
 
 Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1, on Forge,
-NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
-truth; this README covers how to build the code and where it stands against that document.
+NeoForge (via the Forge jar) and Fabric from one codebase. The aim is a mod that looks and feels
+real without being ultra realistic: still Minecraft, so blocky, fun and simple. There is no
+separate design document. This README (what each phase delivers, and the design clarifications
+made while building) and the phase plans in `docs/` are the record. References below to "the
+design doc" and its section numbers point to that record.
 
 **Status:** Phases 1 to 8 are merged into `main`; phase 9, the last, is next
 ([docs/phase9-plan.md](docs/phase9-plan.md)). Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
@@ -31,7 +34,7 @@ smoke client's popup banks exactly what the server banks. Phases 1 to 4 are comp
 
 ## Phases
 
-The design document's roadmap (section 20) in nine phases. Each phase merges into `main` once
+The roadmap, in nine phases. Each phase merges into `main` once
 the automated part of its exit gate passes in CI; the parts that need people are listed in its
 playtest page.
 
@@ -47,8 +50,9 @@ playtest page.
 | 8 | Ski lifts: lines, chairs, boarding, sync, generated resort lifts | Done (merged 2026-11-06), playtest open | [plan](docs/phase8-plan.md), [playtest](docs/playtest-phase8.md) |
 | 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | **Next** | [plan](docs/phase9-plan.md) |
 
-The project's exit (phase 9): section 19's compatibility matrix passes, and a release candidate
-runs for two weeks with no open blockers.
+Development ends with phase 9: the compatibility matrix passes, and the release pipeline's dry run
+is correct. Then, at the owner's call, comes the release: a candidate soaked for two weeks with no
+open blockers, then publishing to Modrinth, CurseForge and GitHub Releases.
 
 ## Build and test
 
