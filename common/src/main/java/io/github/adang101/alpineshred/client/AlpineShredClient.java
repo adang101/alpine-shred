@@ -58,7 +58,11 @@ public final class AlpineShredClient {
                 AlpineShred.id("lens"), (stack, level, entity, seed) -> GogglesItem.lens(stack).modelValue()));
 
         ClientPlatformHooks.registerPlayerRenderLayer(SnowGearLayer::new);
+        io.github.adang101.alpineshred.client.lift.LiftRenderers.register();
+        io.github.adang101.alpineshred.client.lift.LiftSoundManager.register();
         ClientNetwork.register();
+        io.github.adang101.alpineshred.client.lift.ClientLiftLines.register();
+        io.github.adang101.alpineshred.client.lift.LiftBoardClient.register();
         RideDriver.INSTANCE.register();
         RideDebugOverlay.register();
         SnowParticles.register();

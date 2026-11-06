@@ -33,6 +33,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add(ModItems.BOARD_WAX.get(), "Board Wax");
         t.add(ModItems.EDGE_TUNER.get(), "Edge Tuner");
         t.add(ModItems.PARK_WRENCH.get(), "Park Wrench");
+        t.add(io.github.adang101.alpineshred.registry.ModEntities.LIFT_CHAIR.get(), "Lift Chair");
         t.add(ModItems.LIFT_LINKER.get(), "Lift Linker");
         t.add(ModItems.LIFT_PASS.get(), "Lift Pass");
         t.add(ModBlocks.GROOMED_SNOW.get(), "Groomed Snow");
@@ -87,6 +88,38 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
 
         // ---- messages ----
         t.add("message.alpineshred.strap.in", "Strapped in");
+        t.add("message.alpineshred.lift.station_clearance", "Lift station: solid blocks within 2 blocks may be in the way of the cable and chairs");
+        t.add("message.alpineshred.linker.started", "Lift line started at %s. Right-click the tower heads in order, then the return station");
+        t.add("message.alpineshred.linker.added", "Head %s linked at %s");
+        t.add("message.alpineshred.linker.need_drive", "Right-click a drive station first");
+        t.add("message.alpineshred.linker.other_dimension", "The line you started is in another dimension; start again at a drive station");
+        t.add("message.alpineshred.linker.duplicate", "Already in this line: %s");
+        t.add("message.alpineshred.lift.board_prompt", "Right-click the chair to board");
+        t.add("message.alpineshred.lift.board_full", "This chair is full");
+        t.add("message.alpineshred.lift.board_too_far", "That chair is too far away");
+        t.add("message.alpineshred.lift.board_too_fast", "The lift is running too fast to board");
+        t.add("message.alpineshred.lift.board_no_pass", "You need a lift pass to ride this lift");
+        t.add("message.alpineshred.lift.board_refused", "This chair cannot take that passenger");
+        t.add("message.alpineshred.lift.bar_down", "Safety bar down");
+        t.add("message.alpineshred.lift.bar_up", "Safety bar up");
+        t.add("message.alpineshred.lift.dismount_refused", "Raise the safety bar to get off, or wait for the top");
+        t.add("message.alpineshred.lift.no_leashed", "No leashed animals within reach");
+        t.add("message.alpineshred.linker.already_linked", "Already linked to a working lift: %s. Sneak and right-click its tower head to unlink it");
+        t.add("message.alpineshred.linker.node_missing", "Not the right lift block any more: %s");
+        t.add("message.alpineshred.linker.too_far", "Too far from the last node: %s blocks (at most %s)");
+        t.add("message.alpineshred.linker.too_steep", "Too steep: %s degrees (at most %s)");
+        t.add("message.alpineshred.linker.same_place", "Two nodes stand in the same place near %s");
+        t.add("message.alpineshred.linker.blocked_loaded", "The loaded cable is blocked by a solid block at %s");
+        t.add("message.alpineshred.linker.blocked_return", "The return cable is blocked by a solid block at %s");
+        t.add("message.alpineshred.linker.too_many_heads", "Too many tower heads: %s (at most %s)");
+        t.add("message.alpineshred.linker.too_long", "The lift is too long: %s blocks of cable (at most %s)");
+        t.add("message.alpineshred.linker.level_full", "This world already has the most lift lines allowed (%s)");
+        t.add("message.alpineshred.linker.same_station", "The drive and return stations must be different blocks");
+        t.add("message.alpineshred.linker.create_failed", "The lift could not be created");
+        t.add("message.alpineshred.linker.created", "Lift linked: %s tower heads, %s blocks of cable, %s chairs");
+        t.add("message.alpineshred.linker.unlinked", "Lift unlinked");
+        t.add("message.alpineshred.linker.not_linked", "This tower head is not part of a lift");
+        t.add("tooltip.alpineshred.lift_linker.chain", "Line in progress: drive at %s, %s heads");
         t.add("message.alpineshred.strap.out", "Unstrapped");
         t.add("message.alpineshred.strap.disabled", "Riding is disabled on this server");
         t.add("message.alpineshred.strap.spectator", "Spectators can't strap in");
@@ -179,8 +212,23 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("advancements.alpineshred.first_air.description", "Land a trick worth 100 points");
         t.add("advancements.alpineshred.spin_cycle.title", "Spin Cycle");
         t.add("advancements.alpineshred.spin_cycle.description", "Land a 360");
+        t.add("advancements.alpineshred.bluebird_day.title", "Bluebird Day");
+        t.add("advancements.alpineshred.bluebird_day.description", "Ride a ski lift at least 100 blocks to the top");
 
         // ---- commands ----
+        t.add("commands.alpineshred.lift.no_line", "No lift line with the id %s");
+        t.add("commands.alpineshred.lift.ambiguous", "More than one lift line starts with %s; type more of the id");
+        t.add("commands.alpineshred.lift.too_short", "Lift line id %s is too short (at least %s characters)");
+        t.add("commands.alpineshred.lift.list.none", "No lift lines in this dimension");
+        t.add("commands.alpineshred.lift.list.entry", "%s: %s nodes, %s blocks of cable, speed %s b/s, flags %s");
+        t.add("commands.alpineshred.lift.info", "Lift %s: %s nodes (%s), %s blocks of cable, %s chairs, speed %s of %s b/s, flags %s, %s riders");
+        t.add("commands.alpineshred.lift.stop", "Emergency stop on lift %s");
+        t.add("commands.alpineshred.lift.start", "Lift %s started at %s b/s");
+        t.add("commands.alpineshred.lift.remove", "Removed lift %s");
+        t.add("message.alpineshred.lift.speed", "Lift speed: %s blocks/s");
+        t.add("message.alpineshred.lift.emergency_cleared", "Lift emergency stop cleared");
+        t.add("message.alpineshred.lift.stop_button.stopped", "Lift emergency stop");
+        t.add("message.alpineshred.lift.stop_button.no_station", "No lift station within 8 blocks");
         t.add("commands.alpineshred.stats", "%s: best combo %s, total score %s, tricks landed %s, %s s in the air, %s blocks ground, %s blocks ridden, %s lift rides");
         t.add("commands.alpineshred.strap.done", "Changed strap state for %s player(s)");
         t.add("commands.alpineshred.strap.failed", "Could not strap in: %s");
@@ -210,6 +258,11 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("subtitles.alpineshred.grind.catch", "Rail catches");
         t.add("subtitles.alpineshred.trick.combo_bank", "Combo banked");
         t.add("subtitles.alpineshred.trick.bail", "Rider bails");
+        t.add("subtitles.alpineshred.lift.motor", "Lift motor hums");
+        t.add("subtitles.alpineshred.lift.cable_creak", "Cable creaks");
+        t.add("subtitles.alpineshred.lift.bar_close", "Safety bar closes");
+        t.add("subtitles.alpineshred.lift.bar_open", "Safety bar opens");
+        t.add("subtitles.alpineshred.lift.e_stop", "Lift stops suddenly");
         t.add("subtitles.alpineshred.gear.strap_in", "Bindings click");
         t.add("subtitles.alpineshred.gear.strap_out", "Bindings release");
         t.add("subtitles.alpineshred.gear.wax_apply", "Wax rubs on");
@@ -226,6 +279,12 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
 
         // ---- designs (section 22) ----
         t.add(ModBlocks.PAINT_BENCH.get(), "Paint Bench");
+        t.add(ModBlocks.LIFT_TOWER_POLE.get(), "Lift Tower Pole");
+        t.add(ModBlocks.LIFT_TOWER_HEAD.get(), "Lift Tower Head");
+        t.add(ModBlocks.LIFT_DRIVE_STATION.get(), "Lift Drive Station");
+        t.add(ModBlocks.LIFT_RETURN_STATION.get(), "Lift Return Station");
+        t.add(ModBlocks.LIFT_LOADING_GATE.get(), "Lift Loading Gate");
+        t.add(ModBlocks.LIFT_STOP_BUTTON.get(), "Lift Stop Button");
         t.add("container.alpineshred.paint_bench", "Paint Bench");
         t.add("gui.alpineshred.paint_bench.paint", "Paint");
         t.add("gui.alpineshred.paint_bench.gear", "Gear");

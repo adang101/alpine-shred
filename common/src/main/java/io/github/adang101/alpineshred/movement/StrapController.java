@@ -5,6 +5,7 @@ import dev.architectury.event.events.common.EntityEvent;
 import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
 import io.github.adang101.alpineshred.AlpineShred;
+import io.github.adang101.alpineshred.lift.ChairEntity;
 import io.github.adang101.alpineshred.gear.GearProfile;
 import io.github.adang101.alpineshred.gear.GearProfiles;
 import io.github.adang101.alpineshred.registry.ModSounds;
@@ -80,7 +81,7 @@ public final class StrapController {
         if (!result.ok()) return result;
 
         RideSnapshot snapshot = RideSnapshot.OFF
-                .withState(RideState.IDLE)
+                .withState(player.getVehicle() instanceof ChairEntity ? RideState.LIFT : RideState.IDLE)
                 .withMode(gear.kind().rideMode())
                 .withMotion(0, player.getYRot(), 0);
         Riders.set(player, snapshot);
@@ -128,7 +129,8 @@ public final class StrapController {
         if (!StrapCheck.ridingEnabled()) return UnstrapReason.DISABLED;
         if (player.isSpectator()) return UnstrapReason.SPECTATOR;
         if (player.isInWater() || player.isInLava()) return UnstrapReason.FLUID;
-        if (player.isPassenger()) return UnstrapReason.VEHICLE;
+        // A lift chair is the one vehicle a strapped rider keeps their gear on (design doc section 6).
+        if (player.isPassenger() && !(player.getVehicle() instanceof ChairEntity)) return UnstrapReason.VEHICLE;
         if (player.isFallFlying()) return UnstrapReason.ELYTRA;
         GearProfile gear = GearProfiles.get(player);
         RideMode mode = Riders.get(player).mode();

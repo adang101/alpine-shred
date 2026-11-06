@@ -113,7 +113,8 @@ public final class RiderTracker {
      * vanilla's own interpolation between ticks keeps it smooth.
      */
     private static void faceBody(RiderView view) {
-        if (!view.state.isStrapped()) {
+        // Seated on a lift chair the chair turns the body (ChairEntity.clampRotation), not the board.
+        if (!view.state.isStrapped() || view.state == RideState.LIFT) {
             view.bodyYawSet = false;
             return;
         }

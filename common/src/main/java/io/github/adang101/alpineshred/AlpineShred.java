@@ -39,6 +39,8 @@ public final class AlpineShred {
         AlpineConfig.loadCommon(Platform.getConfigFolder(), LOGGER::warn);
 
         ModBlocks.register();
+        io.github.adang101.alpineshred.registry.ModBlockEntities.register();
+        io.github.adang101.alpineshred.registry.ModEntities.register();
         ModItems.register();
         io.github.adang101.alpineshred.registry.ModMenus.register();
         ModTabs.register();
@@ -57,6 +59,8 @@ public final class AlpineShred {
         RideServer.register();
         AlpineCommands.register();
         io.github.adang101.alpineshred.design.DesignServer.register();
+        io.github.adang101.alpineshred.lift.LiftManager.register();
+        io.github.adang101.alpineshred.lift.LiftSync.register();
         io.github.adang101.alpineshred.smoke.ServerSmoke.register();
 
         LOGGER.info("Alpine Shred initialized on {}", Platform.isForge() ? "Forge" : "Fabric");

@@ -1,19 +1,28 @@
 package io.github.adang101.alpineshred.worldgen;
 
 import com.mojang.serialization.Codec;
+import io.github.adang101.alpineshred.AlpineShred;
+import io.github.adang101.alpineshred.config.AlpineConfig;
+import io.github.adang101.alpineshred.lift.LinkValidator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * {@code alpineshred:ski_resort} (design doc section 12, "Resort composition"): a groomed run and,
  * at its bottom, the lodge, turned to face up the run. The lift line between them comes with phase
- * 8 (section 13). The run keeps 28 blocks of its reach free for the lodge.
+ * 8 (section 13). The lift is planned by {@link ResortLiftPlanner} and built by {@link LiftLinePiece}: a drive
+ * station beside the top of the run, a return station beside the lodge and towers between; it is skipped (and
+ * logged at debug level) whenever no valid line can be planned. The run keeps 28 blocks of its reach free for the lodge.
  */
 public class ResortStructure extends Structure {
     public static final Codec<ResortStructure> CODEC = simpleCodec(ResortStructure::new);
@@ -50,10 +59,52 @@ public class ResortStructure extends Structure {
         BlockPos corner = cornerFor(rotation, (int) Math.floor(lx), (int) Math.round(end[2]) - 2, (int) Math.floor(lz));
         double[] first = pts.get(0);
         BlockPos at = new BlockPos((int) Math.floor(first[0]), (int) Math.round(first[2]), (int) Math.floor(first[1]));
+        LodgePiece lodge = new LodgePiece(context.structureTemplateManager(), corner, rotation);
+        LiftLinePiece lift = planLift(context, terrain, plan, lodge.getBoundingBox());
         return Optional.of(new GenerationStub(at, builder -> {
             builder.addPiece(new GroomedRunPiece(plan));
-            builder.addPiece(new LodgePiece(context.structureTemplateManager(), corner, rotation));
+            builder.addPiece(lodge);
+            if (lift != null) builder.addPiece(lift);
         }));
+    }
+
+    /** The resort's lift line, or null (logged at debug level) when no valid one can be planned. */
+    private static LiftLinePiece planLift(GenerationContext context, GeneratorTerrain terrain, RunPlanner.Plan plan, BoundingBox lodge) {
+        ChunkPos chunk = context.chunkPos();
+        LinkValidator.Limits limits = new LinkValidator.Limits(AlpineConfig.LIFT_MAX_SPAN.get(), AlpineConfig.LIFT_MAX_HEADS.get(),
+                AlpineConfig.LIFT_MAX_LENGTH.get(), AlpineConfig.LIFT_MAX_LINES_PER_LEVEL.get());
+        ResortLiftPlanner.Outcome outcome = ResortLiftPlanner.plan(plan.points(), plan.reach(), terrain::height,
+                context.chunkGenerator().getSeaLevel(), limits, context.seed() ^ chunk.toLong());
+        if (outcome.plan() == null) {
+            AlpineShred.LOGGER.debug("Ski resort at {} gets no lift: {}", chunk, outcome.failure());
+            return null;
+        }
+        List<BlockPos> nodes = new ArrayList<>();
+        for (ResortLiftPlanner.Node n : outcome.plan().nodes()) nodes.add(new BlockPos(n.x(), n.y(), n.z()));
+        UUID id = UUID.nameUUIDFromBytes(("alpineshred:resort_lift/" + context.seed() + "/" + chunk.x + "/" + chunk.z)
+                .getBytes(StandardCharsets.UTF_8));
+        boolean needsRedstone = AlpineConfig.LIFT_DRIVE_NEEDS_REDSTONE.get();
+        List<Double> levels = AlpineConfig.LIFT_SPEED_LEVELS.get();
+        LiftLinePiece piece = new LiftLinePiece(id, nodes, !needsRedstone, levels.get(Math.min(1, levels.size() - 1)), needsRedstone);
+        BoundingBox box = piece.getBoundingBox();
+        int reachBlocks = 7 * 16;
+        if (box.minX() < chunk.getMinBlockX() - reachBlocks || box.maxX() > chunk.getMaxBlockX() + reachBlocks
+                || box.minZ() < chunk.getMinBlockZ() - reachBlocks || box.maxZ() > chunk.getMaxBlockZ() + reachBlocks) {
+            AlpineShred.LOGGER.debug("Ski resort at {} gets no lift: it would reach beyond 7 chunks of the start", chunk);
+            return null;
+        }
+        if (box.minY() < context.heightAccessor().getMinBuildHeight() || box.maxY() >= context.heightAccessor().getMaxBuildHeight()) {
+            AlpineShred.LOGGER.debug("Ski resort at {} gets no lift: it would leave the world's height", chunk);
+            return null;
+        }
+        int half = ResortLiftPlanner.PLATFORM_HALF;
+        for (BlockPos station : List.of(nodes.get(0), nodes.get(nodes.size() - 1))) {
+            if (lodge.intersects(station.getX() - half, station.getZ() - half, station.getX() + half, station.getZ() + half)) {
+                AlpineShred.LOGGER.debug("Ski resort at {} gets no lift: a station would stand on the lodge", chunk);
+                return null;
+            }
+        }
+        return piece;
     }
 
     /** The rotation that turns the template's north wall (its door) against the run's direction (dx, dz). */

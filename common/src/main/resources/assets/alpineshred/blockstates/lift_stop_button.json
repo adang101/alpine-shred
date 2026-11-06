@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "alpineshred:block/lift_stop_button"
+    },
+    "facing=east": {
+      "model": "alpineshred:block/lift_stop_button",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "alpineshred:block/lift_stop_button",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "alpineshred:block/lift_stop_button",
+      "y": 270
+    }
+  }
+}

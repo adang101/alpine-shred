@@ -9,6 +9,17 @@ import io.github.adang101.alpineshred.feel.RiderClips;
 import io.github.adang101.alpineshred.gear.GearAccess;
 import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.gear.Lens;
+import io.github.adang101.alpineshred.lift.Boarding;
+import io.github.adang101.alpineshred.lift.ChairEntity;
+import io.github.adang101.alpineshred.lift.LiftChairs;
+import io.github.adang101.alpineshred.lift.LiftLine;
+import io.github.adang101.alpineshred.lift.LiftManager;
+import io.github.adang101.alpineshred.client.lift.ClientLiftLines;
+import io.github.adang101.alpineshred.client.lift.ClientLine;
+import io.github.adang101.alpineshred.client.lift.LiftRenderStats;
+import io.github.adang101.alpineshred.client.lift.LiftSoundManager;
+import io.github.adang101.alpineshred.park.V3;
+import io.github.adang101.alpineshred.registry.ModStats;
 import io.github.adang101.alpineshred.movement.RideMode;
 import io.github.adang101.alpineshred.movement.RideServer;
 import io.github.adang101.alpineshred.movement.RideSnapshot;
@@ -41,6 +52,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.LevelSettings;
@@ -91,6 +104,11 @@ import java.util.function.Consumer;
  * it rides real terrain instead (risk R4): a default world, the nearest snowy slopes, and a minute
  * steering down the fall line around whatever is in the way. Any server validator violation fails
  * it; air time, wipeouts and surfaces go in the transcript.
+ *
+ * <p>With {@code -Dalpineshred.smoke.scenario=lift} ({@code ./gradlew :forge:runLiftClient}) it builds a
+ * powered ski lift beside spawn (phase 8): pictures of the cable, chairs, sheaves and bullwheels, then a
+ * strapped rider boards, rides to the top and is ejected into {@code GLIDE}. The renderers' frame cost
+ * and the lift sounds are logged and checked.
  */
 public final class ClientSmoke {
     private static final boolean ENABLED = Boolean.getBoolean("alpineshred.smoke");
@@ -98,6 +116,8 @@ public final class ClientSmoke {
     private static final boolean PARK = "park".equals(System.getProperty("alpineshred.smoke.scenario"));
     /** Phase 7's visual review: a default world with structures, a picture of each kind. */
     private static final boolean WORLDGEN = "worldgen".equals(System.getProperty("alpineshred.smoke.scenario"));
+    /** Phase 8: a lift beside spawn, ridden from the bottom to the top. */
+    private static final boolean LIFT = "lift".equals(System.getProperty("alpineshred.smoke.scenario"));
     /** Multiplayer (phase 2's exit gate): this client joins a dedicated server as the rider or a watcher. */
     private static final boolean MULTI = "multi".equals(System.getProperty("alpineshred.smoke.scenario"));
     private static final boolean WATCHER = "watcher".equals(System.getProperty("alpineshred.smoke.role"));
@@ -117,7 +137,7 @@ public final class ClientSmoke {
     private static final float OFFSIDE = 90f;
 
     private enum Stage {MENU, LOADING, BUILDING, RIDE_BOARD, GALLERY_BOARD, SWAP, RIDE_SKIS, GALLERY_SKIS, PAINT,
-        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, TOUR, DONE}
+        FINDING, RIDE_MOUNTAIN, RIDE_PARK, PARK_TOOLS, MULTI_WAIT, RIDE_MULTI, WATCH, MULTI_LIFT, TOUR, LIFT_VIEWS, LIFT_RIDE, DONE}
 
     private record Shot(String name, int frame) {
     }
@@ -185,6 +205,7 @@ public final class ClientSmoke {
     public static void register() {
         if (!ENABLED) return;
         AlpineShred.LOGGER.info("[smoke] client smoke test armed");
+        LiftRenderStats.enable();
         ClientTickEvent.CLIENT_POST.register(ClientSmoke::tick);
         ClientGuiEvent.RENDER_HUD.register((graphics, tickDelta) -> frames++);
     }
@@ -194,7 +215,7 @@ public final class ClientSmoke {
         stageTicks++;
         if (stage == Stage.DONE) return;
         takePending(mc);
-        if (ticks > (WORLDGEN ? 3 * TIMEOUT_TICKS : TIMEOUT_TICKS)) {
+        if (ticks > (WORLDGEN || MULTI ? 3 * TIMEOUT_TICKS : TIMEOUT_TICKS)) {
             failures.add("timed out in stage " + stage);
             finish(mc);
             return;
@@ -205,6 +226,7 @@ public final class ClientSmoke {
                     // Quick play (--quickPlayMultiplayer) joins the server on its own.
                     if (mc.player != null && mc.level != null && mc.player.tickCount > 40) {
                         playerId = mc.player.getUUID();
+                        myName = mc.player.getName().getString();
                         mc.options.setCameraType(WATCHER ? CameraType.FIRST_PERSON : CameraType.THIRD_PERSON_BACK);
                         RideDebugOverlay.setEnabled(!WATCHER);
                         note("joined as " + mc.player.getName().getString());
@@ -232,6 +254,9 @@ public final class ClientSmoke {
                         RideDebugOverlay.setEnabled(false);
                         onServer(mc, ClientSmoke::survey);
                         next(Stage.TOUR);
+                    } else if (LIFT) {
+                        onServer(mc, ClientSmoke::buildLift);
+                        next(Stage.LIFT_VIEWS);
                     } else if (PARK) {
                         onServer(mc, ClientSmoke::buildPark);
                         next(Stage.BUILDING);
@@ -306,10 +331,13 @@ public final class ClientSmoke {
                 }
             }
             case RIDE_MULTI -> {
-                if (ride(mc, false)) finish(mc);
+                if (ride(mc, false)) next(Stage.MULTI_LIFT);
             }
             case WATCH -> {
-                if (watch(mc)) finish(mc);
+                if (watch(mc)) next(Stage.MULTI_LIFT);
+            }
+            case MULTI_LIFT -> {
+                if (multiLift(mc)) finish(mc);
             }
             case RIDE_PARK -> {
                 if (ridePark(mc)) next(Stage.PARK_TOOLS);
@@ -319,6 +347,12 @@ public final class ClientSmoke {
             }
             case TOUR -> {
                 if (tour(mc)) finish(mc);
+            }
+            case LIFT_VIEWS -> {
+                if (liftViews(mc)) next(Stage.LIFT_RIDE);
+            }
+            case LIFT_RIDE -> {
+                if (liftRide(mc)) finish(mc);
             }
             default -> {
             }
@@ -855,6 +889,207 @@ public final class ClientSmoke {
         return parkRatTicks > 120;
     }
 
+    // ---- lift (phase 8) -------------------------------------------------------------------------------
+
+    /** A picture of the lift: where to stand (blocks from the origin), where to look, and ticks to wait first. */
+    private record LiftView(String name, double dx, double dy, double dz, float yaw, float pitch, int delay) {
+    }
+
+    /** Yaw 90 looks toward -x, at the line from the east. */
+    private static final List<LiftView> LIFT_VIEWS = List.of(
+            new LiftView("lift_side", 34, 10, 47, 90f, 0f, 160),
+            new LiftView("lift_bullwheel_return", 6, 2, 8, 90f, 0f, 50),
+            new LiftView("lift_head", 7, 9, 33, 67f, 0f, 50),
+            new LiftView("lift_bullwheel_drive", 7, 22, 86, 90f, 5f, 60));
+    /**
+     * The renderers' share of a frame, in milliseconds. The design doc's figure is not at hand; this is the
+     * allowance for the cable of a line this size. CI hardware varies, so the smoke fails at three times it.
+     */
+    // TODO: provisional. The design doc's figure is pending; replace 0.5 with it.
+    private static final double CABLE_BUDGET_MS = 0.5;
+
+    private static volatile UUID liftId;
+    private static volatile Vec3 liftBoardSpot = Vec3.ZERO;
+    private static volatile float liftBoardYaw;
+    private static int liftView, liftViewTicks, liftChairsSeen;
+
+    /** Server thread: a lift of four nodes climbing 21 blocks over 80, with a redstone block under the drive. */
+    private static void buildLift(ServerPlayer player) {
+        ServerLevel level = player.serverLevel();
+        level.setDayTime(6000);
+        level.setWeatherParameters(6000, 0, false, false);
+        BlockPos base = player.blockPosition();
+        origin = base;
+        BlockPos ret = base.offset(0, 0, 8), low = base.offset(0, 8, 36), high = base.offset(0, 15, 62), drive = base.offset(0, 21, 86);
+        List<BlockPos> nodes = List.of(drive, high, low, ret);
+        LiftLine line = SmokeCourse.buildLift(level, nodes);
+        if (line == null) {
+            failures.add("lift: the line was not created, or a node has no block entity");
+            return;
+        }
+        liftId = line.id;
+        V3 spot = line.path().pos(2.0);
+        Float yaw = ChairEntity.yawOf(line.path().tangent(2.0));
+        liftBoardSpot = new Vec3(spot.x(), ret.getY(), spot.z());
+        liftBoardYaw = yaw == null ? 0f : yaw;
+        note(String.format(Locale.ROOT, "built a lift at %s: loop %.0f blocks, %d chairs, powered %b target %.1f", base, line.path().loopLength(),
+                line.chairCount(), line.powered, line.targetSpeed));
+        check(line.powered && line.targetSpeed > 0, "lift: the drive did not power the line");
+        player.getAbilities().flying = true;
+        player.onUpdateAbilities();
+    }
+
+    private static int chairsInView(Minecraft mc) {
+        if (mc.level == null || origin == null) return 0;
+        return mc.level.getEntitiesOfClass(ChairEntity.class, new AABB(origin).inflate(130)).size();
+    }
+
+    /** The scenery pictures, flying: cable and chairs from the side, both bullwheels, a head. True when done. */
+    private static boolean liftViews(Minecraft mc) {
+        if (liftView >= LIFT_VIEWS.size()) return true;
+        LiftView v = LIFT_VIEWS.get(liftView);
+        liftViewTicks++;
+        liftChairsSeen = Math.max(liftChairsSeen, chairsInView(mc));
+        if (liftViewTicks == 1) {
+            onServer(mc, sp -> {
+                sp.getAbilities().flying = true;
+                sp.onUpdateAbilities();
+                sp.teleportTo(sp.serverLevel(), origin.getX() + 0.5 + v.dx(), origin.getY() + v.dy(), origin.getZ() + 0.5 + v.dz(), v.yaw(), v.pitch());
+            });
+        } else if (liftViewTicks >= v.delay() && (liftView > 0 || (ClientLiftLines.size() > 0 && liftChairsSeen >= 2) || liftViewTicks > 600)) {
+            view(mc, v.name(), CameraType.FIRST_PERSON);
+        }
+        if (shots.contains(v.name())) {
+            liftView++;
+            liftViewTicks = 0;
+        } else if (liftViewTicks > 900) {
+            failures.add("lift: no picture of " + v.name() + " (lines " + ClientLiftLines.size() + ", chairs " + liftChairsSeen + ")");
+            liftView++;
+            liftViewTicks = 0;
+        }
+        return false;
+    }
+
+    private static double liftTopY, liftYawError;
+    private static int liftYawNotes;
+    private static int liftTicks, liftRideTicks, liftTopTicks, liftStrapAt = -1;
+    private static boolean liftRode, liftFallback, liftServerChecked;
+    private static final Set<RideState> liftStates = EnumSet.noneOf(RideState.class);
+    private static final Set<RideState> liftAfter = EnumSet.noneOf(RideState.class);
+
+    /** Strap in at the bottom station, board, ride, get ejected at the top. True when it is over and checked. */
+    private static boolean liftRide(Minecraft mc) {
+        LocalPlayer player = mc.player;
+        if (player == null || mc.level == null) {
+            failures.add("lift: player vanished");
+            return true;
+        }
+        liftTicks++;
+        liftChairsSeen = Math.max(liftChairsSeen, chairsInView(mc));
+        RideState synced = Riders.state(player);
+        RideState local = RideDriver.INSTANCE.localState(player);
+        if (liftTicks == 1) {
+            onServer(mc, sp -> {
+                SmokeCourse.dressForBoard(sp);
+                Vec3 spot = liftBoardSpot;
+                sp.teleportTo(sp.serverLevel(), spot.x, spot.y, spot.z, liftBoardYaw, 0f);
+            });
+        } else if (liftTicks == 40) {
+            onServer(mc, sp -> {
+                StrapCheck.Result result = StrapController.tryStrap(sp);
+                note("lift: strap " + result);
+                if (!result.ok()) failures.add("lift: strap failed: " + result);
+            });
+            liftStrapAt = liftTicks;
+        }
+        if (!liftRode) {
+            if (player.isPassenger() && player.getVehicle() instanceof ChairEntity) {
+                liftRode = true;
+                note("lift: boarded at tick " + liftTicks + (liftFallback ? " by the server's fallback" : " by auto-board"));
+            } else if (liftStrapAt > 0 && liftTicks - liftStrapAt > 20 * 40 && !liftFallback) {
+                // Auto-board never fired: board by the server's own rules so the rest still runs.
+                liftFallback = true;
+                failures.add("lift: auto-board did not board the strapped rider within 40 seconds");
+                onServer(mc, sp -> {
+                    ServerLevel level = sp.serverLevel();
+                    LiftLine line = LiftManager.get(level, liftId);
+                    ChairEntity best = null;
+                    for (int i = 0; line != null && i < line.chairCount(); i++) {
+                        ChairEntity chair = LiftChairs.find(level, liftId, i);
+                        if (chair != null && (best == null || Boarding.distance(sp, chair) < Boarding.distance(sp, best))) best = chair;
+                    }
+                    note("lift: fallback boarding " + (best == null ? "has no chair" : Boarding.tryBoard(sp, best, Double.MAX_VALUE)));
+                });
+            } else if (liftTicks > 20 * 120) {
+                failures.add("lift: never boarded");
+                return true;
+            }
+            return false;
+        }
+
+        if (player.isPassenger()) {
+            liftRideTicks++;
+            liftStates.add(synced);
+            if (liftRideTicks % 40 == 1 && player.getVehicle() instanceof ChairEntity chair) {
+                note(String.format(Locale.ROOT, "lift: t%d synced %s local %s bar %b at y %.1f", liftRideTicks, synced, local, chair.barDown(), player.getY() - origin.getY()));
+            }
+            if (liftRideTicks >= 20 && player.getVehicle() instanceof ChairEntity seat) {
+                double error = Math.abs(Mth.wrapDegrees(player.yBodyRot - seat.getYRot()));
+                if (error > 1.0 && liftYawNotes++ < 12) {
+                    note(String.format(Locale.ROOT, "lift: t%d body yaw %.1f, chair yaw %.1f, player yaw %.1f, pending shot %s", liftRideTicks,
+                            player.yBodyRot, seat.getYRot(), player.getYRot(), pending == null ? "none" : pending.name()));
+                }
+                liftYawError = Math.max(liftYawError, error);
+            }
+            if (liftRideTicks >= 50) view(mc, "lift_seated_first_person", CameraType.FIRST_PERSON);
+            if (liftRideTicks >= 90) back(mc, "lift_seated_back");
+            if (liftRideTicks >= 130) view(mc, "lift_seated_front", CameraType.THIRD_PERSON_FRONT);
+            if (liftRideTicks >= 170) orbit(mc, "lift_seated_side", SIDE);
+            if (liftRideTicks > 20 * 100) {
+                failures.add("lift: still riding after 100 seconds");
+                return true;
+            }
+            return false;
+        }
+
+        // Off the chair: ejected at the top.
+        liftTopTicks++;
+        liftAfter.add(synced);
+        liftAfter.add(local);
+        if (liftTopTicks == 1) liftTopY = player.getY() - origin.getY();
+        if (liftTopTicks == 1) note(String.format(Locale.ROOT, "lift: ejected after %d ticks, synced %s local %s, %s", liftRideTicks, synced, local, player.blockPosition()));
+        if (liftTopTicks >= 25) back(mc, "lift_top");
+        if (liftTopTicks == 30 && !liftServerChecked) {
+            liftServerChecked = true;
+            onServer(mc, sp -> {
+                LiftLine line = LiftManager.get(sp.serverLevel(), liftId);
+                int rides = ModStats.value(sp, ModStats.LIFT_RIDES);
+                note("lift: lift_rides " + rides + ", line faulted " + (line != null && line.faulted));
+                check(rides >= 1, "lift: lift_rides is " + rides);
+                check(line != null && !line.faulted, "lift: the line faulted: " + (line == null ? "gone" : line.faultReason));
+            });
+        }
+        if (liftTopTicks < 50) return false;
+
+        double cable = LiftRenderStats.meanMillis(LiftRenderStats.Part.CABLE);
+        note(LiftRenderStats.summary());
+        note("lift: states while seated " + liftStates + ", after " + liftAfter + ", chairs seen " + liftChairsSeen
+                + ", motors started " + LiftSoundManager.motorsStarted + ", one-shot sounds " + LiftSoundManager.oneShots);
+        check(liftStates.contains(RideState.LIFT), "lift: never in LIFT while seated: " + liftStates);
+        check(liftAfter.contains(RideState.GLIDE), "lift: not in GLIDE at the top: " + liftAfter);
+        check(liftChairsSeen >= 2, "lift: only " + liftChairsSeen + " chairs ever drawn");
+        note(String.format(Locale.ROOT, "lift: largest body yaw error against the chair %.3f degrees", liftYawError));
+        check(liftYawError < 1.0, String.format(Locale.ROOT, "lift: the seated body is %.2f degrees off the chair's heading", liftYawError));
+        check(liftTopY > 15, "lift: ejected only " + liftTopY + " blocks up");
+        for (LiftRenderStats.Part part : LiftRenderStats.Part.values()) {
+            check(LiftRenderStats.frames(part) > 20, "lift: " + part + " drew in only " + LiftRenderStats.frames(part) + " frames");
+        }
+        check(cable < 3 * CABLE_BUDGET_MS, String.format(Locale.ROOT, "lift: the cable costs %.3f ms a frame, over 3x the %.1f ms budget", cable, CABLE_BUDGET_MS));
+        check(LiftSoundManager.motorsStarted > 0, "lift: the drive's motor never started");
+        check(LiftSoundManager.oneShots > 0, "lift: no bar sound");
+        return true;
+    }
+
     // ---- multiplayer (phase 2's exit gate) -------------------------------------------------------------
 
     private static final Set<RideState> seen = EnumSet.noneOf(RideState.class);
@@ -935,6 +1170,89 @@ public final class ClientSmoke {
         check(FeelStats.clipsPlayed > 3, who + ": the rider's animation barely changed: " + FeelStats.summary());
         check(FeelStats.loopsStarted > 0, who + ": no riding sounds from the rider");
         return true;
+    }
+
+    // ---- multiplayer lift stage (phase 8) ---------------------------------------------------------------
+
+    private static String myName = "";
+    /** Ticks spent aboard a chair; the sample gt last written; the ticks before which no chair is written. */
+    private static int liftOnboard, sampleFrom;
+    private static long lastSampleGt = -1;
+    /** 0 not disconnected, 1 waiting to reconnect, 2 connecting, 3 back (watcher1 only; the server kicks it mid-ride). */
+    private static int relogState, relogTicks;
+    private static boolean sneakingOff;
+
+    /**
+     * After the run the server builds a lift and the three players ride it (ServerSmoke does the staging): this
+     * client writes where it sees every chair (nearby, with a synced line) each ten game ticks as
+     * {@code lchair gt<time> <index> x y z}; watcher1 reconnects when the server kicks it; and a rider on a line
+     * that has faulted sneaks, which must let it off. True when the server has closed the session.
+     */
+    private static boolean multiLift(Minecraft mc) {
+        LocalPlayer self = mc.player;
+        if (self == null || mc.level == null) return liftOffline(mc);
+        if (relogState == 2) {
+            relogState = 3;
+            // The chairs jump to their synced places once the line arrives; leave that out of the samples.
+            sampleFrom = ticks + 200;
+            note("lift: " + myName + " is back after " + relogTicks + " ticks, vehicle " + self.getVehicle());
+        }
+        if (self.getVehicle() instanceof ChairEntity chair) {
+            liftOnboard++;
+            ClientLine view = chair.lineId() == null ? null : ClientLiftLines.get(chair.lineId());
+            boolean sneak = view != null && view.faulted();
+            if (sneak && !sneakingOff) note(String.format(Locale.ROOT, "lift: %s sees its line faulted at gt%d (speed %.2f), sneaking to get off", myName,
+                    mc.level.getGameTime(), view.speed()));
+            sneakingOff = sneak;
+            hold(mc.options.keyShift, sneak);
+        } else if (sneakingOff) {
+            sneakingOff = false;
+            hold(mc.options.keyShift, false);
+            note("lift: " + myName + " is off the chair at gt" + mc.level.getGameTime());
+        }
+        long gt = mc.level.getGameTime();
+        if (gt % 10 == 0 && gt > lastSampleGt) {
+            lastSampleGt = gt;
+            if (ticks >= sampleFrom && ticks >= quietUntil) {
+                for (ChairEntity chair : mc.level.getEntitiesOfClass(ChairEntity.class, self.getBoundingBox().inflate(100))) {
+                    if (chair.lineId() == null || ClientLiftLines.get(chair.lineId()) == null) continue;
+                    note(String.format(Locale.ROOT, "lchair gt%d %d %.3f %.3f %.3f", gt, chair.chairIndex(), chair.getX(), chair.getY(), chair.getZ()));
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Not in a world: the server stopped (done), or, for watcher1 after riding, it was kicked and reconnects. */
+    private static boolean liftOffline(Minecraft mc) {
+        if (relogState == 0) {
+            if (!"watcher1".equals(myName) || liftOnboard == 0) {
+                check(liftOnboard > 0, "lift: " + myName + " never rode a chair");
+                return true;
+            }
+            relogState = 1;
+            relogTicks = 0;
+            note("lift: disconnected after " + liftOnboard + " ticks aboard; reconnecting in 3 seconds");
+        } else if (relogState == 1) {
+            if (++relogTicks >= 60) {
+                String address = "localhost:25565";
+                net.minecraft.client.gui.screens.ConnectScreen.startConnecting(
+                        mc.screen != null ? mc.screen : new net.minecraft.client.gui.screens.TitleScreen(), mc,
+                        net.minecraft.client.multiplayer.resolver.ServerAddress.parseString(address),
+                        new net.minecraft.client.multiplayer.ServerData("smoke", address, false), false);
+                relogState = 2;
+                relogTicks = 0;
+            }
+        } else if (relogState == 2) {
+            if (++relogTicks > 20 * 90) {
+                failures.add("lift: " + myName + " could not reconnect");
+                return true;
+            }
+        } else {
+            check(liftOnboard > 0, "lift: " + myName + " never rode a chair");
+            return true;
+        }
+        return false;
     }
 
     // ---- park (phase 4) -----------------------------------------------------------------------------

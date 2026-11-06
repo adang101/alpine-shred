@@ -45,6 +45,7 @@ public final class ModTabs {
                         output.accept(item.get());
                     }
                 }
+                for (var item : ModItems.liftItems()) output.accept(item.get());
             })));
 
     private ModTabs() {

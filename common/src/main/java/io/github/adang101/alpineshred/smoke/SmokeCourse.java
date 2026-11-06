@@ -2,7 +2,12 @@ package io.github.adang101.alpineshred.smoke;
 
 import io.github.adang101.alpineshred.gear.GearAccess;
 import io.github.adang101.alpineshred.gear.GogglesItem;
+import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.gear.Lens;
+import io.github.adang101.alpineshred.lift.LiftLine;
+import io.github.adang101.alpineshred.lift.LiftManager;
+import io.github.adang101.alpineshred.lift.LiftNodeBlockEntity;
+import io.github.adang101.alpineshred.lift.LiftTowerHeadBlockEntity;
 import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.registry.ModItems;
 import net.minecraft.core.BlockPos;
@@ -13,6 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 /**
  * The smoke tests' snow run (server side, so a dedicated server can build it too): a platform, a
@@ -54,6 +62,57 @@ public final class SmokeCourse {
                 }
             }
         }
+    }
+
+    /**
+     * The nodes of the multiplayer smoke's lift (drive first, then the heads down to the return station), climbing
+     * 40 blocks over 208 along +z from {@code base}: a loop of well over 400 blocks, with every span under
+     * {@code lift.maxSpan}.
+     */
+    public static List<BlockPos> longLift(BlockPos base) {
+        return List.of(base.offset(0, 40, 216), base.offset(0, 30, 164), base.offset(0, 20, 112), base.offset(0, 10, 60), base.offset(0, 0, 8));
+    }
+
+    /**
+     * Builds a powered lift through {@code nodes} (drive, heads in order, return station; the return station's Y is
+     * the ground): a 9 by 9 platform of groomed snow under each station, a pole under every head and the drive, a
+     * redstone block under the drive, then the blocks, the line and the heads' links. Returns the line, or null
+     * (after logging why) when it could not be made.
+     */
+    public static LiftLine buildLift(ServerLevel level, List<BlockPos> nodes) {
+        BlockPos drive = nodes.get(0), ret = nodes.get(nodes.size() - 1);
+        BlockState groomed = ModBlocks.GROOMED_SNOW.get().defaultBlockState();
+        for (BlockPos station : List.of(ret, drive)) {
+            for (int dx = -4; dx <= 4; dx++) {
+                for (int dz = -4; dz <= 4; dz++) level.setBlock(station.offset(dx, -1, dz), groomed, 2);
+            }
+        }
+        List<BlockPos> towers = new java.util.ArrayList<>(nodes.subList(1, nodes.size() - 1));
+        towers.add(drive.below());
+        for (BlockPos tower : towers) {
+            for (int y = ret.getY(); y < tower.getY(); y++) {
+                level.setBlock(new BlockPos(tower.getX(), y, tower.getZ()), ModBlocks.LIFT_TOWER_POLE.get().defaultBlockState(), 2);
+            }
+        }
+        level.setBlock(drive.below(), Blocks.REDSTONE_BLOCK.defaultBlockState(), 3);
+        for (int i = 0; i < nodes.size(); i++) {
+            var block = i == 0 ? ModBlocks.LIFT_DRIVE_STATION : i == nodes.size() - 1 ? ModBlocks.LIFT_RETURN_STATION : ModBlocks.LIFT_TOWER_HEAD;
+            level.setBlock(nodes.get(i), block.get().defaultBlockState(), 3);
+        }
+        LiftLine line = LiftManager.create(level, nodes);
+        if (line == null) {
+            AlpineShred.LOGGER.error("[smoke] the lift line was not created");
+            return null;
+        }
+        for (int i = 0; i < nodes.size(); i++) {
+            if (!(level.getBlockEntity(nodes.get(i)) instanceof LiftNodeBlockEntity node)) {
+                AlpineShred.LOGGER.error("[smoke] no block entity at lift node {}", i);
+                return null;
+            }
+            if (node instanceof LiftTowerHeadBlockEntity head) head.setLink(line.id, nodes.get(i - 1), nodes.get(i + 1));
+            else node.setLineId(line.id); // the drive reads its redstone here and powers the line
+        }
+        return line;
     }
 
     /** Snowboard, boots, goggles, mitts and helmet; out of creative flight. */

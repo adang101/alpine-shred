@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "G": {
+      "item": "minecraft:oak_fence_gate"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "IGI"
+  ],
+  "result": {
+    "item": "alpineshred:lift_loading_gate"
+  },
+  "show_notification": true
+}

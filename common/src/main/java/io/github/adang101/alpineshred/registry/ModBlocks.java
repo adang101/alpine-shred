@@ -14,6 +14,12 @@ import io.github.adang101.alpineshred.park.block.PlasticBoxBlock;
 import io.github.adang101.alpineshred.park.block.RailBlock;
 import io.github.adang101.alpineshred.park.block.RailPostBlock;
 import io.github.adang101.alpineshred.park.block.RampBlock;
+import io.github.adang101.alpineshred.lift.LiftBlocks;
+import io.github.adang101.alpineshred.lift.LiftFacingBlock;
+import io.github.adang101.alpineshred.lift.LiftStopButtonBlock;
+import io.github.adang101.alpineshred.lift.LiftStationBlock;
+import io.github.adang101.alpineshred.lift.LiftTowerHeadBlock;
+import io.github.adang101.alpineshred.lift.LiftTowerPoleBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -27,7 +33,7 @@ import java.util.List;
 
 /**
  * Blocks: {@code groomed_snow} (phase 1) and the park blocks (phase 4, design doc sections 10, 11
- * and the appendix), and the Paint Bench (section 22). Lift blocks arrive with their phase.
+ * and the appendix), and the Paint Bench (section 22). The lift blocks (section 13) follow.
  */
 public final class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(AlpineShred.MOD_ID, Registries.BLOCK);
@@ -43,6 +49,20 @@ public final class ModBlocks {
     /** Section 22: a crafting table for paint. */
     public static final RegistrySupplier<io.github.adang101.alpineshred.design.PaintBenchBlock> PAINT_BENCH = BLOCKS.register("paint_bench",
             () -> new io.github.adang101.alpineshred.design.PaintBenchBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)));
+
+    // ---- lifts (section 13) ---------------------------------------------------------------------------
+    public static final RegistrySupplier<LiftTowerPoleBlock> LIFT_TOWER_POLE = BLOCKS.register("lift_tower_pole",
+            () -> new LiftTowerPoleBlock(LiftBlocks.steel()));
+    public static final RegistrySupplier<LiftTowerHeadBlock> LIFT_TOWER_HEAD = BLOCKS.register("lift_tower_head",
+            () -> new LiftTowerHeadBlock(LiftBlocks.steel()));
+    public static final RegistrySupplier<LiftStationBlock> LIFT_DRIVE_STATION = BLOCKS.register("lift_drive_station",
+            () -> new LiftStationBlock(LiftBlocks.steel(), true));
+    public static final RegistrySupplier<LiftStationBlock> LIFT_RETURN_STATION = BLOCKS.register("lift_return_station",
+            () -> new LiftStationBlock(LiftBlocks.steel(), false));
+    public static final RegistrySupplier<LiftFacingBlock> LIFT_LOADING_GATE = BLOCKS.register("lift_loading_gate",
+            () -> new LiftFacingBlock(LiftBlocks.steel(), 0, 0, 6, 16, 14, 10));
+    public static final RegistrySupplier<LiftStopButtonBlock> LIFT_STOP_BUTTON = BLOCKS.register("lift_stop_button",
+            () -> new LiftStopButtonBlock(LiftBlocks.steel(), 5, 5, 14, 11, 11, 16));
 
     // ---- rails (section 10) ---------------------------------------------------------------------------
     public static final RegistrySupplier<RailBlock> PIPE_RAIL = park("pipe_rail",
@@ -109,6 +129,11 @@ public final class ModBlocks {
     /** Every park block, in registration order (creative tab, datagen, tests). */
     public static List<RegistrySupplier<? extends Block>> parkBlocks() {
         return Collections.unmodifiableList(PARK);
+    }
+
+    /** The six lift blocks, in creative tab order. */
+    public static List<RegistrySupplier<? extends Block>> liftBlocks() {
+        return List.of(LIFT_TOWER_POLE, LIFT_TOWER_HEAD, LIFT_DRIVE_STATION, LIFT_RETURN_STATION, LIFT_LOADING_GATE, LIFT_STOP_BUTTON);
     }
 
     public static void register() {

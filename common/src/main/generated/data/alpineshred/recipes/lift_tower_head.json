@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "L": {
+      "item": "minecraft:lightning_rod"
+    }
+  },
+  "pattern": [
+    "BLB",
+    "III"
+  ],
+  "result": {
+    "item": "alpineshred:lift_tower_head"
+  },
+  "show_notification": true
+}

@@ -1,6 +1,8 @@
 package io.github.adang101.alpineshred.mixin;
 
+import io.github.adang101.alpineshred.lift.ChairEntity;
 import io.github.adang101.alpineshred.movement.RideHooks;
+import net.minecraft.network.chat.Component;
 import io.github.adang101.alpineshred.movement.RideStateHolder;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -28,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  *       client and rubber-bands it (risk R2).</li>
  *   <li>Jump: the pop replaces vanilla's jump while riding.</li>
  *   <li>Movement emission: no footsteps while sliding.</li>
+ *   <li>Dismount: sneaking off a lift chair is refused unless the dismount rules allow it (phase 8).</li>
  * </ul>
  */
 @Mixin(Player.class)
@@ -60,6 +63,22 @@ public abstract class PlayerMixin extends LivingEntity implements RideStateHolde
     @Inject(method = "isStayingOnGroundSurface", at = @At("HEAD"), cancellable = true)
     private void alpineshred$noEdgeBackOffWhileRiding(CallbackInfoReturnable<Boolean> cir) {
         if (RideHooks.suppressEdgeBackOff((Player) (Object) this)) cir.setReturnValue(false);
+    }
+
+    /**
+     * Sneaking off a lift chair (design doc section 13, "Unloading and dismount") is refused unless
+     * {@link ChairEntity#dismountAllowed()} says so. The server is what dismounts a player ({@code rideTick}
+     * asks this only there); the client makes the same call, so it never predicts a dismount the server refuses.
+     */
+    @Inject(method = "wantsToStopRiding", at = @At("HEAD"), cancellable = true)
+    private void alpineshred$chairDismount(CallbackInfoReturnable<Boolean> cir) {
+        Player self = (Player) (Object) this;
+        if (!(self.getVehicle() instanceof ChairEntity chair) || !self.isShiftKeyDown()) return;
+        if (chair.dismountAllowed()) return;
+        cir.setReturnValue(false);
+        if (!self.level().isClientSide && self.tickCount % 20 == 0) {
+            self.displayClientMessage(Component.translatable("message.alpineshred.lift.dismount_refused"), true);
+        }
     }
 
     @Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)

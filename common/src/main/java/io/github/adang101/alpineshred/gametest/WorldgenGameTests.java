@@ -2,6 +2,11 @@ package io.github.adang101.alpineshred.gametest;
 
 import com.mojang.datafixers.util.Pair;
 import io.github.adang101.alpineshred.AlpineShred;
+import io.github.adang101.alpineshred.config.AlpineConfig;
+import io.github.adang101.alpineshred.lift.LiftLine;
+import io.github.adang101.alpineshred.lift.LiftManager;
+import io.github.adang101.alpineshred.lift.LiftNodeBlockEntity;
+import io.github.adang101.alpineshred.worldgen.LiftLinePiece;
 import io.github.adang101.alpineshred.park.PipeArc;
 import io.github.adang101.alpineshred.park.RailPlacement;
 import io.github.adang101.alpineshred.park.block.LevelRails;
@@ -35,6 +40,7 @@ import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterLists;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.JigsawBlock;
+import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
@@ -54,6 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 import static io.github.adang101.alpineshred.gametest.RideGameTests.check;
 
@@ -179,6 +186,7 @@ public final class WorldgenGameTests {
         int[] found = new int[KINDS.length], tried = new int[KINDS.length];
         long[] nanos = new long[KINDS.length], validNanos = new long[KINDS.length];
         long[] worstNanos = new long[KINDS.length];
+        int[] resortLifts = new int[2]; // resorts with a lift, resorts in all
         int farthest = 0;
         List<String> problems = new ArrayList<>();
         Map<RunPlanner.Failure, Integer> runFailures = new java.util.EnumMap<>(RunPlanner.Failure.class);
@@ -220,6 +228,10 @@ public final class WorldgenGameTests {
                             validNanos[k] += took;
                             worstNanos[k] = Math.max(worstNanos[k], took);
                             farthest = Math.max(farthest, checkStart(KINDS[k][0], seed, chunk, start, level, problems));
+                            if (k == 0) {
+                                resortLifts[1]++;
+                                if (start.getPieces().stream().anyMatch(piece -> piece instanceof LiftLinePiece)) resortLifts[0]++;
+                            }
                         }
                     }
                 }
@@ -234,6 +246,8 @@ public final class WorldgenGameTests {
         }
         AlpineShred.LOGGER.info("[worldgen test] {} starts over {} seeds: {}farthest piece {} chunks from its start; runs and resorts "
                 + "not started: {}", total, SEEDS.length, summary, farthest, runFailures);
+        AlpineShred.LOGGER.info("[worldgen test] resorts with a lift: {} of {}", resortLifts[0], resortLifts[1]);
+        check(resortLifts[0] >= 1, "no resort got a lift out of " + resortLifts[1]);
         problems.stream().limit(20).forEach(p -> AlpineShred.LOGGER.error("[worldgen test] {}", p));
         check(problems.isEmpty(), problems.size() + " out-of-bounds starts, the first: " + (problems.isEmpty() ? "" : problems.get(0)));
         check(total >= 1000, "only " + total + " starts: " + summary);
@@ -244,6 +258,126 @@ public final class WorldgenGameTests {
                     MAX_MEAN_MS[k], summary));
         }
         helper.succeed();
+    }
+
+    /** A resort start that has a lift, with the generator that made it. */
+    private record Found(StructureStart start, LiftLinePiece lift, NoiseBasedChunkGenerator generator, ChunkPos chunk) {
+    }
+
+    /** Generates resort starts as {@link #structuresGenerateWithinBounds} does until one has a lift. */
+    private static Found findResortWithLift(ServerLevel level) {
+        RegistryAccess access = level.registryAccess();
+        Holder<NoiseGeneratorSettings> noise = access.registryOrThrow(Registries.NOISE_SETTINGS).getHolderOrThrow(NoiseGeneratorSettings.OVERWORLD);
+        Holder<MultiNoiseBiomeSourceParameterList> params = access.registryOrThrow(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST)
+                .getHolderOrThrow(MultiNoiseBiomeSourceParameterLists.OVERWORLD);
+        BiomeSource biomes = MultiNoiseBiomeSource.createFromPreset(params);
+        NoiseBasedChunkGenerator generator = new NoiseBasedChunkGenerator(biomes, noise);
+        Structure resort = access.registryOrThrow(Registries.STRUCTURE).getOrThrow(ResourceKey.create(Registries.STRUCTURE, AlpineShred.id("ski_resort")));
+        StructureSet set = access.registryOrThrow(Registries.STRUCTURE_SET).getOrThrow(ResourceKey.create(Registries.STRUCTURE_SET, AlpineShred.id("ski_resorts")));
+        RandomSpreadStructurePlacement placement = (RandomSpreadStructurePlacement) set.placement();
+        int spacing = placement.spacing();
+        long seed = SEEDS[0];
+        RandomState random = RandomState.create(noise.value(), access.lookupOrThrow(Registries.NOISE), seed);
+        Pair<BlockPos, Holder<Biome>> slopes = biomes.findClosestBiome3d(new BlockPos(0, 100, 0), 6400, 32, 64,
+                b -> b.is(Biomes.SNOWY_SLOPES), random.sampler(), level);
+        check(slopes != null, "no snowy slopes within 6400 blocks");
+        ChunkPos centre = new ChunkPos(slopes.getFirst());
+        int rx0 = Math.floorDiv(centre.x, spacing), rz0 = Math.floorDiv(centre.z, spacing), tried = 0;
+        for (int ring = 0; tried < 1500; ring++) {
+            for (int dx = -ring; dx <= ring; dx++) {
+                for (int dz = -ring; dz <= ring; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) != ring) continue;
+                    tried++;
+                    ChunkPos chunk = placement.getPotentialStructureChunk(seed, (rx0 + dx) * spacing, (rz0 + dz) * spacing);
+                    StructureStart start = resort.generate(access, generator, biomes, random, level.getStructureManager(), seed, chunk, 0, level,
+                            resort.biomes()::contains);
+                    if (!start.isValid()) continue;
+                    for (StructurePiece piece : start.getPieces()) {
+                        if (piece instanceof LiftLinePiece lift) return new Found(start, lift, generator, chunk);
+                    }
+                }
+            }
+        }
+        check(false, "no resort with a lift in " + tried + " tries");
+        return null;
+    }
+
+    /**
+     * A generated resort's lift, placed into the level chunk by chunk as generation does (the run and lodge only
+     * where they overlap those chunks), then given a few ticks for its block entities to run their load check:
+     * exactly one line, whose nodes are the blocks the piece placed, not faulted, inside the structure's bounds,
+     * with every node block entity holding the same id.
+     */
+    public static void resortHasALinkedLift(GameTestHelper helper) {
+        ServerLevel level = helper.getLevel();
+        Found found = findResortWithLift(level);
+        LiftLinePiece lift = found.lift();
+        BoundingBox box = lift.getBoundingBox();
+        List<BlockPos> nodes = lift.nodes();
+        check(LiftManager.get(level, lift.lineId()) == null, "the line existed before the resort was placed");
+        int before = LiftManager.lines(level).size();
+        List<ChunkPos> forced = new ArrayList<>();
+        java.util.Set<Long> nodeChunks = new java.util.HashSet<>();
+        for (BlockPos n : nodes) nodeChunks.add(new ChunkPos(n).toLong());
+        net.minecraft.util.RandomSource random = net.minecraft.util.RandomSource.create(1);
+        for (int cx = box.minX() >> 4; cx <= box.maxX() >> 4; cx++) {
+            for (int cz = box.minZ() >> 4; cz <= box.maxZ() >> 4; cz++) {
+                ChunkPos pos = new ChunkPos(cx, cz);
+                level.getChunk(cx, cz);
+                BoundingBox chunkBox = new BoundingBox(pos.getMinBlockX(), level.getMinBuildHeight(), pos.getMinBlockZ(), pos.getMaxBlockX(),
+                        level.getMaxBuildHeight() - 1, pos.getMaxBlockZ());
+                found.start().placeInChunk(level, level.structureManager(), found.generator(), random, chunkBox, pos);
+                if (nodeChunks.contains(pos.toLong())) {
+                    level.setChunkForced(cx, cz, true);
+                    forced.add(pos);
+                }
+            }
+        }
+        boolean needsRedstone = AlpineConfig.LIFT_DRIVE_NEEDS_REDSTONE.get();
+        helper.succeedWhen(() -> {
+            // The block entities load-check on their first tick: wait for the line to exist, then check everything.
+            LiftLine line = LiftManager.get(level, lift.lineId());
+            check(line != null, "no line yet");
+            long mine = LiftManager.lines(level).stream().filter(l -> box.isInside(l.drive)).count();
+            check(mine == 1, mine + " lines in the resort's bounds");
+            check(LiftManager.lines(level).size() == before + 1, "the level gained " + (LiftManager.lines(level).size() - before) + " lines");
+            check(line.nodePositions().equals(nodes), "the line's nodes are not the piece's nodes: " + line.nodePositions() + " vs " + nodes);
+            check(!line.faulted, "the line is faulted: " + line.faultReason);
+            for (BlockPos n : nodes) {
+                check(box.isInside(n) && found.start().getBoundingBox().isInside(n), "node " + n + " is outside the structure's bounds");
+            }
+            BlockPos drive = nodes.get(0), ret = nodes.get(nodes.size() - 1);
+            check(level.getBlockState(drive).is(ModBlocks.LIFT_DRIVE_STATION.get()), "no drive station at " + drive);
+            check(level.getBlockState(ret).is(ModBlocks.LIFT_RETURN_STATION.get()), "no return station at " + ret);
+            for (int i = 1; i < nodes.size() - 1; i++) {
+                BlockPos h = nodes.get(i);
+                check(level.getBlockState(h).is(ModBlocks.LIFT_TOWER_HEAD.get()), "no tower head at " + h);
+                check(level.getBlockState(h.below()).is(ModBlocks.LIFT_TOWER_POLE.get()), "no pole under the head at " + h);
+            }
+            // Every node block entity ends up holding the one line id, and nothing is left pending.
+            for (BlockPos n : nodes) {
+                check(level.getBlockEntity(n) instanceof LiftNodeBlockEntity be && line.id.equals(be.lineId()) && be.pending() == null,
+                        "the block entity at " + n + " does not hold the line id");
+            }
+            // The drive command: off with a lever beside the drive, or running at normal speed.
+            if (needsRedstone) {
+                check(!line.powered, "a line that needs redstone starts powered");
+                int levers = 0;
+                for (Direction d : Direction.Plane.HORIZONTAL) {
+                    BlockState s = level.getBlockState(drive.relative(d));
+                    if (s.is(Blocks.LEVER)) {
+                        levers++;
+                        check(!s.getValue(LeverBlock.POWERED), "the lever is on");
+                    }
+                }
+                check(levers == 1, levers + " levers beside the drive");
+            } else {
+                check(line.powered && line.targetSpeed == AlpineConfig.LIFT_SPEED_LEVELS.get().get(1), "the line does not start running: "
+                        + line.powered + " at " + line.targetSpeed);
+            }
+            LiftManager.remove(level, lift.lineId());
+            for (ChunkPos pos : forced) level.setChunkForced(pos.x, pos.z, false);
+        });
     }
 
     /** Problems with one start go to {@code problems}; returns its farthest piece's distance in chunks. */
@@ -264,6 +398,12 @@ public final class WorldgenGameTests {
                 if (plan.length() < RunPlanner.MIN_BUILT_LENGTH - 8) problems.add(where + ": a run only " + plan.length() + " long");
             }
             if (piece instanceof LodgePiece) lodge = true;
+            if (piece instanceof LiftLinePiece lift) {
+                for (BlockPos node : lift.nodes()) {
+                    if (!b.isInside(node) || !start.getBoundingBox().isInside(node)) problems.add(where + ": lift node " + node + " outside bounds");
+                }
+                if (!kind.equals("ski_resort")) problems.add(where + ": a lift outside a resort");
+            }
         }
         if (far > MAX_CHUNKS_FROM_START) problems.add(where + ": a piece " + far + " chunks from the start");
         if (kind.equals("ski_resort") && !(run && lodge)) problems.add(where + ": run " + run + ", lodge " + lodge);

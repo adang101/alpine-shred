@@ -53,11 +53,15 @@ class ClipFilesTest {
         assertEquals(RiderClips.LAND_TICKS, load(RiderClips.LAND_CLEAN).endTick);
         assertEquals(RiderClips.POLE_PUSH_TICKS, load(RiderClips.POLE_PUSH_LEFT).endTick);
         assertEquals(30, load(RiderClips.WIPEOUT_FRONT).endTick, "the length of the input lock");
+        assertEquals(RiderClips.LIFT_MOUNT_TICKS, load(RiderClips.LIFT_MOUNT).endTick);
+        assertEquals(RiderClips.LIFT_DISMOUNT_TICKS, load(RiderClips.LIFT_DISMOUNT).endTick);
         for (String loop : List.of(RiderClips.GLIDE_BOARD_REGULAR, RiderClips.GLIDE_SKIS, RiderClips.AIR_BOARD,
-                RiderClips.TUCK_BOARD, RiderClips.BRAKE_BOARD, RiderClips.WALK_STRAPPED, RiderClips.POLE_CARRY)) {
+                RiderClips.TUCK_BOARD, RiderClips.BRAKE_BOARD, RiderClips.WALK_STRAPPED, RiderClips.POLE_CARRY,
+                RiderClips.LIFT_SIT_BOARD, RiderClips.LIFT_SIT_SKIS)) {
             assertTrue(load(loop).isInfinite, loop + " should loop");
         }
-        for (String once : List.of(RiderClips.POP_LAUNCH, RiderClips.LAND_CLEAN, RiderClips.WIPEOUT_FRONT)) {
+        for (String once : List.of(RiderClips.POP_LAUNCH, RiderClips.LAND_CLEAN, RiderClips.WIPEOUT_FRONT, RiderClips.LIFT_MOUNT,
+                RiderClips.LIFT_DISMOUNT)) {
             assertFalse(load(once).isInfinite, once + " should play once");
         }
     }

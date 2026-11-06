@@ -17,10 +17,82 @@ that need people go into `docs/playtest-phase8.md`.
 
 ---
 
+## Resume here (paused 2026-11-06)
+
+Development was paused at the user's request to add an ASCII gameplay visualizer, a text view of the game
+state that lets the orchestrator review gameplay without reading screenshots. Nothing is running. This section is
+everything a fresh session needs.
+
+**Branches**
+- `main` (`d6cfd8b`): phase 7 plus this plan. Phase 8 has not been merged.
+- `wip/phase-8`: WP1 to WP9 merged; the last merge is WP8 (`655309a`). The WP8 branch tip, its last commit
+  before the merge (`7402ea2`), passed every CI step.
+- `wip/phase-8-wp10` (this branch; WP10 so far): all of its work is pushed; CI is green at `3f8af2b` (docs commits follow it).
+  It is not merged into `wip/phase-8` yet.
+- `wip/phase-8-wp8`: already merged, so it can be deleted.
+
+**How CI works here.** The cloud container cannot reach the Fabric, Forge or Architectury mavens, so
+`./gradlew` does not run locally. CI is the build:
+- Push the branch, and the run takes 40 to 80 minutes.
+- When it finishes, it force-pushes its logs to the `ci-logs` branch, and `RUN.txt` there names the run and
+  its sha. Read the logs with `git show origin/ci-logs:<path>`.
+- Runs on different branches overwrite each other's `ci-logs`, so run one branch at a time.
+
+**Last CI run on `wip/phase-8-wp10`:** run 42203872917, sha `3f8af2b`, conclusion success. Every step passed,
+including the multiplayer chair comparison (max deviation 0.251 for rider, watcher1 and watcher2, 0.25 tolerance
+and 5% limit unchanged; README clarification 72).
+
+**Root cause of the earlier watcher1 failure (run 42131303522):** a client's line state is dropped on logout and
+the server forgets its synced set, but the lines only came back at the next 40-tick scan, so a rejoining client
+had chairs without line state in the meantime. Fixed by `LiftSync.join` (clear the set, send every line in range
+on `PLAYER_JOIN`), covered by `syncSetTracksPlayers`. `multiplayer-check.py` now also prints outliers by game time.
+
+**History of the chair-sync fix:**
+- `29fd83d` rewinds a sync stamped up to 10 ticks ahead of the client's clock (`ClientLine.apply`,
+  `MAX_REWIND`).
+- `961dd23` makes `ClientLiftLines` step lines by the change in the level's game time.
+- `3f8af2b` sends lines on join.
+
+**Next steps for WP10:**
+1. Orchestrator review of WP10. Check:
+   - the CI timeouts raised from 90 to 120 minutes for the job, and from 25 to 45 for the multiplayer step;
+   - the dedicated-server restart moved to the playtest doc. The plan allows that, with `liftSurvivesSaveReload`
+     plus the real relog in the smoke as the automated cover.
+   - `cda15c9` is a temporary API-probe commit, and its file was removed in `29fd83d`. It's fine to leave it in
+     history.
+2. Merge `wip/phase-8-wp10` into `wip/phase-8` and wait for a green CI run on it. Then merge `wip/phase-8` into
+   `main` (exit gate: plan section 5).
+
+**WP10 measurements so far** (in README clarification 71):
+- `liftManagerBudget`, 5 lines and 260 chairs: Forge 0.0032 ms per tick and 2.9 µs per chair; Fabric 0.0054 ms
+  and 3.4 µs. The budget is 0.3 ms and 5 µs.
+- WP8's renderer costs in the `lift` smoke: cable 0.28 ms per frame, wheel 0.32 ms, chair 0.30 ms. Mean values,
+  measured under software GL.
+
+**Open items for the user:**
+- The design doc's cable frame budget. `CABLE_BUDGET_MS` in `ClientSmoke` is a provisional 0.5 ms (failing at
+  3×).
+- Playtest checks are listed in `docs/playtest-phase8.md`: sounds by ear, the safety-bar height, a full server
+  restart with riders, and render mods.
+
+**Working model** (to keep tokens down): Sonnet subagents implement each package on its own branch and drive
+their own CI loop. Opus only reviews the diffs and the screenshots, sends fixes back, and merges. Once the
+ASCII visualizer exists, prefer its text output to screenshots in reviews.
+
 ## 0. Where it stands (2026-11-01)
 
 | Item | State |
 |---|---|
+| WP1: `LiftLine`, `LiftStations`, `PendingLine`, `LiftSavedData`, `LiftManager`, with unit and game tests | Done (`9d99b9f`) |
+| WP2: six lift blocks, `LiftNodeBlockEntity` (head, drive, return), first-tick load check, datagen, 4 game tests (60 per loader) | Done (`59c9a4d`) |
+| WP3: `LiftLinkerItem`, pure `LinkValidator` sharing `LiftPath` geometry (`anchor`, `spanPoint`), 14 unit tests, 2 game tests | Done (merged after WP4) |
+| WP4: `ChairEntity`, `LineView`, `PassengerRule`, `LiftChairs` spawning, re-attach pieces, `MobAccessor` mixin, 8 game tests | Done (`293f73f`) |
+| WP5: `LiftLineSync` packet, `LiftSync` (40/100-tick passes, change listener), `ClientLiftLines`/`ClientLine`, shared `LiftMotion.targetFor`, 2 game tests (72 per loader) | Done (`c266445`) |
+| WP6: boarding (right-click, auto-board, `c2s/lift_board`), bar, unloading and ejection, sneak-dismount mixin, leads and pets, `lift_rides`, `lift_ridden` and `bluebird_day`, board prompt, 8 game tests | Done (merging) |
+| WP7: `LiftDriveSource`, redstone drive with emergency on loss, speed cycling (the linker passes through), drive keeps its command across a reload, stop button, `/alpineshred lift` commands, 6 game tests | Done (`31bb9b1`) |
+| WP8: `TowerHeadBER`, `BullwheelBER`, `ChairEntityRenderer`, `LiftSoundManager`, rider clips, five lift sounds, the `lift` client smoke scenario, and the seated-yaw fix in `ChairEntity` and `RiderTracker` | Done (merged `655309a`) |
+| WP9: `ResortLiftPlanner` (pure, validated), `LiftLinePiece` (per-chunk, absolute `PendingLine` with an initial drive state), 18 of 28 test resorts get a lift, `resortHasALinkedLift`, survey checks | Done (merging; the worldgen tour is verified in CI) |
+| WP10: the multiplayer smoke's lift stage (three riders on a 400-block lift, chair positions against the server's, a relog, a broken head), `liftSurvivesSaveReload`, `liftManagerBudget`, README and `docs/playtest-phase8.md` | **Done on `wip/phase-8-wp10`, awaiting orchestrator review** (green CI run 42203872917, sha `3f8af2b`) |
 | `LiftPath` (cable loop: sag, bullwheel half circles, 0.25 sampling, `pos`, `tangent`, `chairPos`, `chairCount`) | Done on `wip/phase-8`, with unit tests in `LiftPathTest` (7 tests) |
 | `LiftMotion` (speed ramp 0.5 b/s², emergency 2.0, `travel += speed/20`, client catch-up `advance`) | Done on `wip/phase-8`. **No unit tests yet** (added in WP1) |
 | Config keys `lift.*` (`AlpineConfig` lines 39–57, including `syncRadius`, `driveNeedsRedstone`, `kineticMaxSpeed`) | Done on main |
@@ -66,8 +138,10 @@ that need people go into `docs/playtest-phase8.md`.
    blocks. A button with no station in range does nothing and says so in the action bar.
 4. **Boarding and unload intervals.**
    - The boarding stretch is `s ∈ [0, 4]`: the first 4 blocks of loaded cable after the return wheel.
-   - The unload stretch is the last part of the loaded cable before `loadedEnd` where the seat is at most 3 blocks
-     above the drive station's platform. That platform is the station block's Y.
+   - The unload stretch is the last part of the loaded cable before `loadedEnd` where the seat is within 3 blocks
+     of the drive station's platform, above or below. That platform is the station block's Y. (The doc says "at
+     most 3 blocks above", but on a climbing line that covers the whole loaded cable, so the band is two-sided.
+     This was settled in WP1.)
    - The ejection point is 1 block before `loadedEnd`.
    - Both stretches are computed in a pure `LiftStations` class and stored on the line.
 5. **Generated lifts.** Structure pieces cannot touch `SavedData` during generation. Instead the resort piece
@@ -77,6 +151,9 @@ that need people go into `docs/playtest-phase8.md`.
 6. **Sneak dismount.** A mixin on `Player#wantsToStopRiding`, or the equivalent in `rideTick`, refuses the
    dismount while riding a `ChairEntity` unless the dismount rules in section 13 allow it. Add the mixin to
    `alpineshred.mixins.json` and to the doc's mixin inventory list in the README.
+
+7. **Speeds are doubles** (settled in WP1). `LiftLine.speed` and `targetSpeed` are `double`, so the server's
+   stepping matches `LiftMotion.advance` exactly. Packets and caches carry them as doubles.
 
 ## 3. Work packages
 
@@ -181,6 +258,9 @@ WP5.
 - **Messages:** every rejection names its reason (lang keys `message.alpineshred.linker.*`).
 - **Relinking** a faulted line through the same nodes rebuilds it and clears the fault.
 
+- **Writing node data:** write it through `LiftTowerHeadBlockEntity.setLink(prev, next)` and the BEs'
+  `setLineId`, the hooks WP2 provided.
+
 **Tests:**
 - Unit `LinkValidatorTest`:
   - each rejection reason, in isolation: too far, too steep, cable blocked on the loaded side, cable blocked on the
@@ -235,7 +315,8 @@ WP5.
 ### WP5: Sync (section 15)
 
 **Build:**
-- **`s2c/lift_line_sync`** carries: id, node positions, travel (a double), speed, target, game time, the faulted,
+- **`s2c/lift_line_sync`** carries: id, node positions, the chair spacing (`lift.spacing` is server config, and
+  clients must use the server's value to get the same chair count), travel (a double), speed, target, game time, the faulted,
   running and emergency flags, and `removed` (decision 2).
 - **When it is sent:**
   - once when a player comes within `lift.syncRadius` of any node (checked every 40 ticks against a per-player
@@ -244,6 +325,9 @@ WP5.
   - every 100 ticks to players in range;
   - on removal.
 - The per-player set clears on logout and dimension change.
+- **Chair hook:** set `ChairEntity.clientLineLookup` (`Function<UUID, LineView>`) from `ClientLiftLines`, and make
+  the client line class implement `LineView`. Until this lands, client chairs move only from vanilla move packets,
+  which arrive every 20 ticks.
 - **`ClientLiftLines`:** a cache of `LiftPath`s and states. Each client tick it steps each line with
   `LiftMotion`. When a sync arrives, it catches up from the packet's game time to the client's level game time
   with `advance`, then replaces its state.
@@ -309,13 +393,17 @@ WP5.
 **Build:**
 - **`LiftDriveSource`** interface: `enabled()`, `targetSpeed()`. `DriveStationBE` implements it.
   - It is enabled by a redstone signal, or always when `lift.driveNeedsRedstone` is false.
-  - Right-click cycles through `lift.speedLevels`.
+  - Right-click cycles through `lift.speedLevels`. The exception is a player holding a `lift_linker`: the drive's
+    `use` must return `PASS`, because vanilla runs the block's `use` before the item's `useOn`, and otherwise the
+    drive would swallow linker clicks. A game test must cover this.
   - Every change writes `powered` and `targetSpeed` into the line. Unloaded drives keep their last command.
   - Nothing else may know which class implements it: phase 9 adds the Create variant.
 - **Emergency stop:** a stop button press, or losing redstone while running when `driveNeedsRedstone` is on,
   triggers `emergencyStop`. A redstone signal coming back, or right-clicking the drive, clears it.
 - **Commands** (permission level 2): `/alpineshred lift list | info <id> | stop <id> | start <id> | remove <id>`.
   - `info` prints the nodes, loop length, chairs, speed, flags and rider count.
+  - `remove` must call `clearLine()` on every loaded node BE of the line. Unloaded ones clear themselves on their
+    next load check, because the line is missing.
   - `remove` deletes the line, clears the BEs' data, discards its chairs (ejecting riders safely) and sends the
     removal sync.
 
@@ -338,6 +426,8 @@ WP5.
   - It overrides `shouldRenderOffScreen` to true, with a view distance of 256.
   - Light is sampled at each span's midpoint.
 - **`BullwheelBER`** on both stations: the wheel rotates by `travel / WHEEL_RADIUS`.
+- **Passenger seat height:** WP4 seats passengers at chair Y + 0.1 + `getMyRidingOffset()`. The 0.1 is a
+  placeholder; tune it against the chair model so riders sit on the seat.
 - **`ChairEntityRenderer`:** draws the hanger, seat, backrest and bar. The bar eases over 6 ticks. Light is sampled
   at the chair. The model is placeholder geometry, at most 60 cuboids, with a 64×64 texture.
 - **Animation clips** `lift_mount`, `lift_sit_board`, `lift_sit_skis`, `lift_dismount` (placeholders like the
@@ -365,7 +455,9 @@ WP5.
   lodge, and towers about every 40 blocks along the run's side, offset so the cable clears the run.
   - The line must pass `LinkValidator` against the generated terrain. If it does not, skip the lift and log at
     debug level. Never place a broken line.
-  - Each piece places its blocks with `PendingLine` NBT (decision 5).
+  - Each piece places its blocks with `PendingLine` NBT (decision 5). The node positions must be **absolute
+    world positions, computed after the piece's rotation and placement**. Template NBT is not transformed, so the
+    piece writes the BE data in code when it places the blocks.
   - The stations get small platforms built from ordinary blocks.
   - The line spans about 200 blocks (from the doc).
 - Generated lines start powered at the normal speed when `lift.driveNeedsRedstone` is off. Otherwise they get a
@@ -395,6 +487,13 @@ WP5.
   - On the dedicated server: `save-all`, stop, restart with the same world, and the clients reconnect.
   - If this makes CI too slow or flaky, keep a game-test version (`liftSurvivesSaveReload`: the saved data plus
     the rider NBT round trip) and move the full restart into `docs/playtest-phase8.md`.
+- **Sync timing to measure** (from WP5):
+  - **A sync from the client's "future":** if the client's game time lags the server's, the catch-up is clamped
+    to 0, which leaves the client a few ticks ahead until the next 100-tick resend. If the watchers' chair
+    positions exceed the 0.25 tolerance, make `ClientLine.apply` rewind by `speed/20` per tick for small negative
+    gaps.
+  - **New lines:** a new line reaches nearby players at the next 40-tick scan, up to 2 s after linking. If that
+    looks wrong in play, send the line on `create` to the players in range.
 - **Budgets:** a game test `liftManagerBudget` runs 5 lines with 50 chairs each for 200 ticks and logs the mean
   manager time and the per-chair tick time.
   - Assert at 3× the budget (0.9 ms per tick, 15 µs per chair). Record the real numbers in the README.
@@ -411,6 +510,22 @@ WP5.
     - lifts with Sodium/Embeddium and Iris/Oculus;
     - a NeoForge server;
     - building a lift by hand in survival.
+    - The linker checks that the cable clears terrain, but not the chairs hanging 1.6 blocks below it. Check by
+      hand that chairs on a valid line don't clip through hills. If they do, add a chair-clearance sample to
+      `LinkValidator`.
+
+## 3b. Carried forward (found during WP1–WP9)
+
+- **Concurrent game tests share one level.** A test must never assume it is the only player near its blocks.
+  Lift tests pass their own player list to `LiftChairs.update` (fixed after
+  `chairsSpawnNearPlayersAndDespawnFar` failed intermittently).
+- **Resort generation time:** about 200 ms a start against the doc's 150 ms budget. It was already about 190 ms in
+  phase 7, before lifts; the run planner's noise sampling dominates. This goes to phase 9's optimization pass.
+- **Client-side copies of server config:** `lift.maxBoardSpeed` and `lift.dismountAnywhere` are not in
+  `config_sync`, so a client's board prompt or dismount prediction can disagree with a server that changed them.
+  The server always decides. Phase 9 adds them to `config_sync` with a protocol bump.
+- **Playtest additions:** trees grown after generation can reach a generated cable. Decide in playtest whether
+  generated lifts need a clearing pass.
 
 ## 4. Test inventory (what "done" means for phase 8)
 

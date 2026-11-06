@@ -3,6 +3,7 @@ package io.github.adang101.alpineshred.registry;
 import io.github.adang101.alpineshred.AlpineShred;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
@@ -25,6 +26,18 @@ public final class ModTags {
 
         private static TagKey<Item> tag(String path) {
             return TagKey.create(Registries.ITEM, AlpineShred.id(path));
+        }
+    }
+
+    public static final class EntityTypes {
+        public static final TagKey<EntityType<?>> LIFT_BLOCKED = tag("lift_blocked");
+        public static final TagKey<EntityType<?>> LIFT_PASSENGERS = tag("lift_passengers");
+
+        private EntityTypes() {
+        }
+
+        private static TagKey<EntityType<?>> tag(String path) {
+            return TagKey.create(Registries.ENTITY_TYPE, AlpineShred.id(path));
         }
     }
 

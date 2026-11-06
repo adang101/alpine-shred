@@ -43,7 +43,7 @@ public final class AlpineConfig {
     public static final ConfigSpec.IntEntry LIFT_SEATS = COMMON.integer("lift.seats", 2, 1, 4);
     public static final ConfigSpec.IntEntry LIFT_SPACING = COMMON.integer("lift.spacing", 24, 12, 48);
     public static final ConfigSpec.DoubleListEntry LIFT_SPEED_LEVELS = COMMON.decimals("lift.speedLevels", List.of(1.5, 2.5, 4.0), 0.1, 10.0, 1, 8);
-    public static final ConfigSpec.DoubleEntry LIFT_MAX_BOARD_SPEED = COMMON.decimal("lift.maxBoardSpeed", 3.5, 0.0, 10.0);
+    public static final ConfigSpec.DoubleEntry LIFT_MAX_BOARD_SPEED = COMMON.decimal("lift.maxBoardSpeed", 4.0, 0.0, 10.0);
     public static final ConfigSpec.BoolEntry LIFT_RUN_UNLOADED = COMMON.bool("lift.runUnloaded", true);
     public static final ConfigSpec.BoolEntry LIFT_REQUIRE_PASS = COMMON.bool("lift.requirePass", false);
     public static final ConfigSpec.BoolEntry LIFT_DISMOUNT_ANYWHERE = COMMON.bool("lift.dismountAnywhere", false);

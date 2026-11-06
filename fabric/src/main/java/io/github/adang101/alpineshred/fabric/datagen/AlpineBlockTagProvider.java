@@ -13,6 +13,9 @@ import java.util.concurrent.CompletableFuture;
 
 /** Block tags (design doc sections 11 and 18). */
 public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+    private static final net.minecraft.tags.TagKey<Block> NON_BREAKABLE =
+            net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.BLOCK, new net.minecraft.resources.ResourceLocation("create", "non_breakable"));
+
     public AlpineBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries);
     }
@@ -48,6 +51,10 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.PAINT_BENCH.get());
         var pickaxe = getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE);
         rails().forEach(pickaxe::add);
+        for (var lift : ModBlocks.liftBlocks()) pickaxe.add(lift.get());
+        // Create's wrench and contraptions leave blocks in this tag alone; optional, so it works without Create.
+        var nonBreakable = getOrCreateTagBuilder(NON_BREAKABLE);
+        for (var lift : ModBlocks.liftBlocks()) nonBreakable.addOptional(lift.getId());
         pickaxe.add(ModBlocks.RAIL_POST.get(), ModBlocks.METAL_BOX.get(), ModBlocks.PLASTIC_BOX.get(), ModBlocks.PIPE_COPING.get());
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.WOOD_BOX.get(), ModBlocks.PARK_RAMP.get(),
                 ModBlocks.QUARTER_PIPE.get(), ModBlocks.SLOPE_MARKER_GREEN.get(), ModBlocks.SLOPE_MARKER_BLUE.get(),

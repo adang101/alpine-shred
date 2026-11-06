@@ -12,6 +12,7 @@ import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.gear.MittsItem;
 import io.github.adang101.alpineshred.gear.SkiPolesItem;
 import io.github.adang101.alpineshred.gear.SnowGearItem;
+import io.github.adang101.alpineshred.lift.LiftLinkerItem;
 import io.github.adang101.alpineshred.park.item.ParkWrenchItem;
 import io.github.adang101.alpineshred.park.item.PipeItem;
 import net.minecraft.core.registries.Registries;
@@ -67,8 +68,8 @@ public final class ModItems {
             () -> new EdgeTunerItem(new Item.Properties().durability(64)));
     public static final RegistrySupplier<ParkWrenchItem> PARK_WRENCH = ITEMS.register("park_wrench",
             () -> new ParkWrenchItem(new Item.Properties().stacksTo(1)));
-    public static final RegistrySupplier<DescribedItem> LIFT_LINKER = ITEMS.register("lift_linker",
-            () -> new DescribedItem("tooltip.alpineshred.lift_linker", new Item.Properties().stacksTo(1)));
+    public static final RegistrySupplier<LiftLinkerItem> LIFT_LINKER = ITEMS.register("lift_linker",
+            () -> new LiftLinkerItem("tooltip.alpineshred.lift_linker", new Item.Properties().stacksTo(1)));
     public static final RegistrySupplier<DescribedItem> LIFT_PASS = ITEMS.register("lift_pass",
             () -> new DescribedItem("tooltip.alpineshred.lift_pass", new Item.Properties()));
 
@@ -79,10 +80,27 @@ public final class ModItems {
     public static final RegistrySupplier<BlockItem> PAINT_BENCH = ITEMS.register("paint_bench",
             () -> new BlockItem(ModBlocks.PAINT_BENCH.get(), new Item.Properties()));
 
+    // Lift parts (section 13).
+    public static final RegistrySupplier<BlockItem> LIFT_TOWER_POLE = liftItem("lift_tower_pole", ModBlocks.LIFT_TOWER_POLE);
+    public static final RegistrySupplier<BlockItem> LIFT_TOWER_HEAD = liftItem("lift_tower_head", ModBlocks.LIFT_TOWER_HEAD);
+    public static final RegistrySupplier<BlockItem> LIFT_DRIVE_STATION = liftItem("lift_drive_station", ModBlocks.LIFT_DRIVE_STATION);
+    public static final RegistrySupplier<BlockItem> LIFT_RETURN_STATION = liftItem("lift_return_station", ModBlocks.LIFT_RETURN_STATION);
+    public static final RegistrySupplier<BlockItem> LIFT_LOADING_GATE = liftItem("lift_loading_gate", ModBlocks.LIFT_LOADING_GATE);
+    public static final RegistrySupplier<BlockItem> LIFT_STOP_BUTTON = liftItem("lift_stop_button", ModBlocks.LIFT_STOP_BUTTON);
+
     /** The park blocks' items (section 10, 11), in block registration order; the pipe's places a whole pipe. */
     private static final List<RegistrySupplier<? extends Item>> PARK = registerParkItems();
 
     private ModItems() {
+    }
+
+    private static RegistrySupplier<BlockItem> liftItem(String id, RegistrySupplier<? extends Block> block) {
+        return ITEMS.register(id, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    /** The lift block items, in creative tab order. */
+    public static List<RegistrySupplier<BlockItem>> liftItems() {
+        return List.of(LIFT_TOWER_POLE, LIFT_TOWER_HEAD, LIFT_DRIVE_STATION, LIFT_RETURN_STATION, LIFT_LOADING_GATE, LIFT_STOP_BUTTON);
     }
 
     private static List<RegistrySupplier<? extends Item>> registerParkItems() {
