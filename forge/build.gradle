@@ -145,6 +145,7 @@ dependencies {
             modCompileOnly(coordinate) { transitive = false }
         }
     }
+    if (withCreate) runtimeOnly "io.github.llamalad7:mixinextras-forge:${rootProject.create_mixinextras_version}"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')

@@ -53,7 +53,28 @@ configurations {
     }
 }
 
+// The Create jar as published (unremapped), only to read the jars nested inside it. Create column only.
+configurations {
+    createFabricJar {
+        canBeResolved = true
+        canBeConsumed = false
+        transitive = false
+    }
+}
+
+def createNested = layout.buildDirectory.dir('create-nested').get().asFile
+tasks.register('extractCreateJars', Copy) {
+    from({ zipTree(configurations.createFabricJar.singleFile) }) {
+        include 'META-INF/jars/*.jar'
+        eachFile { it.path = it.name }
+        includeEmptyDirs = false
+    }
+    into createNested
+}
+
 dependencies {
+    if (withCreate) createFabricJar "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
+
     // Create Fabric 6.0.8.1 declares fabricloader >= 0.17.2; only the Create column needs the newer loader.
     modImplementation "net.fabricmc:fabric-loader:${withCreate ? rootProject.create_fabric_loader_version : rootProject.fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
@@ -66,6 +87,9 @@ dependencies {
     // Flywheel, Ponder, Registrate and Porting Lib inside it, so one coordinate is enough.
     if (withCreate) {
         modImplementation "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
+        // Loom does not unpack that jar-in-jar content for the dev runtime, so the nested jars are copied
+        // out of it (see extractCreateJars) and added as runtime mods.
+        modRuntimeOnly project.fileTree(dir: createNested, include: '*.jar').builtBy('extractCreateJars')
     } else {
         modCompileOnly "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
     }
