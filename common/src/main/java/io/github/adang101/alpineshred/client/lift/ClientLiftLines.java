@@ -2,6 +2,7 @@ package io.github.adang101.alpineshred.client.lift;
 
 import dev.architectury.event.events.client.ClientPlayerEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
+import io.github.adang101.alpineshred.client.RideDriver;
 import io.github.adang101.alpineshred.lift.ChairEntity;
 import io.github.adang101.alpineshred.lift.LiftLineSync;
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * The client's cache of synced lift lines (design doc section 15). Each client tick steps every line
@@ -29,14 +31,15 @@ public final class ClientLiftLines {
     private static final LineClock CLOCK = new LineClock();
 
     /** Smoke diagnostics only (null otherwise): receives a line for each sync and each client tick whose game time moved by other than one. */
-    public static volatile java.util.function.Consumer<String> trace;
+    public static volatile Consumer<String> trace;
 
     private ClientLiftLines() {
     }
 
     public static void register() {
         ChairEntity.clientLineLookup = ClientLiftLines::get;
-        ClientTickEvent.CLIENT_POST.register(ClientLiftLines::tick);
+        ChairEntity.clientDismountAnywhere = () -> RideDriver.INSTANCE.serverSettings().dismountAnywhere();
+        ClientTickEvent.CLIENT_PRE.register(ClientLiftLines::tick);
         ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> clear());
     }
 
@@ -83,7 +86,7 @@ public final class ClientLiftLines {
         long now = current.getGameTime();
         // Move the other lines over any clock jump that came with this sync, so the next tick does not repeat it.
         long moved = CLOCK.follow(LINES.values(), now, 0);
-        java.util.function.Consumer<String> t = trace;
+        Consumer<String> t = trace;
         if (t != null) t.accept("lift: sync stamp " + sync.gameTime() + " at client gt" + now + ", clock moved " + moved + " since the last tick");
         ClientLine line = LINES.get(sync.id());
         if (line == null) {
@@ -110,10 +113,14 @@ public final class ClientLiftLines {
             CLOCK.reset();
         }
         if (minecraft.isPaused() || level == null) return;
-        // Follow the level's game time rather than counting ticks: the server's time packet moves a drifted
-        // client's clock, and the lines must move with it or the chairs sit off by the drift until the next sync.
-        long moved = CLOCK.follow(LINES.values(), level.getGameTime(), 1);
-        java.util.function.Consumer<String> t = trace;
-        if (moved != 1 && t != null) t.accept("lift: client clock moved " + moved + " ticks in one tick, now gt" + level.getGameTime());
+        // Runs at the tick's start, before entity ticks, so chairs read lines that are already at this tick's time.
+        // Packets (the server's time packet included) were applied before this point, but ClientLevel.tick has not
+        // advanced the game time yet, and it does so before it ticks entities: so this tick's time is gametime + 1.
+        // The lines follow the level's clock rather than counting ticks, or a drifted client's chairs would sit off
+        // until the next sync. The clock measures from where it last left the lines, so a tick the level skips moves 0.
+        long gameTime = level.getGameTime() + 1;
+        long moved = CLOCK.follow(LINES.values(), gameTime, 1);
+        Consumer<String> t = trace;
+        if (moved != 1 && t != null) t.accept("lift: client clock moved " + moved + " ticks in one tick, now gt" + gameTime);
     }
 }

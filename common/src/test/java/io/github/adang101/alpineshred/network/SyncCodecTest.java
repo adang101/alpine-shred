@@ -23,7 +23,7 @@ class SyncCodecTest {
 
     @Test
     void configPayloadRoundTripsAndToleratesJunk() throws IOException {
-        SyncCodec.Settings settings = new SyncCodec.Settings(false, 1.5, false);
+        SyncCodec.Settings settings = new SyncCodec.Settings(false, 1.5, false, 2.5, true);
         assertEquals(settings, SyncCodec.readConfig(SyncCodec.inflate(SyncCodec.deflate(SyncCodec.configPayload(settings)))));
 
         JsonObject junk = new JsonObject();
@@ -33,6 +33,15 @@ class SyncCodecTest {
         SyncCodec.Settings read = SyncCodec.readConfig(junk);
         assertEquals(SyncCodec.Settings.DEFAULTS.maxSpeedMul(), read.maxSpeedMul(), 1e-9);
         assertEquals(SyncCodec.Settings.DEFAULTS.scrapeEnabled(), read.scrapeEnabled());
+
+        assertEquals(SyncCodec.Settings.DEFAULTS.maxBoardSpeed(), read.maxBoardSpeed(), 1e-9, "missing key keeps its default");
+        assertEquals(SyncCodec.Settings.DEFAULTS.dismountAnywhere(), read.dismountAnywhere());
+
+        JsonObject lift = new JsonObject();
+        lift.addProperty("lift.maxBoardSpeed", 99.0);
+        lift.addProperty("lift.dismountAnywhere", "yes");
+        assertEquals(10.0, SyncCodec.readConfig(lift).maxBoardSpeed(), 1e-9, "clamped to the config range");
+        assertEquals(false, SyncCodec.readConfig(lift).dismountAnywhere(), "malformed boolean keeps its default");
 
         JsonObject huge = new JsonObject();
         huge.addProperty("movement.maxSpeedMul", 1e9);

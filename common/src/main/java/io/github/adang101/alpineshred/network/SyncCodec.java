@@ -31,7 +31,7 @@ import java.util.zip.Inflater;
  */
 public final class SyncCodec {
     /** Bumped whenever a packet layout or a synced data format changes incompatibly. */
-    public static final int PROTOCOL_VERSION = 1;
+    public static final int PROTOCOL_VERSION = 2;
     /** Inflation cap; a real payload is a few kilobytes. */
     public static final int MAX_INFLATED_BYTES = 1 << 20;
 
@@ -135,13 +135,16 @@ public final class SyncCodec {
      * travels outside the compressed JSON (a VarInt in front), so a client can always read it.
      *
      * @param ridingEnabled {@code movement.enabled} and no {@code movement.disableWithMods} mod present
+     * @param maxBoardSpeed {@code lift.maxBoardSpeed}: the client's board prompt and auto-board predict the server's refusal with it
+     * @param dismountAnywhere {@code lift.dismountAnywhere}: the client's sneak-dismount prediction
      */
-    public record Settings(boolean ridingEnabled, double maxSpeedMul, boolean scrapeEnabled) {
-        /** What a client assumes before the server says otherwise. */
-        public static final Settings DEFAULTS = new Settings(true, 1.0, true);
+    public record Settings(boolean ridingEnabled, double maxSpeedMul, boolean scrapeEnabled, double maxBoardSpeed, boolean dismountAnywhere) {
+        /** What a client assumes before the server says otherwise (the config defaults). */
+        public static final Settings DEFAULTS = new Settings(true, 1.0, true, 4.0, false);
 
         public Settings {
             if (!(maxSpeedMul >= 0.1 && maxSpeedMul <= 3.0)) maxSpeedMul = Double.isNaN(maxSpeedMul) ? 1.0 : Math.max(0.1, Math.min(3.0, maxSpeedMul));
+            if (!(maxBoardSpeed >= 0.0 && maxBoardSpeed <= 10.0)) maxBoardSpeed = Double.isNaN(maxBoardSpeed) ? 4.0 : Math.max(0.0, Math.min(10.0, maxBoardSpeed));
         }
     }
 
@@ -150,6 +153,8 @@ public final class SyncCodec {
         json.addProperty("movement.enabled", settings.ridingEnabled());
         json.addProperty("movement.maxSpeedMul", settings.maxSpeedMul());
         json.addProperty("movement.scrapeEnabled", settings.scrapeEnabled());
+        json.addProperty("lift.maxBoardSpeed", settings.maxBoardSpeed());
+        json.addProperty("lift.dismountAnywhere", settings.dismountAnywhere());
         return json;
     }
 
@@ -159,7 +164,9 @@ public final class SyncCodec {
         return new Settings(
                 bool(json, "movement.enabled", d.ridingEnabled()),
                 number(json, "movement.maxSpeedMul", d.maxSpeedMul()),
-                bool(json, "movement.scrapeEnabled", d.scrapeEnabled()));
+                bool(json, "movement.scrapeEnabled", d.scrapeEnabled()),
+                number(json, "lift.maxBoardSpeed", d.maxBoardSpeed()),
+                bool(json, "lift.dismountAnywhere", d.dismountAnywhere()));
     }
 
     private static boolean bool(JsonObject json, String key, boolean fallback) {
