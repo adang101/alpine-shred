@@ -9,33 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/setup-java@v5
-        with: { distribution: temurin, java-version: 17 }
-      - name: Forge deps
+      - name: Ponder contents
         run: |
           set +e
-          B=https://maven.createmod.net/com/simibubi/create/create-1.20.1/6.0.8-291
-          curl -sS -m 60 -o cs.jar "$B/create-1.20.1-6.0.8-291-slim.jar"
-          unzip -p cs.jar META-INF/mods.toml | grep -E "modId|versionRange|mandatory|^\[" | head -60
-          unzip -l cs.jar | grep -E "META-INF/jarjar|\.jar$" | head
-          for u in net/createmod/catnip/Catnip-Forge-1.20.1 net/createmod/ponder/Ponder-Forge-1.20.1 dev/engine-room/flywheel/flywheel-forge-1.20.1; do
-            echo "== $u"; curl -sS -m 30 "https://maven.createmod.net/$u/maven-metadata.xml" | grep -E "<latest>|<release>"
-          done
-          curl -sS -m 30 "https://maven.createmod.net/net/createmod/ponder/Ponder-Forge-1.20.1/1.0.92/Ponder-Forge-1.20.1-1.0.92.pom" | grep -E "artifactId|<version>|<scope>" | head -40
-          curl -sS -m 30 "https://maven.createmod.net/dev/engine-room/flywheel/flywheel-forge-1.20.1/1.0.6/flywheel-forge-1.20.1-1.0.6.pom" | grep -E "artifactId|<version>|<scope>" | head -30
-          curl -sS -m 30 -o /dev/null -w "ponder jar %{http_code}\n" "https://maven.createmod.net/net/createmod/ponder/Ponder-Forge-1.20.1/1.0.92/Ponder-Forge-1.20.1-1.0.92.jar"
-          curl -sS -m 30 -o /dev/null -w "fw jar %{http_code}\n" "https://maven.createmod.net/dev/engine-room/flywheel/flywheel-forge-1.20.1/1.0.6/flywheel-forge-1.20.1-1.0.6.jar"
-          curl -sS -m 30 -o /dev/null -w "fwapi jar %{http_code}\n" "https://maven.createmod.net/dev/engine-room/flywheel/flywheel-forge-api-1.20.1/1.0.6/flywheel-forge-api-1.20.1-1.0.6.jar"
-          curl -sS -m 30 -o /dev/null -w "registrate jar %{http_code}\n" "https://maven.tterrag.com/com/tterrag/registrate/Registrate/MC1.20-1.3.11/Registrate-MC1.20-1.3.11.jar"
-      - name: Fabric 6.0.8.1 from Modrinth
-        run: |
-          set +e
-          V='6.0.8.1+build.1744-mc1.20.1'
-          for slug in create-fabric Xbc0uyRg; do
-            curl -sS -m 90 -L -o cf.jar -w "$slug HTTP %{http_code}\n" "https://api.modrinth.com/maven/maven/modrinth/$slug/$V/$slug-$V.jar"
-            ls -l cf.jar
-          done
-          unzip -l cf.jar | grep -E "META-INF/jars/" | awk '{print $4}'
-          unzip -p cf.jar fabric.mod.json | tr -d '\n ' | grep -oE '"depends":\{[^}]*\}'
-          curl -sS -m 30 "https://api.modrinth.com/maven/maven/modrinth/create-fabric/$V/create-fabric-$V.pom" | head -30
-          for p in flywheel; do curl -sS -m 30 "https://api.modrinth.com/maven/maven/modrinth/$p/maven-metadata.xml" | head -c 600; echo; done
+          curl -sS -m 60 -o p.jar "https://maven.createmod.net/net/createmod/ponder/Ponder-Forge-1.20.1/1.0.92/Ponder-Forge-1.20.1-1.0.92.jar"
+          unzip -l p.jar | grep -E "jarjar|\.jar$|catnip/lang/LangBuilder" | head
+          unzip -p p.jar META-INF/mods.toml | grep -E "modId|versionRange|mandatory" | head -30
+          unzip -p p.jar META-INF/jarjar/metadata.json | head -c 800
+          curl -sS -m 60 -o w.jar "https://maven.createmod.net/dev/engine-room/flywheel/flywheel-forge-1.20.1/1.0.6/flywheel-forge-1.20.1-1.0.6.jar"
+          unzip -l w.jar | grep -E "jarjar|\.jar$" | head
+          unzip -p w.jar META-INF/mods.toml | grep -E "modId|versionRange|mandatory" | head
+          curl -sS -m 60 -o r.jar "https://maven.tterrag.com/com/tterrag/registrate/Registrate/MC1.20-1.3.11/Registrate-MC1.20-1.3.11.jar"
+          unzip -p r.jar META-INF/mods.toml | grep -E "modId|versionRange" | head
