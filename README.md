@@ -772,6 +772,24 @@ covered by a test or noted in code.
     watcher1 1507, max 0.126 (none over); watcher2 1790, max 0.251 (54 over, 3.0%, the closest to
     the 5% limit; spread over the ride, so watch it for flakiness).
 
+73. **A sync that arrives with a time-packet jump is not shifted by the jump twice.** The multiplayer
+    chair comparison was intermittently red on code that had passed (sha eea6ab8: run 42251546818
+    green, run 42251558943 red with watcher1 at 88 of 1496 samples over 0.25, max 0.376, watcher2 at
+    89 of 1813, max 0.626). The outliers came in windows of about 80 ticks that began at a 100-tick
+    resend and ended at the next one, with every chair off by a whole number (2, 3 or 5) of ticks
+    of travel. Cause: the server sends its time packet (every 20 ticks) and the line resend (every
+    100) in the same tick, so both reach the client between two client ticks, and the clock has
+    drifted by a few ticks of its own. `ClientLiftLines.accept` applied the sync at the already
+    moved clock, but `lastGameTime` still held the old one, so the next `tick` shifted every line
+    by the jump again. `LineClock` now brings all lines to the current game time before a sync is
+    applied (a sync then starts a tick from the clock it was applied at). Unit test
+    `LineClockTest`. The smoke clients also log each sync stamp against their clock and each tick
+    in which the clock moved by other than one, which showed jumps of -2 to +3 every 20 ticks,
+    syncs arriving with them ("clock moved -1 since the last tick"). Result (CI run 42260553304,
+    sha fa0b582, chair positions against the server's): rider 1749 samples, max deviation 0.126,
+    0 over 0.25; watcher1 1419, max 0.251, 8 over (one sample time, gt5640); watcher2 1725, max
+    0.126, 0 over; the check passed.
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
 `lift.dismountAnywhere` (`config_sync` carries neither, so a client's board prompt or dismount
