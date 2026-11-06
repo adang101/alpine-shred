@@ -130,6 +130,9 @@ public final class SyncCodec {
 
     // ---- config_sync ----------------------------------------------------------------------------
 
+    /** The range of {@code lift.seats}. */
+    public static final int MIN_SEATS = 1, MAX_SEATS = 4;
+
     /**
      * The server-authoritative settings the client-side controller needs. The protocol version
      * travels outside the compressed JSON (a VarInt in front), so a client can always read it.
@@ -137,13 +140,15 @@ public final class SyncCodec {
      * @param ridingEnabled {@code movement.enabled} and no {@code movement.disableWithMods} mod present
      * @param maxBoardSpeed {@code lift.maxBoardSpeed}: the client's board prompt and auto-board predict the server's refusal with it
      * @param dismountAnywhere {@code lift.dismountAnywhere}: the client's sneak-dismount prediction
+     * @param liftSeats {@code lift.seats}: the client's free-seat check on a chair (no protocol bump: a missing key keeps the default, README 76)
      */
-    public record Settings(boolean ridingEnabled, double maxSpeedMul, boolean scrapeEnabled, double maxBoardSpeed, boolean dismountAnywhere) {
+    public record Settings(boolean ridingEnabled, double maxSpeedMul, boolean scrapeEnabled, double maxBoardSpeed, boolean dismountAnywhere, int liftSeats) {
         /** What a client assumes before the server says otherwise (the config defaults). */
-        public static final Settings DEFAULTS = new Settings(true, 1.0, true, 4.0, false);
+        public static final Settings DEFAULTS = new Settings(true, 1.0, true, 4.0, false, 2);
 
         public Settings {
             if (!(maxSpeedMul >= 0.1 && maxSpeedMul <= 3.0)) maxSpeedMul = Double.isNaN(maxSpeedMul) ? 1.0 : Math.max(0.1, Math.min(3.0, maxSpeedMul));
+            liftSeats = Math.max(MIN_SEATS, Math.min(MAX_SEATS, liftSeats));
             if (!(maxBoardSpeed >= 0.0 && maxBoardSpeed <= 10.0)) maxBoardSpeed = Double.isNaN(maxBoardSpeed) ? 4.0 : Math.max(0.0, Math.min(10.0, maxBoardSpeed));
         }
     }
@@ -155,6 +160,7 @@ public final class SyncCodec {
         json.addProperty("movement.scrapeEnabled", settings.scrapeEnabled());
         json.addProperty("lift.maxBoardSpeed", settings.maxBoardSpeed());
         json.addProperty("lift.dismountAnywhere", settings.dismountAnywhere());
+        json.addProperty("lift.seats", settings.liftSeats());
         return json;
     }
 
@@ -166,7 +172,8 @@ public final class SyncCodec {
                 number(json, "movement.maxSpeedMul", d.maxSpeedMul()),
                 bool(json, "movement.scrapeEnabled", d.scrapeEnabled()),
                 number(json, "lift.maxBoardSpeed", d.maxBoardSpeed()),
-                bool(json, "lift.dismountAnywhere", d.dismountAnywhere()));
+                bool(json, "lift.dismountAnywhere", d.dismountAnywhere()),
+                (int) Math.max(MIN_SEATS, Math.min(MAX_SEATS, Math.round(number(json, "lift.seats", d.liftSeats())))));
     }
 
     private static boolean bool(JsonObject json, String key, boolean fallback) {

@@ -3,6 +3,7 @@ package io.github.adang101.alpineshred.client.lift;
 import dev.architectury.event.events.client.ClientTickEvent;
 import io.github.adang101.alpineshred.client.RideDriver;
 import io.github.adang101.alpineshred.config.AlpineConfig;
+import io.github.adang101.alpineshred.network.SyncCodec;
 import io.github.adang101.alpineshred.lift.AutoBoard;
 import io.github.adang101.alpineshred.lift.Boarding;
 import io.github.adang101.alpineshred.lift.ChairEntity;
@@ -52,13 +53,15 @@ public final class LiftBoardClient {
         List<ChairEntity> chairs = minecraft.level.getEntitiesOfClass(ChairEntity.class, box);
         boolean strapped = Riders.isStrapped(player);
         boolean autoBoard = AlpineConfig.CLIENT_AUTO_BOARD.on();
-        double maxBoardSpeed = RideDriver.INSTANCE.serverSettings().maxBoardSpeed();
+        SyncCodec.Settings server = RideDriver.INSTANCE.serverSettings();
+        double maxBoardSpeed = server.maxBoardSpeed();
+        int seats = server.liftSeats();
         Set<Integer> inReach = new HashSet<>();
         boolean prompt = false;
         for (ChairEntity chair : chairs) {
             LineView view = chair.lineId() == null ? null : ChairEntity.clientLineLookup.apply(chair.lineId());
             if (view == null || chair.chairIndex() >= view.chairCount()) continue;
-            boolean free = PassengerRule.hasFreeSeat(chair.getPassengers().size(), AlpineConfig.LIFT_SEATS.get());
+            boolean free = PassengerRule.hasFreeSeat(chair.getPassengers().size(), seats);
             if (free && Boarding.distance(player, chair) <= Boarding.MANUAL_REACH && view.speed() <= maxBoardSpeed) {
                 prompt = true;
             }

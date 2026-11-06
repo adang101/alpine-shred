@@ -103,7 +103,7 @@ publishing) and `fabric/build/libs/alpineshred-fabric-*.jar`.
 | PlayerAnimator | 1.0.2-rc1+1.20 | risk R1: Player Animation Library has no 1.20.1 builds, so ship on PlayerAnimator and move to PAL with the 1.21 port |
 | Curios (Forge) | 5.14.1+1.20.1 | |
 | Trinkets (Fabric) | 3.7.2 | |
-| Create | 6.0.0 / Create Fabric 6.0.8.1 | optional, wired in phase 9 |
+| Create | 6.0.8-291 (Forge) / Create Fabric 6.0.8.1 | optional; compile-only, wired in phase 9 (clarification 77) |
 
 ## Layout
 
@@ -817,11 +817,45 @@ covered by a test or noted in code.
     makes the level's terrain under each tower head what the plan assumed (stone up to three blocks under
     the head, air above) before placing; the check is unchanged.
 
+76. **`config_sync` carries `lift.seats` too, with no protocol bump.** The client's "right-click to board"
+    prompt asked whether a chair has a free seat against the client's own `lift.seats`, so a server that
+    raised or lowered it showed a wrong prompt. `lift.seats` joins `config_sync` as an integer clamped to
+    1 to 4 (the config range), default 2. A missing key keeps the default, which is how an old payload
+    reads, and protocol 2 has not shipped, so the version stays. `LiftBoardClient` reads the synced value.
+    The chair model's width in `ChairEntityRenderer` and the seat count in `ChairEntity` still read the
+    local config; they only change what a client draws or predicts for a seat it cannot reach, and the
+    server decides boarding either way.
+77. **Create is wired in as an optional, compile-only dependency, with its own CI column.** Phase 9's
+    decision 1, as built:
+    - *Versions.* Forge compiles against Create `6.0.8-291` (the `-slim` jar from `maven.createmod.net`),
+      Flywheel `1.0.6`, Ponder `1.0.92` and Registrate `MC1.20-1.3.11` (the last from `maven.tterrag.com`);
+      the `create_forge_version=6.0.0` pin in `gradle.properties` was not a published build. Fabric compiles
+      against Create Fabric `6.0.8.1+build.1744-mc1.20.1` from Modrinth's maven (the version pinned earlier;
+      `mvn.devos.one` stops at 6.0.7), whose jar carries Flywheel, Ponder, Registrate and Porting Lib inside
+      it. Loom does not unpack that jar-in-jar content for the dev runtime, so the Create job downloads the
+      jar, checks it against a pinned sha256, unzips the nested jars into `fabric/build/create-nested`, and
+      `fabric/build.gradle` adds them as runtime mods (and fails with a clear message if the folder is empty).
+      All are `modCompileOnly` normally; none is bundled, and the jars' `mods.toml` / `fabric.mod.json` still list
+      Create as optional.
+    - *The Create column.* `-PwithCreate` turns the same coordinates into `modImplementation` and sets
+      `-Dalpineshred.create=true` on the game-test runs; on Fabric it also raises Loader to 0.17.2, which
+      Create Fabric 6.0.8.1 requires. CI runs it as a second job (`create`) beside the existing one, so the
+      main job's 120-minute limit is untouched; Create's own Fabric game tests run in that column too (Fabric
+      runs every mod's), so `.github/scripts/gametest-junit-check.py` judges the step from `junit.xml` on our
+      tests alone and only reports Create's failures (Forge filters them out by namespace). The job writes its
+      logs to the `ci-logs-create` branch (with its own `RUN.txt`), so they never overwrite `ci-logs`.
+    - *The bridge.* Common code sees Create only through `compat.create.CreateBridge` (`live()`,
+      `version()`), held in `CreateCompat` and empty (`ABSENT`) until a loader installs one. Each loader's
+      `compat.create` package has the bridge and an `init()`, called from the entry point only when
+      `PlatformHooks.isCreatePresent()`. Nothing else imports Create.
+    - *The load test.* `createBridgeMatchesColumn` is registered in the ordinary holders and runs in both
+      columns, asserting what the column declares: with Create, it is present, the bridge is installed and
+      live; without it, there is no bridge. That is stronger than skipping it outside the Create column, and
+      a Forge namespace filter would have needed a second copy of the empty test template. Later Create
+      tests live in `CreateGameTests` and begin with `inCreateColumn()`.
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
-(v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
-`lift.dismountAnywhere` (`config_sync` carries neither, so a client's board prompt or dismount
-prediction can disagree with a server that changed them; the server always decides; phase 9 adds
-them with a protocol bump).
+(v1.1), and the kinetic lift drive (phase 9).
 Real animation clips, sounds and textures replace the placeholders file by file under the same
 names.
 

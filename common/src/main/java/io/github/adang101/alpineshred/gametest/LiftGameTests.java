@@ -1276,21 +1276,26 @@ public final class LiftGameTests {
     public static void configSyncCarriesLiftKeys(GameTestHelper helper) {
         double speed = AlpineConfig.LIFT_MAX_BOARD_SPEED.get();
         boolean anywhere = AlpineConfig.LIFT_DISMOUNT_ANYWHERE.on();
+        int seats = AlpineConfig.LIFT_SEATS.get();
         try {
             AlpineConfig.LIFT_MAX_BOARD_SPEED.set(1.5);
+            AlpineConfig.LIFT_SEATS.set(3);
             AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(true);
             SyncCodec.Settings view = clientView();
             check(view.maxBoardSpeed() == 1.5, "client sees maxBoardSpeed " + view.maxBoardSpeed());
             check(view.dismountAnywhere(), "client does not see dismountAnywhere");
+            check(view.liftSeats() == 3, "client sees lift.seats " + view.liftSeats());
             AlpineConfig.LIFT_MAX_BOARD_SPEED.set(6.0);
             AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(false);
+            AlpineConfig.LIFT_SEATS.set(1);
             view = clientView();
-            check(view.maxBoardSpeed() == 6.0 && !view.dismountAnywhere(), "client missed the second change: " + view);
+            check(view.maxBoardSpeed() == 6.0 && !view.dismountAnywhere() && view.liftSeats() == 1, "client missed the second change: " + view);
         } catch (java.io.IOException e) {
             throw new AssertionError("config_sync did not decode", e);
         } finally {
             AlpineConfig.LIFT_MAX_BOARD_SPEED.set(speed);
             AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(anywhere);
+            AlpineConfig.LIFT_SEATS.set(seats);
         }
         helper.succeed();
     }

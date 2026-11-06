@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: ['**', '!ci-logs']
+    branches: ['**', '!ci-logs', '!ci-logs-create']
   pull_request:
   workflow_dispatch:
 
@@ -239,3 +239,102 @@ jobs:
             fabric/build/libs/*.jar
             forge/build/libs/*.jar
           if-no-files-found: ignore
+
+  # Phase 9, decision 4: the same game tests with Create (and its Flywheel, Ponder, Registrate) on the dev
+  # runtime, on both loaders. A parallel job, so the 120-minute budget of the main job is untouched; its logs go
+  # to ci-logs-create so they never overwrite the main job's ci-logs.
+  create:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    env:
+      GRADLE_ARGS: >-
+        --stacktrace --no-daemon
+        -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64
+        -Porg.gradle.java.installations.auto-download=false
+        -PwithCreate
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      - name: Prepare log folder
+        run: mkdir -p "$RUNNER_TEMP/ci-logs"
+
+      # Loom does not unpack Create Fabric's jar-in-jar content for the dev runtime, so the jars nested inside the
+      # pinned Create Fabric release are copied into fabric/build/create-nested, which fabric/build.gradle reads
+      # under -PwithCreate. The download is pinned by sha256 (gradle.properties, create_fabric_version).
+      - name: Unpack Create's nested jars (Fabric)
+        env:
+          CREATE_FABRIC_VERSION: 6.0.8.1+build.1744-mc1.20.1
+          CREATE_FABRIC_SHA256: a613603fb08d967c5a4138d1adb7374c4a347b91e489fe21579a4cff4f40105a
+        run: |
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/create-fabric.jar" \
+            "https://api.modrinth.com/maven/maven/modrinth/create-fabric/$CREATE_FABRIC_VERSION/create-fabric-$CREATE_FABRIC_VERSION.jar"
+          echo "$CREATE_FABRIC_SHA256  $RUNNER_TEMP/create-fabric.jar" | sha256sum -c -
+          # Porting Lib's modules nest further modules (fluids, core, ...), and Loom strips nested jars from
+          # every jar it remaps, so unpack to a fixed point (three levels is more than enough), then drop the
+          # plain libraries and keep the newest of each module.
+          W="$RUNNER_TEMP/create-nested-work"; D=fabric/build/create-nested
+          mkdir -p "$W/all" "$D"
+          unzip -jo -q "$RUNNER_TEMP/create-fabric.jar" 'META-INF/jars/*.jar' -d "$W/all"
+          for pass in 1 2 3; do
+            for j in "$W"/all/*.jar; do unzip -jo -q "$j" 'META-INF/jars/*.jar' -d "$W/all" 2>/dev/null || true; done
+          done
+          rm -f "$W"/all/core-3.* "$W"/all/toml-3.* "$W"/all/jsr305-*
+          ls "$W/all" | sed -E 's/-[0-9][^/]*\.jar$//' | sort -u | while read -r base; do
+            cp "$W/all/$(ls "$W/all" | grep -E "^${base}-[0-9]" | sort -V | tail -1)" "$D/"
+          done
+          ls "$D"
+          test "$(ls "$D" | wc -l)" -ge 15
+
+      # Create Fabric registers its own game tests, and Fabric API runs every mod's, so Gradle's exit code also
+      # reflects Create's (README 77). The run is allowed to fail; gametest-junit-check.py then judges only ours:
+      # junit.xml must exist, at least as many of our tests as FabricGameTests declares must have run, none failed.
+      - name: Fabric game tests with Create (headless dedicated server)
+        timeout-minutes: 20
+        run: |
+          set +e
+          ./gradlew :fabric:runGametest $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/3-fabric-gametest-create.log"
+          echo "gradle exit code ${PIPESTATUS[0]} (Create's own tests may fail it; the check below decides)"
+          EXPECTED=$(grep -c '^ *@GameTest(' fabric/src/main/java/io/github/adang101/alpineshred/fabric/gametest/FabricGameTests.java)
+          python3 .github/scripts/gametest-junit-check.py fabric/build/gametest/junit.xml fabricgametests. "$EXPECTED" \
+            | tee "$RUNNER_TEMP/ci-logs/3b-fabric-gametest-create-check.log"
+          exit ${PIPESTATUS[0]}
+
+      - name: Forge game tests with Create (headless game-test server)
+        if: success() || failure()
+        timeout-minutes: 20
+        run: |
+          mkdir -p forge/build/gametest && echo "eula=true" > forge/build/gametest/eula.txt
+          ./gradlew :forge:runGameTestServer $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/4-forge-gametest-create.log"
+
+      - name: Publish logs to the ci-logs-create branch
+        if: always()
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          L="$RUNNER_TEMP/ci-logs"
+          copy() { if [ -e "$1" ]; then mkdir -p "$L/$2" && cp -r "$1" "$L/$2/" ; fi; }
+          copy fabric/build/gametest/logs fabric-gametest
+          copy fabric/build/gametest/crash-reports fabric-gametest
+          copy fabric/build/gametest/junit.xml fabric-gametest
+          copy forge/build/gametest/logs forge-gametest
+          copy forge/build/gametest/crash-reports forge-gametest
+          echo "run ${{ github.run_id }} for ${{ github.sha }} (${{ job.status }}) with Create" > "$L/RUN.txt"
+          cd "$L"
+          git init -q -b ci-logs-create
+          git config user.name "ci-logs"
+          git config user.email "ci-logs@users.noreply.github.com"
+          git add -A
+          git commit -qm "Create-column logs for run ${{ github.run_id }} on ${{ github.sha }}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${{ github.repository }}" HEAD:ci-logs-create
