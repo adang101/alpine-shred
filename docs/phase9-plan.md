@@ -293,6 +293,31 @@ is not synced (moved to WP2).
 - Done when: both columns are green, the mod loads without Create (the existing runs), and the probe results are
   in the handback for WP3 and WP4.
 
+**Done.** Merged into `wip/phase-9` (CI run 42308714073 on `386824b`: main job green, chair check 0/0/0 over 0.25;
+Create column green on both loaders, 91 of ours each). Pins: Forge Create 6.0.8-291 (slim) with Flywheel 1.0.6,
+Ponder 1.0.92, Registrate MC1.20-1.3.11, MixinExtras at runtime; Fabric Create 6.0.8.1 from the Modrinth maven,
+whose nested jars a sha256-checked CI step unpacks, and Fabric Loader 0.17.2 in that column only. On Fabric,
+Create's own game tests run too and are reported but do not gate; `gametest-junit-check.py` judges ours (README 77).
+It took 6 CI rounds (3 granted extra for the Fabric runtime).
+
+**Create API notes for WP3 and WP4** (from WP2's probe; same names on both loaders):
+- Kinetic base: `com.simibubi.create.content.kinetics.base.KineticBlockEntity` (extends `SmartBlockEntity`,
+  constructor `(BlockEntityType<?>, BlockPos, BlockState)`). A consumer reads `getSpeed()` (signed rpm, float),
+  `isOverStressed()`, overrides `calculateStressApplied()` and `onSpeedChanged(float)`; `addToGoggleTooltip`.
+- Stress: `com.simibubi.create.api.stress.BlockStressValues.IMPACTS` (a `SimpleRegistry<Block, DoubleSupplier>`);
+  register the drive's impact there, or override `calculateStressApplied()` with `lift.kineticStress`.
+- Blocks: `KineticBlock` / `HorizontalKineticBlock` implementing `IRotate` (`hasShaftTowards`, `getRotationAxis`),
+  plus `IBE<T>` (`getBlockEntityClass`, `getBlockEntityType`). Our block entity type stays in our Architectury
+  registry, not Registrate.
+- Wrench: `content.equipment.wrench.IWrenchable` (`onWrenched`, `onSneakWrenched`); our common blocks must not
+  implement it (decision 1). Use loader-side click handlers in `compat.create` (Forge `RightClickBlock`, Fabric
+  `UseBlockCallback`) for `AllItems.WRENCH`, or the `create:wrench_pickup` tag for pickup.
+- Tags (`AllTags.AllBlockTags`): `create:non_movable`, `create:non_breakable`, `create:wrench_pickup`,
+  `create:safe_nbt`, `create:relocation_not_supported`, `create:brittle`, `create:seats`; item tag
+  `create:wrench`. Tag JSON needs no Create compile dependency (optional entries).
+- Compile needs only the Create jar; if a Registrate or Flywheel type appears in a signature WP3 touches, add that
+  artifact as `modCompileOnly`.
+
 ### WP3: The kinetic drive (decision 2)
 
 - `kinetic_lift_drive` and `KineticLiftDriveBE implements LiftDriveSource`, in the loaders' `compat.create`
