@@ -1,0 +1,29 @@
+# TEMPORARY (WP2): find Create's published versions and dump its API. Deleted before the WP is handed back.
+name: create-probe
+on:
+  push:
+    branches: ['wip/phase-9-wp2']
+    paths: ['.github/workflows/create-probe.yml']
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: 17 }
+      - name: Metadata
+        run: |
+          for u in \
+            https://maven.createmod.net/com/simibubi/create/create-1.20.1/maven-metadata.xml \
+            https://maven.createmod.net/dev/engine-room/flywheel/flywheel-forge-1.20.1/maven-metadata.xml \
+            https://maven.createmod.net/dev/engine-room/flywheel/flywheel-forge-api-1.20.1/maven-metadata.xml \
+            https://maven.createmod.net/net/createmod/ponder/Ponder-Forge-1.20.1/maven-metadata.xml \
+            https://maven.tterrag.com/com/tterrag/registrate/Registrate/maven-metadata.xml \
+            https://maven.tterrag.com/com/jozufozu/flywheel/flywheel-forge-1.20.1/maven-metadata.xml \
+            https://mvn.devos.one/releases/com/simibubi/create/create-fabric-1.20.1/maven-metadata.xml \
+            https://mvn.devos.one/releases/com/tterrag/registrate_fabric/Registrate/maven-metadata.xml \
+            https://mvn.devos.one/releases/io/github/fabricators_of_create/porting_lib/maven-metadata.xml \
+            https://mvn.devos.one/snapshots/com/simibubi/create/create-fabric-1.20.1/maven-metadata.xml \
+            https://maven.createmod.net/com/simibubi/create/create-fabric-1.20.1/maven-metadata.xml ; do
+            echo "=== $u"; curl -sS -m 30 -w "\nHTTP %{http_code}\n" "$u" | grep -E "<version>|<latest>|<release>|<artifactId>|HTTP" | tail -40
+          done
