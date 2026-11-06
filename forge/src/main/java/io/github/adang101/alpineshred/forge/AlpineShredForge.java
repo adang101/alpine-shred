@@ -5,6 +5,8 @@ import dev.architectury.utils.Env;
 import dev.architectury.utils.EnvExecutor;
 import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.client.AlpineShredClient;
+import io.github.adang101.alpineshred.forge.compat.create.ForgeCreateCompat;
+import io.github.adang101.alpineshred.platform.PlatformHooks;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -17,6 +19,7 @@ public final class AlpineShredForge {
         // Architectury's DeferredRegister and client registries hook into this bus.
         EventBuses.registerModEventBus(AlpineShred.MOD_ID, modBus);
         AlpineShred.init();
+        if (PlatformHooks.isCreatePresent()) ForgeCreateCompat.init();
         EnvExecutor.runInEnv(Env.CLIENT, () -> AlpineShredClient::init);
     }
 }

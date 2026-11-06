@@ -11,6 +11,8 @@ architectury {
 def modId = rootProject.mod_id
 def generatedDir = project(':common').file('src/main/generated')
 def gametestReport = file('build/gametest/junit.xml')
+// -PwithCreate: Create on the dev runtime and the game tests told so (the CI column with Create, README 77).
+def withCreate = project.hasProperty('withCreate')
 
 loom {
     runs {
@@ -28,6 +30,7 @@ loom {
             inherit server
             name 'Game Test'
             vmArg '-Dfabric-api.gametest'
+            if (withCreate) vmArg '-Dalpineshred.create=true'
             vmArg "-Dfabric-api.gametest.report-file=${gametestReport}"
             runDir 'build/gametest'
         }
@@ -51,12 +54,21 @@ configurations {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    // Create Fabric 6.0.8.1 declares fabricloader >= 0.17.2; only the Create column needs the newer loader.
+    modImplementation "net.fabricmc:fabric-loader:${withCreate ? rootProject.create_fabric_loader_version : rootProject.fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
     modImplementation "dev.architectury:architectury-fabric:${rootProject.architectury_api_version}"
 
     modImplementation "dev.kosmx.player-anim:player-animation-lib-fabric:${rootProject.player_anim_version}"
     modImplementation "dev.emi:trinkets:${rootProject.trinkets_version}"
+
+    // Create is optional: compile against it, and run with it only for the Create column. Its jar carries
+    // Flywheel, Ponder, Registrate and Porting Lib inside it, so one coordinate is enough.
+    if (withCreate) {
+        modImplementation "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
+    } else {
+        modCompileOnly "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
+    }
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')

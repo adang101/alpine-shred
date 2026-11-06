@@ -432,6 +432,11 @@ public final class FabricGameTests implements FabricGameTest {
     }
 
     @GameTest(template = TEMPLATE)
+    public static void createBridgeMatchesColumn(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.createBridgeMatchesColumn(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
     public static void configSyncCarriesLiftKeys(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.configSyncCarriesLiftKeys(helper);
     }
