@@ -265,6 +265,7 @@
   "message.alpineshred.unstrap.gear_removed": "Unstrapped: gear removed",
   "message.alpineshred.unstrap.spectator": "Unstrapped",
   "message.alpineshred.unstrap.vehicle": "Unstrapped to ride",
+  "message.alpineshred.wrench.lift_hint": "Use the lift linker on lift blocks (sneak to pick this one up)",
   "message.alpineshred.wrench.lip_off": "Ramp lip off",
   "message.alpineshred.wrench.lip_on": "Ramp lip on",
   "message.alpineshred.wrench.only_option": "This is the only piece that fits here",
