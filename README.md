@@ -794,6 +794,29 @@ covered by a test or noted in code.
     is positioned before the post-tick line shift, so it lags a jump by one tick); watcher2 1756,
     0 over. No windows of 0.375 or more.
 
+74. **`config_sync` carries the lift keys.** `lift.maxBoardSpeed` and `lift.dismountAnywhere` join the
+    synced settings and `SyncCodec.PROTOCOL_VERSION` goes from 1 to 2 (a client on another protocol
+    already ignores the sync and keeps its defaults, which are the config defaults, 4.0 and off). The
+    client's board prompt (`LiftBoardClient`) and the sneak-dismount prediction
+    (`ChairEntity.dismountAllowed` on the client, through `ChairEntity.clientDismountAnywhere`) read the
+    synced values, so they agree with a server that changed them; the server still decides. The
+    auto-board decision reads no config key (`AutoBoard` is geometry only), so it needed no change.
+    `ClientLiftLines` now steps its lines at the start of the client tick (`CLIENT_PRE`), before entity
+    ticks, to the level's game time plus one (packets, the server's time packet included, are applied
+    before the tick starts, and `ClientLevel.tick` advances the time before it ticks entities), so a
+    chair no longer lags a clock jump by a tick. `LineClock` and its contract are unchanged.
+
+75. **`resortHasALinkedLift` raced the level's random seed, not another test.** It failed once on Forge
+    ("no pole under the head at -5979,97,-5013", run 42260553304) and passed on the rerun at the same
+    coordinates. The resort is planned on terrain from the test's own fixed seed, so the site and the
+    node heights are the same every run, but the structure is placed into the game-test server's level,
+    and that server starts with a random seed. `LiftLinePiece.tower` builds its pole from the ground
+    under the head (read from the level) up to the head; where the level's terrain at the head's column
+    rose to the head's height or higher, there was nothing to build and no pole was placed. Generation
+    in a real world is unaffected: the planner and the placement read the same terrain. The test now
+    makes the level's terrain under each tower head what the plan assumed (stone up to three blocks under
+    the head, air above) before placing; the check is unchanged.
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
 `lift.dismountAnywhere` (`config_sync` carries neither, so a client's board prompt or dismount
