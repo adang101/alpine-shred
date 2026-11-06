@@ -55,12 +55,15 @@ def check_chairs(server_path, client_paths, after_stall):
     ok = True
     for path in client_paths:
         devs = []
+        outliers = []
         shifted = 0
         for (t, i), (x, y, z) in chairs(path, LCHAIR).items():
             if after_stall(t) or (t, i) not in server:
                 continue
             d = math.dist((x, y, z), server[(t, i)])
             devs.append(d)
+            if d > CHAIR_TOLERANCE:
+                outliers.append((t, i, d))
             # Diagnostic only: would the sample agree with the server's chair a tick earlier or later?
             if d > CHAIR_TOLERANCE and any(math.dist((x, y, z), server[(t + dt, i)]) <= CHAIR_TOLERANCE for dt in (-2, -1, 1, 2) if (t + dt, i) in server):
                 shifted += 1
@@ -72,6 +75,13 @@ def check_chairs(server_path, client_paths, after_stall):
         bad = sum(1 for d in devs if d > CHAIR_TOLERANCE)
         print(f"multiplayer check: {path}: {len(devs)} chair samples, max deviation {devs[-1]:.3f}, median {devs[len(devs) // 2]:.3f}, "
               f"{bad} over {CHAIR_TOLERANCE} ({shifted} of them within it a tick or two off in time)")
+        if outliers:
+            # Diagnostic only: when the outliers fall, so a relog or a clock jump shows as a cluster.
+            by_gt = {}
+            for t, i, d in outliers:
+                by_gt.setdefault(t, []).append(d)
+            print("multiplayer check:   outliers by game time (count, worst): " + ", ".join(
+                f"gt{t} ({len(v)}, {max(v):.3f})" for t, v in sorted(by_gt.items())))
         for line in lift_lines(path):
             print("multiplayer check:   " + line)
         if len(devs) < 50 or bad > 0.05 * len(devs):

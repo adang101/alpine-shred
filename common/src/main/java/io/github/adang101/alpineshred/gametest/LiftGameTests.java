@@ -1073,6 +1073,15 @@ public final class LiftGameTests {
             LiftSync.pass(level, 160);
             check(LiftSync.synced(near.getUUID()).contains(line.id), "the line left the set when out of range");
 
+            // A joining player gets the line at once, from an empty set, whatever the beat.
+            LiftSync.forget(far.getUUID());
+            int farJoin = toFar.size();
+            LiftSync.join(far, level);
+            check(toFar.size() == farJoin + 1 && !toFar.get(farJoin).removed() && toFar.get(farJoin).id().equals(line.id)
+                    && LiftSync.synced(far.getUUID()).contains(line.id), "a joining player was not sent the line at once");
+            LiftSync.join(far, level);
+            check(toFar.size() == farJoin + 2, "a rejoin did not resend the line");
+
             // Removal reaches everyone with the line and empties their sets.
             int nearBefore = toNear.size(), farBefore = toFar.size();
             LiftManager.remove(level, line.id);
