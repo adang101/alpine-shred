@@ -733,6 +733,15 @@ covered by a test or noted in code.
     `ClientLiftLines` follows the level's game time instead of counting ticks, so when the server's
     time packet moves a drifted client's clock the lines move with it (the first run with only the
     rewind still showed clusters of 0.25 to 1.25 blocks, up to ten ticks, right after such jumps).
+    The client that logs out and back in mid-ride (`watcher1`) still had 5.8% of its samples
+    over 0.25 (worst 0.626): its line state was dropped on logout and only came back at the next
+    40-tick scan, with the chairs left to the entity packets until then. `LiftSync.join` now
+    clears the player's synced set and sends every line in range on login. Final multiplayer
+    run (CI run 42203872917, sha 3f8af2b), chair positions against the server's: rider 1879
+    samples, max deviation 0.251 (6 over 0.25); watcher1 1565 samples, max 0.251 (18 over);
+    watcher2 1864 samples, max 0.251 (16 over). The remaining outliers all sit at 0.250 to 0.251
+    (two ticks at 2.5 b/s, just over the tolerance), a few sample times per client rather than a
+    cluster around the relog; the check prints them by game time.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
