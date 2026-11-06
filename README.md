@@ -832,7 +832,8 @@ covered by a test or noted in code.
       the `create_forge_version=6.0.0` pin in `gradle.properties` was not a published build. Fabric compiles
       against Create Fabric `6.0.8.1+build.1744-mc1.20.1` from Modrinth's maven (the version pinned earlier;
       `mvn.devos.one` stops at 6.0.7), whose jar carries Flywheel, Ponder, Registrate and Porting Lib inside
-      it. All are `modCompileOnly`; none is bundled, and the jars' `mods.toml` / `fabric.mod.json` still list
+      it (the Create column copies those nested jars out of it for the dev runtime, since Loom does not).
+      All are `modCompileOnly` normally; none is bundled, and the jars' `mods.toml` / `fabric.mod.json` still list
       Create as optional.
     - *The Create column.* `-PwithCreate` turns the same coordinates into `modImplementation` and sets
       `-Dalpineshred.create=true` on the game-test runs; on Fabric it also raises Loader to 0.17.2, which
