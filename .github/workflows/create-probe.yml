@@ -13,6 +13,8 @@ jobs:
         with: { distribution: temurin, java-version: 17 }
       - name: Fabric metadata and pom
         run: |
+          set +e
+          for u in https://api.modrinth.com/maven/maven/modrinth/create-fabric/maven-metadata.xml https://mvn.devos.one/releases/com/simibubi/create/ https://mvn.devos.one/releases/com/simibubi/ https://mvn.devos.one/releases/ https://mvn.devos.one/snapshots/com/simibubi/create/create-fabric-1.20.1/ ; do echo "== $u"; curl -sS -m 30 -w "\nHTTP %{http_code}\n" "$u" | grep -E "<version>|<latest>|<release>|href|HTTP" | tail -25; done
           FB=https://mvn.devos.one/snapshots/com/simibubi/create/create-fabric-1.20.1
           curl -sS -m 30 $FB/maven-metadata.xml > fm.xml
           grep -E "<latest>|<release>|<lastUpdated>" fm.xml
@@ -26,6 +28,7 @@ jobs:
           unzip -p cf.jar fabric.mod.json | head -c 3500
       - name: Forge pom
         run: |
+          set +e
           B=https://maven.createmod.net/com/simibubi/create/create-1.20.1/6.0.8-291
           curl -sS -m 30 "$B/create-1.20.1-6.0.8-291.pom" | grep -E "groupId|artifactId|<version>|<scope>|classifier" | head -80
           curl -sS -m 30 "$B/" | head -30
@@ -34,9 +37,11 @@ jobs:
           ls -l *.jar
       - name: Class names
         run: |
+          set +e
           for j in cs.jar cf.jar; do echo "##### $j"; unzip -Z1 $j | grep -E "Wrench|wrench|Stress|IRotate|KineticBlock|SpeedLevel|AllTags|/Create.class|AllBlocks.class|BlockMovementChecks|api/" | grep -v "\$[0-9]" | grep -E "\.class$" | head -150; done
       - name: javap
         run: |
+          set +e
           for j in cs.jar cf.jar; do
             echo "##### $j"
             for c in com.simibubi.create.content.kinetics.base.KineticBlockEntity com.simibubi.create.content.kinetics.base.IRotate 'com.simibubi.create.content.kinetics.base.IRotate$SpeedLevel' 'com.simibubi.create.content.kinetics.base.IRotate$StressImpact' com.simibubi.create.content.kinetics.base.KineticBlock com.simibubi.create.content.kinetics.base.DirectionalKineticBlock com.simibubi.create.content.kinetics.base.HorizontalKineticBlock com.simibubi.create.content.equipment.wrench.IWrenchable com.simibubi.create.content.equipment.wrench.WrenchItem com.simibubi.create.AllTags 'com.simibubi.create.AllTags$AllBlockTags' 'com.simibubi.create.AllTags$AllItemTags' com.simibubi.create.api.stress.BlockStressValues com.simibubi.create.content.kinetics.BlockStressValues com.simibubi.create.foundation.block.IBE com.simibubi.create.Create com.simibubi.create.foundation.blockEntity.SmartBlockEntity com.simibubi.create.content.kinetics.base.GeneratingKineticBlockEntity com.simibubi.create.content.kinetics.base.KineticEffectHandler com.simibubi.create.content.kinetics.simpleRelays.ICogWheel com.simibubi.create.content.kinetics.base.IRotate\$StressImpact; do
