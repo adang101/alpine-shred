@@ -281,9 +281,21 @@ jobs:
           curl -fsSL --retry 3 -o "$RUNNER_TEMP/create-fabric.jar" \
             "https://api.modrinth.com/maven/maven/modrinth/create-fabric/$CREATE_FABRIC_VERSION/create-fabric-$CREATE_FABRIC_VERSION.jar"
           echo "$CREATE_FABRIC_SHA256  $RUNNER_TEMP/create-fabric.jar" | sha256sum -c -
-          mkdir -p fabric/build/create-nested
-          unzip -jo "$RUNNER_TEMP/create-fabric.jar" 'META-INF/jars/*.jar' -d fabric/build/create-nested
-          ls fabric/build/create-nested
+          # Porting Lib's modules nest further modules (fluids, core, ...), and Loom strips nested jars from
+          # every jar it remaps, so unpack to a fixed point (three levels is more than enough), then drop the
+          # plain libraries and keep the newest of each module.
+          W="$RUNNER_TEMP/create-nested-work"; D=fabric/build/create-nested
+          mkdir -p "$W/all" "$D"
+          unzip -jo -q "$RUNNER_TEMP/create-fabric.jar" 'META-INF/jars/*.jar' -d "$W/all"
+          for pass in 1 2 3; do
+            for j in "$W"/all/*.jar; do unzip -jo -q "$j" 'META-INF/jars/*.jar' -d "$W/all" 2>/dev/null || true; done
+          done
+          rm -f "$W"/all/core-3.* "$W"/all/toml-3.* "$W"/all/jsr305-*
+          ls "$W/all" | sed -E 's/-[0-9][^/]*\.jar$//' | sort -u | while read -r base; do
+            cp "$W/all/$(ls "$W/all" | grep -E "^${base}-[0-9]" | sort -V | tail -1)" "$D/"
+          done
+          ls "$D"
+          test "$(ls "$D" | wc -l)" -ge 15
 
       - name: Fabric game tests with Create (headless dedicated server)
         timeout-minutes: 20
