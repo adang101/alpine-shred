@@ -1580,7 +1580,10 @@ public final class LiftGameTests {
             LiftManager.setDrive(level, id, true, 2.5);
             for (int i = 0; i < 120; i++) LiftManager.tick(level);
             check(line.speed > 1.0 && line.travel > 0, "the line did not get going: speed " + line.speed + ", travel " + line.travel);
-            ChairEntity chair = LiftChairs.spawn(level, line, 0);
+            // The 120 ticks above include spawn passes (every few ticks, on a level-wide counter) that measure to every
+            // player of the shared level, so a concurrent test's player near the line may already have had chair 0 spawned.
+            ChairEntity chair = LiftChairs.find(level, id, 0);
+            if (chair == null) chair = LiftChairs.spawn(level, line, 0);
             check(chair != null, "chair 0 was not spawned");
             chair.tick();
             first = RideGameTests.newServerPlayer(helper, profile);
