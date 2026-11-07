@@ -946,14 +946,14 @@ covered by a test or noted in code.
     - *The kinetic drive* stays a gearbox, a large cogwheel and an iron block: the same iron block as the drive
       station it sits beside, and only Create's andesite-tier parts otherwise. Its recipe keeps its Create load
       conditions on both loaders.
-84. **Common tags are written in both loaders' namespaces, by datagen.** On 1.20.1 Fabric reads `c:` and Forge reads
-    `forge:`, and datagen runs on Fabric only, so `AlpineItemTagProvider` puts each item into both with one helper
-    (`convention`): boots (`c:boots`, `forge:armors/boots`), helmets (`c:helmets`, `forge:armors/helmets`),
-    `forge:armors`, and tools (`c:tools`, `forge:tools`: the poles, edge tuner, park wrench and lift linker). The
-    park wrench is not in any wrench tag: other mods treat that tag as "rotates my blocks", and it is the park tool
-    only (README 80). Groomed snow joins the vanilla `minecraft:snow` block tag, which is what makes grass under
-    it show its snowy side. There is no 1.20.1 convention for dyeable gear or for snow blocks on either loader, so
-    nothing is invented for them.
+84. **Common tags are Forge's, written by datagen; Fabric has none to join.** Datagen runs on Fabric only, but a
+    `forge:` tag is just a data file, so `AlpineItemTagProvider` writes `forge:armors`, `forge:armors/boots`,
+    `forge:armors/helmets` (boots and helmet) and `forge:tools` (poles, edge tuner, park wrench, lift linker). The API
+    probe of fabric-convention-tags-v1 1.5.6 (the 1.20.1 Fabric API in use) showed no armor, tool or wrench tags
+    there, so no `c:` copies are invented. The park wrench is in no wrench tag: other mods treat that tag as
+    "rotates my blocks", and it is the park tool only (README 80). Groomed snow joins the vanilla `minecraft:snow`
+    block tag, which is what makes grass under it show its snowy side. Neither loader has a convention for dyeable
+    gear or snow blocks, so nothing is invented for them.
 85. **WP5's checks.** `GeneratedDataTest` (unit, reads the committed JSON and the generated language file for the
     ids): every item has a recipe or a listed reason (the three weathered copper rails, which only weather), and every
     block has a loot table and a `minecraft:mineable` tag or a listed reason (the quarter pipe and the kinetic drive

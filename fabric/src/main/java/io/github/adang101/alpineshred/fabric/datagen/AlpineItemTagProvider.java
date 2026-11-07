@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Item tags (design doc section 18, "Tags"). Curios and Trinkets slot tags live in each loader module.
  * Vanilla tags are referenced with {@code forceAddTag}: datagen only knows tags it generates itself.
- * Common tags are written in both loaders' namespaces (README 84).
+ * Common tags are Forge's: Fabric's 1.20.1 convention tags have none for armor or tools (README 84).
  */
 public final class AlpineItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public AlpineItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -42,22 +42,15 @@ public final class AlpineItemTagProvider extends FabricTagProvider.ItemTagProvid
         getOrCreateTagBuilder(ItemTags.FREEZE_IMMUNE_WEARABLES).add(
                 ModItems.SKI_BOOTS.get(), ModItems.SNOWBOARD_BOOTS.get(), ModItems.SKI_HELMET.get());
 
-        // Common tags: 1.20.1 Fabric reads "c:", Forge reads "forge:", so each goes into both (datagen runs on Fabric only).
-        convention("boots", "armors/boots", ModItems.SKI_BOOTS.get(), ModItems.SNOWBOARD_BOOTS.get());
-        convention("helmets", "armors/helmets", ModItems.SKI_HELMET.get());
-        convention("tools", "tools", ModItems.SKI_POLES.get(), ModItems.CARBON_SKI_POLES.get(), ModItems.EDGE_TUNER.get(),
+        // Forge's common tags. Fabric's convention tags (fabric-convention-tags-v1 1.5.6) have no armor or tool tags, so no "c:" copies.
+        forge("armors/boots", ModItems.SKI_BOOTS.get(), ModItems.SNOWBOARD_BOOTS.get());
+        forge("armors/helmets", ModItems.SKI_HELMET.get());
+        forge("armors", ModItems.SKI_BOOTS.get(), ModItems.SNOWBOARD_BOOTS.get(), ModItems.SKI_HELMET.get());
+        forge("tools", ModItems.SKI_POLES.get(), ModItems.CARBON_SKI_POLES.get(), ModItems.EDGE_TUNER.get(),
                 ModItems.PARK_WRENCH.get(), ModItems.LIFT_LINKER.get());
-        getOrCreateTagBuilder(item("forge", "armors")).add(
-                ModItems.SKI_BOOTS.get(), ModItems.SNOWBOARD_BOOTS.get(), ModItems.SKI_HELMET.get());
     }
 
-    /** Puts the items in Fabric's {@code c:<fabricPath>} and Forge's {@code forge:<forgePath>}. */
-    private void convention(String fabricPath, String forgePath, Item... items) {
-        getOrCreateTagBuilder(item("c", fabricPath)).add(items);
-        getOrCreateTagBuilder(item("forge", forgePath)).add(items);
-    }
-
-    private static TagKey<Item> item(String namespace, String path) {
-        return TagKey.create(Registries.ITEM, new ResourceLocation(namespace, path));
+    private void forge(String path, Item... items) {
+        getOrCreateTagBuilder(TagKey.create(Registries.ITEM, new ResourceLocation("forge", path))).add(items);
     }
 }
