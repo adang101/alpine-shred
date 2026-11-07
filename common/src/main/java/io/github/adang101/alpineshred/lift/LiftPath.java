@@ -187,6 +187,26 @@ public final class LiftPath {
         return pos(chairS(travel, index, count)).add(0, -CHAIR_HANG, 0);
     }
 
+    /**
+     * {@link #chairPos}, and the heading of {@link #tangent} there as {@link ChairEntity#yawOf} gives it, without
+     * allocating: {@code out} gets x, y, z and the yaw in degrees (a float's value; NaN when the cable points
+     * straight up or down). Every chair calls this every tick on both sides, so it does the same arithmetic as
+     * the three methods it replaces, bit for bit (phase 9 WP6; {@code LiftPathTest}).
+     */
+    public void chairPlace(double travel, int index, int count, double[] out) {
+        double w = wrap(travel + index * (loopLength / count));
+        int i = index(w);
+        double span = dist[i + 1] - dist[i];
+        double t = span <= 0 ? 0 : (w - dist[i]) / span;
+        out[0] = xs[i] + (xs[i + 1] - xs[i]) * t;
+        out[1] = ys[i] + (ys[i + 1] - ys[i]) * t + -CHAIR_HANG;
+        out[2] = zs[i] + (zs[i + 1] - zs[i]) * t;
+        double dx = xs[i + 1] - xs[i], dy = ys[i + 1] - ys[i], dz = zs[i + 1] - zs[i];
+        double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        double tx = len < 1.0e-12 ? 1 : dx / len, tz = len < 1.0e-12 ? 0 : dz / len;
+        out[3] = tx * tx + tz * tz < 1.0e-9 ? Double.NaN : (float) Math.toDegrees(Math.atan2(-tx, tz));
+    }
+
     /** The loop distance of chair {@code index} of {@code count}: {@code travel + index * spacing}, wrapped. */
     public double chairS(double travel, int index, int count) {
         return wrap(travel + index * (loopLength / count));

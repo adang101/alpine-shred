@@ -94,7 +94,8 @@ public final class LiftChairs {
     private static double nearestPlayerSqr(List<? extends Player> players, LiftLine line) {
         double best = Double.MAX_VALUE;
         for (Player player : players) {
-            for (BlockPos node : line.nodePositions()) {
+            for (int i = 0, n = line.nodeCount(); i < n; i++) {
+                BlockPos node = line.nodeAt(i);
                 best = Math.min(best, player.distanceToSqr(node.getX() + 0.5, node.getY() + 0.5, node.getZ() + 0.5));
             }
         }

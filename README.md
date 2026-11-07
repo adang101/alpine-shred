@@ -737,9 +737,9 @@ covered by a test or noted in code.
     offset (so a seated player's hips, 0.75 above their feet, land on the plank).
 68. **Chairs render out to 128 blocks**, the distance they are spawned at, rather than the 60
     blocks a box 1.2 by 0.5 would give.
-69. **The cable's frame budget is provisional.** The design doc's figure is not at hand; the `lift`
-    client smoke allows the cable 0.5 ms a frame and fails at three times that (1.5 ms), until the
-    doc's figure is confirmed.
+69. **The cable's frame budget is 0.5 ms, final.** The design doc's figure was never at hand; phase 9
+    keeps the phase 8 allowance (the `lift` client smoke measured 0.28 ms a frame) as the budget, and the
+    smoke fails at three times it (1.5 ms), as for the other budgets (71).
 70. **Seated riders face along the cable.** The chair sets a seated player's body yaw each tick and
     the rider tracker leaves it alone, so the third-person body does not swing against the chair;
     the head may turn 105 degrees either side, as in a boat.

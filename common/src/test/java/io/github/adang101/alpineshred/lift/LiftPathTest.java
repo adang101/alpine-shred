@@ -128,4 +128,31 @@ class LiftPathTest {
         assertThrows(IllegalArgumentException.class, () -> LiftPath.of(List.of(new V3(0, 64, 0))));
         assertThrows(IllegalArgumentException.class, () -> LiftPath.of(List.of(new V3(0, 64, 0), new V3(0, 80, 0))));
     }
+
+    @Test
+    void chairPlaceIsTheAllocatingMethodsBitForBit() {
+        double[] out = new double[4];
+        Random random = new Random(11);
+        for (List<V3> nodes : List.of(STRAIGHT, BENT)) {
+            LiftPath path = LiftPath.of(nodes);
+            for (int count : new int[]{1, 7, 40}) {
+                for (int n = 0; n < 2000; n++) {
+                    double travel = (random.nextDouble() * 3 - 1) * path.loopLength();
+                    int index = random.nextInt(count);
+                    path.chairPlace(travel, index, count, out);
+                    V3 p = path.chairPos(travel, index, count);
+                    V3 t = path.tangent(path.chairS(travel, index, count));
+                    assertEquals(p.x(), out[0], 0.0);
+                    assertEquals(p.y(), out[1], 0.0);
+                    assertEquals(p.z(), out[2], 0.0);
+                    boolean upright = t.x() * t.x() + t.z() * t.z() < 1.0e-9; // ChairEntity.yawOf's null
+                    if (upright) {
+                        assertTrue(Double.isNaN(out[3]));
+                    } else {
+                        assertEquals((float) Math.toDegrees(Math.atan2(-t.x(), t.z())), (float) out[3], 0.0f);
+                    }
+                }
+            }
+        }
+    }
 }

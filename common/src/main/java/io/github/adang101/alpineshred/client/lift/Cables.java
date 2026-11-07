@@ -55,20 +55,27 @@ final class Cables {
         int light = LevelRenderer.getLightColor(level, BlockPos.containing((a.x() + b.x()) / 2, (a.y() + b.y()) / 2, (a.z() + b.z()) / 2));
         Matrix4f m = pose.last().pose();
         Matrix3f n = pose.last().normal();
-        V3 from = a;
+        // LiftPath.spanPoint's arithmetic with its sag worked out once a span rather than once a piece, and no
+        // point objects: this runs every frame (phase 9 WP6).
+        double sag = LiftPath.sag(Math.sqrt((b.x() - a.x()) * (b.x() - a.x()) + (b.z() - a.z()) * (b.z() - a.z())));
+        double fromX = a.x(), fromY = a.y(), fromZ = a.z();
         for (int i = 1; i <= pieces; i++) {
             double t = i / (double) pieces;
-            V3 to = LiftPath.spanPoint(a, b, t);
+            double toX = a.x() + (b.x() - a.x()) * t, toY = a.y() + (b.y() - a.y()) * t - sag * 4 * t * (1 - t),
+                    toZ = a.z() + (b.z() - a.z()) * t;
             // The pattern is fixed to the moving cable: it sits where it was, plus the travel.
             float v0 = (float) (((i - 1) / (double) pieces * length - travel) * REPEATS_PER_BLOCK);
             float v1 = (float) ((t * length - travel) * REPEATS_PER_BLOCK);
-            piece(vc, m, n, origin, from, to, v0, v1, light);
-            from = to;
+            piece(vc, m, n, origin, fromX, fromY, fromZ, toX, toY, toZ, v0, v1, light);
+            fromX = toX;
+            fromY = toY;
+            fromZ = toZ;
         }
     }
 
-    private static void piece(VertexConsumer vc, Matrix4f m, Matrix3f n, BlockPos origin, V3 p0, V3 p1, float v0, float v1, int light) {
-        double dx = p1.x() - p0.x(), dy = p1.y() - p0.y(), dz = p1.z() - p0.z();
+    private static void piece(VertexConsumer vc, Matrix4f m, Matrix3f n, BlockPos origin, double p0x, double p0y, double p0z,
+                              double p1x, double p1y, double p1z, float v0, float v1, int light) {
+        double dx = p1x - p0x, dy = p1y - p0y, dz = p1z - p0z;
         double len = Math.sqrt(dx * dx + dy * dy + dz * dz);
         if (len < 1.0e-6) return;
         dx /= len;
@@ -80,8 +87,8 @@ final class Cables {
         double ux = dy * sz, uy = dz * sx - dx * sz, uz = -dy * sx;
         float h = (float) (WIDTH / 2);
         float ox = origin.getX(), oy = origin.getY(), oz = origin.getZ();
-        float ax = (float) p0.x() - ox, ay = (float) p0.y() - oy, az = (float) p0.z() - oz;
-        float bx = (float) p1.x() - ox, by = (float) p1.y() - oy, bz = (float) p1.z() - oz;
+        float ax = (float) p0x - ox, ay = (float) p0y - oy, az = (float) p0z - oz;
+        float bx = (float) p1x - ox, by = (float) p1y - oy, bz = (float) p1z - oz;
         strip(vc, m, n, ax, ay, az, bx, by, bz, (float) sx * h, 0, (float) sz * h, (float) ux, (float) uy, (float) uz, v0, v1, light);
         strip(vc, m, n, ax, ay, az, bx, by, bz, (float) ux * h, (float) uy * h, (float) uz * h, (float) sx, 0, (float) sz, v0, v1, light);
     }
