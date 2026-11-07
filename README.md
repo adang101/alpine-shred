@@ -853,7 +853,7 @@ covered by a test or noted in code.
       live; without it, there is no bridge. That is stronger than skipping it outside the Create column, and
       a Forge namespace filter would have needed a second copy of the empty test template. Later Create
       tests live in `CreateGameTests` and begin with `inCreateColumn()`.
-80. **Create's wrench works on our blocks by four rules.** Matched by the `create:wrench` item tag, handled by
+80. **Create's wrench works on our blocks by four rules.** Matched by registry id `create:wrench` (the `create:wrench` item tag does not hold the wrench in Create 6.0.8), handled by
     `compat.create.WrenchActions` (the loaders' `RightClickBlock` and `UseBlockCallback` only translate the event,
     behind `isCreatePresent()`); no interface on our blocks. The decision table is `WrenchRule`:
     - *Park pieces* (what the park wrench changes): a plain click runs `ParkWrenchItem.use`, the park wrench's
@@ -869,7 +869,7 @@ covered by a test or noted in code.
     - *Pickup* hands the block item to the player (nothing in creative) and drops no loot.
 81. **WP4's tests.** Unit: `WrenchRuleTest`. Create-column game tests (return early outside it, via
     `inCreateColumn()`; the common handler is called with a mock player holding `create:wrench`):
-    `wrenchIsMatchedByTag`, `wrenchOnParkPieces`, `wrenchOnLiftBlocks`, and `wrenchPickupFaultsLikeBreaking`
+    `wrenchIsMatchedById`, `wrenchOnParkPieces`, `wrenchOnLiftBlocks`, and `wrenchPickupFaultsLikeBreaking`
     (builds the same line twice, removes a node by hand and by wrench, and compares the fault reasons).
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs

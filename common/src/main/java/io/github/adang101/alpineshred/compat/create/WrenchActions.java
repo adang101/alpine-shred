@@ -3,13 +3,11 @@ package io.github.adang101.alpineshred.compat.create;
 import io.github.adang101.alpineshred.park.item.ParkWrenchItem;
 import io.github.adang101.alpineshred.registry.ModTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,18 +15,21 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * Create's wrench on our blocks (phase 9 plan, WP4; README 80). The loaders' click handlers only translate their
  * event into {@link #onClick}; the decision is {@link WrenchRule}. No Create class is named: the wrench is matched
- * by the {@code create:wrench} item tag, and nothing here loads without Create's presence being tested first
- * (a tag nobody fills matches nothing).
+ * by its registry id, and nothing here loads without Create's presence being tested first
+ *.
  */
 public final class WrenchActions {
-    /** Create's wrench item tag, made by id so no Create class is needed. */
-    public static final TagKey<Item> WRENCH = TagKey.create(Registries.ITEM, new ResourceLocation("create", "wrench"));
+    /**
+     * Create's wrench by registry id, so no Create class is needed. The {@code create:wrench} item tag does not
+     * hold the wrench in Create 6.0.8 (CI round 1), so the id is the match.
+     */
+    public static final ResourceLocation WRENCH = new ResourceLocation("create", "wrench");
 
     private WrenchActions() {
     }
 
     public static boolean isWrench(ItemStack stack) {
-        return stack.is(WRENCH);
+        return !stack.isEmpty() && BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(WRENCH);
     }
 
     public static WrenchRule.Kind kindOf(BlockState state) {

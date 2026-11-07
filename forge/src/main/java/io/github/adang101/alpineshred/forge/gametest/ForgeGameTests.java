@@ -438,8 +438,8 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = AlpineGameTests.TEMPLATE)
-    public static void wrenchIsMatchedByTag(GameTestHelper helper) {
-        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchIsMatchedByTag(helper);
+    public static void wrenchIsMatchedById(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchIsMatchedById(helper);
     }
 
     @GameTest(template = AlpineGameTests.TEMPLATE)

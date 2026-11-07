@@ -83,14 +83,14 @@ public final class CreateGameTests {
         return WrenchActions.onClick(helper.getLevel(), abs, player, player.getItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND));
     }
 
-    /** The wrench item tag matches Create's wrench and nothing of ours; an empty hand is left alone. */
-    public static void wrenchIsMatchedByTag(GameTestHelper helper) {
+    /** The wrench check matches Create's wrench and nothing of ours; an empty hand is left alone. */
+    public static void wrenchIsMatchedById(GameTestHelper helper) {
         if (!inCreateColumn()) {
             helper.succeed();
             return;
         }
         Player player = wrenchHolder(helper, false);
-        check(WrenchActions.isWrench(player.getItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND)), "create:wrench is not in the wrench tag");
+        check(WrenchActions.isWrench(player.getItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND)), "create:wrench is not recognised as the wrench");
         check(!WrenchActions.isWrench(new ItemStack(Items.STICK)), "a stick counts as a wrench");
         BlockPos abs = helper.absolutePos(new BlockPos(2, 2, 2));
         helper.getLevel().setBlock(abs, ModBlocks.LIFT_TOWER_POLE.get().defaultBlockState(), 3);
