@@ -1,0 +1,241 @@
+name: release
+
+# WP8 / README 89. A `v*` tag builds both jars at that version, makes a GitHub release and publishes to Modrinth
+# and CurseForge. A manual run is a dry run: it builds and verifies everything, uploads the jars as workflow
+# artifacts, and publishes nothing. Publishing is only ever done by a tag.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Build and verify only. Nothing is published and no release is created (the only mode a manual run supports).'
+        type: boolean
+        default: true
+      version:
+        description: 'Mod version to build in a dry run (a tag run takes it from the tag)'
+        type: string
+        default: '1.0.0'
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    env:
+      GRADLE_ARGS: >-
+        --stacktrace --no-daemon
+        -Porg.gradle.java.installations.fromEnv=JAVA_HOME_17_X64
+        -Porg.gradle.java.installations.auto-download=false
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+      full: ${{ steps.v.outputs.full }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Work out the version
+        id: v
+        env:
+          EVENT: ${{ github.event_name }}
+          REF_NAME: ${{ github.ref_name }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          DRY_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$EVENT" = push ]; then
+            v="${REF_NAME#v}"
+          else
+            if [ "$DRY_RUN" != true ]; then
+              echo "::error::A manual run is a dry run only. Publish by pushing a v* tag."; exit 1
+            fi
+            v="$DRY_VERSION"
+          fi
+          if ! printf '%s' "$v" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'; then
+            echo "::error::'$v' is not a version (expected 1.2.3 or 1.2.3-rc.1)"; exit 1
+          fi
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          # The jars and their metadata carry <version>+mc<minecraft> (build.gradle).
+          echo "full=$v+mc$(sed -n 's/^minecraft_version=//p' gradle.properties)" >> "$GITHUB_OUTPUT"
+
+      - name: Changelog section for this version
+        run: |
+          mkdir -p release-out
+          .github/scripts/changelog-section.sh "${{ steps.v.outputs.version }}" | tee release-out/changelog.md
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: |
+            17
+            21
+
+      - uses: gradle/actions/setup-gradle@v5
+
+      # The Fabric compile needs Create's nested jars on every build, release builds included (phase 9 plan, WP3).
+      - name: Unpack Create's nested jars (Fabric)
+        run: .github/scripts/unpack-create-nested.sh
+
+      - name: Build both jars (and run the unit tests)
+        run: ./gradlew build -Pmod_version=${{ steps.v.outputs.version }} $GRADLE_ARGS
+
+      - name: Verify the jars' metadata
+        run: |
+          full='${{ steps.v.outputs.full }}'
+          for loader in fabric forge; do
+            jar="$loader/build/libs/alpineshred-$loader-$full.jar"
+            test -f "$jar" || { echo "::error::missing $jar"; ls "$loader/build/libs"; exit 1; }
+            python3 -I .github/scripts/verify-jar.py "$loader" "$jar" "$full"
+            mkdir -p "release-out/$loader" && cp "$jar" "release-out/"
+          done
+          rmdir release-out/fabric release-out/forge
+          ls -l release-out
+
+      - uses: actions/upload-artifact@v5
+        with:
+          name: release-jars
+          path: release-out
+          if-no-files-found: error
+
+  github-release:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: release-jars
+          path: release-out
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          flags=()
+          case "$VERSION" in *-*) flags+=(--prerelease);; esac
+          gh release create "$TAG" release-out/alpineshred-*.jar \
+            --repo "$GITHUB_REPOSITORY" --title "Alpine Shred $VERSION" \
+            --notes-file release-out/changelog.md "${flags[@]}"
+
+  publish:
+    if: github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      # A step is skipped when its token or project id is missing. Secrets cannot be tested in `if` directly.
+      MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      MODRINTH_PROJECT_ID: ${{ vars.MODRINTH_PROJECT_ID }}
+      CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+      CURSEFORGE_PROJECT_ID: ${{ vars.CURSEFORGE_PROJECT_ID }}
+      VERSION: ${{ needs.build.outputs.version }}
+      FULL: ${{ needs.build.outputs.full }}
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          name: release-jars
+          path: release-out
+
+      - name: Release channel
+        id: ch
+        run: |
+          case "$VERSION" in
+            *-alpha*) t=alpha;; *-beta*|*-rc*) t=beta;; *) t=release;;
+          esac
+          echo "type=$t" >> "$GITHUB_OUTPUT"
+          echo "changelog<<EOF" >> "$GITHUB_OUTPUT"; cat release-out/changelog.md >> "$GITHUB_OUTPUT"; echo EOF >> "$GITHUB_OUTPUT"
+
+      - name: Modrinth, Fabric jar
+        if: env.MODRINTH_TOKEN != '' && env.MODRINTH_PROJECT_ID != ''
+        uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659 # v3.3.0
+        with:
+          modrinth-id: ${{ env.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ env.MODRINTH_TOKEN }}
+          files: release-out/alpineshred-fabric-${{ env.FULL }}.jar
+          name: Alpine Shred ${{ env.VERSION }} (Fabric)
+          version: ${{ env.VERSION }}+fabric
+          version-type: ${{ steps.ch.outputs.type }}
+          changelog: ${{ steps.ch.outputs.changelog }}
+          loaders: fabric
+          game-versions: 1.20.1
+          java: 17
+          dependencies: |
+            fabric-api(required)
+            architectury-api(required)
+            trinkets(required)
+            playeranimator(required)
+            create-fabric(optional)
+
+      - name: Modrinth, Forge jar (Forge and NeoForge 1.20.1)
+        if: env.MODRINTH_TOKEN != '' && env.MODRINTH_PROJECT_ID != ''
+        uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659 # v3.3.0
+        with:
+          modrinth-id: ${{ env.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ env.MODRINTH_TOKEN }}
+          files: release-out/alpineshred-forge-${{ env.FULL }}.jar
+          name: Alpine Shred ${{ env.VERSION }} (Forge)
+          version: ${{ env.VERSION }}+forge
+          version-type: ${{ steps.ch.outputs.type }}
+          changelog: ${{ steps.ch.outputs.changelog }}
+          loaders: |
+            forge
+            neoforge
+          game-versions: 1.20.1
+          java: 17
+          dependencies: |
+            architectury-api(required)
+            curios(required)
+            playeranimator(required)
+            create(optional)
+
+      - name: CurseForge, Fabric jar
+        if: env.CURSEFORGE_TOKEN != '' && env.CURSEFORGE_PROJECT_ID != ''
+        uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659 # v3.3.0
+        with:
+          curseforge-id: ${{ env.CURSEFORGE_PROJECT_ID }}
+          curseforge-token: ${{ env.CURSEFORGE_TOKEN }}
+          files: release-out/alpineshred-fabric-${{ env.FULL }}.jar
+          name: Alpine Shred ${{ env.VERSION }} (Fabric)
+          version: ${{ env.VERSION }}+fabric
+          version-type: ${{ steps.ch.outputs.type }}
+          changelog: ${{ steps.ch.outputs.changelog }}
+          loaders: fabric
+          game-versions: 1.20.1
+          java: 17
+          dependencies: |
+            fabric-api(required)
+            architectury-api(required)
+            trinkets(required)
+            playeranimator(required)
+            create-fabric(optional)
+
+      - name: CurseForge, Forge jar (Forge and NeoForge 1.20.1)
+        if: env.CURSEFORGE_TOKEN != '' && env.CURSEFORGE_PROJECT_ID != ''
+        uses: Kir-Antipov/mc-publish@995edadc13559a8b28d0b7e6571229f067ec7659 # v3.3.0
+        with:
+          curseforge-id: ${{ env.CURSEFORGE_PROJECT_ID }}
+          curseforge-token: ${{ env.CURSEFORGE_TOKEN }}
+          files: release-out/alpineshred-forge-${{ env.FULL }}.jar
+          name: Alpine Shred ${{ env.VERSION }} (Forge)
+          version: ${{ env.VERSION }}+forge
+          version-type: ${{ steps.ch.outputs.type }}
+          changelog: ${{ steps.ch.outputs.changelog }}
+          loaders: |
+            forge
+            neoforge
+          game-versions: 1.20.1
+          java: 17
+          dependencies: |
+            architectury-api(required)
+            curios(required)
+            playeranimator(required)
+            create(optional)

@@ -432,6 +432,36 @@ public final class FabricGameTests implements FabricGameTest {
     }
 
     @GameTest(template = TEMPLATE)
+    public static void createBridgeMatchesColumn(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.createBridgeMatchesColumn(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void wrenchIsMatchedById(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchIsMatchedById(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void wrenchOnParkPieces(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchOnParkPieces(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void wrenchOnLiftBlocks(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchOnLiftBlocks(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void wrenchPickupFaultsLikeBreaking(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchPickupFaultsLikeBreaking(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
+    public static void configSyncCarriesLiftKeys(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.LiftGameTests.configSyncCarriesLiftKeys(helper);
+    }
+
+    @GameTest(template = TEMPLATE)
     public static void sneakDismountRules(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.sneakDismountRules(helper);
     }
@@ -469,5 +499,35 @@ public final class FabricGameTests implements FabricGameTest {
     @GameTest(template = TEMPLATE)
     public static void liftManagerBudget(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.liftManagerBudget(helper);
+    }
+
+    @GameTest(template = TEMPLATE, timeoutTicks = 600, batch = "kineticDrive")
+    public static void kineticRotationRunsTheLine(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.KineticDriveGameTests.kineticRotationRunsTheLine(helper);
+    }
+
+    @GameTest(template = TEMPLATE, timeoutTicks = 600, batch = "kineticDrive")
+    public static void kineticLostRotationIsAnEmergencyStop(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.KineticDriveGameTests.kineticLostRotationIsAnEmergencyStop(helper);
+    }
+
+    @GameTest(template = TEMPLATE, timeoutTicks = 600, batch = "kineticDrive")
+    public static void kineticOverstressStopsTheLine(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.KineticDriveGameTests.kineticOverstressStopsTheLine(helper);
+    }
+
+    @GameTest(template = TEMPLATE, timeoutTicks = 600, batch = "kineticDrive")
+    public static void kineticDriveOverridesRedstone(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.KineticDriveGameTests.kineticDriveOverridesRedstone(helper);
+    }
+
+    @GameTest(template = TEMPLATE, timeoutTicks = 600, batch = "kineticDrive")
+    public static void kineticDriveSurvivesSaveAndReload(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.KineticDriveGameTests.kineticDriveSurvivesSaveAndReload(helper);
+    }
+
+    @GameTest(template = TEMPLATE, timeoutTicks = 600, batch = "kineticDrive")
+    public static void kineticDriveBudget(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.KineticDriveGameTests.kineticDriveBudget(helper);
     }
 }

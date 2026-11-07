@@ -19,5 +19,6 @@ public final class AlpineShredDataGen implements DataGeneratorEntrypoint {
         pack.addProvider(AlpineBlockTagProvider::new);
         pack.addProvider(AlpineEntityTypeTagProvider::new);
         pack.addProvider(AlpineLootProvider::new);
+        pack.addProvider(AlpineCreateProvider::new);
     }
 }

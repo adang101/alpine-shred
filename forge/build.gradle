@@ -9,6 +9,8 @@ architectury {
 
 // Resolved up front: inside Loom's run closures, rootProject resolves against the run config.
 def modId = rootProject.mod_id
+// -PwithCreate: Create on the dev runtime and the game tests told so (the CI column with Create, README 77).
+def withCreate = project.hasProperty('withCreate')
 
 loom {
     forge {
@@ -25,6 +27,7 @@ loom {
             property 'forge.enableGameTest', 'true'
             property 'forge.gameTestServer', 'true'
             property 'forge.enabledGameTestNamespaces', modId
+            if (withCreate) property 'alpineshred.create', 'true'
             runDir 'build/gametest'
         }
         // The real client on a virtual display, riding a generated run with simulated keys (CI only).
@@ -126,6 +129,23 @@ dependencies {
     modImplementation "dev.kosmx.player-anim:player-animation-lib-forge:${rootProject.player_anim_version}"
     modCompileOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}:api"
     modRuntimeOnly "top.theillusivec4.curios:curios-forge:${rootProject.curios_version}"
+
+    // Create is optional: compile against it, and run with it only for the Create column. None of it is bundled.
+    // transitive=false everywhere: Ponder's pom pins an older Flywheel than Create 6.0.8 wants.
+    def createDeps = [
+            "com.simibubi.create:create-${rootProject.minecraft_version}:${rootProject.create_forge_version}:slim",
+            "dev.engine-room.flywheel:flywheel-forge-${rootProject.minecraft_version}:${rootProject.create_flywheel_version}",
+            "net.createmod.ponder:Ponder-Forge-${rootProject.minecraft_version}:${rootProject.create_ponder_version}",
+            "com.tterrag.registrate:Registrate:${rootProject.create_registrate_version}",
+    ]
+    createDeps.each { coordinate ->
+        if (withCreate) {
+            modImplementation(coordinate) { transitive = false }
+        } else {
+            modCompileOnly(coordinate) { transitive = false }
+        }
+    }
+    if (withCreate) runtimeOnly "io.github.llamalad7:mixinextras-forge:${rootProject.create_mixinextras_version}"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionForge')

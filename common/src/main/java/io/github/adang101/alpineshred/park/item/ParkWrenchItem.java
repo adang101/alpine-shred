@@ -42,11 +42,24 @@ public class ParkWrenchItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState state = level.getBlockState(pos);
         Player player = context.getPlayer();
-        boolean sneak = player != null && player.isSecondaryUseActive();
+        return use(context.getLevel(), context.getClickedPos(), player, player != null && player.isSecondaryUseActive());
+    }
+
+    /** True for the blocks this wrench changes: the same set {@link #use} acts on, so callers never keep a copy of it. */
+    public static boolean handles(BlockState state) {
+        Block block = state.getBlock();
+        return block instanceof RailBlock || block instanceof RampBlock || block instanceof BoxBlock
+                || block instanceof PipeCopingBlock || block instanceof ParkDecorBlock;
+    }
+
+    /**
+     * What a click on {@code pos} does: the wrench's whole behaviour, apart from the item. Shared with the
+     * Create wrench handler (phase 9, WP4, README 80) so a click with either wrench calls one body of code.
+     * PASS when the block is not a park piece.
+     */
+    public static InteractionResult use(Level level, BlockPos pos, @Nullable Player player, boolean sneak) {
+        BlockState state = level.getBlockState(pos);
         BlockState changed;
         Component message;
         if (state.getBlock() instanceof RailBlock) {

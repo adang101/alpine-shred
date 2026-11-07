@@ -320,6 +320,10 @@ public final class WorldgenGameTests {
         java.util.Set<Long> nodeChunks = new java.util.HashSet<>();
         for (BlockPos n : nodes) nodeChunks.add(new ChunkPos(n).toLong());
         net.minecraft.util.RandomSource random = net.minecraft.util.RandomSource.create(1);
+        for (int i = 1; i < nodes.size() - 1; i++) {
+            level.getChunk(nodes.get(i).getX() >> 4, nodes.get(i).getZ() >> 4);
+            groundUnderHead(level, box, nodes.get(i));
+        }
         for (int cx = box.minX() >> 4; cx <= box.maxX() >> 4; cx++) {
             for (int cz = box.minZ() >> 4; cz <= box.maxZ() >> 4; cz++) {
                 ChunkPos pos = new ChunkPos(cx, cz);
@@ -378,6 +382,22 @@ public final class WorldgenGameTests {
             LiftManager.remove(level, lift.lineId());
             for (ChunkPos pos : forced) level.setChunkForced(pos.x, pos.z, false);
         });
+    }
+
+    /**
+     * Makes the level's terrain under a tower head what the plan assumed. The start was planned on terrain from the
+     * test's own seed, but it is placed into the level, whose seed is random on each server start; where that terrain
+     * rose to the head's height (or above), {@code LiftLinePiece} found no ground below the head and built no pole.
+     * The head's column becomes stone up to three blocks under the head (the planner's minimum clearance) and air above.
+     * Done before anything reads the column's world-gen heightmap, which a loaded chunk computes once.
+     */
+    private static void groundUnderHead(ServerLevel level, BoundingBox box, BlockPos head) {
+        BlockState stone = Blocks.STONE.defaultBlockState(), air = Blocks.AIR.defaultBlockState();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int y = box.minY(); y < level.getMaxBuildHeight(); y++) {
+            BlockState want = y < head.getY() - 3 ? stone : air;
+            if (level.getBlockState(pos.set(head.getX(), y, head.getZ())) != want) level.setBlock(pos, want, Block.UPDATE_CLIENTS);
+        }
     }
 
     /** Problems with one start go to {@code problems}; returns its farthest piece's distance in chunks. */

@@ -53,6 +53,8 @@ public final class AlpineConfig {
     public static final ConfigSpec.BoolEntry LIFT_PETS_AUTO_BOARD = COMMON.bool("lift.petsAutoBoard", true);
     public static final ConfigSpec.IntEntry LIFT_SYNC_RADIUS = COMMON.integer("lift.syncRadius", 256, 32, 1024);
     public static final ConfigSpec.DoubleEntry LIFT_KINETIC_MAX_SPEED = COMMON.decimal("lift.kineticMaxSpeed", 4.0, 0.1, 10.0);
+    /** Stress units per rpm the kinetic lift drive takes from a Create network (README 78): 4 gives 1024 su at 256 rpm. */
+    public static final ConfigSpec.DoubleEntry LIFT_KINETIC_STRESS = COMMON.decimal("lift.kineticStress", 4.0, 0.1, 64.0);
     /** Section 13 mentions {@code drive.needsRedstone} without a default; on by default here. */
     public static final ConfigSpec.BoolEntry LIFT_DRIVE_NEEDS_REDSTONE = COMMON.bool("lift.driveNeedsRedstone", true);
 

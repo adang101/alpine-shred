@@ -25,7 +25,8 @@ import java.util.function.Consumer;
 /**
  * Recipes (design doc section 5, "Core ingredients", and section 18). Patterns are set here; the
  * doc fixes only the ingredients. The survival audience (section 21) is why upgrades consume the
- * base gear and the pro tier needs netherite.
+ * base gear. The costs were settled in phase 9's balance pass (README 83): starter gear needs no
+ * mid-game item, the pro tier needs a diamond and an amethyst shard, nothing needs an end-game item.
  */
 public final class AlpineRecipeProvider extends FabricRecipeProvider {
     public AlpineRecipeProvider(FabricDataOutput output) {
@@ -39,11 +40,11 @@ public final class AlpineRecipeProvider extends FabricRecipeProvider {
         board(out, ModItems.PARK_SNOWBOARD.get(), Items.BIRCH_PLANKS, Items.SLIME_BALL, Items.COPPER_INGOT);
         board(out, ModItems.FREERIDE_SNOWBOARD.get(), Items.SPRUCE_PLANKS, Items.PHANTOM_MEMBRANE, Items.PACKED_ICE);
         SmithingTransformRecipeBuilder.smithing(
-                        Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+                        Ingredient.of(Items.DIAMOND),
                         Ingredient.of(ModItems.PARK_SNOWBOARD.get(), ModItems.FREERIDE_SNOWBOARD.get()),
-                        Ingredient.of(Items.NETHERITE_INGOT),
+                        Ingredient.of(Items.AMETHYST_SHARD),
                         RecipeCategory.TOOLS, ModItems.PRO_SNOWBOARD.get())
-                .unlocks(getHasName(Items.NETHERITE_INGOT), has(Items.NETHERITE_INGOT))
+                .unlocks(getHasName(Items.DIAMOND), has(Items.DIAMOND))
                 .save(out, AlpineShred.id("pro_snowboard_smithing"));
 
         // ---- skis: two plank runners with leather straps; upgrades start from basic skis ----
@@ -60,11 +61,11 @@ public final class AlpineRecipeProvider extends FabricRecipeProvider {
         skiUpgrade(out, ModItems.POWDER_SKIS.get(), Items.PHANTOM_MEMBRANE, Items.FEATHER);
         skiUpgrade(out, ModItems.PARK_SKIS.get(), Items.SLIME_BALL, Items.COPPER_INGOT);
         SmithingTransformRecipeBuilder.smithing(
-                        Ingredient.of(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE),
+                        Ingredient.of(Items.DIAMOND),
                         Ingredient.of(ModItems.CARVING_SKIS.get(), ModItems.PARK_SKIS.get()),
-                        Ingredient.of(Items.NETHERITE_INGOT),
+                        Ingredient.of(Items.AMETHYST_SHARD),
                         RecipeCategory.TOOLS, ModItems.PRO_SKIS.get())
-                .unlocks(getHasName(Items.NETHERITE_INGOT), has(Items.NETHERITE_INGOT))
+                .unlocks(getHasName(Items.DIAMOND), has(Items.DIAMOND))
                 .save(out, AlpineShred.id("pro_skis_smithing"));
 
         // ---- wearables ----
@@ -178,7 +179,7 @@ public final class AlpineRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.SNOW_BLOCK), has(Items.SNOW_BLOCK))
                 .save(out);
 
-        // ---- lifts (section 13); the costs are provisional until the phase 9 balance pass ----
+        // ---- lifts (section 13); the costs were settled in the phase 9 balance pass (README 83) ----
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModItems.LIFT_TOWER_POLE.get(), 4)
                 .pattern("B")
                 .pattern("I")

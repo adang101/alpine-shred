@@ -46,6 +46,7 @@ public final class ModTabs {
                     }
                 }
                 for (var item : ModItems.liftItems()) output.accept(item.get());
+                io.github.adang101.alpineshred.compat.create.CreateCompat.bridge().addCreativeTabItems(item -> output.accept(item));
             })));
 
     private ModTabs() {

@@ -1,10 +1,14 @@
 # Alpine Shred
 
 Snowboards, skis, park features, groomed runs and ski lifts for Minecraft 1.20.1, on Forge,
-NeoForge (via the Forge jar) and Fabric from one codebase. The design document is the source of
-truth; this README covers how to build the code and where it stands against that document.
+NeoForge (via the Forge jar) and Fabric from one codebase. The aim is a mod that looks and feels
+real without being ultra realistic: still Minecraft, so blocky, fun and simple. There is no
+separate design document. This README (what each phase delivers, and the design clarifications
+made while building) and the phase plans in `docs/` are the record. References below to "the
+design doc" and its section numbers point to that record.
 
-**Status:** Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
+**Status:** Phases 1 to 8 are merged into `main`; phase 9, the last, is next
+([docs/phase9-plan.md](docs/phase9-plan.md)). Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
 that carry up to two riders (or mobs) and leave them at the top in a glide, lifts that generate at
 ski resorts, and `/alpineshred lift` commands. Its automated exit gate passes in CI: the lift game
 tests (line data and its save and reload, boarding, riding, unloading, faulted lines, relogs, the
@@ -27,6 +31,28 @@ smoke client's popup banks exactly what the server banks. Phases 1 to 4 are comp
 ([docs/playtest-phase3.md](docs/playtest-phase3.md)), and the hand checks in
 [docs/playtest-phase4.md](docs/playtest-phase4.md). Still to check by hand: the jar on a NeoForge
 1.20.1 server, and Trinkets (Fabric) syncing designs, which CI cannot run.
+
+## Phases
+
+The roadmap, in nine phases. Each phase merges into `main` once
+the automated part of its exit gate passes in CI; the parts that need people are listed in its
+playtest page.
+
+| Phase | What it delivers | State | Plan and playtest |
+| --- | --- | --- | --- |
+| 1 | Gear: the appendix items, recipes, the `alpine` armor material, config, Curios and Trinkets slots | Done | |
+| 2 | Riding: `SlideController`, slopes, carving, jumps, server validation | Done | |
+| 3 | Feel: rider animation, lean, camera, sounds and particles | Done, except the outside-tester gate | [playtest](docs/playtest-phase3.md) |
+| 4 | Terrain park: rails, boxes, ramps, pipes, the park wrench, grinding | Done, hand checks open | [playtest](docs/playtest-phase4.md) |
+| 5 | Tricks and scoring: spins, flips, grabs, grinds, combos, the server's validation | Done | |
+| 6 | Board and ski customization: the Paint Bench, editor, share codes | Done, playtest open | [playtest](docs/playtest-phase6.md) |
+| 7 | World generation: groomed runs, resorts, parks, snow features | Done, playtest open | [playtest](docs/playtest-phase7.md) |
+| 8 | Ski lifts: lines, chairs, boarding, sync, generated resort lifts | Done (merged 2026-11-06), playtest open | [plan](docs/phase8-plan.md), [playtest](docs/playtest-phase8.md) |
+| 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | **Next** | [plan](docs/phase9-plan.md) |
+
+Development ends with phase 9: the compatibility matrix passes, and the release pipeline's dry run
+is correct. Then, at the owner's call, comes the release: a candidate soaked for two weeks with no
+open blockers, then publishing to Modrinth, CurseForge and GitHub Releases.
 
 ## Build and test
 
@@ -77,7 +103,7 @@ publishing) and `fabric/build/libs/alpineshred-fabric-*.jar`.
 | PlayerAnimator | 1.0.2-rc1+1.20 | risk R1: Player Animation Library has no 1.20.1 builds, so ship on PlayerAnimator and move to PAL with the 1.21 port |
 | Curios (Forge) | 5.14.1+1.20.1 | |
 | Trinkets (Fabric) | 3.7.2 | |
-| Create | 6.0.0 / Create Fabric 6.0.8.1 | optional, wired in phase 9 |
+| Create | 6.0.8-291 (Forge) / Create Fabric 6.0.8.1 | optional; compile-only, wired in phase 9 (clarification 77) |
 
 ## Layout
 
@@ -741,13 +767,248 @@ covered by a test or noted in code.
     samples, max deviation 0.251 (6 over 0.25); watcher1 1565 samples, max 0.251 (18 over);
     watcher2 1864 samples, max 0.251 (16 over). The remaining outliers all sit at 0.250 to 0.251
     (two ticks at 2.5 b/s, just over the tolerance), a few sample times per client rather than a
-    cluster around the relog; the check prints them by game time.
+    cluster around the relog; the check prints them by game time. The merge run on `wip/phase-8`
+    (CI run 42209693937, sha 2eb24c8) passed too: rider 1811 samples, max 0.251 (13 over);
+    watcher1 1507, max 0.126 (none over); watcher2 1790, max 0.251 (54 over, 3.0%, the closest to
+    the 5% limit; spread over the ride, so watch it for flakiness).
+
+73. **A sync that arrives with a time-packet jump is not shifted by the jump twice.** The multiplayer
+    chair comparison was intermittently red on code that had passed (sha eea6ab8: run 42251546818
+    green, run 42251558943 red with watcher1 at 88 of 1496 samples over 0.25, max 0.376, watcher2 at
+    89 of 1813, max 0.626). The outliers came in windows of about 80 ticks that began at a 100-tick
+    resend and ended at the next one, with every chair off by a whole number (2, 3 or 5) of ticks
+    of travel. Cause: the server sends its time packet (every 20 ticks) and the line resend (every
+    100) in the same tick, so both reach the client between two client ticks, and the clock has
+    drifted by a few ticks of its own. `ClientLiftLines.accept` applied the sync at the already
+    moved clock, but `lastGameTime` still held the old one, so the next `tick` shifted every line
+    by the jump again. `LineClock` now brings all lines to the current game time before a sync is
+    applied (a sync then starts a tick from the clock it was applied at). Unit test
+    `LineClockTest`. The smoke clients also log each sync stamp against their clock and each tick
+    in which the clock moved by other than one, which showed jumps of -2 to +3 every 20 ticks,
+    syncs arriving with them ("clock moved -1 since the last tick"). Result (CI run 42260553304,
+    sha fa0b582, chair positions against the server's): rider 1749 samples, max deviation 0.126,
+    0 over 0.25; watcher1 1419, max 0.251, 8 over (one sample time, gt5640); watcher2 1725, max
+    0.126, 0 over; the check passed. A second run (CI run 42268884498, sha 4a2f654) passed too: rider 1776
+    samples, 0 over; watcher1 1422, 18 over (two sample times with 9 chairs each: gt6480 at 0.251,
+    and gt5280 at 1.001, the one tick in which a stall made the client's clock jump by 9; the chair
+    is positioned before the post-tick line shift, so it lags a jump by one tick); watcher2 1756,
+    0 over. No windows of 0.375 or more.
+
+74. **`config_sync` carries the lift keys.** `lift.maxBoardSpeed` and `lift.dismountAnywhere` join the
+    synced settings and `SyncCodec.PROTOCOL_VERSION` goes from 1 to 2 (a client on another protocol
+    already ignores the sync and keeps its defaults, which are the config defaults, 4.0 and off). The
+    client's board prompt (`LiftBoardClient`) and the sneak-dismount prediction
+    (`ChairEntity.dismountAllowed` on the client, through `ChairEntity.clientDismountAnywhere`) read the
+    synced values, so they agree with a server that changed them; the server still decides. The
+    auto-board decision reads no config key (`AutoBoard` is geometry only), so it needed no change.
+    `ClientLiftLines` now steps its lines at the start of the client tick (`CLIENT_PRE`), before entity
+    ticks, to the level's game time plus one (packets, the server's time packet included, are applied
+    before the tick starts, and `ClientLevel.tick` advances the time before it ticks entities), so a
+    chair no longer lags a clock jump by a tick. `LineClock` and its contract are unchanged.
+
+75. **`resortHasALinkedLift` raced the level's random seed, not another test.** It failed once on Forge
+    ("no pole under the head at -5979,97,-5013", run 42260553304) and passed on the rerun at the same
+    coordinates. The resort is planned on terrain from the test's own fixed seed, so the site and the
+    node heights are the same every run, but the structure is placed into the game-test server's level,
+    and that server starts with a random seed. `LiftLinePiece.tower` builds its pole from the ground
+    under the head (read from the level) up to the head; where the level's terrain at the head's column
+    rose to the head's height or higher, there was nothing to build and no pole was placed. Generation
+    in a real world is unaffected: the planner and the placement read the same terrain. The test now
+    makes the level's terrain under each tower head what the plan assumed (stone up to three blocks under
+    the head, air above) before placing; the check is unchanged.
+
+76. **`config_sync` carries `lift.seats` too, with no protocol bump.** The client's "right-click to board"
+    prompt asked whether a chair has a free seat against the client's own `lift.seats`, so a server that
+    raised or lowered it showed a wrong prompt. `lift.seats` joins `config_sync` as an integer clamped to
+    1 to 4 (the config range), default 2. A missing key keeps the default, which is how an old payload
+    reads, and protocol 2 has not shipped, so the version stays. `LiftBoardClient` reads the synced value.
+    The chair model's width in `ChairEntityRenderer` and the seat count in `ChairEntity` still read the
+    local config; they only change what a client draws or predicts for a seat it cannot reach, and the
+    server decides boarding either way.
+77. **Create is wired in as an optional, compile-only dependency, with its own CI column.** Phase 9's
+    decision 1, as built:
+    - *Versions.* Forge compiles against Create `6.0.8-291` (the `-slim` jar from `maven.createmod.net`),
+      Flywheel `1.0.6`, Ponder `1.0.92` and Registrate `MC1.20-1.3.11` (the last from `maven.tterrag.com`);
+      the `create_forge_version=6.0.0` pin in `gradle.properties` was not a published build. Fabric compiles
+      against Create Fabric `6.0.8.1+build.1744-mc1.20.1` from Modrinth's maven (the version pinned earlier;
+      `mvn.devos.one` stops at 6.0.7), whose jar carries Flywheel, Ponder, Registrate and Porting Lib inside
+      it. Loom does not unpack that jar-in-jar content for the dev runtime, so the Create job downloads the
+      jar, checks it against a pinned sha256, unzips the nested jars into `fabric/build/create-nested`, and
+      `fabric/build.gradle` adds them as runtime mods (and fails with a clear message if the folder is empty).
+      All are `modCompileOnly` normally; none is bundled, and the jars' `mods.toml` / `fabric.mod.json` still list
+      Create as optional.
+    - *The Create column.* `-PwithCreate` turns the same coordinates into `modImplementation` and sets
+      `-Dalpineshred.create=true` on the game-test runs; on Fabric it also raises Loader to 0.17.2, which
+      Create Fabric 6.0.8.1 requires. CI runs it as a second job (`create`) beside the existing one, so the
+      main job's 120-minute limit is untouched; Create's own Fabric game tests run in that column too (Fabric
+      runs every mod's), so `.github/scripts/gametest-junit-check.py` judges the step from `junit.xml` on our
+      tests alone and only reports Create's failures (Forge filters them out by namespace). The job writes its
+      logs to the `ci-logs-create` branch (with its own `RUN.txt`), so they never overwrite `ci-logs`.
+    - *The bridge.* Common code sees Create only through `compat.create.CreateBridge` (`live()`,
+      `version()`), held in `CreateCompat` and empty (`ABSENT`) until a loader installs one. Each loader's
+      `compat.create` package has the bridge and an `init()`, called from the entry point only when
+      `PlatformHooks.isCreatePresent()`. Nothing else imports Create.
+    - *The load test.* `createBridgeMatchesColumn` is registered in the ordinary holders and runs in both
+      columns, asserting what the column declares: with Create, it is present, the bridge is installed and
+      live; without it, there is no bridge. That is stronger than skipping it outside the Create column, and
+      a Forge namespace filter would have needed a second copy of the empty test template. Later Create
+      tests live in `CreateGameTests` and begin with `inCreateColumn()`.
+78. **The kinetic lift drive is a Create gearbox that runs the station beside it.** Phase 9 decision 2, as built:
+    - *The block.* `kinetic_lift_drive` is a log-style block (axis `x`, `y` or `z`) with a cable wheel on its four
+      side faces and a shaft hole in both ends, so it joins a Create network the way a shaft does. It and its
+      block entity `KineticLiftDriveBE` (a Create `KineticBlockEntity` that implements `LiftDriveSource`) live in
+      each loader's `compat.create` package and are registered, in their own Architectury registers, only when
+      Create is present. It drops itself in code (`getDrops`), not from a loot table: datagen runs without Create,
+      and a loot file naming an item that does not exist would be a load error in the normal column.
+    - *Which drive wins.* `LiftDriveStationBlockEntity.enabled()` and `targetSpeed()` first ask
+      `CreateCompat.bridge().kineticDriveNear(...)`, which looks at the six neighbours in the fixed order down, up,
+      north, south, west, east and returns the first kinetic drive or null. With Create absent the bridge is the
+      empty one and answers null, so the station behaves as before and costs nothing. While one is attached it
+      is the source and redstone is ignored; remove it and the station's neighbour update hands control back to
+      redstone. Right-clicking such a station clears an emergency the rotation allows to run, and otherwise only
+      reports the speed (there is no level to cycle).
+    - *Numbers.* `KineticDriveMath` (pure, common, unit-tested): speed is `|rpm| / 64` blocks per second clamped to
+      `lift.kineticMaxSpeed` (4.0, range 0.1 to 10.0, already in the config); under 8 rpm in either direction is
+      stopped; stress is a flat `lift.kineticStress` (4.0, range 0.1 to 64.0, new) per rpm, so 256 rpm takes
+      1024 su whatever the chair count. `calculateStressApplied()` returns that per-rpm impact and Create
+      multiplies by the speed; the item tooltip quotes the figure at 256 rpm.
+    - *Motion.* No new motion code. The drive tells its neighbouring stations to `refresh()` when its command
+      (`enabled`, target speed) changes, and the station writes it into the line exactly as for redstone, so
+      `LiftMotion` ramps a speed change and an emergency stop (losing rotation, falling under 8 rpm, or
+      overstress, which Create reports as speed 0) decelerates at 2.0 blocks per second squared. Rotation coming
+      back clears the emergency, as redstone returning does. The block entity compares its command every tick
+      (two float reads and a compare, `KineticDriveWatch`, no allocation) as well as in `onSpeedChanged`, because
+      Create zeroes an unsourced block's speed without calling it. A fresh drive starts as "stopped" and a drive
+      read from disk takes its saved rotation as the baseline, so a reload is never a false emergency stop.
+79. **The kinetic drive's data is written by id, and its tests use Create's real network.**
+    - *Data without Create.* The datagen run has no Create, so `AlpineCreateProvider` writes the recipe and its
+      advancement as JSON by id. The recipe (a shapeless gearbox, large cogwheel and iron block; WP5 may balance
+      it) carries both loaders' load conditions (`conditions` with `forge:mod_loaded`, and
+      `fabric:load_conditions`), so a world without Create skips it before parsing; its advancement unlocks on the
+      drive station, an item that always exists. The block's `mineable/pickaxe` and `create:non_breakable` entries
+      are `required: false`. The lang keys are plain strings, and the blockstate, models and textures come from
+      `art/placeholder/generate_kinetic_drive.py` as for the other lift blocks. The normal column's logs show no
+      error or warning from any of it. The two stress tooltip lines read the client's local `lift.kineticStress`
+      (it is not in `config_sync`; only the server's value matters for the drive).
+    - *Tests.* `KineticDriveMathTest` and `KineticDriveWatchTest` (unit). `KineticDriveGameTests`, in the Create
+      column only (each returns at once elsewhere): rotation runs the line and its speed follows the rpm on the
+      `LiftMotion` ramp up to the cap; losing rotation (the motor removed) is an emergency stop at 2.0 b/s^2 and
+      rotation back restarts it; overstress stops it and relief restarts it; redstone is ignored while a drive is
+      attached and returns when it is removed; the drive's saved data reads back as the same command; and the
+      tick budget, under 3x 0.02 ms a drive (decision 6). The rig is a station, a kinetic drive against its east
+      face and Create's creative motor beyond it, built through a few `test...` fixture methods on `CreateBridge`
+      (the only way common test code can name Create's blocks).
+    - *Build and CI.* The Fabric kinetic block entity extends Create's, so javac needs Create's whole supertype chain,
+      which reaches into Porting Lib. `.github/scripts/unpack-create-nested.sh` (the Create job's step from
+      README 77, now a script) therefore runs in both jobs, and `fabric/build.gradle` puts the unpacked jars on the
+      compile classpath always and on the runtime classpath under `-PwithCreate`. The six kinetic game tests run in
+      their own game-test batch (`kineticDrive`): batches run one after another, and `resortHasALinkedLift` counts
+      the level's lines before and after, so lines made and removed by tests running at the same time broke it.
+80. **Create's wrench works on our blocks by four rules.** Matched by registry id `create:wrench` (the `create:wrench` item tag does not hold the wrench in Create 6.0.8), handled by
+    `compat.create.WrenchActions` (the loaders' `RightClickBlock` and `UseBlockCallback` only translate the event,
+    behind `isCreatePresent()`); no interface on our blocks. The decision table is `WrenchRule`:
+    - *Park pieces* (what the park wrench changes): a plain click runs `ParkWrenchItem.use`, the park wrench's
+      own code, now a shared static method. A sneak-click picks the piece up, as Create does for its own blocks.
+      The plan said both "turn when sneaking" and "sneak picks up"; sneak picks up, so turning stays a
+      park-wrench job (the park wrench is unchanged and stays the park tool).
+    - *Lift blocks* in the data-driven tag `alpineshred:wrench/lift_pickup` (pole, head, drive and return
+      station; the loading gate and stop button, which hold no line data, and the kinetic drive joins by tag): a plain click does nothing but show the action-bar hint
+      `message.alpineshred.wrench.lift_hint` (use the lift linker). A sneak-click picks the block up through
+      `Level.destroyBlock`, which runs the same `onRemove` as breaking it by hand, so the head and stations
+      fault their line with the same reason. A pole has no data and no fault path, by hand or by wrench
+      (poles keep their old behaviour); the gate and stop button have no `onRemove` or block entity either, so picking them up faults nothing, as breaking them by hand.
+    - *Pickup* hands the block item to the player (nothing in creative) and drops no loot.
+81. **WP4's tests.** Unit: `WrenchRuleTest`. Create-column game tests (return early outside it, via
+    `inCreateColumn()`; the common handler is called with a mock player holding `create:wrench`):
+    `wrenchIsMatchedById`, `wrenchOnParkPieces`, `wrenchOnLiftBlocks`, and `wrenchPickupFaultsLikeBreaking`
+    (builds the same line twice, removes a node by hand and by wrench, and compares the fault reasons).
+82. **The client obeys the server's flip limit.** CI run 42355456284 failed because `TrickAngles.flips` rounds to
+    the nearest, so 228 degrees in 11 ticks counts as one whole flip, and the validator's rule 2 says a whole flip
+    needs 16 air ticks. The validator was right (a flip past 180 degrees is a flip, as scored); the client was
+    not bound by it. `FlipLimit` (common, pure) holds both flip bounds, the rate and the 16 ticks per whole flip.
+    `TrickValidator` rejects with it, and `AirRotation.step` takes the air tick count and holds the pitch at the
+    limit, so an honest rider can never send a flip report the server rejects. The validator's limits are
+    unchanged. A short air holds a flip at just under half a turn until tick 16. Unit: `FlipLimitTest`.
+83. **The balance pass changed one recipe, and settled the rest as they were.** Phase 9 decision 5: data only, no
+    code or stat changes (gear stats and durabilities stay as phase 6 tuned them, since the movement tests rest on them).
+    Every changed number:
+
+    | Recipe | Before | After |
+    |---|---|---|
+    | Pro Snowboard (smithing table) | netherite upgrade template, a park or freeride board, netherite ingot | diamond (template slot), a park or freeride board, amethyst shard |
+    | Pro Skis (smithing table) | netherite upgrade template, carving or park skis, netherite ingot | diamond (template slot), carving or park skis, amethyst shard |
+
+    Why: "nothing needs end-game items", and netherite is the one end-game material the mod asked for. The pro tier
+    stays a smithing recipe because the smithing transform is what carries a painted design onto the pro board
+    (`smithingCarriesTheDesign`); that test's table now holds a diamond and an amethyst shard. A diamond and an
+    amethyst shard (the same shard the carbon poles use) put the top tier at mid-game cost. Checked and kept:
+    - *Starter gear.* A snowboard is 4 spruce planks, 1 leather and 2 iron nuggets; snowboard boots are 2 leather,
+      a string and 2 wool. That is one log, three leather, two wool, a string and a fifth of an iron ingot, so a new
+      player is riding after a cow, a sheep and a smelt. Skis, ski boots, mitts and the park pieces are as cheap.
+    - *Mid-game gear.* Park and freeride boards, the three ski upgrades, the carbon poles and the park wrench stay at
+      iron, copper, slime, phantom membrane, packed ice, amethyst and redstone.
+    - *Lifts.* Pole (4 per iron ingot and 2 bars), head (lightning rod, 3 ingots), drive station (iron block, piston,
+      4 redstone), return station (iron block, piston), gate and stop button are unchanged. A small lift is two iron
+      blocks and two pistons plus poles: an iron-tier build, with no diamond and no Nether item in it.
+    - *The kinetic drive* stays a gearbox, a large cogwheel and an iron block: the same iron block as the drive
+      station it sits beside, and only Create's andesite-tier parts otherwise. Its recipe keeps its Create load
+      conditions on both loaders.
+84. **Common tags are Forge's, written by datagen; Fabric has none to join.** Datagen runs on Fabric only, but a
+    `forge:` tag is just a data file, so `AlpineItemTagProvider` writes `forge:armors`, `forge:armors/boots`,
+    `forge:armors/helmets` (boots and helmet) and `forge:tools` (poles, edge tuner, park wrench, lift linker). The API
+    probe of fabric-convention-tags-v1 1.5.6 (the 1.20.1 Fabric API in use) showed no armor, tool or wrench tags
+    there, so no `c:` copies are invented. The park wrench is in no wrench tag: other mods treat that tag as
+    "rotates my blocks", and it is the park tool only (README 80). Groomed snow joins the vanilla `minecraft:snow`
+    block tag, which is what makes grass under it show its snowy side. Neither loader has a convention for dyeable
+    gear or snow blocks, so nothing is invented for them.
+85. **WP5's checks.** `GeneratedDataTest` (unit, reads the committed JSON and the generated language file for the
+    ids): every item has a recipe or a listed reason (the three weathered copper rails, which only weather), and every
+    block has a loot table and a `minecraft:mineable` tag or a listed reason (the quarter pipe and the kinetic drive
+    drop in code). A stale reason fails too, and a failure names the offending ids. The lift tags were reviewed
+    against the vanilla mobs and left as they were: `lift_blocked` keeps the ender dragon, wither and warden, and the
+    size limits (1.2 wide, 2.4 tall) already keep out every other large mob; `lift_passengers` stays empty.
+
+89. **The release pipeline is `release.yml`, and a tag is the only way to publish.** Phase 9 decision 7, as built
+    (WP8; the long `build.yml` is untouched).
+    - *Triggers.* A `v*` tag push runs `build` (both jars at the tag's version, the unit tests, the metadata check),
+      then `github-release` and `publish` in parallel. A manual run (`workflow_dispatch`, `dry_run` true by default,
+      plus a `version` input, 1.0.0 by default) runs `build` only and uploads the jars and the changelog section as
+      the `release-jars` artifact. A manual run with `dry_run` false fails at once: publishing from a branch with a
+      made-up version is what the tag rule is there to prevent.
+    - *Tokens.* The workflow is read-only by default. Only `github-release` gets `contents: write`, and it uses
+      `GITHUB_TOKEN` with the `gh` CLI (`gh release create`, jars plus the version's changelog section; a version
+      with a `-` is a prerelease). `publish` reads `MODRINTH_TOKEN` and `CURSEFORGE_TOKEN` from secrets and
+      `MODRINTH_PROJECT_ID` and `CURSEFORGE_PROJECT_ID` from repository variables. Each of the four publish steps is
+      skipped when its token or id is empty, so a tag with no secrets set still makes the GitHub release. Secrets
+      are passed to the action as inputs and never echoed.
+    - *Why `Kir-Antipov/mc-publish@v3.3.0`.* It is the widely used action for exactly this, one step handles both
+      Modrinth and CurseForge (loaders, game versions, dependencies and release type), and the version tag is more
+      than a few weeks old. Plain curl against the two APIs would be about 60 lines of JSON and multipart handling
+      to own. It is given no `github-token`, so it cannot touch releases. The dependency slugs (`fabric-api`,
+      `architectury-api`, `trinkets`, `playeranimator`, `curios`, `create`, `create-fabric`) are written from
+      memory and are checked by hand at the first real publish, which is after development.
+    - *The build.* Gradle runs `build -Pmod_version=<tag without v>` after `.github/scripts/unpack-create-nested.sh`
+      (the Fabric compile needs it on every build, README 79). A tag must look like `1.2.3` or `1.2.3-rc.1`.
+    - *Changelog.* `CHANGELOG.md` is built from the "What phase N delivers" sections, newest section on top
+      (`## [1.0.0] - unreleased`). `.github/scripts/changelog-section.sh` prints the section whose heading starts
+      with `## [<version>]` and fails when it is missing or empty, so a tag with no changelog section cannot build.
+      The date in the heading is edited when the tag is cut.
+90. **The jars' metadata is checked after the build, from inside each jar.** `.github/scripts/verify-jar.py` reads
+    `fabric.mod.json` or `META-INF/mods.toml` out of the built jar and fails on a mismatch:
+    - *Version.* `gradle.properties` holds `mod_version`; `build.gradle` makes the project version
+      `<mod_version>+mc<minecraft_version>`, and both resource tasks expand it into the metadata, so
+      `-Pmod_version=1.0.0` gives `1.0.0+mc1.20.1` in the file name and in both metadata files. No change was needed
+      there. The check expects exactly that string.
+    - *Ranges.* Minecraft `~1.20.1` (Fabric) and `[1.20.1,1.20.2)` (Forge); Fabric loader `>=0.15.0`; Forge `[47,)`.
+    - *Create is optional on both loaders.* Fabric `suggests` `create` at `>=6.0.0`, the line our compat code is
+      built against (Create Fabric 6.0.8.1 in CI; a wrong range on a suggestion only warns). Forge has a
+      `mandatory = false` dependency at `[6.0.0,)` with `side = "BOTH"`. The check also fails if Create is ever a
+      hard dependency on Fabric.
+    - *NeoForge.* The Forge jar runs on NeoForge 1.20.1, whose mod loader reads the same `mods.toml`, so the jar is
+      unchanged and the publish step lists it under both `forge` and `neoforge`. The Fabric jar lists `fabric` only.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
-(v1.1), the kinetic lift drive (phase 9), and the client-side copies of `lift.maxBoardSpeed` and
-`lift.dismountAnywhere` (`config_sync` carries neither, so a client's board prompt or dismount
-prediction can disagree with a server that changed them; the server always decides; phase 9 adds
-them with a protocol bump).
+(v1.1). The kinetic lift drive arrived in phase 9 (README 78).
 Real animation clips, sounds and textures replace the placeholders file by file under the same
 names.
 

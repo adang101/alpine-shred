@@ -58,6 +58,8 @@ import java.util.function.Function;
 public class ChairEntity extends Entity {
     /** Client-side hook: the view of a line by id, or null when the client knows nothing of it. */
     public static volatile Function<UUID, LineView> clientLineLookup = id -> null;
+    /** The client's view of {@code lift.dismountAnywhere}, from the server's config_sync; the client fills it. */
+    public static volatile java.util.function.BooleanSupplier clientDismountAnywhere = () -> false;
 
     private static final EntityDataAccessor<Optional<UUID>> DATA_LINE = SynchedEntityData.defineId(ChairEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Integer> DATA_INDEX = SynchedEntityData.defineId(ChairEntity.class, EntityDataSerializers.INT);
@@ -308,7 +310,7 @@ public class ChairEntity extends Entity {
             LiftLine line = id == null ? null : LiftManager.get((ServerLevel) level(), id);
             faulted = line == null || line.faulted; // nothing is driving a chair whose line is gone
         }
-        return DismountRule.allowed(barDown(), heightAboveGround(), faulted, AlpineConfig.LIFT_DISMOUNT_ANYWHERE.on());
+        return DismountRule.allowed(barDown(), heightAboveGround(), faulted, level().isClientSide ? clientDismountAnywhere.getAsBoolean() : AlpineConfig.LIFT_DISMOUNT_ANYWHERE.on());
     }
 
     /** The line is gone or this index no longer exists: put riders on safe ground, then go. */

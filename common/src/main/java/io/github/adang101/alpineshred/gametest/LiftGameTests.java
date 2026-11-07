@@ -31,6 +31,8 @@ import io.github.adang101.alpineshred.lift.LiftReturnStationBlockEntity;
 import io.github.adang101.alpineshred.lift.LiftTowerHeadBlockEntity;
 import io.github.adang101.alpineshred.lift.PendingLine;
 import io.github.adang101.alpineshred.config.AlpineConfig;
+import io.github.adang101.alpineshred.network.ModNetwork;
+import io.github.adang101.alpineshred.network.SyncCodec;
 import io.github.adang101.alpineshred.lift.ChairEntity;
 import io.github.adang101.alpineshred.lift.LiftChairs;
 import io.github.adang101.alpineshred.lift.PassengerRule;
@@ -152,7 +154,7 @@ public final class LiftGameTests {
     // ---- work package 2: blocks and block entities ----
 
     /** A drive, one head and a return station six blocks apart, placed with their block entities. */
-    private record Built(BlockPos drive, BlockPos head, BlockPos ret) {
+    record Built(BlockPos drive, BlockPos head, BlockPos ret) {
         List<BlockPos> nodes() {
             return List.of(drive, head, ret);
         }
@@ -174,7 +176,7 @@ public final class LiftGameTests {
         }
     }
 
-    private static Built place(GameTestHelper helper) {
+    static Built place(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos base = helper.absolutePos(new BlockPos(1, 2, 1));
         Built b = new Built(base, base.offset(0, 1, 6), base.offset(0, 0, 12));
@@ -186,7 +188,7 @@ public final class LiftGameTests {
     }
 
     /** Writes the data a linker would: the line id on every block entity, and the head's neighbours. */
-    private static void link(ServerLevel level, Built b, LiftLine line) {
+    static void link(ServerLevel level, Built b, LiftLine line) {
         b.driveBe(level).setLineId(line.id);
         b.headBe(level).setLink(line.id, b.drive, b.ret);
         b.returnBe(level).setLineId(line.id);
@@ -1263,6 +1265,41 @@ public final class LiftGameTests {
         return aboard;
     }
 
+    /** What a client would read from the server's config_sync body: the receiver's decode path in {@code ClientNetwork}. */
+    private static SyncCodec.Settings clientView() throws java.io.IOException {
+        net.minecraft.network.FriendlyByteBuf buf = ModNetwork.configSyncBuffer();
+        check(buf.readVarInt() == SyncCodec.PROTOCOL_VERSION, "protocol version not first in config_sync");
+        return SyncCodec.readConfig(SyncCodec.inflate(buf.readByteArray(ModNetwork.MAX_SYNC_BYTES)));
+    }
+
+    /** Synchronous, so no other test sees the changed values. */
+    public static void configSyncCarriesLiftKeys(GameTestHelper helper) {
+        double speed = AlpineConfig.LIFT_MAX_BOARD_SPEED.get();
+        boolean anywhere = AlpineConfig.LIFT_DISMOUNT_ANYWHERE.on();
+        int seats = AlpineConfig.LIFT_SEATS.get();
+        try {
+            AlpineConfig.LIFT_MAX_BOARD_SPEED.set(1.5);
+            AlpineConfig.LIFT_SEATS.set(3);
+            AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(true);
+            SyncCodec.Settings view = clientView();
+            check(view.maxBoardSpeed() == 1.5, "client sees maxBoardSpeed " + view.maxBoardSpeed());
+            check(view.dismountAnywhere(), "client does not see dismountAnywhere");
+            check(view.liftSeats() == 3, "client sees lift.seats " + view.liftSeats());
+            AlpineConfig.LIFT_MAX_BOARD_SPEED.set(6.0);
+            AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(false);
+            AlpineConfig.LIFT_SEATS.set(1);
+            view = clientView();
+            check(view.maxBoardSpeed() == 6.0 && !view.dismountAnywhere() && view.liftSeats() == 1, "client missed the second change: " + view);
+        } catch (java.io.IOException e) {
+            throw new AssertionError("config_sync did not decode", e);
+        } finally {
+            AlpineConfig.LIFT_MAX_BOARD_SPEED.set(speed);
+            AlpineConfig.LIFT_DISMOUNT_ANYWHERE.set(anywhere);
+            AlpineConfig.LIFT_SEATS.set(seats);
+        }
+        helper.succeed();
+    }
+
     public static void sneakDismountRules(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         LiftLine line = LiftManager.create(level, climbingLine(helper));
@@ -1548,7 +1585,10 @@ public final class LiftGameTests {
             LiftManager.setDrive(level, id, true, 2.5);
             for (int i = 0; i < 120; i++) LiftManager.tick(level);
             check(line.speed > 1.0 && line.travel > 0, "the line did not get going: speed " + line.speed + ", travel " + line.travel);
-            ChairEntity chair = LiftChairs.spawn(level, line, 0);
+            // The 120 ticks above include spawn passes (every few ticks, on a level-wide counter) that measure to every
+            // player of the shared level, so a concurrent test's player near the line may already have had chair 0 spawned.
+            ChairEntity chair = LiftChairs.find(level, id, 0);
+            if (chair == null) chair = LiftChairs.spawn(level, line, 0);
             check(chair != null, "chair 0 was not spawned");
             chair.tick();
             first = RideGameTests.newServerPlayer(helper, profile);

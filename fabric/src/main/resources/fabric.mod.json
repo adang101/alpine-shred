@@ -27,6 +27,6 @@
     "player-animator": "*"
   },
   "suggests": {
-    "create": "*"
+    "create": ">=6.0.0"
   }
 }
