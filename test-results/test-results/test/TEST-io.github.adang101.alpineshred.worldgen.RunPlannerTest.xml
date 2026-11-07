@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.worldgen.RunPlannerTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-07T12:13:37.017Z" hostname="runnervmwuk1x" time="0.199">
+  <properties/>
+  <testcase name="waterAndBiomeEdgesStopTheRun()" classname="io.github.adang101.alpineshred.worldgen.RunPlannerTest" time="0.005"/>
+  <testcase name="startsMustBeHighAndSloped()" classname="io.github.adang101.alpineshred.worldgen.RunPlannerTest" time="0.001"/>
+  <testcase name="aRunStartsBelowASummitTooSteepToRideFrom()" classname="io.github.adang101.alpineshred.worldgen.RunPlannerTest" time="0.004"/>
+  <testcase name="columnsAreGroomedThenFadeAndMarkersStandOnBothEdges()" classname="io.github.adang101.alpineshred.worldgen.RunPlannerTest" time="0.002"/>
+  <testcase name="aPlainSlopeGivesARunDownIt()" classname="io.github.adang101.alpineshred.worldgen.RunPlannerTest" time="0.002"/>
+  <testcase name="theSeedPicksTheSameRunEveryTime()" classname="io.github.adang101.alpineshred.worldgen.RunPlannerTest" time="0.001"/>
+  <testcase name="aThousandRandomSlopesStayInBounds()" classname="io.github.adang101.alpineshred.worldgen.RunPlannerTest" time="0.183"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.lift.EjectCrossingTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-11-07T12:13:35.086Z" hostname="runnervmwuk1x" time="0.007">
+  <properties/>
+  <testcase name="wrapAroundTheLoopIsHandled()" classname="io.github.adang101.alpineshred.lift.EjectCrossingTest" time="0.001"/>
+  <testcase name="theZoneAfterTheEjectionPointEjectsEvenWithoutACrossing()" classname="io.github.adang101.alpineshred.lift.EjectCrossingTest" time="0.0"/>
+  <testcase name="crossingTheEjectionPointIsDetected()" classname="io.github.adang101.alpineshred.lift.EjectCrossingTest" time="0.001"/>
+  <testcase name="notYetReachedOrAlreadyPassedIsNotACrossing()" classname="io.github.adang101.alpineshred.lift.EjectCrossingTest" time="0.0"/>
+  <testcase name="aStandingChairNeverCrosses()" classname="io.github.adang101.alpineshred.lift.EjectCrossingTest" time="0.0"/>
+  <testcase name="backwardsOrJumpingMotionIsNotACrossing()" classname="io.github.adang101.alpineshred.lift.EjectCrossingTest" time="0.001"/>
+  <testcase name="theZoneWrapsToo()" classname="io.github.adang101.alpineshred.lift.EjectCrossingTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

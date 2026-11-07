@@ -1,0 +1,38 @@
+stage LOADING
+stage LIFT_VIEWS
+built a lift at BlockPos{x=4, y=-60, z=-4}: loop 175 blocks, 7 chairs, powered true target 2.5
+screenshot lift_side at z 47.5, OFF
+screenshot lift_bullwheel_return at z 8.5, OFF
+screenshot lift_head at z 33.5, OFF
+screenshot lift_bullwheel_drive at z 86.5, OFF
+stage LIFT_RIDE
+lift: strap OK
+lift: boarded at tick 131 by auto-board
+lift: t1 synced LIFT local LIFT bar false at y 0.8
+lift: t41 synced LIFT local LIFT bar true at y 1.5
+screenshot lift_seated_first_person at z 15.6, LIFT
+lift: t81 synced LIFT local LIFT bar true at y 2.5
+screenshot lift_seated_back at z 20.6, LIFT
+lift: t121 synced LIFT local LIFT bar true at y 3.9
+screenshot lift_seated_front at z 25.4, LIFT
+lift: t161 synced LIFT local LIFT bar true at y 5.4
+screenshot lift_seated_side at z 30.0, LIFT
+lift: t201 synced LIFT local LIFT bar true at y 7.3
+lift: t241 synced LIFT local LIFT bar true at y 8.8
+lift: t281 synced LIFT local LIFT bar true at y 9.6
+lift: t321 synced LIFT local LIFT bar true at y 10.6
+lift: t361 synced LIFT local LIFT bar true at y 12.0
+lift: t401 synced LIFT local LIFT bar true at y 13.7
+lift: t441 synced LIFT local LIFT bar true at y 15.6
+lift: t481 synced LIFT local LIFT bar true at y 16.2
+lift: t521 synced LIFT local LIFT bar true at y 17.1
+lift: t561 synced LIFT local LIFT bar false at y 18.4
+lift: t601 synced LIFT local LIFT bar false at y 19.9
+lift: ejected after 636 ticks, synced GLIDE local IDLE, BlockPos{x=6, y=-39, z=81}
+screenshot lift_top at z 92.3, AIR
+lift: lift_rides 1, line faulted false
+lift render cost per frame: cable mean 0.290 ms worst 25.115 ms over 1526 frames; wheel mean 0.341 ms worst 7.308 ms over 1603 frames; chair mean 0.311 ms worst 9.117 ms over 1618 frames;
+lift: states while seated [LIFT], after [IDLE, GLIDE, AIR], chairs seen 7, motors started 1, one-shot sounds 8
+lift: largest body yaw error against the chair 0.000 degrees
+screenshots: 9
+RESULT PASS

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "minecraft:leather"
+    },
+    "H": {
+      "item": "minecraft:iron_nugget"
+    },
+    "P": {
+      "item": "minecraft:spruce_planks"
+    }
+  },
+  "pattern": [
+    " PH",
+    "PCP",
+    "HP "
+  ],
+  "result": {
+    "item": "alpineshred:snowboard"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "B",
+    "I",
+    "B"
+  ],
+  "result": {
+    "count": 4,
+    "item": "alpineshred:lift_tower_pole"
+  },
+  "show_notification": true
+}

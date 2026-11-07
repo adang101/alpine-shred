@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:snow_block"
+    }
+  },
+  "pattern": [
+    "P  ",
+    "PP ",
+    "SPP"
+  ],
+  "result": {
+    "item": "alpineshred:quarter_pipe"
+  },
+  "show_notification": true
+}

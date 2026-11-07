@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.client.lift.LineClockTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-07T12:13:33.291Z" hostname="runnervmwuk1x" time="0.079">
+  <properties/>
+  <testcase name="aSyncThatArrivesWithAClockJumpIsNotShiftedByTheJumpAgain()" classname="io.github.adang101.alpineshred.client.lift.LineClockTest" time="0.075"/>
+  <testcase name="aClockJumpWithoutASyncMovesTheLineByTheJump()" classname="io.github.adang101.alpineshred.client.lift.LineClockTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

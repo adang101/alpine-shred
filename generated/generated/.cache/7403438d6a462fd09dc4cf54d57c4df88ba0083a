@@ -1,0 +1,13 @@
+// 1.20.1	2026-11-07T12:12:51.977731753	Alpine Shred/Tags for minecraft:item
+ab0c847bb6ff952669684102684e41a9c2433901 data/forge/tags/items/armors/helmets.json
+e4b3ae47259e05746eeb05f7f4eea8c71471a0b0 data/alpineshred/tags/items/binding/board.json
+e2bcb3dc6bc553b1a9495265a7a80c30a5f3132d data/alpineshred/tags/items/repair/soft_gear.json
+287b3afaff5f9ad5afae300a7ad09919bec21481 data/minecraft/tags/items/freeze_immune_wearables.json
+287b3afaff5f9ad5afae300a7ad09919bec21481 data/forge/tags/items/armors.json
+9a1270ffb29d8411fd78eba8a48ac26678921678 data/forge/tags/items/tools.json
+632dd652d3c370d3f9ff665ff0730b3dd71bd5e0 data/alpineshred/tags/items/design_cost.json
+138576078559d81be69a326823f7bac0a7823ecd data/alpineshred/tags/items/binding/ski.json
+cd4fa6e1314cd40a0c9f7abc6f39fafea1a5512b data/forge/tags/items/armors/boots.json
+0567b180c2e93c6ecbed6d101bcf1f8af613478b data/alpineshred/tags/items/gear/boards.json
+f475c05bd4b9fbc0c5b20d2725681650e3ad3588 data/alpineshred/tags/items/gear/poles.json
+de80c99e64ef024153f7afe73c7fcafea6a88fe9 data/alpineshred/tags/items/gear/skis.json
