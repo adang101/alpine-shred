@@ -34,7 +34,7 @@ final class ServerGuideTable {
         note("worldgen.groomedRuns", "Groomed runs generate in new chunks. Off skips them. Run planning samples terrain noise: the most expensive start type besides resorts.");
         note("worldgen.resorts", "Ski resorts (lodge, groomed run and lift) generate in new chunks. About 133 to 138 ms a start on CI's two cores (budget 150 ms).");
         note("worldgen.snowFeatures", "Snow features (small park pieces) generate in new chunks. About 3 ms a start when on.");
-        note("worldgen.frequencyMul", "Below 1 skips that share of starts of every type, by each start's own seed. Above 1 has no effect: spacing belongs to the structure sets (a datapack may change them).");
+        note("worldgen.frequencyMul", "Keeps this share of starts of every type and skips the rest, by each start's own seed; 1.0 keeps all. It cannot add starts: spacing belongs to the structure sets (a datapack may change them).");
         // lift
         note("lift.maxLinesPerLevel", "Lift lines per dimension; the linker refuses more. Cost grows with line count (the manager measured 0.003 to 0.005 ms a tick for five lines).");
         note("lift.maxHeads", "Most tower heads on one line (the linker refuses more).");

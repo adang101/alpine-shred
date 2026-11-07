@@ -1031,6 +1031,10 @@ covered by a test or noted in code.
     - *NeoForge.* The Forge jar runs on NeoForge 1.20.1, whose mod loader reads the same `mods.toml`, so the jar is
       unchanged and the publish step lists it under both `forge` and `neoforge`. The Fabric jar lists `fabric` only.
 
+91. **`worldgen.frequencyMul` is 0.1 to 1.0.** It only thins starts (below 1, by the start's own seed); above 1 it did
+    nothing, because spacing belongs to the structure sets. A dead range invites a setting that cannot work, so the
+    range now ends at 1.0 and a value above it is clamped with a warning like any other. Nothing else read the old
+    10.0 (no test, generated file or sync key). Written up in `docs/server-guide.md` (WP7).
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

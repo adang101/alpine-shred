@@ -68,7 +68,7 @@ range changes, so replace the block with it. "Allowed" is the range the loader c
 | `worldgen.groomedRuns` | `true` | `true`, `false` | Groomed runs generate in new chunks. Off skips them. Run planning samples terrain noise: the most expensive start type besides resorts. |
 | `worldgen.resorts` | `true` | `true`, `false` | Ski resorts (lodge, groomed run and lift) generate in new chunks. About 133 to 138 ms a start on CI's two cores (budget 150 ms). |
 | `worldgen.snowFeatures` | `true` | `true`, `false` | Snow features (small park pieces) generate in new chunks. About 3 ms a start when on. |
-| `worldgen.frequencyMul` | `1.0` | 0.1 to 10.0 | Below 1 skips that share of starts of every type, by each start's own seed. Above 1 has no effect: spacing belongs to the structure sets (a datapack may change them). |
+| `worldgen.frequencyMul` | `1.0` | 0.1 to 1.0 | Keeps this share of starts of every type and skips the rest, by each start's own seed; 1.0 keeps all. It cannot add starts: spacing belongs to the structure sets (a datapack may change them). |
 | `lift.maxLinesPerLevel` | `64` | 1 to 1024 | Lift lines per dimension; the linker refuses more. Cost grows with line count (the manager measured 0.003 to 0.005 ms a tick for five lines). |
 | `lift.maxHeads` | `48` | 1 to 256 | Most tower heads on one line (the linker refuses more). |
 | `lift.maxSpan` | `64` | 8 to 256 | Longest horizontal gap between two consecutive nodes of a line, in blocks (the linker refuses more; a resort's generated lift obeys it too). |
@@ -187,13 +187,13 @@ switch at generation time, so no restart is needed for a change to apply to the 
 | Structure | Switch | Spacing / separation (chunks) | Cost per start |
 | --- | --- | --- | --- |
 | `alpineshred:terrain_park` | `worldgen.terrainParks` | 28 / 10 | about 3 ms |
-| `alpineshred:groomed_run` | `worldgen.groomedRuns` | 22 / 8 | planner: samples terrain noise |
+| `alpineshred:groomed_run` | `worldgen.groomedRuns` | 22 / 8 | 133 to 138 ms on CI's two cores (about 220 ms before phase 9's work) |
 | `alpineshred:ski_resort` | `worldgen.resorts` | 56 / 24 | 133 to 138 ms on CI's two cores, budget 150 ms |
 | `alpineshred:snow_feature` | `worldgen.snowFeatures` | 10 / 4 | about 3 ms |
 
-- `worldgen.frequencyMul` below 1 skips that share of starts of every type (decided by the start's own seed, so
-  the same starts are always kept). Above 1 does nothing: spacing is the structure set's. To place more, change
-  the structure sets in a datapack (`data/alpineshred/worldgen/`).
+- `worldgen.frequencyMul` (0.1 to 1.0) keeps that share of starts of every type and skips the rest (decided by the
+  start's own seed, so the same starts are always kept). It cannot add starts: spacing is the structure set's. To
+  place more, change the structure sets in a datapack (`data/alpineshred/worldgen/`).
 - A resort is a lodge, a groomed run and, when a valid one can be planned, a lift. It plans its lift inside
   `lift.maxSpan`, `lift.maxHeads` and `lift.maxLength`; if none fits, the resort has no lift (logged at debug).
 - Run and resort planning sample the generator's terrain noise on a world generation thread, so the cost shows up
@@ -269,10 +269,12 @@ Numbers are from CI (a two-core machine) in the phase 8 and 9 runs. A real serve
 | Cable, client | 0.5 ms a frame | 0.28 ms | Client only. CI fails at 3 times (README 69). |
 | Kinetic drive | 0.02 ms a tick each | 0.0006 to 0.0012 ms | CI fails at 3 times. |
 | Resort start | 150 ms | 133 to 138 ms (about 210 before phase 9's work) | The game test fails at a 400 ms mean. |
+| Groomed run start | 50 ms design figure (README 59) | 132.7 to 138.4 ms (CI round 2 of WP6), 220.4 ms before | Over the design figure. The game test asserts only a 400 ms mean (`WorldgenGameTests.MAX_MEAN_MS`). |
 | Terrain park, snow feature start | 50 ms | about 3 ms | The game test fails at 50 ms. |
 | Design texture build, client | 5 ms mean | 0.5 to 1.1 ms | Client only. |
 
-Groomed runs have a 50 ms design figure and measured 230 ms in phase 7; phase 9 did not report a new number for them.
+Resort and groomed-run starts share the planner, so both fell by the same work (README 86). The budget the code asserts for
+each is 400 ms; the 150 ms and 50 ms figures are the design targets.
 
 Knobs, most useful first:
 - `worldgen.resorts` and `worldgen.groomedRuns`: remove most generation cost (section 6).
@@ -311,7 +313,6 @@ if present) have builds that load there. If you try it, run the three-player lif
 - Server restart with riders on a running line is covered by a game test of the saved data and by a relog in
   the multiplayer smoke, but not yet verified on a real restart (`/save-all`, `/stop`, start) with people riding.
 - The spark check on a real server with five long lines is not yet verified; section 9 is CI only.
-- `worldgen.frequencyMul` above 1 does nothing (section 6).
 - `lift.spacing` changes reach a line only when it is created or loaded (section 3).
 - Lowering a lift limit does not remove lines that already exceed it.
 - Fabric development only: `./gradlew :fabric:runClient` does not start (a Trinkets mixin names a Yarn field). The

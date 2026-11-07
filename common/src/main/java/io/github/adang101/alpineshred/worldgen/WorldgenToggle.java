@@ -5,8 +5,8 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 
 /**
  * The {@code worldgen.*} switches (design doc section 12, "Config"): each structure type reads its
- * flag before placing, so they work without a datapack. {@code worldgen.frequencyMul} below 1
- * skips that share of starts; above 1 it has no effect (spacing is the structure set's).
+ * flag before placing, so they work without a datapack. {@code worldgen.frequencyMul} (0.1 to 1)
+ * skips the rest of the starts; 1 keeps them all. It cannot add starts: spacing is the structure set's (README 91).
  */
 public enum WorldgenToggle {
     TERRAIN_PARKS, GROOMED_RUNS, RESORTS, SNOW_FEATURES;
