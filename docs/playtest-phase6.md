@@ -1,5 +1,9 @@
 # Phase 6 hand check: painting boards and skis
 
+> **Moved:** the open items on this page are tracked in
+> [playtest-phase9.md](playtest-phase9.md#3-the-open-playtest-list), the one place to tick them off. This page keeps
+> the procedure and the questions.
+
 Phase 6's exit gate is mostly about people: five players each paint and save a design in under
 10 minutes, and 20 different designs render on three clients within the texture budget. The
 automated runs cover the rest (saves through the bench with and without dye, rejected saves

@@ -902,10 +902,9 @@ public final class ClientSmoke {
             new LiftView("lift_head", 7, 9, 33, 67f, 0f, 50),
             new LiftView("lift_bullwheel_drive", 7, 22, 86, 90f, 5f, 60));
     /**
-     * The renderers' share of a frame, in milliseconds. The design doc's figure is not at hand; this is the
-     * allowance for the cable of a line this size. CI hardware varies, so the smoke fails at three times it.
+     * The cable's share of a frame, in milliseconds: final (README clarification 69). CI hardware varies, so
+     * the smoke fails at three times it.
      */
-    // TODO: provisional. The design doc's figure is pending; replace 0.5 with it.
     private static final double CABLE_BUDGET_MS = 0.5;
 
     private static volatile UUID liftId;
@@ -1190,6 +1189,7 @@ public final class ClientSmoke {
      */
     private static boolean multiLift(Minecraft mc) {
         LocalPlayer self = mc.player;
+        ClientLiftLines.trace = ClientSmoke::note;
         if (self == null || mc.level == null) return liftOffline(mc);
         if (relogState == 2) {
             relogState = 3;

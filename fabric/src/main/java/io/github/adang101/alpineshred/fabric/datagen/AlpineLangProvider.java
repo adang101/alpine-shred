@@ -146,6 +146,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("message.alpineshred.wrench.only_option", "This is the only piece that fits here");
         t.add("message.alpineshred.wrench.rail", "Rail: %s, %s");
         t.add("message.alpineshred.wrench.slope", "Ramp slope: %s");
+        t.add("message.alpineshred.wrench.lift_hint", "Use the lift linker on lift blocks (sneak to pick this one up)");
         t.add("message.alpineshred.wrench.lip_on", "Ramp lip on");
         t.add("message.alpineshred.wrench.lip_off", "Ramp lip off");
         t.add("shape.alpineshred.flat", "flat");
@@ -285,6 +286,10 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add(ModBlocks.LIFT_RETURN_STATION.get(), "Lift Return Station");
         t.add(ModBlocks.LIFT_LOADING_GATE.get(), "Lift Loading Gate");
         t.add(ModBlocks.LIFT_STOP_BUTTON.get(), "Lift Stop Button");
+        // The kinetic drive exists only with Create, so its keys are plain strings (README 78).
+        t.add("block.alpineshred.kinetic_lift_drive", "Kinetic Lift Drive");
+        t.add("tooltip.alpineshred.kinetic_lift_drive", "Place it against a lift drive station and turn it: 64 rpm is 1 block/s");
+        t.add("tooltip.alpineshred.kinetic_lift_drive.stress", "Stress: %s su at full speed");
         t.add("container.alpineshred.paint_bench", "Paint Bench");
         t.add("gui.alpineshred.paint_bench.paint", "Paint");
         t.add("gui.alpineshred.paint_bench.gear", "Gear");

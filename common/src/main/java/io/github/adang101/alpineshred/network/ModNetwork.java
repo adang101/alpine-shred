@@ -274,14 +274,20 @@ public final class ModNetwork {
     /** The server-authoritative settings the client controller needs, as this server sees them. */
     public static SyncCodec.Settings serverSettings() {
         return new SyncCodec.Settings(StrapCheck.ridingEnabled(), AlpineConfig.MOVEMENT_MAX_SPEED_MUL.value(),
-                AlpineConfig.MOVEMENT_SCRAPE_ENABLED.on());
+                AlpineConfig.MOVEMENT_SCRAPE_ENABLED.on(), AlpineConfig.LIFT_MAX_BOARD_SPEED.get(), AlpineConfig.LIFT_DISMOUNT_ANYWHERE.on(),
+                AlpineConfig.LIFT_SEATS.get());
     }
 
-    public static void sendConfigSync(ServerPlayer player) {
+    /** The {@code s2c/config_sync} body for the server's current settings; split out so a game test reads exactly what a client would. */
+    public static FriendlyByteBuf configSyncBuffer() {
         FriendlyByteBuf buf = buffer();
         buf.writeVarInt(SyncCodec.PROTOCOL_VERSION);
         buf.writeByteArray(SyncCodec.deflate(SyncCodec.configPayload(serverSettings())));
-        NetworkManager.sendToPlayer(player, CONFIG_SYNC, buf);
+        return buf;
+    }
+
+    public static void sendConfigSync(ServerPlayer player) {
+        NetworkManager.sendToPlayer(player, CONFIG_SYNC, configSyncBuffer());
     }
 
     /** After {@code /alpineshred config reload} or {@code tuning reload}. */

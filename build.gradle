@@ -36,6 +36,8 @@ subprojects {
             name = 'TerraformersMC (Trinkets mirror)'
             url = 'https://maven.terraformersmc.com/releases'
         }
+        maven { name = 'Create (Create, Ponder, Flywheel)'; url = 'https://maven.createmod.net' }
+        maven { name = 'tterrag (Registrate)'; url = 'https://maven.tterrag.com/' }
         exclusiveContent {
             forRepository { maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' } }
             filter { includeGroup 'maven.modrinth' }

@@ -19,16 +19,19 @@ public final class AirRotation {
     /**
      * @param spinInput -1 (A), 0, or 1 (D)
      * @param flipInput -1 (S, back), 0, or 1 (W, front)
+     * @param airTicks  air ticks so far this session, counting this one; flips stop at {@link FlipLimit}
+     *                  so the report passes the server's validator
      * @return degrees spun this tick
      */
-    public double step(MovementTuning t, GearKind kind, int spinInput, int flipInput, boolean grabbing) {
+    public double step(MovementTuning t, GearKind kind, int spinInput, int flipInput, boolean grabbing, int airTicks) {
         double spinMax = kind == GearKind.SKIS ? t.airSpinMaxSkis : t.airSpinMaxBoard;
         double mul = grabbing ? t.airGrabRotationMul : 1.0;
         spinRate = ramp(spinRate, Integer.signum(spinInput), spinMax, t.airRampTicks);
         flipRate = ramp(flipRate, Integer.signum(flipInput), t.airFlipMax, t.airRampTicks);
         double spun = spinRate * mul;
         yawAccum += spun;
-        pitchAccum += flipRate * mul;
+        double cap = FlipLimit.maxPitch(airTicks, t.airFlipMax);
+        pitchAccum = Math.max(-cap, Math.min(cap, pitchAccum + flipRate * mul));
         return spun;
     }
 

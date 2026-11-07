@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "alpineshred:block/kinetic_lift_drive"
+    },
+    "axis=z": {
+      "model": "alpineshred:block/kinetic_lift_drive",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "alpineshred:block/kinetic_lift_drive",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

@@ -6,6 +6,8 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.IntStream;
 
 /**
  * {@link RunPlanner.Terrain} over a structure's generation context, before anything is built.
@@ -37,11 +39,63 @@ final class GeneratorTerrain implements RunPlanner.Terrain {
 
     /** The real surface at lattice point (i, j), i.e. block (i * LATTICE, j * LATTICE). */
     private int sample(int i, int j) {
-        return samples.computeIfAbsent(key(i, j), k -> {
-            columns++;
-            return context.chunkGenerator().getBaseHeight(i * LATTICE, j * LATTICE, Heightmap.Types.WORLD_SURFACE_WG,
-                    context.heightAccessor(), context.randomState());
-        });
+        Integer held = samples.get(key(i, j));
+        if (held != null) return held;
+        long start = System.nanoTime();
+        int height = column(i, j);
+        samples.put(key(i, j), height);
+        columns++;
+        SAMPLE_NANOS.addAndGet(System.nanoTime() - start);
+        SAMPLED.incrementAndGet();
+        return height;
+    }
+
+    private int column(int i, int j) {
+        return context.chunkGenerator().getBaseHeight(i * LATTICE, j * LATTICE, Heightmap.Types.WORLD_SURFACE_WG,
+                context.heightAccessor(), context.randomState());
+    }
+
+    /** Lattice columns sampled, and wall time spent sampling them, by every terrain (for the worldgen test's report). */
+    private static final AtomicLong SAMPLE_NANOS = new AtomicLong(), SAMPLED = new AtomicLong();
+
+    static String sampleStats() {
+        long n = SAMPLED.get();
+        return String.format(java.util.Locale.ROOT, "%d lattice columns, %.2f ms each on average", n, n == 0 ? 0 : SAMPLE_NANOS.get() / 1.0e6 / n);
+    }
+
+    /**
+     * Fetches the lattice columns under the given points that are not held yet, side by side on the common pool.
+     * A column costs about two milliseconds of noise and a step of the planner needs several that do not depend on
+     * one another; the heights are the same ones {@link #sample} would give, only sooner (README clarification 86).
+     */
+    @Override
+    public void prefetch(int[] xs, int[] zs, int n) {
+        int[] ids = new int[4 * n + 4], js = new int[4 * n + 4];
+        long[] keys = new long[4 * n + 4];
+        int missing = 0;
+        for (int k = 0; k < n; k++) {
+            int i = Math.floorDiv(xs[k], LATTICE), j = Math.floorDiv(zs[k], LATTICE);
+            boolean aligned = xs[k] == i * LATTICE && zs[k] == j * LATTICE;
+            for (int c = 0; c < (aligned ? 1 : 4); c++) {
+                int ci = i + (c & 1), cj = j + (c >> 1);
+                long key = key(ci, cj);
+                if (samples.containsKey(key)) continue;
+                boolean seen = false;
+                for (int m = 0; m < missing && !seen; m++) seen = keys[m] == key;
+                if (seen) continue;
+                keys[missing] = key;
+                ids[missing] = ci;
+                js[missing++] = cj;
+            }
+        }
+        if (missing < 2) return; // one column is fetched when it is read
+        long start = System.nanoTime();
+        int[] heights = new int[missing];
+        IntStream.range(0, missing).parallel().forEach(m -> heights[m] = column(ids[m], js[m]));
+        for (int m = 0; m < missing; m++) samples.put(keys[m], heights[m]);
+        columns += missing;
+        SAMPLE_NANOS.addAndGet(System.nanoTime() - start);
+        SAMPLED.addAndGet(missing);
     }
 
     @Override

@@ -491,7 +491,7 @@ public final class SlideController {
         }
         int spin = in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
         grab = in.grab() != GrabType.NONE ? in.grab() : in.sneak() ? GrabType.METHOD : GrabType.NONE;
-        double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE);
+        double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE, airTicks);
         double align = Math.max(-EXIT_ALIGN_RATE, Math.min(EXIT_ALIGN_RATE, exitAlign));
         exitAlign -= align;
         motion.heading = SlideModel.wrapDegrees(motion.heading + spun + align);

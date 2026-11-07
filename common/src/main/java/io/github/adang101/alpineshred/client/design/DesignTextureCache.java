@@ -7,10 +7,12 @@ import io.github.adang101.alpineshred.design.Design;
 import io.github.adang101.alpineshred.design.DesignAtlas;
 import io.github.adang101.alpineshred.design.DesignKind;
 import io.github.adang101.alpineshred.design.DesignNbt;
+import io.github.adang101.alpineshred.registry.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
 
 import java.io.InputStream;
@@ -42,7 +44,9 @@ public final class DesignTextureCache {
     private static long window = Long.MIN_VALUE;
     private static int builtInWindow;
     private static int created;
-    private static long buildNanos, maxBuildNanos;
+    private static long buildNanos, maxBuildNanos, defaultsNanos, atlasNanos, uploadNanos;
+    /** Reused by every build: the builds are one at a time on the render thread. */
+    private static final int[] SCRATCH = new int[DesignKind.BOARD.width * DesignKind.BOARD.atlasHeight()];
     private static int builds;
 
     private DesignTextureCache() {
@@ -74,8 +78,16 @@ public final class DesignTextureCache {
             return fallback;
         }
         long start = System.nanoTime();
-        ResourceLocation built = upload(kind, DesignAtlas.build(kind, design, defaults(item, kind), 0x808080));
-        long took = System.nanoTime() - start;
+        int[] defaults = defaults(item, kind);
+        long afterDefaults = System.nanoTime();
+        int[] atlas = DesignAtlas.build(kind, design, defaults, 0x808080, SCRATCH);
+        long afterAtlas = System.nanoTime();
+        ResourceLocation built = upload(kind, atlas);
+        long end = System.nanoTime();
+        long took = end - start;
+        defaultsNanos += afterDefaults - start;
+        atlasNanos += afterAtlas - afterDefaults;
+        uploadNanos += end - afterAtlas;
         buildNanos += took;
         maxBuildNanos = Math.max(maxBuildNanos, took);
         builds++;
@@ -106,7 +118,7 @@ public final class DesignTextureCache {
         }
     }
 
-    /** Uploads an ARGB atlas as a new dynamic texture. */
+    /** Uploads an ARGB atlas (the first {@code width * atlasHeight} entries of {@code argb}) as a new dynamic texture. */
     static ResourceLocation upload(DesignKind kind, int[] argb) {
         NativeImage image = new NativeImage(NativeImage.Format.RGBA, kind.width, kind.atlasHeight(), false);
         fill(image, kind, argb);
@@ -134,14 +146,57 @@ public final class DesignTextureCache {
 
     /** The default atlas of {@code item} as ARGB, or null when its texture is missing or the wrong size. */
     public static int[] defaults(ResourceLocation item, DesignKind kind) {
-        return DEFAULTS.computeIfAbsent(item, i -> Optional.ofNullable(readDefaults(i, kind))).orElse(null);
+        Optional<int[]> held = DEFAULTS.get(item);
+        if (held == null) {
+            held = Optional.ofNullable(readDefaults(Minecraft.getInstance().getResourceManager(), item, kind, false));
+            DEFAULTS.put(item, held);
+        }
+        return held.orElse(null);
     }
 
-    private static int[] readDefaults(ResourceLocation item, DesignKind kind) {
-        var resource = Minecraft.getInstance().getResourceManager().getResource(defaultTexture(item));
+    /**
+     * Reads every board and ski's default atlas when resources load, so the first design drawn on each item
+     * does not pay for a file read and a PNG decode inside a frame (the multiplayer watchers' mean build time
+     * was 5.585 ms against a 5 ms budget, the first build of each item being the slow ones). The kind is the
+     * one whose atlas height the file has.
+     */
+    public static void preload(ResourceManager manager) {
+        for (var supplier : ModItems.boardsAndSkis()) {
+            ResourceLocation item = BuiltInRegistries.ITEM.getKey(supplier.get());
+            for (DesignKind kind : DesignKind.values()) {
+                int[] atlas = readDefaults(manager, item, kind, true);
+                if (atlas != null) {
+                    DEFAULTS.put(item, Optional.of(atlas));
+                    break;
+                }
+            }
+        }
+        warmUp();
+    }
+
+    /**
+     * Runs the atlas build and one texture upload for each kind at resource load, so the JVM has compiled them and
+     * the first design drawn in a frame does not pay for interpreting them: CI's builds averaged 3.6 ms in the
+     * atlas step against microseconds once compiled. Nothing is kept.
+     */
+    private static void warmUp() {
+        for (DesignKind kind : DesignKind.values()) {
+            int[] defaults = new int[kind.width * kind.atlasHeight()];
+            for (int i = 0; i < 40; i++) DesignAtlas.build(kind, null, defaults, 0x808080, SCRATCH);
+            try {
+                release(upload(kind, SCRATCH));
+            } catch (RuntimeException e) {
+                AlpineShred.LOGGER.debug("Design texture warm-up skipped: {}", e.getMessage());
+            }
+        }
+    }
+
+    private static int[] readDefaults(ResourceManager manager, ResourceLocation item, DesignKind kind, boolean quiet) {
+        var resource = manager.getResource(defaultTexture(item));
         if (resource.isEmpty()) return null;
         try (InputStream in = resource.get().open(); NativeImage image = NativeImage.read(in)) {
             if (image.getWidth() != kind.width || image.getHeight() != kind.atlasHeight()) {
+                if (quiet) return null;
                 AlpineShred.LOGGER.warn("{} is {}x{}, not the {}x{} atlas", defaultTexture(item), image.getWidth(), image.getHeight(),
                         kind.width, kind.atlasHeight());
                 return null;
@@ -166,8 +221,9 @@ public final class DesignTextureCache {
 
     /** Section 22's budget read-out: textures built, their mean and longest build time in milliseconds. */
     public static String buildStats() {
-        return String.format(java.util.Locale.ROOT, "%d built, mean %.3f ms, longest %.3f ms", builds,
-                builds == 0 ? 0 : buildNanos / 1.0e6 / builds, maxBuildNanos / 1.0e6);
+        double per = builds == 0 ? Double.POSITIVE_INFINITY : 1.0e6 * builds;
+        return String.format(java.util.Locale.ROOT, "%d built, mean %.3f ms (defaults %.3f, atlas %.3f, upload %.3f), longest %.3f ms", builds,
+                buildNanos / per, defaultsNanos / per, atlasNanos / per, uploadNanos / per, maxBuildNanos / 1.0e6);
     }
 
     public static double meanBuildMillis() {

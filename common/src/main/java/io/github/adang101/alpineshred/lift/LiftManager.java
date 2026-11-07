@@ -60,8 +60,8 @@ public final class LiftManager {
     }
 
     private static boolean anyNodeLoaded(ServerLevel level, LiftLine line) {
-        for (BlockPos p : line.nodePositions()) {
-            if (level.hasChunkAt(p)) return true;
+        for (int i = 0, n = line.nodeCount(); i < n; i++) {
+            if (level.hasChunkAt(line.nodeAt(i))) return true;
         }
         return false;
     }
@@ -69,10 +69,10 @@ public final class LiftManager {
     private static void stepLine(LiftSavedData data, LiftLine line) {
         boolean stopping = LiftMotion.isStopping(line.faulted, line.emergency);
         double target = LiftMotion.targetFor(line.powered, line.faulted, line.emergency, line.targetSpeed);
-        double[] next = LiftMotion.step(line.speed, line.travel, target, stopping, line.path().loopLength());
-        boolean speedChanged = next[0] != line.speed;
-        line.speed = next[0];
-        line.travel = next[1];
+        double speed = LiftMotion.nextSpeed(line.speed, target, stopping);
+        boolean speedChanged = speed != line.speed;
+        line.travel = LiftMotion.nextTravel(line.travel, speed, line.path().loopLength());
+        line.speed = speed;
         line.age++;
         if (speedChanged || ++line.ticksSinceDirty >= SAVE_INTERVAL) {
             line.ticksSinceDirty = 0;

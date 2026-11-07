@@ -30,8 +30,8 @@ public final class TrickValidator {
         if (Math.abs(r.yawAccum()) > air * spinMax * 1.1 + 30) {
             return String.format(java.util.Locale.ROOT, "air report: spin %.0f in %d ticks", r.yawAccum(), air);
         }
-        // Flips at the flip rate, and (rule 2) whole flips need 16 ticks each.
-        if (Math.abs(r.pitchAccum()) > air * flipMax * 1.1 + 30 || TrickAngles.flips(r.pitchAccum()) > air / 16) {
+        // Flips at the flip rate, and (rule 2) whole flips need 16 ticks each: see FlipLimit, which the client obeys too.
+        if (!FlipLimit.allows(r.pitchAccum(), air, flipMax)) {
             return String.format(java.util.Locale.ROOT, "air report: flip %.0f in %d ticks", r.pitchAccum(), air);
         }
         // Rule 3: no grab longer than the air.
