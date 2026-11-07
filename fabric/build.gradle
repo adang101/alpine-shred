@@ -80,6 +80,8 @@ dependencies {
     // Create is optional: compile against it, and run with it only for the Create column. Its jar carries
     // Flywheel, Ponder, Registrate and Porting Lib inside it: the nested jars are on the compile classpath always
     // and on the runtime classpath for the Create column.
+    // Create's classes carry javax.annotation annotations (the unpack script drops the jsr305 jar itself): javac wants them.
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
     createNestedJars.each { modCompileOnly files(it) }
     if (withCreate) {
         modImplementation "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
