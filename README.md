@@ -930,6 +930,28 @@ covered by a test or noted in code.
     limit, so an honest rider can never send a flip report the server rejects. The validator's limits are
     unchanged. A short air holds a flip at just under half a turn until tick 16. Unit: `FlipLimitTest`.
 
+86. **Resort and run generation fetch their noise together.** The planner's cost is the generator's noise
+    (about 2.5 ms a lattice column on the CI machine, 80 to 90 columns a start), and the heights it reads
+    cannot change without changing the plan. So the lattice and its interpolation stay, and
+    `RunPlanner.Terrain.prefetch` (and `ResortLiftPlanner.Ground.prefetch`) tell the terrain which columns a
+    step is about to read: the eight candidate headings, the uphill walk's ring, the profile's points and the
+    lift's spans. `GeneratorTerrain` computes the missing lattice columns side by side on the common pool and
+    stores them; every height is the value `getBaseHeight` gives. A plan is the same for a seed: `RunPlannerTest`
+    holds fingerprints of the plans the unchanged planner made for eight seeds and checks them with and without
+    prefetching. Resorts measured about 210 ms a start before and 133 ms after on the CI machine (150 ms budget).
+87. **Design textures are warmed at resource load.** A texture build is the default atlas lookup, the atlas build
+    and the upload. The first design on each board or ski read its default file and decoded the PNG inside the
+    frame, and the atlas build ran interpreted. The defaults are now read when resources load (`preload`), the
+    atlas build and an upload are run once per kind then, and the build writes into a reused buffer. The 5 ms
+    budget is unchanged and still asserted on the mean build time; the smoke's read-out splits it into defaults,
+    atlas and upload.
+88. **The lift's tick and frame paths do not allocate.** `LiftMotion.nextTravel` replaces the `{speed, travel}`
+    array per line per tick (server and client); `LiftPath.chairPlace` replaces the three point and heading
+    objects per chair per tick; `LiftLine.nodeAt` replaces the node list built per line per tick and per player
+    in the chair pass; the cable's pieces are computed in doubles with the sag worked out once a span; the rider
+    tracker reuses its list. The arithmetic is the same bit for bit (`LiftPathTest`, `LiftMotionTest`). Left as
+    is: the per-chair `Key` records in `LiftChairs.update`, which runs once a second.
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
 Real animation clips, sounds and textures replace the placeholders file by file under the same

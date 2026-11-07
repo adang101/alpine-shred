@@ -171,6 +171,24 @@ public final class DesignTextureCache {
                 }
             }
         }
+        warmUp();
+    }
+
+    /**
+     * Runs the atlas build and one texture upload for each kind at resource load, so the JVM has compiled them and
+     * the first design drawn in a frame does not pay for interpreting them: CI's builds averaged 3.6 ms in the
+     * atlas step against microseconds once compiled. Nothing is kept.
+     */
+    private static void warmUp() {
+        for (DesignKind kind : DesignKind.values()) {
+            int[] defaults = new int[kind.width * kind.atlasHeight()];
+            for (int i = 0; i < 40; i++) DesignAtlas.build(kind, null, defaults, 0x808080, SCRATCH);
+            try {
+                release(upload(kind, SCRATCH));
+            } catch (RuntimeException e) {
+                AlpineShred.LOGGER.debug("Design texture warm-up skipped: {}", e.getMessage());
+            }
+        }
     }
 
     private static int[] readDefaults(ResourceManager manager, ResourceLocation item, DesignKind kind, boolean quiet) {
