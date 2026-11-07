@@ -1,0 +1,4 @@
+net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags
+net.fabricmc.fabric.api.tag.convention.v1.ConventionalBlockTags
+net.minecraftforge.common.Tags$Items
+net.minecraftforge.common.Tags$Blocks
