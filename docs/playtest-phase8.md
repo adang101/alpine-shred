@@ -1,5 +1,9 @@
 # Phase 8 hand check: ski lifts
 
+> **Moved:** the open items on this page are tracked in
+> [playtest-phase9.md](playtest-phase9.md#3-the-open-playtest-list), the one place to tick them off. This page keeps
+> the procedure and the questions.
+
 Phase 8's exit gate is "three players ride a 400-block lift, and the ride survives a save and reload;
 faulted-line handling works; the performance budgets are met". The automated runs cover most of it:
 

@@ -1,5 +1,9 @@
 # Phase 3 play-test
 
+> **Moved:** the open items on this page are tracked in
+> [playtest-phase9.md](playtest-phase9.md#3-the-open-playtest-list), the one place to tick them off. This page keeps
+> the procedure and the questions.
+
 Phase 3's exit gate: five testers from outside the project each ride for 10 minutes. This page is
 the setup and the questions, so every session runs the same way and the answers can be compared.
 

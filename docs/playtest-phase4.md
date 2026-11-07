@@ -1,5 +1,9 @@
 # Phase 4 hand check: the park
 
+> **Moved:** the open items on this page are tracked in
+> [playtest-phase9.md](playtest-phase9.md#3-the-open-playtest-list), the one place to tick them off. This page keeps
+> the procedure and the questions.
+
 Phase 4's exit gate is automated (the 10-piece rail chain, box slide and pipe ride game tests run
 in CI on both loaders, and a Forge client rides a park line in CI step 8). This page is the short
 check by hand that the automated runs cannot see: how building a park feels, and how riding one
