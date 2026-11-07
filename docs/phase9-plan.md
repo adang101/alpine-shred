@@ -1,6 +1,6 @@
 # Phase 9 plan: Create compatibility and polish
 
-**Status:** WP0 to WP9 and the flip fix are merged into `wip/phase-9`, and every automated exit-gate item passes in
+**Status:** Merged into `main`. WP0 to WP9 and the flip fix are done, and every automated exit-gate item passes in
 CI. Open before the release: the hand rows and open list in `docs/playtest-phase9.md`, including the spark check.
 
 This is the work plan for phase 9, the last phase of development. There is no separate design document. What
