@@ -30,7 +30,8 @@ smoke client's popup banks exactly what the server banks. Phases 1 to 4 are comp
 3's exit gate, five outside testers riding for 10 minutes each
 ([docs/playtest-phase3.md](docs/playtest-phase3.md)), and the hand checks in
 [docs/playtest-phase4.md](docs/playtest-phase4.md). Still to check by hand: the jar on a NeoForge
-1.20.1 server, and Trinkets (Fabric) syncing designs, which CI cannot run.
+1.20.1 server, and Trinkets (Fabric) syncing designs, which CI cannot run. Every open hand check is now listed in
+[docs/playtest-phase9.md](docs/playtest-phase9.md).
 
 ## Phases
 
@@ -51,7 +52,9 @@ playtest page.
 | 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | **Next** | [plan](docs/phase9-plan.md) |
 
 Development ends with phase 9: the compatibility matrix passes, and the release pipeline's dry run
-is correct. Then, at the owner's call, comes the release: a candidate soaked for two weeks with no
+is correct. The matrix (which loader, Create, Curios and Trinkets, and server combinations CI covers and which are
+checked by hand) and the one list of every still-open playtest item from phases 3 to 8 are in
+[docs/playtest-phase9.md](docs/playtest-phase9.md). Then, at the owner's call, comes the release: a candidate soaked for two weeks with no
 open blockers, then publishing to Modrinth, CurseForge and GitHub Releases.
 
 ## Build and test

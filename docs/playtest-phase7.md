@@ -1,5 +1,9 @@
 # Phase 7 hand check: world generation
 
+> **Moved:** the open items on this page are tracked in
+> [playtest-phase9.md](playtest-phase9.md#3-the-open-playtest-list), the one place to tick them off. This page keeps
+> the procedure and the questions.
+
 Phase 7's exit gate is "1000 generated structures across test seeds with no crashes, all within
 bounds, plus visual review". The automated runs cover the first part: a game test generates the
 four structures over real overworld terrain for three seeds and checks every piece's bounds, and

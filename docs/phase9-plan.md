@@ -468,6 +468,12 @@ against Modrinth and CurseForge (README 89).
   - a NeoForge server.
 - Done when: every CI row is green, and the hand rows are written so that someone can tick them off.
 
+**Done.** Merged into `wip/phase-9` (run 42381069745 on `4514c53`, green on both jobs). `docs/playtest-phase9.md` has
+the matrix: 7 rows covered by CI, each naming its job and step, and 5 rows by hand (10 checkboxes H1 to H10), plus the
+consolidated open list O1 to O21 from phases 3 to 8; the older playtest docs point to it. The multiplayer smoke with
+Create stays a hand row (H1): that step takes about 29 minutes, too costly for the Create job. Trinkets design sync
+is by hand too (no Fabric client run in CI).
+
 ### After phase 9: the release (at the user's call)
 
 1. Run the hand rows of the matrix and the open playtest list.
