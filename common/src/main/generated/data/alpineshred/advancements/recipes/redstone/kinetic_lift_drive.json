@@ -1,4 +1,5 @@
 {
+  "parent": "minecraft:recipes/root",
   "criteria": {
     "has_lift_drive_station": {
       "conditions": {
@@ -19,7 +20,6 @@
       "trigger": "minecraft:recipe_unlocked"
     }
   },
-  "parent": "minecraft:recipes/root",
   "requirements": [
     [
       "has_lift_drive_station",

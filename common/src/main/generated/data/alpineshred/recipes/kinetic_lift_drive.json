@@ -1,17 +1,18 @@
 {
-  "category": "redstone",
-  "conditions": [
-    {
-      "modid": "create",
-      "type": "forge:mod_loaded"
-    }
-  ],
   "fabric:load_conditions": [
     {
       "condition": "fabric:all_mods_loaded",
       "values": [
         "create"
       ]
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "create"
     }
   ],
   "ingredients": [
@@ -27,6 +28,5 @@
   ],
   "result": {
     "item": "alpineshred:kinetic_lift_drive"
-  },
-  "type": "minecraft:crafting_shapeless"
+  }
 }
