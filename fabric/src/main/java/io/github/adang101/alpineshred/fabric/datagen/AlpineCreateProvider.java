@@ -40,7 +40,7 @@ public final class AlpineCreateProvider implements DataProvider {
                 DataProvider.saveStable(cache, advancement(), advancements.json(AlpineShred.id("recipes/redstone/kinetic_lift_drive"))));
     }
 
-    /** A gearbox, a large cogwheel for the cable wheel, and an iron block for the frame; the balance pass (WP5) may change it. */
+    /** A gearbox, a large cogwheel for the cable wheel, and an iron block for the frame, the same iron block as the drive station. Settled unchanged by the balance pass (README 83). */
     private static JsonElement recipe() {
         JsonObject json = new JsonObject();
         json.addProperty("type", "minecraft:crafting_shapeless");

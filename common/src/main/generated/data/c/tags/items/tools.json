@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "alpineshred:ski_poles",
+    "alpineshred:carbon_ski_poles",
+    "alpineshred:edge_tuner",
+    "alpineshred:park_wrench",
+    "alpineshred:lift_linker"
+  ]
+}
