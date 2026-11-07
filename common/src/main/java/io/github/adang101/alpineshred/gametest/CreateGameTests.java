@@ -150,7 +150,8 @@ public final class CreateGameTests {
         }
         ServerLevel level = helper.getLevel();
         List<net.minecraft.world.level.block.Block> blocks = List.of(ModBlocks.LIFT_TOWER_POLE.get(), ModBlocks.LIFT_TOWER_HEAD.get(),
-                ModBlocks.LIFT_DRIVE_STATION.get(), ModBlocks.LIFT_RETURN_STATION.get());
+                ModBlocks.LIFT_DRIVE_STATION.get(), ModBlocks.LIFT_RETURN_STATION.get(),
+                ModBlocks.LIFT_LOADING_GATE.get(), ModBlocks.LIFT_STOP_BUTTON.get());
         Player plain = wrenchHolder(helper, false);
         Player sneaker = wrenchHolder(helper, true);
         for (int i = 0; i < blocks.size(); i++) {
@@ -165,10 +166,6 @@ public final class CreateGameTests {
             check(level.getBlockState(abs).isAir(), "sneak-click did not pick up " + name);
             check(sneaker.getInventory().countItem(block.asItem()) == 1, name + " did not reach the inventory");
         }
-        BlockPos gate = helper.absolutePos(new BlockPos(6, 2, 1));
-        level.setBlock(gate, ModBlocks.LIFT_LOADING_GATE.get().defaultBlockState(), 3);
-        check(click(helper, sneaker, gate) == InteractionResult.PASS, "the loading gate is not in the pickup tag but was handled");
-        level.setBlock(gate, Blocks.AIR.defaultBlockState(), 3);
         helper.succeed();
     }
 

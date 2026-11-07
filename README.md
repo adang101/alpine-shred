@@ -861,11 +861,11 @@ covered by a test or noted in code.
       The plan said both "turn when sneaking" and "sneak picks up"; sneak picks up, so turning stays a
       park-wrench job (the park wrench is unchanged and stays the park tool).
     - *Lift blocks* in the data-driven tag `alpineshred:wrench/lift_pickup` (pole, head, drive and return
-      station; the kinetic drive joins it by tag): a plain click does nothing but show the action-bar hint
+      station; the loading gate and stop button, which hold no line data, and the kinetic drive joins by tag): a plain click does nothing but show the action-bar hint
       `message.alpineshred.wrench.lift_hint` (use the lift linker). A sneak-click picks the block up through
       `Level.destroyBlock`, which runs the same `onRemove` as breaking it by hand, so the head and stations
       fault their line with the same reason. A pole has no data and no fault path, by hand or by wrench
-      (poles keep their old behaviour); the loading gate and stop button are not in the tag and are left alone.
+      (poles keep their old behaviour); the gate and stop button have no `onRemove` or block entity either, so picking them up faults nothing, as breaking them by hand.
     - *Pickup* hands the block item to the player (nothing in creative) and drops no loot.
 81. **WP4's tests.** Unit: `WrenchRuleTest`. Create-column game tests (return early outside it, via
     `inCreateColumn()`; the common handler is called with a mock player holding `create:wrench`):

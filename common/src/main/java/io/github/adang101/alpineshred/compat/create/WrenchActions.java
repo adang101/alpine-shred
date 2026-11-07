@@ -42,7 +42,7 @@ public final class WrenchActions {
      * anything else means we handled it and the loader cancels the event.
      */
     public static InteractionResult onClick(Level level, BlockPos pos, Player player, ItemStack held) {
-        if (!isWrench(held) || !player.mayBuild()) return InteractionResult.PASS;
+        if (!isWrench(held) || !player.mayBuild() || !level.mayInteract(player, pos)) return InteractionResult.PASS;
         BlockState state = level.getBlockState(pos);
         boolean sneak = player.isSecondaryUseActive();
         switch (WrenchRule.decide(kindOf(state), sneak)) {
