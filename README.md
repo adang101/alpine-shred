@@ -922,6 +922,13 @@ covered by a test or noted in code.
     `inCreateColumn()`; the common handler is called with a mock player holding `create:wrench`):
     `wrenchIsMatchedById`, `wrenchOnParkPieces`, `wrenchOnLiftBlocks`, and `wrenchPickupFaultsLikeBreaking`
     (builds the same line twice, removes a node by hand and by wrench, and compares the fault reasons).
+82. **The client obeys the server's flip limit.** CI run 42355456284 failed because `TrickAngles.flips` rounds to
+    the nearest, so 228 degrees in 11 ticks counts as one whole flip, and the validator's rule 2 says a whole flip
+    needs 16 air ticks. The validator was right (a flip past 180 degrees is a flip, as scored); the client was
+    not bound by it. `FlipLimit` (common, pure) holds both flip bounds, the rate and the 16 ticks per whole flip.
+    `TrickValidator` rejects with it, and `AirRotation.step` takes the air tick count and holds the pitch at the
+    limit, so an honest rider can never send a flip report the server rejects. The validator's limits are
+    unchanged. A short air holds a flip at just under half a turn until tick 16. Unit: `FlipLimitTest`.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
