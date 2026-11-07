@@ -7,6 +7,9 @@ separate design document. This README (what each phase delivers, and the design 
 made while building) and the phase plans in `docs/` are the record. References below to "the
 design doc" and its section numbers point to that record.
 
+**Running a server?** Read [docs/server-guide.md](docs/server-guide.md): every config key, the commands and
+permission levels, lift and world generation settings, Create, performance budgets and NeoForge notes.
+
 **Status:** Phases 1 to 8 are merged into `main`; phase 9, the last, is next
 ([docs/phase9-plan.md](docs/phase9-plan.md)). Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
 that carry up to two riders (or mobs) and leave them at the top in a glide, lifts that generate at
@@ -48,7 +51,7 @@ playtest page.
 | 6 | Board and ski customization: the Paint Bench, editor, share codes | Done, playtest open | [playtest](docs/playtest-phase6.md) |
 | 7 | World generation: groomed runs, resorts, parks, snow features | Done, playtest open | [playtest](docs/playtest-phase7.md) |
 | 8 | Ski lifts: lines, chairs, boarding, sync, generated resort lifts | Done (merged 2026-11-06), playtest open | [plan](docs/phase8-plan.md), [playtest](docs/playtest-phase8.md) |
-| 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | **Next** | [plan](docs/phase9-plan.md) |
+| 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | **Next** | [plan](docs/phase9-plan.md), [server guide](docs/server-guide.md) |
 
 Development ends with phase 9: the compatibility matrix passes, and the release pipeline's dry run
 is correct. Then, at the owner's call, comes the release: a candidate soaked for two weeks with no
