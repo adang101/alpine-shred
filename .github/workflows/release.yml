@@ -6,6 +6,9 @@ name: release
 on:
   push:
     tags: ['v*']
+    # TEMPORARY (WP8): registers the workflow so it can be dispatched from this branch. Removed in the next commit.
+    branches: ['wip/phase-9-wp8']
+    paths: ['.github/workflows/release.yml']
   workflow_dispatch:
     inputs:
       dry_run:
@@ -46,13 +49,15 @@ jobs:
         id: v
         env:
           EVENT: ${{ github.event_name }}
+          REF_TYPE: ${{ github.ref_type }}
           REF_NAME: ${{ github.ref_name }}
           DRY_RUN: ${{ inputs.dry_run }}
           DRY_VERSION: ${{ inputs.version }}
         run: |
-          if [ "$EVENT" = push ]; then
+          if [ "$EVENT" = push ] && [ "$REF_TYPE" = tag ]; then
             v="${REF_NAME#v}"
           else
+            if [ "$EVENT" = push ]; then echo "::error::branch push, registration only"; exit 1; fi
             if [ "$DRY_RUN" != true ]; then
               echo "::error::A manual run is a dry run only. Publish by pushing a v* tag."; exit 1
             fi
@@ -105,7 +110,7 @@ jobs:
           if-no-files-found: error
 
   github-release:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -128,7 +133,7 @@ jobs:
             --notes-file release-out/changelog.md "${flags[@]}"
 
   publish:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref_type == 'tag'
     needs: build
     runs-on: ubuntu-latest
     env:
