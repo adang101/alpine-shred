@@ -349,6 +349,19 @@ Create's wrench on our blocks, kept to rules a player can guess:
   (the park wrench stays the park tool).
 - Tests: game tests in the Create column for each rule above, and one test that the faulting path is shared.
 
+**Done.** Merged into `wip/phase-9` (tip `8e8852b`; run 42321366075 green on both jobs at `8f2a9a9`, and run
+42355456284 at the tip green on the Create job). Create's wrench is matched by the id `create:wrench` (Create
+6.0.8's `create:wrench` item tag lacks it). Plain click on a park piece runs the park wrench's cycle, sneak picks
+up; lift blocks in `alpineshred:wrench/lift_pickup` show the linker hint or are picked up through
+`destroyBlock`, the same fault path as breaking by hand (README 80, 81). Playtest: a wrench pickup on Fabric reaches
+the server in real play.
+
+**Open, found by WP4's run 42355456284:** the Mountain ride smoke failed once with "server validator flagged
+real-terrain riding 1 times: air report: flip 228 in 11 ticks". The rider is the scripted honest client, so the
+client let a flip through that `TrickValidator` rejects (flip rate, or whole flips needing 16 air ticks each).
+Find where the client and server rules differ and fix it so they agree; don't loosen the validator. Assigned to a
+small standalone fix before WP6.
+
 ### WP5: Tags, recipes and the balance pass
 
 - **Tags:** common tags (`c:` on Fabric, `forge:` on Forge) wherever another mod would look for them (tools,
