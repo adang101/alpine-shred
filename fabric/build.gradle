@@ -53,19 +53,19 @@ configurations {
     }
 }
 
-// The Create column runs Create Fabric in the dev runtime, and Loom does not unpack its jar-in-jar content
-// (Flywheel, Ponder, Registrate, Porting Lib, ...). The CI step "Unpack Create's nested jars" copies them,
-// flattened, into this folder before Gradle starts; they become runtime mods below. It is read here, not
-// produced here, because Loom rejects resolving a configuration while the project is configured.
+// Create Fabric nests its libraries (Flywheel, Ponder, Registrate, Porting Lib, ...) as jar-in-jar content, which
+// Loom does not unpack. The CI step "Unpack Create's nested jars" (.github/scripts/unpack-create-nested.sh)
+// copies them, flattened, into this folder before Gradle starts. They are compile-only mods always, because the
+// kinetic drive extends Create's block entity and javac needs its whole supertype chain (it reaches into Porting
+// Lib), and runtime mods under -PwithCreate. The folder is read here, not produced here, because Loom rejects
+// resolving a configuration while the project is configured.
 def createNestedJars = []
-if (withCreate) {
-    def nestedDir = layout.buildDirectory.dir('create-nested').get().asFile
-    // The CI step already dropped the plain libraries (night-config core and toml, jsr305).
-    createNestedJars = ((nestedDir.listFiles() ?: new File[0]) as List).findAll { it.name.endsWith('.jar') }.sort { it.name }
-    if (createNestedJars.isEmpty()) {
-        throw new GradleException("-PwithCreate needs ${nestedDir} filled with the jars nested inside Create Fabric: " +
-                "run the CI step that unpacks Create's nested jars first (.github/workflows/build.yml, job 'create').")
-    }
+def nestedDir = layout.buildDirectory.dir('create-nested').get().asFile
+// The script already dropped the plain libraries (night-config core and toml, jsr305).
+createNestedJars = ((nestedDir.listFiles() ?: new File[0]) as List).findAll { it.name.endsWith('.jar') }.sort { it.name }
+if (createNestedJars.isEmpty()) {
+    throw new GradleException("The Fabric build needs ${nestedDir} filled with the jars nested inside Create Fabric: " +
+            "run .github/scripts/unpack-create-nested.sh from the repository root first.")
 }
 
 dependencies {
@@ -78,7 +78,9 @@ dependencies {
     modImplementation "dev.emi:trinkets:${rootProject.trinkets_version}"
 
     // Create is optional: compile against it, and run with it only for the Create column. Its jar carries
-    // Flywheel, Ponder, Registrate and Porting Lib inside it: one coordinate to compile, the nested jars for the runtime.
+    // Flywheel, Ponder, Registrate and Porting Lib inside it: the nested jars are on the compile classpath always
+    // and on the runtime classpath for the Create column.
+    createNestedJars.each { modCompileOnly files(it) }
     if (withCreate) {
         modImplementation "maven.modrinth:create-fabric:${rootProject.create_fabric_version}"
         createNestedJars.each { modRuntimeOnly files(it) }

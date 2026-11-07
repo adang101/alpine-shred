@@ -898,6 +898,12 @@ covered by a test or noted in code.
       tick budget, under 3x 0.02 ms a drive (decision 6). The rig is a station, a kinetic drive against its east
       face and Create's creative motor beyond it, built through a few `test...` fixture methods on `CreateBridge`
       (the only way common test code can name Create's blocks).
+    - *Build and CI.* The Fabric kinetic block entity extends Create's, so javac needs Create's whole supertype chain,
+      which reaches into Porting Lib. `.github/scripts/unpack-create-nested.sh` (the Create job's step from
+      README 77, now a script) therefore runs in both jobs, and `fabric/build.gradle` puts the unpacked jars on the
+      compile classpath always and on the runtime classpath under `-PwithCreate`. The six kinetic game tests run in
+      their own game-test batch (`kineticDrive`): batches run one after another, and `resortHasALinkedLift` counts
+      the level's lines before and after, so lines made and removed by tests running at the same time broke it.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
