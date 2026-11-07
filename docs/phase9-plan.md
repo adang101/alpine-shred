@@ -368,6 +368,11 @@ real-terrain riding 1 times: air report: flip 228 in 11 ticks". The rider is the
 client let a flip through that `TrickValidator` rejects (flip rate, or whole flips needing 16 air ticks each).
 Find where the client and server rules differ and fix it so they agree; don't loosen the validator. Assigned to a
 small standalone fix before WP6.
+**Fixed** (merged; branch `wip/phase-9-flip`, run 42359456092): `TrickAngles.flips` rounds, so 228 degrees is a
+whole flip and needs 16 air ticks; the client's `AirRotation` had no air bound. Shared `FlipLimit` now holds both
+rules; the validator calls it unchanged and the client clamps pitch to it (README 82). A short air holds an
+unfinished flip under a half turn. That run's only real failure was a WP6 item: watcher1's design textures built
+in a mean 5.585 ms against the 5 ms budget.
 
 ### WP5: Tags, recipes and the balance pass
 
@@ -384,6 +389,9 @@ small standalone fix before WP6.
   mineable tag (a unit test over the generated JSON, or a game test).
 
 ### WP6: Optimization
+
+- Carry-over: the multiplayer watcher's design-texture build ran a mean 5.585 ms against its 5 ms budget once
+  (run 42359456092). Find the cost and bring it well under budget; don't raise the budget.
 
 - **Resort generation:** about 200 ms a start in CI against the 150 ms budget (README clarification 59). The run
   planner's noise sampling dominates. Cache or downsample it, keeping the output identical for a seed (assert
