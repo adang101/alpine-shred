@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "alpineshred:lift_tower_pole",
+    "alpineshred:lift_tower_head",
+    "alpineshred:lift_drive_station",
+    "alpineshred:lift_return_station",
+    "alpineshred:lift_loading_gate",
+    "alpineshred:lift_stop_button"
+  ]
+}

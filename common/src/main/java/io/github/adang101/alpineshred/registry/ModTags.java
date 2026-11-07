@@ -48,6 +48,8 @@ public final class ModTags {
         public static final TagKey<Block> SLIDE_BOXES = tag("slide/boxes");
         public static final TagKey<Block> GRINDABLE = tag("grindable");
         public static final TagKey<Block> GRINDABLE_VANILLA = tag("grindable_vanilla");
+        /** Lift blocks Create's wrench may pick up (sneak-click). Other lift blocks can join by tag (README 80). */
+        public static final TagKey<Block> WRENCH_LIFT_PICKUP = tag("wrench/lift_pickup");
 
         private Blocks() {
         }

@@ -853,6 +853,24 @@ covered by a test or noted in code.
       live; without it, there is no bridge. That is stronger than skipping it outside the Create column, and
       a Forge namespace filter would have needed a second copy of the empty test template. Later Create
       tests live in `CreateGameTests` and begin with `inCreateColumn()`.
+80. **Create's wrench works on our blocks by four rules.** Matched by registry id `create:wrench` (the `create:wrench` item tag does not hold the wrench in Create 6.0.8), handled by
+    `compat.create.WrenchActions` (the loaders' `RightClickBlock` and `UseBlockCallback` only translate the event,
+    behind `isCreatePresent()`); no interface on our blocks. The decision table is `WrenchRule`:
+    - *Park pieces* (what the park wrench changes): a plain click runs `ParkWrenchItem.use`, the park wrench's
+      own code, now a shared static method. A sneak-click picks the piece up, as Create does for its own blocks.
+      The plan said both "turn when sneaking" and "sneak picks up"; sneak picks up, so turning stays a
+      park-wrench job (the park wrench is unchanged and stays the park tool).
+    - *Lift blocks* in the data-driven tag `alpineshred:wrench/lift_pickup` (pole, head, drive and return
+      station; the loading gate and stop button, which hold no line data, and the kinetic drive joins by tag): a plain click does nothing but show the action-bar hint
+      `message.alpineshred.wrench.lift_hint` (use the lift linker). A sneak-click picks the block up through
+      `Level.destroyBlock`, which runs the same `onRemove` as breaking it by hand, so the head and stations
+      fault their line with the same reason. A pole has no data and no fault path, by hand or by wrench
+      (poles keep their old behaviour); the gate and stop button have no `onRemove` or block entity either, so picking them up faults nothing, as breaking them by hand.
+    - *Pickup* hands the block item to the player (nothing in creative) and drops no loot.
+81. **WP4's tests.** Unit: `WrenchRuleTest`. Create-column game tests (return early outside it, via
+    `inCreateColumn()`; the common handler is called with a mock player holding `create:wrench`):
+    `wrenchIsMatchedById`, `wrenchOnParkPieces`, `wrenchOnLiftBlocks`, and `wrenchPickupFaultsLikeBreaking`
+    (builds the same line twice, removes a node by hand and by wrench, and compares the fault reasons).
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1), and the kinetic lift drive (phase 9).

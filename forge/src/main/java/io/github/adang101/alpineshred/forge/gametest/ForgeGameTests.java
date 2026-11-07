@@ -438,6 +438,26 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void wrenchIsMatchedById(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchIsMatchedById(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void wrenchOnParkPieces(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchOnParkPieces(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void wrenchOnLiftBlocks(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchOnLiftBlocks(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
+    public static void wrenchPickupFaultsLikeBreaking(GameTestHelper helper) {
+        io.github.adang101.alpineshred.gametest.CreateGameTests.wrenchPickupFaultsLikeBreaking(helper);
+    }
+
+    @GameTest(template = AlpineGameTests.TEMPLATE)
     public static void configSyncCarriesLiftKeys(GameTestHelper helper) {
         io.github.adang101.alpineshred.gametest.LiftGameTests.configSyncCarriesLiftKeys(helper);
     }
