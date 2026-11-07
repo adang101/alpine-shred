@@ -181,8 +181,11 @@ jobs:
 
       # Logs, reports and generated data also go to the ci-logs branch, readable with plain git
       # from environments that cannot download Actions artifacts.
+      # Best effort: runs on other branches force-push the same log branch, and a lost race ("cannot lock ref")
+      # is not a test result. The step still shows its error; the job's outcome comes from the tests.
       - name: Publish logs to the ci-logs branch
         if: always()
+        continue-on-error: true
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -300,8 +303,11 @@ jobs:
           mkdir -p forge/build/gametest && echo "eula=true" > forge/build/gametest/eula.txt
           ./gradlew :forge:runGameTestServer $GRADLE_ARGS 2>&1 | tee "$RUNNER_TEMP/ci-logs/4-forge-gametest-create.log"
 
+      # Best effort: runs on other branches force-push the same log branch, and a lost race ("cannot lock ref")
+      # is not a test result. The step still shows its error; the job's outcome comes from the tests.
       - name: Publish logs to the ci-logs-create branch
         if: always()
+        continue-on-error: true
         env:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
