@@ -35,15 +35,23 @@ public final class LiftMotion {
         return speed;
     }
 
-    /** One tick of a line: {speed, travel} after it, with {@code travel} folded into the loop. */
-    public static double[] step(double speed, double travel, double target, boolean emergency, double loopLength) {
-        double s = nextSpeed(speed, target, emergency);
-        double t = travel + s / TICKS_PER_SECOND;
+    /** The travel one tick later at {@code speedAfter}, folded into the loop. */
+    public static double nextTravel(double travel, double speedAfter, double loopLength) {
+        double t = travel + speedAfter / TICKS_PER_SECOND;
         if (loopLength > 0) {
             t %= loopLength;
             if (t < 0) t += loopLength;
         }
-        return new double[]{s, t};
+        return t;
+    }
+
+    /**
+     * One tick of a line: {speed, travel} after it, with {@code travel} folded into the loop. Per-tick callers
+     * use {@link #nextSpeed} and {@link #nextTravel}, which do not allocate.
+     */
+    public static double[] step(double speed, double travel, double target, boolean emergency, double loopLength) {
+        double s = nextSpeed(speed, target, emergency);
+        return new double[]{s, nextTravel(travel, s, loopLength)};
     }
 
     /** {@code ticks} ticks of a line, tick by tick, as the server runs them: {speed, travel}. */

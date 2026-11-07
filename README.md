@@ -737,9 +737,9 @@ covered by a test or noted in code.
     offset (so a seated player's hips, 0.75 above their feet, land on the plank).
 68. **Chairs render out to 128 blocks**, the distance they are spawned at, rather than the 60
     blocks a box 1.2 by 0.5 would give.
-69. **The cable's frame budget is provisional.** The design doc's figure is not at hand; the `lift`
-    client smoke allows the cable 0.5 ms a frame and fails at three times that (1.5 ms), until the
-    doc's figure is confirmed.
+69. **The cable's frame budget is 0.5 ms, final.** The design doc's figure was never at hand; phase 9
+    keeps the phase 8 allowance (the `lift` client smoke measured 0.28 ms a frame) as the budget, and the
+    smoke fails at three times it (1.5 ms), as for the other budgets (71).
 70. **Seated riders face along the cable.** The chair sets a seated player's body yaw each tick and
     the rider tracker leaves it alone, so the third-person body does not swing against the chair;
     the head may turn 105 degrees either side, as in a boat.
@@ -968,6 +968,27 @@ covered by a test or noted in code.
     against the vanilla mobs and left as they were: `lift_blocked` keeps the ender dragon, wither and warden, and the
     size limits (1.2 wide, 2.4 tall) already keep out every other large mob; `lift_passengers` stays empty.
 
+86. **Resort and run generation fetch their noise together.** The planner's cost is the generator's noise
+    (about 2.5 ms a lattice column on the CI machine, 80 to 90 columns a start), and the heights it reads
+    cannot change without changing the plan. So the lattice and its interpolation stay, and
+    `RunPlanner.Terrain.prefetch` (and `ResortLiftPlanner.Ground.prefetch`) tell the terrain which columns a
+    step is about to read: the eight candidate headings, the uphill walk's ring, the profile's points and the
+    lift's spans. `GeneratorTerrain` computes the missing lattice columns side by side on the common pool and
+    stores them; every height is the value `getBaseHeight` gives. A plan is the same for a seed: `RunPlannerTest`
+    holds fingerprints of the plans the unchanged planner made for eight seeds and checks them with and without
+    prefetching. Resorts measured about 210 ms a start before and 133 ms after on the CI machine (150 ms budget).
+87. **Design textures are warmed at resource load.** A texture build is the default atlas lookup, the atlas build
+    and the upload. The first design on each board or ski read its default file and decoded the PNG inside the
+    frame, and the atlas build ran interpreted. The defaults are now read when resources load (`preload`), the
+    atlas build and an upload are run once per kind then, and the build writes into a reused buffer. The 5 ms
+    budget is unchanged and still asserted on the mean build time; the smoke's read-out splits it into defaults,
+    atlas and upload.
+88. **The lift's tick and frame paths do not allocate.** `LiftMotion.nextTravel` replaces the `{speed, travel}`
+    array per line per tick (server and client); `LiftPath.chairPlace` replaces the three point and heading
+    objects per chair per tick; `LiftLine.nodeAt` replaces the node list built per line per tick and per player
+    in the chair pass; the cable's pieces are computed in doubles with the sag worked out once a span; the rider
+    tracker reuses its list. The arithmetic is the same bit for bit (`LiftPathTest`, `LiftMotionTest`). Left as
+    is: the per-chair `Key` records in `LiftChairs.update`, which runs once a second.
 89. **The release pipeline is `release.yml`, and a tag is the only way to publish.** Phase 9 decision 7, as built
     (WP8; the long `build.yml` is untouched).
     - *Triggers.* A `v*` tag push runs `build` (both jars at the tag's version, the unit tests, the metadata check),
@@ -1006,6 +1027,7 @@ covered by a test or noted in code.
       hard dependency on Fabric.
     - *NeoForge.* The Forge jar runs on NeoForge 1.20.1, whose mod loader reads the same `mods.toml`, so the jar is
       unchanged and the publish step lists it under both `forge` and `neoforge`. The Fabric jar lists `fabric` only.
+
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

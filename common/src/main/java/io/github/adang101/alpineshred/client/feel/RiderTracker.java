@@ -28,6 +28,8 @@ public final class RiderTracker {
     private static final int RELEASE_AFTER_OFF_TICKS = 40;
 
     private static final Map<AbstractClientPlayer, RiderView> VIEWS = new WeakHashMap<>();
+    /** Riders to let go this tick; reused, since the tick must not allocate. */
+    private static final List<AbstractClientPlayer> GONE = new ArrayList<>();
     @Nullable
     private static ClientLevel trackedLevel;
     @Nullable
@@ -98,11 +100,15 @@ public final class RiderTracker {
                 VIEWS.remove(player);
             }
         }
-        List<AbstractClientPlayer> gone = new ArrayList<>();
-        for (AbstractClientPlayer player : VIEWS.keySet()) {
-            if (player.isRemoved() || player.level() != level) gone.add(player);
+        if (!VIEWS.isEmpty()) {
+            for (AbstractClientPlayer player : VIEWS.keySet()) {
+                if (player.isRemoved() || player.level() != level) GONE.add(player);
+            }
+            if (!GONE.isEmpty()) {
+                for (int i = 0; i < GONE.size(); i++) release(VIEWS.remove(GONE.get(i)));
+                GONE.clear();
+            }
         }
-        for (AbstractClientPlayer player : gone) release(VIEWS.remove(player));
 
         RideEffects.tick(local, VIEWS.get(local));
     }

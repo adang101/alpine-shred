@@ -409,6 +409,13 @@ against the committed data (README 83 to 85).
 - **Cable budget:** make `CABLE_BUDGET_MS` final at 0.5 ms (decision 6), and update README clarification 69.
 - Don't change behaviour: every smoke and game test stays green with unchanged results.
 
+**Done.** Merged into `wip/phase-9` (runs 42367878134 and 42376722696, green on both jobs). Design textures:
+the watcher mean fell from 3.2 to 5.6 ms to 0.5 to 1.1 ms by warming the atlas at resource load (README 87). Resort
+starts fell from about 210 ms to 133 to 138 ms by fetching independent noise columns side by side on the common
+pool, with plans identical to the old planner for 8 seeds (README 86); a one-core server falls back to the old
+speed. Hot paths no longer allocate per line, chair or cable piece per tick, each change bit-identical by test
+(README 88). `CABLE_BUDGET_MS` is final at 0.5 ms (README 69).
+
 ### WP7: The server guide
 
 - `docs/server-guide.md` for server owners:

@@ -57,6 +57,14 @@ public final class RunPlanner {
 
         /** True where a run may go (a snowy biome from the structure's tag). */
         boolean allowed(int x, int z);
+
+        /**
+         * Says that the first {@code n} columns (xs[k], zs[k]) are about to be read, so a terrain whose heights
+         * are slow (the world generator's noise) can fetch the missing ones together. It never changes an answer:
+         * the default does nothing (README clarification 86).
+         */
+        default void prefetch(int[] xs, int[] zs, int n) {
+        }
     }
 
     public static final int STEP = 8;
@@ -84,6 +92,11 @@ public final class RunPlanner {
 
     public static Failure lastFailure() {
         return LAST_FAILURE.get();
+    }
+
+    /** The world generator's noise columns sampled so far and what each cost, for the worldgen test's report. */
+    public static String sampleStats() {
+        return GeneratorTerrain.sampleStats();
     }
 
     static void noteFailure(Failure failure) {
@@ -128,8 +141,22 @@ public final class RunPlanner {
         return Failure.NONE;
     }
 
+    /** Asks for the eight columns one step around (x, z), and (x, z) itself. */
+    private static void prefetchRing(Terrain t, int x, int z) {
+        int[] xs = new int[9], zs = new int[9];
+        xs[0] = x;
+        zs[0] = z;
+        for (int k = 0; k < 8; k++) {
+            double a = k * Math.PI / 4;
+            xs[k + 1] = (int) Math.round(x + Math.cos(a) * STEP);
+            zs[k + 1] = (int) Math.round(z + Math.sin(a) * STEP);
+        }
+        t.prefetch(xs, zs, 9);
+    }
+
     /** {angle, grade} of the steepest of eight directions over one step. */
     private static double[] steepest(Terrain t, int x, int z) {
+        prefetchRing(t, x, z);
         int h = t.height(x, z);
         double bestAngle = 0, bestGrade = -1;
         for (int k = 0; k < 8; k++) {
@@ -168,6 +195,7 @@ public final class RunPlanner {
         int target = MIN_LENGTH + random.nextInt(MAX_LENGTH - MIN_LENGTH + 1);
         int width = 9 + 2 * random.nextInt(3);
         double limit = maxReach - width / 2.0 - EDGE_FADE - 1;
+        int[] askX = new int[HEADINGS], askZ = new int[HEADINGS];
 
         double heading = steepest(t, startX, startZ)[0];
         List<double[]> control = new ArrayList<>();
@@ -180,6 +208,15 @@ public final class RunPlanner {
             double bestCost = Double.MAX_VALUE, bestHeading = heading, bestGrade = 0;
             boolean bestBlocked = true;
             int h = t.height((int) Math.round(x), (int) Math.round(z));
+            int asked = 0;
+            for (int k = 0; k < HEADINGS; k++) {
+                double a = heading + (-MAX_TURN + k * (2 * MAX_TURN) / (HEADINGS - 1));
+                double nx = x + Math.cos(a) * STEP, nz = z + Math.sin(a) * STEP;
+                if (Math.hypot(nx - centerX, nz - centerZ) > limit) continue;
+                askX[asked] = (int) Math.round(nx);
+                askZ[asked++] = (int) Math.round(nz);
+            }
+            t.prefetch(askX, askZ, asked);
             for (int k = 0; k < HEADINGS; k++) {
                 double turn = -MAX_TURN + k * (2 * MAX_TURN) / (HEADINGS - 1);
                 double a = heading + turn;
@@ -251,6 +288,12 @@ public final class RunPlanner {
         // Profile: the terrain under each point, smoothed over 5 points, never climbing, flat on the run-out.
         int n = points.size();
         double[] ground = new double[n];
+        int[] groundX = new int[n], groundZ = new int[n];
+        for (int i = 0; i < n; i++) {
+            groundX[i] = (int) Math.round(points.get(i)[0]);
+            groundZ[i] = (int) Math.round(points.get(i)[1]);
+        }
+        t.prefetch(groundX, groundZ, n);
         for (int i = 0; i < n; i++) ground[i] = t.height((int) Math.round(points.get(i)[0]), (int) Math.round(points.get(i)[1]));
         double[] profile = new double[n];
         for (int i = 0; i < n; i++) {
@@ -309,6 +352,7 @@ public final class RunPlanner {
         int x = centerX, z = centerZ;
         walk.add(new int[]{x, z});
         for (int walked = 0; walked + STEP <= maxDistance; walked += STEP) {
+            prefetchRing(t, x, z);
             int h = t.height(x, z);
             int bx = x, bz = z, best = h;
             for (int k = 0; k < 8; k++) {

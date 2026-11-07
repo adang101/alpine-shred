@@ -77,4 +77,18 @@ class LiftMotionTest {
         // Without a loop length nothing wraps.
         assertEquals(0.2, LiftMotion.step(4.0, 0, 4.0, false, 0)[1], 1e-12);
     }
+
+    @Test
+    void theAllocationFreeStepIsTheArrayStep() {
+        java.util.Random random = new java.util.Random(5);
+        for (int n = 0; n < 5000; n++) {
+            double speed = random.nextDouble() * 5, travel = random.nextDouble() * LOOP * 1.2 - 3, target = random.nextBoolean() ? 0 : 2.5;
+            boolean emergency = random.nextBoolean();
+            double loop = random.nextInt(4) == 0 ? 0 : LOOP;
+            double[] step = LiftMotion.step(speed, travel, target, emergency, loop);
+            double s = LiftMotion.nextSpeed(speed, target, emergency);
+            assertEquals(step[0], s, 0.0);
+            assertEquals(step[1], LiftMotion.nextTravel(travel, s, loop), 0.0);
+        }
+    }
 }

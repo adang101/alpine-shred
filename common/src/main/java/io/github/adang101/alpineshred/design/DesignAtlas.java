@@ -16,9 +16,18 @@ public final class DesignAtlas {
      * @param core     the color under everything when there is no default texture
      */
     public static int[] build(DesignKind kind, Design design, int[] defaults, int core) {
+        return build(kind, design, defaults, core, new int[kind.width * kind.atlasHeight()]);
+    }
+
+    /**
+     * As above into a caller's buffer (at least {@code width * atlasHeight} long; the used part is fully
+     * written), so the texture cache builds without allocating (phase 9 WP6).
+     */
+    public static int[] build(DesignKind kind, Design design, int[] defaults, int core, int[] out) {
         int w = kind.width, h = kind.height;
-        int[] out = new int[w * kind.atlasHeight()];
-        if (defaults != null && defaults.length != out.length) defaults = null;
+        int size = w * kind.atlasHeight();
+        if (defaults != null && defaults.length != size) defaults = null;
+        java.util.Arrays.fill(out, 0, size, 0);
         boolean[] mask = Outline.mask(kind);
         for (int face = 0; face < 2; face++) {
             for (int i = 0; i < kind.pixels(); i++) {
@@ -29,7 +38,7 @@ public final class DesignAtlas {
             }
         }
         int edgeStart = 2 * kind.pixels();
-        for (int i = edgeStart; i < out.length; i++) {
+        for (int i = edgeStart; i < size; i++) {
             out[i] = 0xFF000000 | (design != null ? design.edge() : defaults != null ? defaults[i] : core);
         }
         return out;

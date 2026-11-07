@@ -167,11 +167,14 @@ public class ChairEntity extends Entity {
     public void place(LineView view) {
         LiftPath path = view.path();
         int index = chairIndex(), count = view.chairCount();
-        V3 p = path.chairPos(view.travel(), index, count);
-        Float yaw = yawOf(path.tangent(path.chairS(view.travel(), index, count)));
-        setPos(p.x(), p.y(), p.z());
-        if (yaw != null) setYRot(yaw);
+        double[] at = placeBuffer;
+        path.chairPlace(view.travel(), index, count, at);
+        setPos(at[0], at[1], at[2]);
+        if (!Double.isNaN(at[3])) setYRot((float) at[3]);
     }
+
+    /** Reused by {@link #place}, which runs every tick: x, y, z and yaw. */
+    private final double[] placeBuffer = new double[4];
 
     @Override
     public void tick() {

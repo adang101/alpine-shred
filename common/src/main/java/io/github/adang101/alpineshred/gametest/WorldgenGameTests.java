@@ -247,6 +247,7 @@ public final class WorldgenGameTests {
         AlpineShred.LOGGER.info("[worldgen test] {} starts over {} seeds: {}farthest piece {} chunks from its start; runs and resorts "
                 + "not started: {}", total, SEEDS.length, summary, farthest, runFailures);
         AlpineShred.LOGGER.info("[worldgen test] resorts with a lift: {} of {}", resortLifts[0], resortLifts[1]);
+        AlpineShred.LOGGER.info("[worldgen test] noise: {}", RunPlanner.sampleStats());
         check(resortLifts[0] >= 1, "no resort got a lift out of " + resortLifts[1]);
         problems.stream().limit(20).forEach(p -> AlpineShred.LOGGER.error("[worldgen test] {}", p));
         check(problems.isEmpty(), problems.size() + " out-of-bounds starts, the first: " + (problems.isEmpty() ? "" : problems.get(0)));

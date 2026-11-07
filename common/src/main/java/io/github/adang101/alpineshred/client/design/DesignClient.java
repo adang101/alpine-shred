@@ -36,7 +36,10 @@ public final class DesignClient {
             }
             MenuRegistry.registerScreenFactory(ModMenus.PAINT_BENCH.get(), PaintBenchScreen::new);
         });
-        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, (ResourceManagerReloadListener) manager -> DesignTextureCache.clear(),
+        ReloadListenerRegistry.register(PackType.CLIENT_RESOURCES, (ResourceManagerReloadListener) manager -> {
+                    DesignTextureCache.clear();
+                    DesignTextureCache.preload(manager);
+                },
                 AlpineShred.id("design_textures"));
     }
 

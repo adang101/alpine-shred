@@ -26,6 +26,10 @@ public final class ResortLiftPlanner {
     @FunctionalInterface
     public interface Ground {
         int height(int x, int z);
+
+        /** As {@link RunPlanner.Terrain#prefetch}: the first {@code n} columns are about to be read. Never changes an answer. */
+        default void prefetch(int[] xs, int[] zs, int n) {
+        }
     }
 
     /** A node's block position. A tower head's Y is its head block; a station's is the station block, on its platform. */
@@ -104,6 +108,7 @@ public final class ResortLiftPlanner {
             if (near < reach + BEYOND_REACH - 1) return fail("a node only " + (int) near + " from the run");
         }
         int last = columns.size() - 1;
+        prefetchLine(columns, ground);
         int[] heights = new int[columns.size()];
         for (int i = 0; i < columns.size(); i++) {
             int[] c = columns.get(i);
@@ -143,6 +148,40 @@ public final class ResortLiftPlanner {
         LinkValidator.Result r = LinkValidator.checkFinish(path, (x, y, z) -> y < ground.height(x, z), limits, 0);
         if (!r.ok()) return fail("link validation: " + r.reason() + " at span " + r.span());
         return new Outcome(new Plan(List.copyOf(nodes), side), null);
+    }
+
+    /**
+     * Asks the terrain for the columns the clearance checks will read: every node, and the three lateral columns
+     * every {@link #SAMPLE} blocks along each span (as {@link #worstDeficit} reads them), so a slow terrain can
+     * fetch them together (README clarification 86). A hint only: whatever it misses is read when it is needed.
+     */
+    private static void prefetchLine(List<int[]> columns, Ground ground) {
+        int total = columns.size();
+        for (int i = 0; i + 1 < columns.size(); i++) {
+            int[] a = columns.get(i), b = columns.get(i + 1);
+            total += 3 * Math.max(2, (int) Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / SAMPLE));
+        }
+        int[] xs = new int[total], zs = new int[total];
+        int n = 0;
+        for (int[] c : columns) {
+            xs[n] = c[0];
+            zs[n++] = c[1];
+        }
+        for (int i = 0; i + 1 < columns.size(); i++) {
+            int[] a = columns.get(i), b = columns.get(i + 1);
+            double dx = b[0] - a[0], dz = b[1] - a[1], h = Math.hypot(dx, dz);
+            double nx = -dz / h, nz = dx / h;
+            int samples = Math.max(2, (int) Math.ceil(h / SAMPLE));
+            for (int k = 1; k < samples; k++) {
+                double t = k / (double) samples;
+                double x = a[0] + 0.5 + dx * t, z = a[1] + 0.5 + dz * t;
+                for (int lateral = -1; lateral <= 1; lateral++) {
+                    xs[n] = (int) Math.floor(x + nx * 1.5 * lateral);
+                    zs[n++] = (int) Math.floor(z + nz * 1.5 * lateral);
+                }
+            }
+        }
+        ground.prefetch(xs, zs, n);
     }
 
     private static Outcome fail(String why) {

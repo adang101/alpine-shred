@@ -101,10 +101,9 @@ public final class ClientLine implements LineView {
 
     /** One client tick. */
     public void tick() {
-        double[] next = LiftMotion.step(speed, travel, target(), LiftMotion.isStopping(faulted, emergency),
-                path.loopLength());
-        speed = next[0];
-        travel = next[1];
+        double after = LiftMotion.nextSpeed(speed, target(), LiftMotion.isStopping(faulted, emergency));
+        travel = LiftMotion.nextTravel(travel, after, path.loopLength());
+        speed = after;
     }
 
     private double target() {

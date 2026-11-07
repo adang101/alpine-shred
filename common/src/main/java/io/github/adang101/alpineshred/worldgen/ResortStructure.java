@@ -68,12 +68,27 @@ public class ResortStructure extends Structure {
         }));
     }
 
+    /** The terrain as the lift planner's ground, passing on its prefetching. */
+    private static ResortLiftPlanner.Ground ground(GeneratorTerrain terrain) {
+        return new ResortLiftPlanner.Ground() {
+            @Override
+            public int height(int x, int z) {
+                return terrain.height(x, z);
+            }
+
+            @Override
+            public void prefetch(int[] xs, int[] zs, int n) {
+                terrain.prefetch(xs, zs, n);
+            }
+        };
+    }
+
     /** The resort's lift line, or null (logged at debug level) when no valid one can be planned. */
     private static LiftLinePiece planLift(GenerationContext context, GeneratorTerrain terrain, RunPlanner.Plan plan, BoundingBox lodge) {
         ChunkPos chunk = context.chunkPos();
         LinkValidator.Limits limits = new LinkValidator.Limits(AlpineConfig.LIFT_MAX_SPAN.get(), AlpineConfig.LIFT_MAX_HEADS.get(),
                 AlpineConfig.LIFT_MAX_LENGTH.get(), AlpineConfig.LIFT_MAX_LINES_PER_LEVEL.get());
-        ResortLiftPlanner.Outcome outcome = ResortLiftPlanner.plan(plan.points(), plan.reach(), terrain::height,
+        ResortLiftPlanner.Outcome outcome = ResortLiftPlanner.plan(plan.points(), plan.reach(), ground(terrain),
                 context.chunkGenerator().getSeaLevel(), limits, context.seed() ^ chunk.toLong());
         if (outcome.plan() == null) {
             AlpineShred.LOGGER.debug("Ski resort at {} gets no lift: {}", chunk, outcome.failure());

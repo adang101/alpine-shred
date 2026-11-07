@@ -158,4 +158,98 @@ class RunPlannerTest {
         assertEquals(a.difficulty(), b.difficulty());
         for (int i = 0; i < a.points().size(); i++) assertEquals(a.points().get(i)[0], b.points().get(i)[0], 0.0);
     }
+
+    // ---- the plan is the same with or without prefetching (phase 9 WP6, README clarification 86) -------
+
+    private static double noise(double x, double z, long seed) {
+        long ix = (long) Math.floor(x), iz = (long) Math.floor(z);
+        double fx = x - ix, fz = z - iz;
+        fx = fx * fx * (3 - 2 * fx);
+        fz = fz * fz * (3 - 2 * fz);
+        double a = corner(ix, iz, seed), b = corner(ix + 1, iz, seed), c = corner(ix, iz + 1, seed), d = corner(ix + 1, iz + 1, seed);
+        return (a + (b - a) * fx) * (1 - fz) + (c + (d - c) * fx) * fz;
+    }
+
+    private static double corner(long a, long b, long seed) {
+        long v = a * 341873128712L + b * 132897987541L + seed * 7919;
+        v = (v ^ (v >>> 13)) * 0x5DEECE66DL;
+        v ^= v >>> 17;
+        return (v & 0xFFFF) / 65535.0;
+    }
+
+    /** Rolling hills with a patch of biome edges; the same shape for a seed whatever reads it. */
+    private static int hills(int x, int z, long seed) {
+        double s = 0, amp = 1, f = 1 / 180.0;
+        for (int o = 0; o < 4; o++) {
+            s += amp * noise(x * f + o * 17.3, z * f + o * 5.1, seed + o);
+            amp *= 0.5;
+            f *= 2;
+        }
+        return 70 + (int) (s * 110);
+    }
+
+    private static long fingerprint(RunPlanner.Plan p) {
+        if (p == null) return 0;
+        long r = p.difficulty().ordinal() * 31L + p.width();
+        r = r * 31 + p.runOutFrom();
+        for (double[] q : p.points()) for (double d : q) r = r * 1000003L + Double.doubleToLongBits(d);
+        return r;
+    }
+
+    /** Terrain that counts the columns it is told about ahead of time, and answers as the plain one does. */
+    private static final class Prefetching implements RunPlanner.Terrain {
+        final long seed;
+        int asked;
+
+        Prefetching(long seed) {
+            this.seed = seed;
+        }
+
+        public int height(int x, int z) {
+            return hills(x, z, seed);
+        }
+
+        public boolean water(int x, int z) {
+            return height(x, z) <= SEA;
+        }
+
+        public boolean allowed(int x, int z) {
+            return Math.floorMod(x / 16 + z / 16, 29) != 0;
+        }
+
+        @Override
+        public void prefetch(int[] xs, int[] zs, int n) {
+            asked += n;
+        }
+    }
+
+    /** What the planner made before it asked for anything ahead of time, for these seeds (0 is no run). */
+    private static final long[] BEFORE = {0L, 2096675732614876916L, 1213417880162493119L, -459437940366731736L,
+            -2606439576071750627L, -5039765583989849600L, 5989176570082954363L, -5067185104170099595L};
+
+    @Test
+    void prefetchingDoesNotChangeAPlan() {
+        for (int k = 0; k < BEFORE.length; k++) {
+            long seed = k + 1;
+            Random r = new Random(seed * 977);
+            int cx = r.nextInt(4000) - 2000, cz = r.nextInt(4000) - 2000;
+            Prefetching ahead = new Prefetching(seed);
+            RunPlanner.Terrain plain = new RunPlanner.Terrain() {
+                public int height(int x, int z) {
+                    return hills(x, z, seed);
+                }
+
+                public boolean water(int x, int z) {
+                    return height(x, z) <= SEA;
+                }
+
+                public boolean allowed(int x, int z) {
+                    return Math.floorMod(x / 16 + z / 16, 29) != 0;
+                }
+            };
+            assertEquals(BEFORE[k], fingerprint(RunPlanner.planThrough(plain, SEA, cx, cz, 84, seed * 31, 84)), "seed " + seed + " plain");
+            assertEquals(BEFORE[k], fingerprint(RunPlanner.planThrough(ahead, SEA, cx, cz, 84, seed * 31, 84)), "seed " + seed + " prefetching");
+            assertTrue(ahead.asked > 0, "seed " + seed + ": nothing was asked ahead");
+        }
+    }
 }

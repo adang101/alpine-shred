@@ -65,6 +65,16 @@ public final class LiftLine implements LineView {
     }
 
     /** All node positions in loop order: drive, heads, return. */
+    /** The number of nodes: the drive, the heads and the return. */
+    public int nodeCount() {
+        return heads.size() + 2;
+    }
+
+    /** Node {@code i} (0 the drive, the last the return), without the list {@link #nodePositions} builds. */
+    public BlockPos nodeAt(int i) {
+        return i == 0 ? drive : i == heads.size() + 1 ? returnStation : heads.get(i - 1);
+    }
+
     public List<BlockPos> nodePositions() {
         List<BlockPos> all = new ArrayList<>(heads.size() + 2);
         all.add(drive);
