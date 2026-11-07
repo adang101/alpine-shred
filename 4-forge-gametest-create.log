@@ -1,0 +1,511 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Architect Plugin: 3.4.162
+Architectury Loom: 1.11.458
+
+> Task :common:compileJava UP-TO-DATE
+> Task :common:processResources UP-TO-DATE
+> Task :common:classes UP-TO-DATE
+> Task :common:jar UP-TO-DATE
+> Task :forge:processResources
+
+> Task :forge:compileJava
+/home/runner/work/alpine-shred/alpine-shred/forge/src/main/java/io/github/adang101/alpineshred/forge/compat/create/ForgeCreateBridge.java:30: warning: [removal] ResourceLocation(String,String) in ResourceLocation has been deprecated and marked for removal
+    private static final ResourceLocation SHAFT = new ResourceLocation("create", "shaft");
+                                                  ^
+/home/runner/work/alpine-shred/alpine-shred/forge/src/main/java/io/github/adang101/alpineshred/forge/AlpineShredForge.java:18: warning: [removal] get() in FMLJavaModLoadingContext has been deprecated and marked for removal
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+                                                   ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+2 warnings
+
+> Task :forge:classes
+> Task :forge:generateLog4jConfig
+> Task :forge:generateRemapClasspath
+> Task :forge:generateDLIConfig
+> Task :forge:prepareArchitecturyTransformer
+> Task :forge:configureLaunch
+
+> Task :forge:runGameTestServer
+[Architectury Transformer] Architectury Runtime 5.2.87
+[Architectury Transformer] Read classpath in 1.295 s
+[Architectury Transformer] Listening at /home/runner/work/alpine-shred/alpine-shred/common/build/devlibs/alpineshred-common-0.1.0-alpha.1+mc1.20.1-dev.jar
+[12:15:32] [main/INFO] (Launcher) ModLauncher running: args [--launchTarget, forgeserveruserdev, --gameDir, ., --fml.forgeVersion, 47.4.28, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, -mixin.config, alpineshred.mixins.json, -mixin.config, alpineshred.client.mixins.json, nogui, --mixin.config, alpineshred.client.mixins.json, --mixin.config, alpineshred.mixins.json]
+[12:15:32] [main/INFO] (Launcher) ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 21.0.13 by Eclipse Adoptium; OS Linux arch amd64 version 7.0.0-1019-azure
+[12:15:32] [main/INFO] (unprotect) Initializing Unprotect using ModLauncher backend, target: Minecraft and loader classes (minecraft+forge)
+[12:15:32] [main/WARN] (FMLConfig) Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/gametest/config/fml.toml is not correct. Correcting
+[12:15:32] [main/INFO] (FMLConfig) Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
+[12:15:32] [main/INFO] (FMLConfig) Incorrect key [earlyWindowLogHelpMessage] was corrected from null to true
+[12:15:32] [main/INFO] (FMLConfig) Incorrect key [earlyWindowSquir] was corrected from null to false
+[12:15:32] [main/INFO] (FMLConfig) Incorrect key [earlyWindowShowCPU] was corrected from null to false
+[12:15:32] [main/INFO] (ImmediateWindowHandler) ImmediateWindowProvider not loading because launch target is forgeserveruserdev
+[12:15:32] [main/INFO] (mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/runner/.gradle/caches/modules-2/files-2.1/dev.architectury/mixin-patched/0.8.5.12/cf1f787f58d3b08b0cb53ecbba7928c09a1893c8/mixin-patched-0.8.5.12.jar%23116!/ Service=ModLauncher Env=SERVER
+[12:15:32] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.4.28/2f0765ea31561e9dfaf8eb8b54ac0548cd857559/javafmllanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[12:15:32] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.4.28/4e54a5f415a61888bd9c5d61b140ae5f86bf665f/lowcodelanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[12:15:32] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.4.28/4d3efb7da0466927cc5b1e4487c3d3c33ba842d0/mclanguage-1.20.1-47.4.28.jar is missing mods.toml file
+[12:15:32] [main/WARN] (ModFileParser) Mod file /home/runner/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.4.28/99808794b6f9f27ca527ad9db1203409fb8552f8/fmlcore-1.20.1-47.4.28.jar is missing mods.toml file
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file javafmllanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@24ccf6a8
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file lowcodelanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@24ccf6a8
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file mclanguage-1.20.1-47.4.28.jar of type LANGPROVIDER with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@24ccf6a8
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file fmlcore-1.20.1-47.4.28.jar of type LIBRARY with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@24ccf6a8
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@24ccf6a8
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file main of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@24ccf6a8
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file  of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.MinecraftLocator@24ccf6a8
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file architectury-forge-0f2af2a4-9.2.14.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file create-1.20.1-0f2af2a4-6.0.8-291-slim.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file flywheel-forge-1.20.1-0f2af2a4-1.0.6.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file Ponder-Forge-1.20.1-0f2af2a4-1.0.92.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file curios-forge-0f2af2a4-5.14.1+1.20.1.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file mixinextras-forge-0.4.1.jar of type GAMELIBRARY with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file 8037082304039982300.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file architectury-forge-0f2af2a4-9.2.14.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file player-animation-lib-forge-0f2af2a4-1.0.2-rc1+1.20.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file create-1.20.1-0f2af2a4-6.0.8-291-slim.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file flywheel-forge-1.20.1-0f2af2a4-1.0.6.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file Ponder-Forge-1.20.1-0f2af2a4-1.0.92.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file Registrate-0f2af2a4-MC1.20-1.3.11.jar of type GAMELIBRARY with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file curios-forge-0f2af2a4-5.14.1+1.20.1.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file mixinextras-forge-0.4.1.jar of type GAMELIBRARY with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file 8037082304039982300.jar of type MOD with provider net.minecraftforge.fml.loading.moddiscovery.ClasspathLocator@64898aa7
+[12:15:32] [main/INFO] (JarInJarDependencyLocator) Found 1 dependencies adding them to mods collection
+[12:15:32] [main/INFO] (ModDiscoverer) Found mod file MixinExtras-0.4.1.jar of type GAMELIBRARY with provider net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator@74cad6d
+[12:15:34] [main/INFO] (mixin) Compatibility level set to JAVA_17
+[12:15:34] [main/INFO] (LaunchServiceHandler) Launching target 'forgeserveruserdev' with arguments [--gameDir, ., nogui]
+[12:15:34] [main/INFO] (unprotect) Found 7423 Minecraft classes
+[12:15:34] [main/INFO] (mixin) Remapping refMap architectury-forge-refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap architectury-common-refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap player-animation-lib-minecraft_common-refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap curios.refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap backend-flywheel.refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap flywheel.refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap flywheel.refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap ponder.refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap ponder.refmap.json using RemapperChain (Architectury Patched)
+[12:15:34] [main/INFO] (mixin) Remapping refMap create.refmap.json using RemapperChain (Architectury Patched)
+2026-11-07 12:15:35,318 main WARN Advanced terminal features are not available in this environment
+[12:15:35] [main/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
+[12:15:39] [modloading-worker-0/INFO] [ne.mi.co.ForgeMod/FORGEMOD]: Forge mod loading, version 47.4.28, for MC 1.20.1 with MCP 20230612.114412
+[12:15:39] [modloading-worker-0/INFO] [ne.mi.co.MinecraftForge/FORGE]: MinecraftForge v47.4.28 Initialized
+[12:15:39] [modloading-worker-0/INFO] [co.si.cr.Create/]: Create 6.0.8 initializing! Commit hash: 588124239141029c5321afd38d20c2eaf872b32b
+[12:15:39] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id architectury:sync_ids
+[12:15:40] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/strap_toggle
+[12:15:40] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/ride_state
+[12:15:40] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/ride_action
+[12:15:40] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/air_report
+[12:15:40] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/grind_report
+[12:15:40] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/lift_board
+[12:15:40] [modloading-worker-0/INFO] [de.ar.ne.fo.NetworkManagerImpl/]: Registering C2S receiver with id alpineshred:c2s/design_save
+[12:15:40] [modloading-worker-0/INFO] [Alpine Shred/]: Alpine Shred initialized on Forge
+[12:15:41] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/gametest/config/curios-common.toml is not correct. Correcting
+[12:15:41] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key slots was corrected from null to its default, []. 
+[12:15:41] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file /home/runner/work/alpine-shred/alpine-shred/forge/build/gametest/config/create-common.toml is not correct. Correcting
+[12:15:41] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key worldgen was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:41] [main/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key worldgen.disableWorldGen was corrected from null to its default, false. 
+[12:15:41] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Starting version check at https://files.minecraftforge.net/net/minecraftforge/forge/promotions_slim.json
+[12:15:42] [Forge Version Check/INFO] [ne.mi.fm.VersionChecker/]: [forge] Found status: UP_TO_DATE Current: 47.4.28 Target: null
+[12:15:43] [main/ERROR] [minecraft/Settings]: Failed to load properties from file: server.properties
+java.nio.file.NoSuchFileException: server.properties
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:92) ~[?:?] {}
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?] {}
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?] {}
+	at sun.nio.fs.UnixFileSystemProvider.newByteChannel(UnixFileSystemProvider.java:261) ~[?:?] {}
+	at java.nio.file.Files.newByteChannel(Files.java:380) ~[?:?] {}
+	at java.nio.file.Files.newByteChannel(Files.java:432) ~[?:?] {}
+	at java.nio.file.spi.FileSystemProvider.newInputStream(FileSystemProvider.java:420) ~[?:?] {}
+	at java.nio.file.Files.newInputStream(Files.java:160) ~[?:?] {}
+	at net.minecraft.server.dedicated.Settings.loadFromFile(Settings.java:36) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?] {re:classloading,pl:unprotect:A}
+	at net.minecraft.server.dedicated.DedicatedServerProperties.fromFile(DedicatedServerProperties.java:137) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?] {re:classloading,pl:unprotect:A}
+	at net.minecraft.server.dedicated.DedicatedServerSettings.<init>(DedicatedServerSettings.java:12) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?] {re:classloading}
+	at net.minecraft.server.Main.main(Main.java:126) ~[forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/:?] {re:classloading,pl:unprotect:A}
+	at jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[?:?] {}
+	at java.lang.reflect.Method.invoke(Method.java:580) ~[?:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.runTarget(CommonLaunchHandler.java:111) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonLaunchHandler.serverService(CommonLaunchHandler.java:103) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?] {}
+	at net.minecraftforge.fml.loading.targets.ForgeServerUserdevLaunchHandler.devService(ForgeServerUserdevLaunchHandler.java:16) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?] {}
+	at net.minecraftforge.fml.loading.targets.CommonDevLaunchHandler.lambda$makeService$7(CommonDevLaunchHandler.java:135) ~[fmlloader-1.20.1-47.4.28.jar%2394!/:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandlerDecorator.launch(LaunchServiceHandlerDecorator.java:30) ~[modlauncher-10.0.9.jar%2397!/:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:53) ~[modlauncher-10.0.9.jar%2397!/:?] {}
+	at cpw.mods.modlauncher.LaunchServiceHandler.launch(LaunchServiceHandler.java:71) ~[modlauncher-10.0.9.jar%2397!/:?] {}
+	at cpw.mods.modlauncher.Launcher.run(Launcher.java:108) ~[modlauncher-10.0.9.jar%2397!/:?] {}
+	at cpw.mods.modlauncher.Launcher.main(Launcher.java:78) ~[modlauncher-10.0.9.jar%2397!/:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:26) ~[modlauncher-10.0.9.jar%2397!/:?] {}
+	at cpw.mods.modlauncher.BootstrapLaunchConsumer.accept(BootstrapLaunchConsumer.java:23) ~[modlauncher-10.0.9.jar%2397!/:?] {}
+	at cpw.mods.bootstraplauncher.BootstrapLauncher.main(BootstrapLauncher.java:141) ~[?:?] {}
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar%23185!/:?] {}
+	at dev.architectury.transformer.TransformerRuntime.main(TransformerRuntime.java:220) ~[?:?] {}
+[12:15:43] [main/INFO] [mojang/YggdrasilAuthenticationService]: Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[12:15:43] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/assets/.mcassetsroot' uses unexpected schema
+[12:15:43] [main/WARN] [minecraft/VanillaPackResourcesBuilder]: Assets URL 'union:/home/runner/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/forge-1.20.1-47.4.28-minecraft-merged/1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28/forge-1.20.1-47.4.28-minecraft-merged-1.20.1-loom.mappings.1_20_1.layered+hash.1900670477-v2-forge-1.20.1-47.4.28.jar%23187!/data/.mcassetsroot' uses unexpected schema
+[12:15:43] [main/INFO] [co.si.cr.Create/]: Created 157 recipes which will be injected into the game
+[12:15:43] [main/INFO] [co.si.cr.Create/]: Created 0 tags which will be injected into the game
+[12:15:43] [main/INFO] [minecraft/MinecraftServer]: Found new data pack create:dynamic_data, loading it automatically
+[12:15:44] [main/INFO] [minecraft/RecipeManager]: Loaded 22 recipes
+[12:15:44] [main/INFO] [minecraft/AdvancementList]: Loaded 2448 advancements
+[12:15:44] [main/INFO] [to.th.cu.Curios/]: Loaded 12 curio slots
+[12:15:44] [main/INFO] [to.th.cu.Curios/]: Loaded 1 curio entities
+[12:15:45] [main/INFO] [ne.mi.ga.ForgeGameTestHooks/]: Enabled Gametest Namespaces: [alpineshred]
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/curios-server.toml is not correct. Correcting
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key keepCurios was corrected from null to its default, DEFAULT. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key menu was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key menu.enableLegacyMenu was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key menu.experimental was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key menu.experimental.minimumColumns was corrected from null to its default, 1. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key menu.experimental.maxSlotsPerPage was corrected from null to its default, 48. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/forge-server.toml is not correct. Correcting
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringBlockEntities was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.removeErroringEntities was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.fullBoundingBoxLadders was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBaseSummonChance was corrected from null to its default, 0.1. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.zombieBabyChance was corrected from null to its default, 0.05. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.permissionHandler was corrected from null to its default, forge:default_handler. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.advertiseDedicatedServerToLan was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key server.useItemWithDurationZero was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Configuration file ./world/serverconfig/create-server.toml is not correct. Correcting
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key infrastructure was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key infrastructure.tickrateSyncTimer was corrected from null to its default, 20. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.bulkPressing was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.bulkCutting was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.allowBrewingInMixer was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.allowShapelessInMixer was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.allowShapedSquareInPress was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.allowRegularCraftingInCrafter was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.maxFireworkIngredientsInCrafter was corrected from null to its default, 9. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.allowStonecuttingOnSaw was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.allowCastingBySpout was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.displayLogStrippingRecipes was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.lightSourceCountForRefinedRadiance was corrected from null to its default, 10. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.enableRefinedRadianceRecipe was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key recipes.enableShadowSteelRecipe was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.disableStress was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.maxBeltLength was corrected from null to its default, 20. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.maxChainConveyorLength was corrected from null to its default, 32. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.maxChainConveyorConnections was corrected from null to its default, 4. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.crushingDamage was corrected from null to its default, 4. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.maxRotationSpeed was corrected from null to its default, 256. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.ignoreDeployerAttacks was corrected from null to its default, CREEPERS. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.kineticValidationFrequency was corrected from null to its default, 60. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.crankHungerMultiplier was corrected from null to its default, 0.009999999776482582. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.minimumWindmillSails was corrected from null to its default, 8. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.windmillSailsPerRPM was corrected from null to its default, 8. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.maxEjectorDistance was corrected from null to its default, 32. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.ejectorScanInterval was corrected from null to its default, 120. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.encasedFan was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.encasedFan.fanPushDistance was corrected from null to its default, 20. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.encasedFan.fanPullDistance was corrected from null to its default, 20. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.encasedFan.fanBlockCheckRate was corrected from null to its default, 30. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.encasedFan.fanRotationArgmax was corrected from null to its default, 256. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.encasedFan.fanProcessingTime was corrected from null to its default, 150. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.maxBlocksMoved was corrected from null to its default, 2048. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.maxChassisRange was corrected from null to its default, 16. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.maxPistonPoles was corrected from null to its default, 64. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.maxRopeLength was corrected from null to its default, 384. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.maxCartCouplingLength was corrected from null to its default, 32. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.rollerFillDepth was corrected from null to its default, 12. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.survivalContraptionPickup was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.movableSpawners was corrected from null to its default, NO_PICKUP. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.amethystMovement was corrected from null to its default, NO_PICKUP. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.movableObsidian was corrected from null to its default, UNMOVABLE. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.movableReinforcedDeepslate was corrected from null to its default, UNMOVABLE. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.moveItemsToStorage was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.harvestPartiallyGrown was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.harvesterReplants was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.minecartContraptionInContainers was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.stabiliseStableContraptions was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.syncPlayerPickupHitboxWithContraptionHitbox was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.contraptions.noDropWhenContraptionReplaceBlocks was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stats was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stats.mediumSpeed was corrected from null to its default, 30.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stats.fastSpeed was corrected from null to its default, 100.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stats.mediumStressImpact was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stats.highStressImpact was corrected from null to its default, 8.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stats.mediumCapacity was corrected from null to its default, 256.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stats.highCapacity was corrected from null to its default, 1024.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2 was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.brass_encased_shaft was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.turntable was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.clutch was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_mixer was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.gearbox was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_bearing was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.copper_backtank was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.hose_pulley was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.display_board was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.crushing_wheel was corrected from null to its default, 8.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.adjustable_chain_gearshift was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.millstone was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.rotation_speed_controller was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.sticky_mechanical_piston was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_crafter was corrected from null to its default, 2.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.deployer was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.elevator_pulley was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.stressometer was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.cogwheel was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.encased_chain_drive was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.belt was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.brass_encased_large_cogwheel was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.weighted_ejector was corrected from null to its default, 2.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.chain_conveyor was corrected from null to its default, 1.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_saw was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.flywheel was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_piston was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.speedometer was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.brass_encased_cogwheel was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.clockwork_bearing was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_press was corrected from null to its default, 8.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_drill was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.andesite_encased_shaft was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.netherite_backtank was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_arm was corrected from null to its default, 2.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.sequenced_gearshift was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.andesite_encased_large_cogwheel was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.shaft was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.cuckoo_clock was corrected from null to its default, 1.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.gearshift was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.rope_pulley was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.andesite_encased_cogwheel was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.large_cogwheel was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.encased_fan was corrected from null to its default, 2.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mysterious_cuckoo_clock was corrected from null to its default, 1.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.gantry_shaft was corrected from null to its default, 0.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.impact.mechanical_pump was corrected from null to its default, 4.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity.steam_engine was corrected from null to its default, 1024.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity.water_wheel was corrected from null to its default, 32.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity.copper_valve_handle was corrected from null to its default, 8.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity.hand_crank was corrected from null to its default, 8.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity.creative_motor was corrected from null to its default, 16384.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity.large_water_wheel was corrected from null to its default, 128.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key kinetics.stressValues.v2.capacity.windmill_bearing was corrected from null to its default, 512.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.fluidTankCapacity was corrected from null to its default, 8. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.fluidTankMaxHeight was corrected from null to its default, 32. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.mechanicalPumpRange was corrected from null to its default, 16. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.hosePulleyRange was corrected from null to its default, 128. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.hosePulleyBlockThreshold was corrected from null to its default, 10000. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.fillInfinite was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.bottomlessFluidMode was corrected from null to its default, ALLOW_BY_TAG. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.fluidFillPlaceFluidSourceBlocks was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key fluids.pipesPlaceFluidSourceBlocks was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.defaultExtractionTimer was corrected from null to its default, 8. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.psiTimeout was corrected from null to its default, 60. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.mechanicalArmRange was corrected from null to its default, 5. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.packagePortRange was corrected from null to its default, 5. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.linkRange was corrected from null to its default, 256. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.displayLinkRange was corrected from null to its default, 64. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.vaultCapacity was corrected from null to its default, 20. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.chainConveyorCapacity was corrected from null to its default, 20. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.brassTunnelTimer was corrected from null to its default, 10. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.factoryGaugeTimer was corrected from null to its default, 100. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key logistics.seatHostileMobs was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.creativePrintIncludesAir was corrected from null to its default, false. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.maxSchematics was corrected from null to its default, 10. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.maxTotalSchematicSize was corrected from null to its default, 256. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.maxSchematicPacketSize was corrected from null to its default, 1024. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.schematicIdleTimeout was corrected from null to its default, 600. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.schematicannon was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.schematicannon.schematicannonDelay was corrected from null to its default, 10. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key schematics.schematicannon.schematicannonShotsPerGunpowder was corrected from null to its default, 400. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment.maxSymmetryWandRange was corrected from null to its default, 50. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment.placementAssistRange was corrected from null to its default, 12. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment.toolboxRange was corrected from null to its default, 10. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment.airInBacktank was corrected from null to its default, 900. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment.enchantedBacktankCapacity was corrected from null to its default, 300. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment.maxExtendoGripActions was corrected from null to its default, 1000. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key equipment.maxPotatoCannonShots was corrected from null to its default, 200. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.trainsCauseDamage was corrected from null to its default, true. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.maxTrackPlacementLength was corrected from null to its default, 32. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.maxAssemblyLength was corrected from null to its default, 128. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.maxBogeyCount was corrected from null to its default, 20. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.manualTrainSpeedModifier was corrected from null to its default, 0.75. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.trainStats was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.trainStats.trainTopSpeed was corrected from null to its default, 28.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.trainStats.trainTurningTopSpeed was corrected from null to its default, 14.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.trainStats.trainAcceleration was corrected from null to its default, 3.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.poweredTrainStats was corrected from null to its default, SimpleCommentedConfig:{}. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.poweredTrainStats.poweredTrainTopSpeed was corrected from null to its default, 40.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.poweredTrainStats.poweredTrainTurningTopSpeed was corrected from null to its default, 20.0. 
+[12:15:45] [Server thread/WARN] [ne.mi.co.ForgeConfigSpec/CORE]: Incorrect key trains.poweredTrainStats.poweredTrainAcceleration was corrected from null to its default, 3.0. 
+[12:15:49] [Server thread/INFO] [minecraft/MinecraftServer]: Preparing start region for dimension minecraft:overworld
+[12:15:49] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[12:15:49] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[12:15:50] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[12:15:50] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 0%
+[12:15:51] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 1%
+[12:15:51] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 1%
+[12:15:52] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 2%
+[12:15:52] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 3%
+[12:15:53] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 4%
+[12:15:53] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 6%
+[12:15:54] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 9%
+[12:15:54] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 11%
+[12:15:55] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 14%
+[12:15:55] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 16%
+[12:15:56] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 18%
+[12:15:56] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 21%
+[12:15:57] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 23%
+[12:15:57] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 25%
+[12:15:58] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 28%
+[12:15:58] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 32%
+[12:15:59] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 34%
+[12:15:59] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 37%
+[12:16:00] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 41%
+[12:16:00] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 44%
+[12:16:01] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 45%
+[12:16:01] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 48%
+[12:16:02] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 51%
+[12:16:02] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 54%
+[12:16:03] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 56%
+[12:16:03] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 60%
+[12:16:04] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 64%
+[12:16:04] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 68%
+[12:16:05] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 70%
+[12:16:05] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 73%
+[12:16:06] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 76%
+[12:16:06] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 80%
+[12:16:07] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 83%
+[12:16:07] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 87%
+[12:16:08] [Worker-Main-3/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 91%
+[12:16:08] [Worker-Main-2/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 95%
+[12:16:09] [Worker-Main-1/INFO] [minecraft/LoggerChunkProgressListener]: Preparing spawn area: 99%
+[12:16:09] [Server thread/INFO] [minecraft/LoggerChunkProgressListener]: Time elapsed: 20127 ms
+[12:16:09] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+[12:16:09] [Server thread/INFO] [ne.mi.se.pe.PermissionAPI/]: Successfully initialized permission handler forge:default_handler
+[12:16:09] [Server thread/INFO] [minecraft/GameTestBatchRunner]: Running test batch 'kineticDrive:1' (6 tests)...
+[12:16:09] [Server thread/INFO] [minecraft/GameTestServer]: 101 tests are now running!
+[12:16:10] [Server thread/INFO] [Alpine Shred/]: [kinetic budget] 4000 ticks: 0.00051 ms a tick per drive (budget 0.02)
+[12:16:11] [Server thread/INFO] [minecraft/GameTestServer]: [++__+_                                                                                               ]
+[12:16:11] [Server thread/INFO] [minecraft/GameTestServer]: [++__+_                                                                                               ]
+[12:16:11] [Server thread/INFO] [minecraft/GameTestServer]: [++_+++                                                                                               ]
+[12:16:30] [Server thread/INFO] [minecraft/GameTestBatchRunner]: Running test batch 'defaultBatch:1' (95 tests)...
+[12:16:31] [Server thread/WARN] [minecraft/MinecraftServer]: Can't keep up! Is the server overloaded? Running 19469ms or 389 ticks behind
+[12:16:32] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 803 at (2.5, 71.0, 1.5)
+[12:16:32] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:32] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 804 at (-3.5, 69.0, -3.5)
+[12:16:32] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:32] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 808 at (3.5, 68.0, -1.5)
+[12:16:32] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:32] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 816 at (-9.5, 68.0, 9.5)
+[12:16:32] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:32] [Server thread/INFO] [Alpine Shred/]: Lift line a33a2262-52fc-4504-8742-315152326479 faulted: test
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 846 at (-9.5, 64.0, -7.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:33] [Server thread/INFO] [Alpine Shred/]: Lift line 9745bcb4-af57-449e-a6d5-7a121b0c07eb faulted: head broken at 62 -57 161
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 857 at (-9.5, 68.0, 9.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 862 at (-1.5, 69.0, -9.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-reload[embedded] logged in with entity id 865 at (5.5, 70.0, 5.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-reload joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-reload[embedded] logged in with entity id 866 at (61.25412997909022, -53.849920398194044, 276.07839076262394)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-reload joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 880 at (-4.5, 63.0, 7.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Rail Rider]
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 882 at (-7.5, 64.0, -1.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Catching Air]
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has reached the goal [Spin Cycle]
+[12:16:33] [Server thread/INFO] [Alpine Shred/]: Lift line 18672332-4e22-45de-b10d-1cc11a15c7e3 faulted: test
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 884 at (6.5, 74.0, -7.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 892 at (-5.5, 68.0, 9.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-relog[embedded] logged in with entity id 896 at (-0.5, 68.0, -2.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-relog joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-relog[embedded] logged in with entity id 897 at (64.4561909389259, -49.9042735793971, 421.108238078545)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-relog joined the game
+[12:16:33] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 912 at (4.5, 73.0, 2.5)
+[12:16:33] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:34] [Server thread/INFO] [Alpine Shred/]: [lift budget] 5 lines, 260 chairs, 200 ticks: manager 0.0015 ms a tick (budget 0.3), chair 1.438 us a tick (budget 5.0)
+[12:16:34] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1189 at (2.5, 72.0, 0.5)
+[12:16:34] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:34] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1198 at (-8.5, 64.0, 2.5)
+[12:16:34] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:34] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Best Friends Forever]
+[12:16:34] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1204 at (10.5, 71.0, -1.5)
+[12:16:34] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:35] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1210 at (1.5, 71.0, 10.5)
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:35] [Server thread/WARN] [Alpine Shred/]: Corrected rider alpine-rider (speed 3.000 > 1.739)
+[12:16:35] [Server thread/INFO] [Alpine Shred/]: Lift line 13df7e28-63e1-4170-86e2-a8b64876282e faulted: head at 14 -57 546: next node BlockPos{x=19, y=-58, z=557} should be BlockPos{x=14, y=-58, z=552}
+[12:16:35] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1213 at (9.5, 64.0, 8.5)
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:35] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1217 at (-7.5, 63.0, 4.5)
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:35] [Server thread/WARN] [Alpine Shred/]: Would correct (validation not strict) rider alpine-rider (air report: heading error 5, spin says 90); set movement.validation.strict to enforce
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Catching Air]
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has reached the goal [Spin Cycle]
+[12:16:35] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1219 at (3.5, 71.0, -8.5)
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:35] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1226 at (-6.5, 63.0, 10.5)
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Catching Air]
+[12:16:35] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has reached the goal [Spin Cycle]
+[12:18:48] [Server thread/INFO] [Alpine Shred/]: [worldgen test] 1068 starts over 3 seeds: ski_resort 28 of 4114 tried (10.2 ms a try, 150.4 ms a start, worst 236 ms); groomed_run 42 of 4500 tried (10.0 ms a try, 146.7 ms a start, worst 303 ms); terrain_park 600 of 8874 tried (1.8 ms a try, 2.0 ms a start, worst 8 ms); snow_feature 398 of 16991 tried (1.7 ms a try, 1.9 ms a start, worst 3 ms); farthest piece 7 chunks from its start; runs and resorts not started: {NOT_NEAR_BIOME=8344, LOW=60, BIOME=90, STEEP=37, SHORT_BLOCKED=7, SHORT_FLAT=6}
+[12:18:48] [Server thread/INFO] [Alpine Shred/]: [worldgen test] resorts with a lift: 18 of 28
+[12:18:52] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1268 at (-3.5, 70.0, 9.5)
+[12:18:52] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:18:52] [Server thread/WARN] [minecraft/ServerGamePacketListenerImpl]: alpine-rider moved wrongly!
+[12:18:52] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1270 at (-5.5, 70.0, -0.5)
+[12:18:52] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:18:52] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1271 at (-1.5, 68.0, 8.5)
+[12:18:52] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:18:53] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1278 at (-6.5, 64.0, -9.5)
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:18:53] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1280 at (-5.5, 64.0, 3.5)
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Catching Air]
+[12:18:53] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1281 at (3.5, 71.0, -8.5)
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Catching Air]
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has reached the goal [Spin Cycle]
+[12:18:53] [Server thread/INFO] [Alpine Shred/]: Lift line 29a9dbc8-da69-46a1-b729-edc724cc5e75 faulted: drive station broken at 14 -58 848
+[12:18:53] [Server thread/INFO] [Alpine Shred/]: Lift line cd100140-948c-4fd9-b855-79e2316f533e faulted: drive station broken at 14 -58 848
+[12:18:53] [Server thread/INFO] [Alpine Shred/]: Lift line 59e142b3-47c2-4865-80f4-7311fe0bacfb faulted: head broken at 14 -57 854
+[12:18:53] [Server thread/INFO] [Alpine Shred/]: Lift line ec65ceb6-6019-42b6-bd3a-bf9f7e34df29 faulted: head broken at 14 -57 854
+[12:18:53] [Server thread/INFO] [minecraft/PlayerList]: alpine-rider[embedded] logged in with entity id 1293 at (-9.5, 64.0, 1.5)
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider joined the game
+[12:18:53] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider has made the advancement [Bluebird Day]
+[12:18:54] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++]
+[12:18:54] [Server thread/INFO] [minecraft/GameTestServer]: ========= 101 GAME TESTS COMPLETE ======================
+[12:18:54] [Server thread/INFO] [minecraft/GameTestServer]: All 101 required tests passed :)
+[12:18:54] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+[12:18:54] [Server thread/INFO] [minecraft/MinecraftServer]: Stopping server
+[12:18:54] [Server thread/INFO] [minecraft/MinecraftServer]: Saving players
+[12:18:54] [Server thread/INFO] [minecraft/ServerGamePacketListenerImpl]: alpine-rider lost connection: Server closed
+[12:18:54] [Server thread/INFO] [minecraft/MinecraftServer]: alpine-rider left the game
+[12:18:54] [Server thread/INFO] [minecraft/MinecraftServer]: Saving worlds
+[12:18:56] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[12:18:59] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[12:18:59] [Server thread/INFO] [minecraft/MinecraftServer]: Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[12:18:59] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (world): All chunks are saved
+[12:18:59] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[12:18:59] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[12:18:59] [Server thread/INFO] [minecraft/MinecraftServer]: ThreadedAnvilChunkStorage: All dimensions are saved
+[12:19:00] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_4-1794053717920.json
+
+[Incubating] Problems report is available at: file:///home/runner/work/alpine-shred/alpine-shred/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.14.3/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 3m 45s
+10 actionable tasks: 7 executed, 3 up-to-date
