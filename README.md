@@ -968,6 +968,45 @@ covered by a test or noted in code.
     against the vanilla mobs and left as they were: `lift_blocked` keeps the ender dragon, wither and warden, and the
     size limits (1.2 wide, 2.4 tall) already keep out every other large mob; `lift_passengers` stays empty.
 
+89. **The release pipeline is `release.yml`, and a tag is the only way to publish.** Phase 9 decision 7, as built
+    (WP8; the long `build.yml` is untouched).
+    - *Triggers.* A `v*` tag push runs `build` (both jars at the tag's version, the unit tests, the metadata check),
+      then `github-release` and `publish` in parallel. A manual run (`workflow_dispatch`, `dry_run` true by default,
+      plus a `version` input, 1.0.0 by default) runs `build` only and uploads the jars and the changelog section as
+      the `release-jars` artifact. A manual run with `dry_run` false fails at once: publishing from a branch with a
+      made-up version is what the tag rule is there to prevent.
+    - *Tokens.* The workflow is read-only by default. Only `github-release` gets `contents: write`, and it uses
+      `GITHUB_TOKEN` with the `gh` CLI (`gh release create`, jars plus the version's changelog section; a version
+      with a `-` is a prerelease). `publish` reads `MODRINTH_TOKEN` and `CURSEFORGE_TOKEN` from secrets and
+      `MODRINTH_PROJECT_ID` and `CURSEFORGE_PROJECT_ID` from repository variables. Each of the four publish steps is
+      skipped when its token or id is empty, so a tag with no secrets set still makes the GitHub release. Secrets
+      are passed to the action as inputs and never echoed.
+    - *Why `Kir-Antipov/mc-publish@v3.3.0`.* It is the widely used action for exactly this, one step handles both
+      Modrinth and CurseForge (loaders, game versions, dependencies and release type), and the version tag is more
+      than a few weeks old. Plain curl against the two APIs would be about 60 lines of JSON and multipart handling
+      to own. It is given no `github-token`, so it cannot touch releases. The dependency slugs (`fabric-api`,
+      `architectury-api`, `trinkets`, `playeranimator`, `curios`, `create`, `create-fabric`) are written from
+      memory and are checked by hand at the first real publish, which is after development.
+    - *The build.* Gradle runs `build -Pmod_version=<tag without v>` after `.github/scripts/unpack-create-nested.sh`
+      (the Fabric compile needs it on every build, README 79). A tag must look like `1.2.3` or `1.2.3-rc.1`.
+    - *Changelog.* `CHANGELOG.md` is built from the "What phase N delivers" sections, newest section on top
+      (`## [1.0.0] - unreleased`). `.github/scripts/changelog-section.sh` prints the section whose heading starts
+      with `## [<version>]` and fails when it is missing or empty, so a tag with no changelog section cannot build.
+      The date in the heading is edited when the tag is cut.
+90. **The jars' metadata is checked after the build, from inside each jar.** `.github/scripts/verify-jar.py` reads
+    `fabric.mod.json` or `META-INF/mods.toml` out of the built jar and fails on a mismatch:
+    - *Version.* `gradle.properties` holds `mod_version`; `build.gradle` makes the project version
+      `<mod_version>+mc<minecraft_version>`, and both resource tasks expand it into the metadata, so
+      `-Pmod_version=1.0.0` gives `1.0.0+mc1.20.1` in the file name and in both metadata files. No change was needed
+      there. The check expects exactly that string.
+    - *Ranges.* Minecraft `~1.20.1` (Fabric) and `[1.20.1,1.20.2)` (Forge); Fabric loader `>=0.15.0`; Forge `[47,)`.
+    - *Create is optional on both loaders.* Fabric `suggests` `create` at `>=6.0.0`, the line our compat code is
+      built against (Create Fabric 6.0.8.1 in CI; a wrong range on a suggestion only warns). Forge has a
+      `mandatory = false` dependency at `[6.0.0,)` with `side = "BOTH"`. The check also fails if Create is ever a
+      hard dependency on Fabric.
+    - *NeoForge.* The Forge jar runs on NeoForge 1.20.1, whose mod loader reads the same `mods.toml`, so the jar is
+      unchanged and the publish step lists it under both `forge` and `neoforge`. The Fabric jar lists `fabric` only.
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
 Real animation clips, sounds and textures replace the placeholders file by file under the same

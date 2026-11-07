@@ -439,6 +439,12 @@ against the committed data (README 83 to 85).
 - Done when: a dry run on the WP branch produces both jars with the right metadata. No real publish happens in
   development.
 
+**Done (dry run).** Merged into `wip/phase-9` (main CI run 42367538642 green on both jobs; dry run 42367602934
+built and verified both jars, version `1.0.0+mc1.20.1`, nothing published). `release.yml` publishes only from a `v*`
+tag; a manual run cannot publish. At the merge Opus pinned `mc-publish` to its v3.3.0 commit and set the Fabric
+Create range to `>=6.0.0` to match Forge. Before the first real publish: check the mc-publish dependency slugs
+against Modrinth and CurseForge (README 89).
+
 ### WP9: The compatibility matrix
 
 - Write the matrix in `docs/playtest-phase9.md`. Mark each row as CI (with the step that covers it) or by hand.
