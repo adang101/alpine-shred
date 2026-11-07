@@ -10,6 +10,7 @@ public final class FabricCreateCompat {
     }
 
     public static void init() {
+        FabricKineticDrive.register();
         CreateCompat.install(new FabricCreateBridge());
         // Create's wrench on our blocks (README 80): a non-PASS result ends the click.
         UseBlockCallback.EVENT.register((player, level, hand, hit) ->

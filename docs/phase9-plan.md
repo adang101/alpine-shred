@@ -334,6 +334,13 @@ It took 6 CI rounds (3 granted extra for the Fabric runtime).
   - a budget test: under 3× 0.02 ms a tick per drive (decision 6).
 - Done when: both columns are green, the `lift` smoke is unchanged, and the measured numbers are reported.
 
+**Done.** Merged into `wip/phase-9` (run 42355396757 on `dba2f22`, green on both jobs; 97 of ours per loader in
+the Create column). Measured 0.0006 to 0.0012 ms a tick per drive against the 0.02 ms budget. The drive drops
+itself in code (no loot table), its recipe and tag entries are written by id with load conditions or
+`required: false`, and its six game tests run in their own batch (README 78, 79). At the merge it joined
+`alpineshred:wrench/lift_pickup` as an optional entry. Note for WP8: the Fabric compile now needs Create's nested
+jars on every build (`.github/scripts/unpack-create-nested.sh`), so release builds must run that script too.
+
 ### WP4: Wrench support
 
 Create's wrench on our blocks, kept to rules a player can guess:

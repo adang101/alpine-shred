@@ -42,6 +42,11 @@ jobs:
       - name: Prepare log folder
         run: mkdir -p "$RUNNER_TEMP/ci-logs"
 
+      # The Fabric kinetic drive extends Create's block entity, so javac needs Create's nested jars (Porting Lib)
+      # on the compile classpath, in this job as well as in the one with Create (README 79).
+      - name: Unpack Create's nested jars (Fabric)
+        run: .github/scripts/unpack-create-nested.sh
+
       # Data generation first: tags, recipes, loot and lang feed the jars and the game tests.
       - name: Generate data (Fabric datagen into common/src/main/generated)
         timeout-minutes: 20
@@ -270,32 +275,9 @@ jobs:
       - name: Prepare log folder
         run: mkdir -p "$RUNNER_TEMP/ci-logs"
 
-      # Loom does not unpack Create Fabric's jar-in-jar content for the dev runtime, so the jars nested inside the
-      # pinned Create Fabric release are copied into fabric/build/create-nested, which fabric/build.gradle reads
-      # under -PwithCreate. The download is pinned by sha256 (gradle.properties, create_fabric_version).
+      # Loom does not unpack Create Fabric's jar-in-jar content; see the script (README 77, 79).
       - name: Unpack Create's nested jars (Fabric)
-        env:
-          CREATE_FABRIC_VERSION: 6.0.8.1+build.1744-mc1.20.1
-          CREATE_FABRIC_SHA256: a613603fb08d967c5a4138d1adb7374c4a347b91e489fe21579a4cff4f40105a
-        run: |
-          curl -fsSL --retry 3 -o "$RUNNER_TEMP/create-fabric.jar" \
-            "https://api.modrinth.com/maven/maven/modrinth/create-fabric/$CREATE_FABRIC_VERSION/create-fabric-$CREATE_FABRIC_VERSION.jar"
-          echo "$CREATE_FABRIC_SHA256  $RUNNER_TEMP/create-fabric.jar" | sha256sum -c -
-          # Porting Lib's modules nest further modules (fluids, core, ...), and Loom strips nested jars from
-          # every jar it remaps, so unpack to a fixed point (three levels is more than enough), then drop the
-          # plain libraries and keep the newest of each module.
-          W="$RUNNER_TEMP/create-nested-work"; D=fabric/build/create-nested
-          mkdir -p "$W/all" "$D"
-          unzip -jo -q "$RUNNER_TEMP/create-fabric.jar" 'META-INF/jars/*.jar' -d "$W/all"
-          for pass in 1 2 3; do
-            for j in "$W"/all/*.jar; do unzip -jo -q "$j" 'META-INF/jars/*.jar' -d "$W/all" 2>/dev/null || true; done
-          done
-          rm -f "$W"/all/core-3.* "$W"/all/toml-3.* "$W"/all/jsr305-*
-          ls "$W/all" | sed -E 's/-[0-9][^/]*\.jar$//' | sort -u | while read -r base; do
-            cp "$W/all/$(ls "$W/all" | grep -E "^${base}-[0-9]" | sort -V | tail -1)" "$D/"
-          done
-          ls "$D"
-          test "$(ls "$D" | wc -l)" -ge 15
+        run: .github/scripts/unpack-create-nested.sh
 
       # Create Fabric registers its own game tests, and Fabric API runs every mod's, so Gradle's exit code also
       # reflects Create's (README 77). The run is allowed to fail; gametest-junit-check.py then judges only ours:

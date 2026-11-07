@@ -154,7 +154,7 @@ public final class LiftGameTests {
     // ---- work package 2: blocks and block entities ----
 
     /** A drive, one head and a return station six blocks apart, placed with their block entities. */
-    private record Built(BlockPos drive, BlockPos head, BlockPos ret) {
+    record Built(BlockPos drive, BlockPos head, BlockPos ret) {
         List<BlockPos> nodes() {
             return List.of(drive, head, ret);
         }
@@ -176,7 +176,7 @@ public final class LiftGameTests {
         }
     }
 
-    private static Built place(GameTestHelper helper) {
+    static Built place(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();
         BlockPos base = helper.absolutePos(new BlockPos(1, 2, 1));
         Built b = new Built(base, base.offset(0, 1, 6), base.offset(0, 0, 12));
@@ -188,7 +188,7 @@ public final class LiftGameTests {
     }
 
     /** Writes the data a linker would: the line id on every block entity, and the head's neighbours. */
-    private static void link(ServerLevel level, Built b, LiftLine line) {
+    static void link(ServerLevel level, Built b, LiftLine line) {
         b.driveBe(level).setLineId(line.id);
         b.headBe(level).setLink(line.id, b.drive, b.ret);
         b.returnBe(level).setLineId(line.id);

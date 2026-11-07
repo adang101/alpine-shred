@@ -6,6 +6,10 @@
     "alpineshred:lift_drive_station",
     "alpineshred:lift_return_station",
     "alpineshred:lift_loading_gate",
-    "alpineshred:lift_stop_button"
+    "alpineshred:lift_stop_button",
+    {
+      "id": "alpineshred:kinetic_lift_drive",
+      "required": false
+    }
   ]
 }

@@ -12,6 +12,7 @@ public final class ForgeCreateCompat {
     }
 
     public static void init() {
+        ForgeKineticDrive.register();
         CreateCompat.install(new ForgeCreateBridge());
         MinecraftForge.EVENT_BUS.addListener(ForgeCreateCompat::onRightClickBlock);
     }

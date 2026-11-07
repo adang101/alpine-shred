@@ -24,6 +24,10 @@
     {
       "id": "alpineshred:lift_stop_button",
       "required": false
+    },
+    {
+      "id": "alpineshred:kinetic_lift_drive",
+      "required": false
     }
   ]
 }

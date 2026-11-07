@@ -1,5 +1,6 @@
 package io.github.adang101.alpineshred.lift;
 
+import io.github.adang101.alpineshred.compat.create.CreateCompat;
 import io.github.adang101.alpineshred.config.AlpineConfig;
 import io.github.adang101.alpineshred.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -15,7 +16,8 @@ import java.util.UUID;
 /**
  * The standalone drive station: its line and the speed level it is set to (an index into
  * {@code lift.speedLevels}; 1 is "normal"). As a {@link LiftDriveSource} it is enabled by a redstone
- * signal, or always when {@code lift.driveNeedsRedstone} is off.
+ * signal, or always when {@code lift.driveNeedsRedstone} is off. A Create kinetic drive next to it replaces
+ * both (see {@link #kineticSource}).
  *
  * <p>{@link #refresh} pushes the drive's command into the saved line ({@code powered} and
  * {@code targetSpeed}), so an unloaded drive keeps its last command. It runs on a redstone neighbour
@@ -42,14 +44,26 @@ public class LiftDriveStationBlockEntity extends LiftNodeBlockEntity implements 
         setChanged();
     }
 
+    /**
+     * The kinetic drive attached to this station, or null (phase 9 decision 2, README 78). While there is one it
+     * is the source and redstone is ignored; without Create the bridge answers null at no cost.
+     */
+    public LiftDriveSource kineticSource() {
+        return level == null ? null : CreateCompat.bridge().kineticDriveNear(level, worldPosition);
+    }
+
     @Override
     public boolean enabled() {
+        LiftDriveSource kinetic = kineticSource();
+        if (kinetic != null) return kinetic.enabled();
         if (!AlpineConfig.LIFT_DRIVE_NEEDS_REDSTONE.get()) return true;
         return level != null && level.hasNeighborSignal(worldPosition);
     }
 
     @Override
     public double targetSpeed() {
+        LiftDriveSource kinetic = kineticSource();
+        if (kinetic != null) return kinetic.targetSpeed();
         List<Double> levels = AlpineConfig.LIFT_SPEED_LEVELS.get();
         return levels.get(Math.max(0, Math.min(speedLevel, levels.size() - 1)));
     }
@@ -71,6 +85,11 @@ public class LiftDriveStationBlockEntity extends LiftNodeBlockEntity implements 
             LiftManager.clearEmergency(level, lineId);
             refresh(level);
             player.displayClientMessage(Component.translatable("message.alpineshred.lift.emergency_cleared"), true);
+            return;
+        }
+        if (kineticSource() != null) {
+            // The rotation sets the speed: there is no level to cycle.
+            player.displayClientMessage(Component.translatable("message.alpineshred.lift.speed", String.format("%.1f", targetSpeed())), true);
             return;
         }
         double speed = cycleSpeedLevel();

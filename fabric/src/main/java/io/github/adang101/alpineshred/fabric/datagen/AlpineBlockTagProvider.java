@@ -58,7 +58,11 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
         // Lift blocks Create's wrench may pick up (README 80); later lift blocks, like the kinetic drive, join here.
         getOrCreateTagBuilder(ModTags.Blocks.WRENCH_LIFT_PICKUP).add(ModBlocks.LIFT_TOWER_POLE.get(), ModBlocks.LIFT_TOWER_HEAD.get(),
                 ModBlocks.LIFT_DRIVE_STATION.get(), ModBlocks.LIFT_RETURN_STATION.get(),
-                ModBlocks.LIFT_LOADING_GATE.get(), ModBlocks.LIFT_STOP_BUTTON.get());
+                ModBlocks.LIFT_LOADING_GATE.get(), ModBlocks.LIFT_STOP_BUTTON.get())
+                .addOptional(AlpineCreateProvider.KINETIC_DRIVE);
+        // The kinetic drive exists only with Create: optional entries, so these tags load without it (README 78).
+        nonBreakable.addOptional(AlpineCreateProvider.KINETIC_DRIVE);
+        pickaxe.addOptional(AlpineCreateProvider.KINETIC_DRIVE);
         pickaxe.add(ModBlocks.RAIL_POST.get(), ModBlocks.METAL_BOX.get(), ModBlocks.PLASTIC_BOX.get(), ModBlocks.PIPE_COPING.get());
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.WOOD_BOX.get(), ModBlocks.PARK_RAMP.get(),
                 ModBlocks.QUARTER_PIPE.get(), ModBlocks.SLOPE_MARKER_GREEN.get(), ModBlocks.SLOPE_MARKER_BLUE.get(),
