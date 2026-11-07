@@ -7,8 +7,11 @@ separate design document. This README (what each phase delivers, and the design 
 made while building) and the phase plans in `docs/` are the record. References below to "the
 design doc" and its section numbers point to that record.
 
-**Status:** Phases 1 to 8 are merged into `main`; phase 9, the last, is next
-([docs/phase9-plan.md](docs/phase9-plan.md)). Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
+**Running a server?** Read [docs/server-guide.md](docs/server-guide.md): every config key, the commands and
+permission levels, lift and world generation settings, Create, performance budgets and NeoForge notes.
+
+**Status:** Phases 1 to 8 are merged into `main`; phase 9, the last, is built on `wip/phase-9` and passes
+its automated exit gate ([docs/phase9-plan.md](docs/phase9-plan.md)). Phase 8 (ski lifts) is built: lift lines of towers, a drive and a return station, chairs
 that carry up to two riders (or mobs) and leave them at the top in a glide, lifts that generate at
 ski resorts, and `/alpineshred lift` commands. Its automated exit gate passes in CI: the lift game
 tests (line data and its save and reload, boarding, riding, unloading, faulted lines, relogs, the
@@ -49,7 +52,7 @@ playtest page.
 | 6 | Board and ski customization: the Paint Bench, editor, share codes | Done, playtest open | [playtest](docs/playtest-phase6.md) |
 | 7 | World generation: groomed runs, resorts, parks, snow features | Done, playtest open | [playtest](docs/playtest-phase7.md) |
 | 8 | Ski lifts: lines, chairs, boarding, sync, generated resort lifts | Done (merged 2026-11-06), playtest open | [plan](docs/phase8-plan.md), [playtest](docs/playtest-phase8.md) |
-| 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | **Next** | [plan](docs/phase9-plan.md) |
+| 9 | Create compatibility and polish: the kinetic drive, wrench support, tags, the balance pass, the server guide, optimization, the release pipeline | Built on `wip/phase-9`, CI green; hand rows open | [plan](docs/phase9-plan.md), [server guide](docs/server-guide.md) |
 
 Development ends with phase 9: the compatibility matrix passes, and the release pipeline's dry run
 is correct. The matrix (which loader, Create, Curios and Trinkets, and server combinations CI covers and which are
@@ -1031,6 +1034,10 @@ covered by a test or noted in code.
     - *NeoForge.* The Forge jar runs on NeoForge 1.20.1, whose mod loader reads the same `mods.toml`, so the jar is
       unchanged and the publish step lists it under both `forge` and `neoforge`. The Fabric jar lists `fabric` only.
 
+91. **`worldgen.frequencyMul` is 0.1 to 1.0.** It only thins starts (below 1, by the start's own seed); above 1 it did
+    nothing, because spacing belongs to the structure sets. A dead range invites a setting that cannot work, so the
+    range now ends at 1.0 and a value above it is clamped with a warning like any other. Nothing else read the old
+    10.0 (no test, generated file or sync key). Written up in `docs/server-guide.md` (WP7).
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

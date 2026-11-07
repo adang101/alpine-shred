@@ -34,7 +34,7 @@ public final class AlpineConfig {
     public static final ConfigSpec.BoolEntry WORLDGEN_GROOMED_RUNS = COMMON.bool("worldgen.groomedRuns", true);
     public static final ConfigSpec.BoolEntry WORLDGEN_RESORTS = COMMON.bool("worldgen.resorts", true);
     public static final ConfigSpec.BoolEntry WORLDGEN_SNOW_FEATURES = COMMON.bool("worldgen.snowFeatures", true);
-    public static final ConfigSpec.DoubleEntry WORLDGEN_FREQUENCY_MUL = COMMON.decimal("worldgen.frequencyMul", 1.0, 0.1, 10.0);
+    public static final ConfigSpec.DoubleEntry WORLDGEN_FREQUENCY_MUL = COMMON.decimal("worldgen.frequencyMul", 1.0, 0.1, 1.0);
 
     public static final ConfigSpec.IntEntry LIFT_MAX_LINES_PER_LEVEL = COMMON.integer("lift.maxLinesPerLevel", 64, 1, 1024);
     public static final ConfigSpec.IntEntry LIFT_MAX_HEADS = COMMON.integer("lift.maxHeads", 48, 1, 256);

@@ -1,5 +1,8 @@
 # Phase 9 plan: Create compatibility and polish
 
+**Status:** WP0 to WP9 and the flip fix are merged into `wip/phase-9`, and every automated exit-gate item passes in
+CI. Open before the release: the hand rows and open list in `docs/playtest-phase9.md`, including the spark check.
+
 This is the work plan for phase 9, the last phase of development. There is no separate design document. What
 the game does is defined by this plan, the earlier phase plans, and the README ("What phase N delivers" and
 "Design clarifications made while building"). Older text that cites "the design doc" or its section numbers refers
@@ -430,6 +433,11 @@ speed. Hot paths no longer allocate per line, chair or cable piece per tick, eac
   - NeoForge, and known issues.
 - The README links to it.
 - Opus reviews it for accuracy against the code, not for prose.
+
+**Done.** Merged into `wip/phase-9` (run 42385350787 on `262e701`, green on both jobs). `docs/server-guide.md` has
+11 sections; its two config tables are rendered from `AlpineConfig` and `ServerGuideTest` keeps them in step. Review
+fixes: the groomed-run figures from WP6, and `worldgen.frequencyMul` narrowed to 0.1 to 1.0 (README 91). Untested
+claims (NeoForge, other Create versions, a client without Create) are marked "not yet verified".
 
 ### WP8: The release pipeline
 
