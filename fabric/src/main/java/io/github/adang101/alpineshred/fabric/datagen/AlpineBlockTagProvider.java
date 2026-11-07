@@ -25,6 +25,8 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_SNOW).add(ModBlocks.GROOMED_SNOW.get(), Blocks.SNOW_BLOCK, Blocks.SNOW);
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_ICE).add(Blocks.ICE, Blocks.PACKED_ICE, Blocks.BLUE_ICE, Blocks.FROSTED_ICE);
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_POWDER).add(Blocks.POWDER_SNOW);
+        // Vanilla's "snow" tag is what lets grass under a snow block show its snowy side (README 84).
+        getOrCreateTagBuilder(BlockTags.SNOW).add(ModBlocks.GROOMED_SNOW.get());
 
         // Slabs in the tag work as low boxes (section 11).
         getOrCreateTagBuilder(ModTags.Blocks.SLIDE_BOXES)

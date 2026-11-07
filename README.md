@@ -929,6 +929,44 @@ covered by a test or noted in code.
     `TrickValidator` rejects with it, and `AirRotation.step` takes the air tick count and holds the pitch at the
     limit, so an honest rider can never send a flip report the server rejects. The validator's limits are
     unchanged. A short air holds a flip at just under half a turn until tick 16. Unit: `FlipLimitTest`.
+83. **The balance pass changed one recipe, and settled the rest as they were.** Phase 9 decision 5: data only, no
+    code or stat changes (gear stats and durabilities stay as phase 6 tuned them, since the movement tests rest on them).
+    Every changed number:
+
+    | Recipe | Before | After |
+    |---|---|---|
+    | Pro Snowboard (smithing table) | netherite upgrade template, a park or freeride board, netherite ingot | diamond (template slot), a park or freeride board, amethyst shard |
+    | Pro Skis (smithing table) | netherite upgrade template, carving or park skis, netherite ingot | diamond (template slot), carving or park skis, amethyst shard |
+
+    Why: "nothing needs end-game items", and netherite is the one end-game material the mod asked for. The pro tier
+    stays a smithing recipe because the smithing transform is what carries a painted design onto the pro board
+    (`smithingCarriesTheDesign`); that test's table now holds a diamond and an amethyst shard. A diamond and an
+    amethyst shard (the same shard the carbon poles use) put the top tier at mid-game cost. Checked and kept:
+    - *Starter gear.* A snowboard is 4 spruce planks, 1 leather and 2 iron nuggets; snowboard boots are 2 leather,
+      a string and 2 wool. That is one log, three leather, two wool, a string and a fifth of an iron ingot, so a new
+      player is riding after a cow, a sheep and a smelt. Skis, ski boots, mitts and the park pieces are as cheap.
+    - *Mid-game gear.* Park and freeride boards, the three ski upgrades, the carbon poles and the park wrench stay at
+      iron, copper, slime, phantom membrane, packed ice, amethyst and redstone.
+    - *Lifts.* Pole (4 per iron ingot and 2 bars), head (lightning rod, 3 ingots), drive station (iron block, piston,
+      4 redstone), return station (iron block, piston), gate and stop button are unchanged. A small lift is two iron
+      blocks and two pistons plus poles: an iron-tier build, with no diamond and no Nether item in it.
+    - *The kinetic drive* stays a gearbox, a large cogwheel and an iron block: the same iron block as the drive
+      station it sits beside, and only Create's andesite-tier parts otherwise. Its recipe keeps its Create load
+      conditions on both loaders.
+84. **Common tags are Forge's, written by datagen; Fabric has none to join.** Datagen runs on Fabric only, but a
+    `forge:` tag is just a data file, so `AlpineItemTagProvider` writes `forge:armors`, `forge:armors/boots`,
+    `forge:armors/helmets` (boots and helmet) and `forge:tools` (poles, edge tuner, park wrench, lift linker). The API
+    probe of fabric-convention-tags-v1 1.5.6 (the 1.20.1 Fabric API in use) showed no armor, tool or wrench tags
+    there, so no `c:` copies are invented. The park wrench is in no wrench tag: other mods treat that tag as
+    "rotates my blocks", and it is the park tool only (README 80). Groomed snow joins the vanilla `minecraft:snow`
+    block tag, which is what makes grass under it show its snowy side. Neither loader has a convention for dyeable
+    gear or snow blocks, so nothing is invented for them.
+85. **WP5's checks.** `GeneratedDataTest` (unit, reads the committed JSON and the generated language file for the
+    ids): every item has a recipe or a listed reason (the three weathered copper rails, which only weather), and every
+    block has a loot table and a `minecraft:mineable` tag or a listed reason (the quarter pipe and the kinetic drive
+    drop in code). A stale reason fails too, and a failure names the offending ids. The lift tags were reviewed
+    against the vanilla mobs and left as they were: `lift_blocked` keeps the ender dragon, wither and warden, and the
+    size limits (1.2 wide, 2.4 tall) already keep out every other large mob; `lift_passengers` stays empty.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

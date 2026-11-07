@@ -151,8 +151,8 @@ public final class DesignGameTests {
         ItemStack park = new ItemStack(ModItems.PARK_SNOWBOARD.get());
         Design d = sample(DesignKind.BOARD).withAuthor("Alex", java.util.UUID.randomUUID());
         DesignNbt.write(park, d);
-        SimpleContainer table = new SimpleContainer(new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), park,
-                new ItemStack(Items.NETHERITE_INGOT));
+        SimpleContainer table = new SimpleContainer(new ItemStack(Items.DIAMOND), park,
+                new ItemStack(Items.AMETHYST_SHARD));
         var level = helper.getLevel();
         var recipe = level.getRecipeManager().getRecipeFor(RecipeType.SMITHING, table, level);
         check(recipe.isPresent(), "no smithing recipe for a park board");

@@ -388,6 +388,13 @@ in a mean 5.585 ms against the 5 ms budget.
 - Tests: a datagen check that every item has a recipe or a reason, and every block has a loot table and a
   mineable tag (a unit test over the generated JSON, or a game test).
 
+**Done.** Merged into `wip/phase-9` (run 42364491124 on `08cafc7`: everything green, Create job included, apart
+from the multiplayer watcher's design-texture mean, 5.375 ms against 5 ms, the WP6 carry-over seen a second time).
+The balance pass changed only the pro tier: diamond and an amethyst shard replace netherite in the smithing recipe,
+which keeps carrying the design. Common tags are `forge:` only, since Fabric's 1.20.1 conventions have none for
+these; groomed snow joins `minecraft:snow`. `GeneratedDataTest` checks recipes, loot tables and mineable tags
+against the committed data (README 83 to 85).
+
 ### WP6: Optimization
 
 - Carry-over: the multiplayer watcher's design-texture build ran a mean 5.585 ms against its 5 ms budget once
