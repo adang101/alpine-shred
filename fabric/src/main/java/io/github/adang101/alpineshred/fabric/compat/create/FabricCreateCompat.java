@@ -8,6 +8,7 @@ public final class FabricCreateCompat {
     }
 
     public static void init() {
+        FabricKineticDrive.register();
         CreateCompat.install(new FabricCreateBridge());
     }
 }

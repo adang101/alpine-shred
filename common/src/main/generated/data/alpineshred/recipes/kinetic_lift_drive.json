@@ -1,0 +1,32 @@
+{
+  "category": "redstone",
+  "conditions": [
+    {
+      "modid": "create",
+      "type": "forge:mod_loaded"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:all_mods_loaded",
+      "values": [
+        "create"
+      ]
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "create:gearbox"
+    },
+    {
+      "item": "create:large_cogwheel"
+    },
+    {
+      "item": "minecraft:iron_block"
+    }
+  ],
+  "result": {
+    "item": "alpineshred:kinetic_lift_drive"
+  },
+  "type": "minecraft:crafting_shapeless"
+}

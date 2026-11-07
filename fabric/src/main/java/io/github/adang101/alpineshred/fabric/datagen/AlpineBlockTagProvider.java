@@ -55,6 +55,9 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
         // Create's wrench and contraptions leave blocks in this tag alone; optional, so it works without Create.
         var nonBreakable = getOrCreateTagBuilder(NON_BREAKABLE);
         for (var lift : ModBlocks.liftBlocks()) nonBreakable.addOptional(lift.getId());
+        // The kinetic drive exists only with Create: optional entries, so these tags load without it (README 78).
+        nonBreakable.addOptional(AlpineCreateProvider.KINETIC_DRIVE);
+        pickaxe.addOptional(AlpineCreateProvider.KINETIC_DRIVE);
         pickaxe.add(ModBlocks.RAIL_POST.get(), ModBlocks.METAL_BOX.get(), ModBlocks.PLASTIC_BOX.get(), ModBlocks.PIPE_COPING.get());
         getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE).add(ModBlocks.WOOD_BOX.get(), ModBlocks.PARK_RAMP.get(),
                 ModBlocks.QUARTER_PIPE.get(), ModBlocks.SLOPE_MARKER_GREEN.get(), ModBlocks.SLOPE_MARKER_BLUE.get(),

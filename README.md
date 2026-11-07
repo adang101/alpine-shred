@@ -853,9 +853,54 @@ covered by a test or noted in code.
       live; without it, there is no bridge. That is stronger than skipping it outside the Create column, and
       a Forge namespace filter would have needed a second copy of the empty test template. Later Create
       tests live in `CreateGameTests` and begin with `inCreateColumn()`.
+78. **The kinetic lift drive is a Create gearbox that runs the station beside it.** Phase 9 decision 2, as built:
+    - *The block.* `kinetic_lift_drive` is a log-style block (axis `x`, `y` or `z`) with a cable wheel on its four
+      side faces and a shaft hole in both ends, so it joins a Create network the way a shaft does. It and its
+      block entity `KineticLiftDriveBE` (a Create `KineticBlockEntity` that implements `LiftDriveSource`) live in
+      each loader's `compat.create` package and are registered, in their own Architectury registers, only when
+      Create is present. It drops itself in code (`getDrops`), not from a loot table: datagen runs without Create,
+      and a loot file naming an item that does not exist would be a load error in the normal column.
+    - *Which drive wins.* `LiftDriveStationBlockEntity.enabled()` and `targetSpeed()` first ask
+      `CreateCompat.bridge().kineticDriveNear(...)`, which looks at the six neighbours in the fixed order down, up,
+      north, south, west, east and returns the first kinetic drive or null. With Create absent the bridge is the
+      empty one and answers null, so the station behaves as before and costs nothing. While one is attached it
+      is the source and redstone is ignored; remove it and the station's neighbour update hands control back to
+      redstone. Right-clicking such a station clears an emergency the rotation allows to run, and otherwise only
+      reports the speed (there is no level to cycle).
+    - *Numbers.* `KineticDriveMath` (pure, common, unit-tested): speed is `|rpm| / 64` blocks per second clamped to
+      `lift.kineticMaxSpeed` (4.0, range 0.1 to 10.0, already in the config); under 8 rpm in either direction is
+      stopped; stress is a flat `lift.kineticStress` (4.0, range 0.1 to 64.0, new) per rpm, so 256 rpm takes
+      1024 su whatever the chair count. `calculateStressApplied()` returns that per-rpm impact and Create
+      multiplies by the speed; the item tooltip quotes the figure at 256 rpm.
+    - *Motion.* No new motion code. The drive tells its neighbouring stations to `refresh()` when its command
+      (`enabled`, target speed) changes, and the station writes it into the line exactly as for redstone, so
+      `LiftMotion` ramps a speed change and an emergency stop (losing rotation, falling under 8 rpm, or
+      overstress, which Create reports as speed 0) decelerates at 2.0 blocks per second squared. Rotation coming
+      back clears the emergency, as redstone returning does. The block entity compares its command every tick
+      (two float reads and a compare, `KineticDriveWatch`, no allocation) as well as in `onSpeedChanged`, because
+      Create zeroes an unsourced block's speed without calling it. A fresh drive starts as "stopped" and a drive
+      read from disk takes its saved rotation as the baseline, so a reload is never a false emergency stop.
+79. **The kinetic drive's data is written by id, and its tests use Create's real network.**
+    - *Data without Create.* The datagen run has no Create, so `AlpineCreateProvider` writes the recipe and its
+      advancement as JSON by id. The recipe (a shapeless gearbox, large cogwheel and iron block; WP5 may balance
+      it) carries both loaders' load conditions (`conditions` with `forge:mod_loaded`, and
+      `fabric:load_conditions`), so a world without Create skips it before parsing; its advancement unlocks on the
+      drive station, an item that always exists. The block's `mineable/pickaxe` and `create:non_breakable` entries
+      are `required: false`. The lang keys are plain strings, and the blockstate, models and textures come from
+      `art/placeholder/generate_kinetic_drive.py` as for the other lift blocks. The normal column's logs show no
+      error or warning from any of it. The two stress tooltip lines read the client's local `lift.kineticStress`
+      (it is not in `config_sync`; only the server's value matters for the drive).
+    - *Tests.* `KineticDriveMathTest` and `KineticDriveWatchTest` (unit). `KineticDriveGameTests`, in the Create
+      column only (each returns at once elsewhere): rotation runs the line and its speed follows the rpm on the
+      `LiftMotion` ramp up to the cap; losing rotation (the motor removed) is an emergency stop at 2.0 b/s^2 and
+      rotation back restarts it; overstress stops it and relief restarts it; redstone is ignored while a drive is
+      attached and returns when it is removed; the drive's saved data reads back as the same command; and the
+      tick budget, under 3x 0.02 ms a drive (decision 6). The rig is a station, a kinetic drive against its east
+      face and Create's creative motor beyond it, built through a few `test...` fixture methods on `CreateBridge`
+      (the only way common test code can name Create's blocks).
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
-(v1.1), and the kinetic lift drive (phase 9).
+(v1.1). The kinetic lift drive arrived in phase 9 (README 78).
 Real animation clips, sounds and textures replace the placeholders file by file under the same
 names.
 

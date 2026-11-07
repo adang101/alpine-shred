@@ -17,6 +17,10 @@
     "alpineshred:lift_return_station",
     "alpineshred:lift_loading_gate",
     "alpineshred:lift_stop_button",
+    {
+      "id": "alpineshred:kinetic_lift_drive",
+      "required": false
+    },
     "alpineshred:rail_post",
     "alpineshred:metal_box",
     "alpineshred:plastic_box",

@@ -1,0 +1,35 @@
+{
+  "criteria": {
+    "has_lift_drive_station": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "alpineshred:lift_drive_station"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "alpineshred:kinetic_lift_drive"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "parent": "minecraft:recipes/root",
+  "requirements": [
+    [
+      "has_lift_drive_station",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alpineshred:kinetic_lift_drive"
+    ]
+  },
+  "sends_telemetry_event": false
+}
