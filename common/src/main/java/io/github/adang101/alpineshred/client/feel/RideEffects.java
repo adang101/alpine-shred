@@ -30,7 +30,6 @@ import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
-import java.util.Optional;
 
 /**
  * The local rider's camera and screen (design doc sections 9 and 17): camera roll and speed field
@@ -53,6 +52,8 @@ public final class RideEffects {
     private static final LeafCover LEAF_COVER = new LeafCover();
     /** Reused for the eye-position block lookup, so the tick does not allocate. */
     private static final BlockPos.MutableBlockPos EYE = new BlockPos.MutableBlockPos();
+    /** The goggles worn, looked up once per client tick; {@link ItemStack#EMPTY} when none. */
+    private static ItemStack worn = ItemStack.EMPTY;
     private static double speed;
     private static boolean riding;
     private static int lineFrame;
@@ -81,7 +82,9 @@ public final class RideEffects {
         RideState state = view == null ? RideState.OFF : view.state;
         CAMERA.tick(riding, state == RideState.WIPEOUT, view == null ? 0 : view.lean, speed,
                 AlpineConfig.CLIENT_FOV_EFFECT.value(), reduceMotion);
-        boolean goggles = goggles(player).isPresent();
+        // The slot lookup runs once a tick; the frame path reads the stored stack (a one-tick lag is fine).
+        worn = GearAccess.current().goggles(player).orElse(ItemStack.EMPTY);
+        boolean goggles = !worn.isEmpty();
         boolean snowfall = inSnowfall(player);
         SCREEN.tick(state, speed, snowfall, goggles, AlpineConfig.CLIENT_FLASH_SAFE.on(), reduceMotion);
         LENS.tick(state, speed, view == null ? 0 : view.lean, snowfall, goggles);
@@ -96,6 +99,7 @@ public final class RideEffects {
         SCREEN.reset();
         LENS.reset();
         LEAF_COVER.reset();
+        worn = ItemStack.EMPTY;
         riding = false;
         speed = 0;
     }
@@ -111,10 +115,6 @@ public final class RideEffects {
         if (!level.isRaining()) return false;
         BlockPos pos = player.blockPosition();
         return level.canSeeSky(pos) && level.getBiome(pos).value().getPrecipitationAt(pos) == Biome.Precipitation.SNOW;
-    }
-
-    private static Optional<ItemStack> goggles(LocalPlayer player) {
-        return GearAccess.current().goggles(player);
     }
 
     /**
@@ -134,14 +134,14 @@ public final class RideEffects {
                 overlay(graphics, LENS_FROST, w, h, 1, 1, 1, (float) LENS.alpha(reduceMotion));
                 overlay(graphics, LENS_BLOTCHES, w, h, 1, 1, 1, (float) LENS.blotchAlpha(reduceMotion));
             }
-            float leaves = (float) LEAF_COVER.alpha(partialTick, goggles(player).isPresent());
+            boolean goggles = !worn.isEmpty();
+            float leaves = (float) LEAF_COVER.alpha(partialTick, goggles);
             if (leaves > 0.004f) overlay(graphics, LEAVES, w, h, 1, 1, 1, leaves);
-            goggles(player).ifPresent(stack -> {
-                if (!AlpineConfig.CLIENT_GOGGLES_OVERLAY.on()) return;
-                Lens lens = GogglesItem.lens(stack);
+            if (goggles && AlpineConfig.CLIENT_GOGGLES_OVERLAY.on()) {
+                Lens lens = GogglesItem.lens(worn);
                 if ((lens.overlayArgb() >>> 24) > 0) graphics.fill(0, 0, w, h, lens.overlayArgb());
                 overlay(graphics, GOGGLES_FRAME, w, h, 1, 1, 1, 1);
-            });
+            }
         }
         if (SCREEN.speedLines() > 0) {
             // Two mirrored copies alternate every few ticks so the streaks flicker past.
