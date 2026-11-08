@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Riding through leaves (README clarification 93): a block in {@code #alpineshred:ride_through} has no
+ * Riding through leaves (README clarification 97): a block in {@code #alpineshred:ride_through} has no
  * collision for a player whose ride a controller drives. The client's movement and the server's replay
  * of it both ask for collision shapes through here, so vanilla's "moved wrongly" check agrees with the
  * client and no validator change is needed.

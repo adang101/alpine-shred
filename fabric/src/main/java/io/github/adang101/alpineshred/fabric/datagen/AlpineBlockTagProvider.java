@@ -49,7 +49,7 @@ public final class AlpineBlockTagProvider extends FabricTagProvider.BlockTagProv
         grindable.add(ModBlocks.RAIL_POST.get(), ModBlocks.PIPE_COPING.get());
         getOrCreateTagBuilder(ModTags.Blocks.GRINDABLE_VANILLA).forceAddTag(BlockTags.FENCES).forceAddTag(BlockTags.WALLS);
 
-        // Riders pass through leaves, slowed (README 93), and wipe out sooner on a trunk (README 94).
+        // Riders pass through leaves, slowed (README 97), and wipe out sooner on a trunk (README 98).
         getOrCreateTagBuilder(ModTags.Blocks.RIDE_THROUGH).forceAddTag(BlockTags.LEAVES);
         getOrCreateTagBuilder(ModTags.Blocks.TREE_TRUNKS).forceAddTag(BlockTags.LOGS).add(Blocks.MANGROVE_ROOTS);
 

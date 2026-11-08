@@ -148,7 +148,7 @@ public final class SlideController {
     public record Pushed() implements Event {
     }
 
-    /** The rider's body just entered ride-through blocks (README clarification 93); for a rustle and leaf particles. */
+    /** The rider's body just entered ride-through blocks (README clarification 97); for a rustle and leaf particles. */
     public record ThroughLeaves() implements Event {
     }
 
@@ -294,7 +294,7 @@ public final class SlideController {
 
     /**
      * Leaves slow the rider by {@code leafDrag} of its speed per tick, on the ground and in the air, and
-     * announce the entry once (README clarification 93). Not applied on rails, boxes and pipes, which
+     * announce the entry once (README clarification 97). Not applied on rails, boxes and pipes, which
      * follow their own paths.
      */
     private void dragThroughLeaves(Body body, MovementTuning t) {
@@ -464,7 +464,7 @@ public final class SlideController {
      * glancing along a wall at a shallow angle is not a crash.
      *
      * <p>A tree trunk wipes the rider out from {@code treeHitSpeed}, below {@code wallHitSpeed}
-     * (README clarification 94). The trunk query runs only for an impact in between, so a crash
+     * (README clarification 98). The trunk query runs only for an impact in between, so a crash
      * that wipes out anyway, and a bump too soft to matter, cost nothing extra.
      */
     private void handleWall(Body body, Moved moved, double speedBefore, MovementTuning t) {

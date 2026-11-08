@@ -225,7 +225,7 @@ public final class SlideModel {
     }
 
     /**
-     * Braking (README clarification 92): {@code (brakeDecel + brakeSpeedDecel * speed)} blocks per tick
+     * Braking (README clarification 96): {@code (brakeDecel + brakeSpeedDecel * speed)} blocks per tick
      * squared, times the ski multiplier, times the surface's grip capped at 1. It does not scale with
      * the surface's friction, which on snow (0.0006 to 0.0014) is far below a slope's pull, so a
      * friction multiplier could not stop a rider on any real slope. Slick surfaces still bite less

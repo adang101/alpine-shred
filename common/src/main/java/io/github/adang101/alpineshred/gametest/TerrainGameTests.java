@@ -18,7 +18,7 @@ import static io.github.adang101.alpineshred.gametest.RideGameTests.check;
 
 /**
  * Feedback round 1 game tests: braking down a steep slope, riding through leaves, and tree trunks
- * (README clarifications 92 to 94). Like {@link RideGameTests}, the controller is driven tick by tick
+ * (README clarifications 96 to 98). Like {@link RideGameTests}, the controller is driven tick by tick
  * through {@link Ride} on real collision, in the {@value RideGameTests#LARGE} template.
  */
 public final class TerrainGameTests {

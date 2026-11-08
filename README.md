@@ -1047,7 +1047,7 @@ covered by a test or noted in code.
     range now ends at 1.0 and a value above it is clamped with a warning like any other. Nothing else read the old
     10.0 (no test, generated file or sync key). Written up in `docs/server-guide.md` (WP7).
 
-92. **Braking is a deceleration of its own, not a friction multiplier.** Player feedback: "a player can not slow
+96. **Braking is a deceleration of its own, not a friction multiplier.** Player feedback: "a player can not slow
     down." The old brake multiplied the surface friction by 8 (skis 6). Snow friction is 0.0006 to 0.0014, so a full
     brake was about 0.009 blocks per tick squared, and the slope's pull is `0.08 x 0.35 x sin(theta)`, 0.0096 at 20
     degrees: on most slopes the brake could not even stop the acceleration. Now sneaking applies
@@ -1071,7 +1071,7 @@ covered by a test or noted in code.
       object that already tolerates missing and extra keys, so the protocol version is unchanged: a client without
       these keys uses its defaults, and a server with an old `tuning.json` gets the new keys' defaults.
 
-93. **Riders pass through leaves, slowed.** Player feedback: leaves should be rideable, obscure vision a bit and slow
+97. **Riders pass through leaves, slowed.** Player feedback: leaves should be rideable, obscure vision a bit and slow
     the rider. A block in `#alpineshred:ride_through` (default `#minecraft:leaves`, so other mods' leaves that join
     that tag follow) has no collision for a player whose synced ride state `isControllerDriven()` (a strapped rider on
     the ground, in the air, on a feature, or wiped out; not LIFT, not OFF).
@@ -1092,7 +1092,7 @@ covered by a test or noted in code.
       accepted. An admin may put any block in the tag and riders then pass through it; the tag is a datapack knob.
       Riding through leaves is not offered to rails, boxes and pipes, which follow their own paths.
 
-94. **A tree trunk wipes the rider out at a lower impact speed.** Player feedback: hitting a trunk is a wipeout. A
+98. **A tree trunk wipes the rider out at a lower impact speed.** Player feedback: hitting a trunk is a wipeout. A
     horizontal collision wipes the rider out from `treeHitSpeed` (0.2) when the block it hit is in
     `#alpineshred:tree_trunks` (default `#minecraft:logs` and `minecraft:mangrove_roots`), and from `wallHitSpeed`
     (0.5) for any other block. The trunk is looked up (`Body.hitTrunk`) only after a collision whose impact is

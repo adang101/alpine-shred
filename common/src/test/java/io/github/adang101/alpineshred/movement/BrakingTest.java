@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Braking as a real deceleration (README clarification 92): stopping time and distance straight down
+ * Braking as a real deceleration (README clarification 96): stopping time and distance straight down
  * a slope, holding on a steep slope, and the surfaces that bite less. The numbers in the messages are
  * the ones quoted in the clarification.
  */
