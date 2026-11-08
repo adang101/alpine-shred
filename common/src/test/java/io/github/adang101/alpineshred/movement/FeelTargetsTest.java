@@ -90,7 +90,7 @@ class FeelTargetsTest {
         AirRotation rotation = new AirRotation();
         int ticksFor360 = -1;
         for (int i = 1; i <= airTicks; i++) {
-            rotation.step(T, GearKind.BOARD, 1, 0, false, 99);
+            rotation.step(T, GearKind.BOARD, i == 1 ? 0 : 1, 0, false, 99, 0); // D is pressed after the takeoff tick (README 92)
             if (rotation.yawAccum >= 360) {
                 ticksFor360 = i;
                 break;

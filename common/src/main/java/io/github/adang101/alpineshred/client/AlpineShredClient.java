@@ -36,6 +36,8 @@ import java.util.List;
 public final class AlpineShredClient {
     /** Hint shown once per client the first time the rider actually slides (section 7). */
     public static final String HINT_STEER = "steer";
+    /** Hint shown once per client the first time the rider goes airborne (README 95). */
+    public static final String HINT_AIR = "air";
 
     private static RideState lastLocalState = RideState.OFF;
 
@@ -119,6 +121,7 @@ public final class AlpineShredClient {
     private static void onLocalStateChange(LocalPlayer player, RideState from, RideState to) {
         // The steering hint waits for the first real slide.
         if (to == RideState.GLIDE || to == RideState.CARVE) showHintOnce(player, HINT_STEER);
+        if (to == RideState.AIR) showHintOnce(player, HINT_AIR);
     }
 
     private static void showHintOnce(LocalPlayer player, String hint) {

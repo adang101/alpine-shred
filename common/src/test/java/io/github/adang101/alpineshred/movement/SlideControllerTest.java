@@ -105,14 +105,21 @@ class SlideControllerTest {
     /** Rides off the kicker; in the air, {@code air} picks the input each tick from the controller. */
     private static SlideController.TrickLanded airOffTheKicker(VoxelBody body, SlideController c,
                                                                  java.util.function.Function<SlideController, RideInput> air) {
+        int airSeen = 0;
         for (int tick = 0; tick < 120; tick++) {
-            RideInput in = c.state() == RideState.AIR ? air.apply(c) : RideInput.coast(0);
+            // The takeoff tick is spent with the keys released: a key held at takeoff does nothing until released (README 92).
+            RideInput in = c.state() == RideState.AIR ? (airSeen++ > 0 ? air.apply(c) : released(air.apply(c))) : RideInput.coast(0);
             c.tick(body, in, BOARD);
             for (SlideController.Event e : c.events()) {
                 if (e instanceof SlideController.TrickLanded landed) return landed;
             }
         }
         throw new AssertionError("never landed: " + c.state() + " z " + body.z);
+    }
+
+    /** {@code in} with A/D and W/S let go, the grab and sneak kept: the takeoff tick of a rider who held them on the ground. */
+    private static RideInput released(RideInput in) {
+        return new RideInput(0, 0, in.lookYaw(), in.sneak(), in.jump(), in.grab());
     }
 
     private static VoxelBody kicker() {
@@ -156,6 +163,44 @@ class SlideControllerTest {
             assertEquals(RideState.WIPEOUT, c.state(), "a bail wipes out");
         }
         assertTrue(landed.report().pitchAccum() > 300, "flipped " + landed.report().pitchAccum());
+    }
+
+    /** The complaint: W and D held on the ground and through the jump must not throw the rider into a flip and spin. */
+    @Test
+    void keysHeldFromTakeoffThroughTheAirLandClean() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        RideInput held = new RideInput(1, 1, 0, false, false, GrabType.NONE);
+        SlideController.TrickLanded landed = null;
+        for (int tick = 0; tick < 120 && landed == null; tick++) {
+            c.tick(body, held, BOARD);
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.TrickLanded l) landed = l;
+            }
+        }
+        assertTrue(landed != null, "never landed");
+        assertEquals(0, landed.report().pitchAccum(), 0, "W held from the ground does not flip");
+        assertEquals(0, landed.report().yawAccum(), 0, "D held from the ground does not spin");
+        assertTrue(landed.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "landing " + landed.quality());
+        assertTrue(c.state() != RideState.WIPEOUT);
+    }
+
+    /** A fresh W press flips; letting go levels the rider back out, so a half-done flip is not a bail. */
+    @Test
+    void aFreshPressFlipsAndReleasingLevelsOutForTheLanding() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        // airOffTheKicker releases the keys on the takeoff tick; press W for four ticks from the second, then let go.
+        int[] airTick = {0};
+        double[] peak = {0};
+        SlideController.TrickLanded landed = airOffTheKicker(body, c, ctl -> {
+            int n = airTick[0]++;
+            peak[0] = Math.max(peak[0], ctl.flipAngle());
+            return new RideInput(0, n >= 1 && n < 5 ? 1 : 0, 0, false, false, GrabType.NONE);
+        });
+        assertTrue(peak[0] >= 60, "the fresh press flipped: " + peak[0]);
+        assertEquals(0, landed.report().pitchAccum(), 1.0e-9, "levelled out before the landing");
+        assertTrue(landed.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "landing " + landed.quality());
     }
 
     @Test
@@ -230,9 +275,10 @@ class SlideControllerTest {
         };
         SlideController c = riding(body, 0.8);
         List<SlideController.TrickLanded> landings = new ArrayList<>();
+        int airSeen = 0;
         boolean slid = false;
         for (int tick = 0; tick < 200 && landings.stream().noneMatch(l -> l.report().fromRail()); tick++) {
-            boolean spin = c.state() == RideState.AIR && !slid && Math.abs(c.spinAngle()) < 80;
+            boolean spin = c.state() == RideState.AIR && airSeen++ > 0 && !slid && Math.abs(c.spinAngle()) < 80; // D after the takeoff tick (README 92)
             c.tick(body, spin ? new RideInput(1, 0, 0, false, false, GrabType.NONE) : RideInput.coast(0), BOARD);
             slid |= c.state() == RideState.GRIND;
             for (SlideController.Event e : c.events()) {

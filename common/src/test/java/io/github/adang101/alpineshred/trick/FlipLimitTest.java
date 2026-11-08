@@ -23,7 +23,7 @@ class FlipLimitTest {
     void theFailedMountainRideReportIsRejectedAndNeverProduced() {
         assertNotNull(TrickValidator.check(report(228, 11), 11, 0, 24, T.airFlipMax));
         AirRotation r = new AirRotation();
-        for (int tick = 1; tick <= 11; tick++) r.step(T, GearKind.BOARD, 0, 1, false, tick);
+        for (int tick = 1; tick <= 11; tick++) r.step(T, GearKind.BOARD, 0, tick == 1 ? 0 : 1, false, tick, 0);
         assertTrue(Math.abs(r.pitchAccum) < 180, "held at the cap: " + r.pitchAccum);
         assertNull(TrickValidator.check(report(r.pitchAccum, 11), 11, 0, 24, T.airFlipMax));
     }
@@ -44,7 +44,7 @@ class FlipLimitTest {
                     for (int release = 0; release <= air; release++) {
                         AirRotation r = new AirRotation();
                         for (int tick = 1; tick <= air; tick++) {
-                            r.step(T, GearKind.BOARD, 0, tick <= release ? dir : 0, grab == 1, tick);
+                            r.step(T, GearKind.BOARD, 0, tick > 1 && tick <= release ? dir : 0, grab == 1, tick, 0);
                             assertTrue(FlipLimit.allows(r.pitchAccum, tick, T.airFlipMax), "air " + air + " tick " + tick);
                         }
                         String why = TrickValidator.check(report(r.pitchAccum, air), air, 0, 24, T.airFlipMax);

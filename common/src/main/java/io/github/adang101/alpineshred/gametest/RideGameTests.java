@@ -27,7 +27,10 @@ import io.github.adang101.alpineshred.network.RideAction;
 import io.github.adang101.alpineshred.network.SyncCodec;
 import io.github.adang101.alpineshred.registry.ModBlocks;
 import io.github.adang101.alpineshred.registry.ModItems;
+import io.github.adang101.alpineshred.trick.AirReport;
 import io.github.adang101.alpineshred.trick.GrabType;
+import io.github.adang101.alpineshred.trick.LandingQuality;
+import io.github.adang101.alpineshred.trick.TrickValidator;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.embedded.EmbeddedChannel;
 import net.minecraft.core.BlockPos;
@@ -455,20 +458,61 @@ public final class RideGameTests {
 
     /** Risk R2, part two: a kicker launch at speed with a long air phase (floating kick, air budget). */
     public static void vanillaAcceptsKickerAir(GameTestHelper helper) {
-        Course course = new Course(helper);
-        Block snow = ModBlocks.GROOMED_SNOW.get();
-        course.flat(0, 7, 3, snow)
-                .column(8, 3.375, snow).column(9, 3.75, snow).column(10, 4.125, snow).column(11, 4.5, snow)
-                .flat(12, 71, 3, snow);
-        Replay run = replayOnServer(helper, course, 3, false, z -> RideInput.coast(0));
+        Replay run = replayOnServer(helper, kickerCourse(helper), 3, false, z -> RideInput.coast(0));
         check(run.launchVy > 0, "the kicker never launched");
         check(run.airTicks >= 14, "only " + run.airTicks + " ticks in the air");
+        helper.succeed();
+    }
+
+    /** The kicker of {@link #vanillaAcceptsKickerAir}, on groomed snow. */
+    private static Course kickerCourse(GameTestHelper helper) {
+        Course course = new Course(helper);
+        Block snow = ModBlocks.GROOMED_SNOW.get();
+        return course.flat(0, 7, 3, snow)
+                .column(8, 3.375, snow).column(9, 3.75, snow).column(10, 4.125, snow).column(11, 4.5, snow)
+                .flat(12, 71, 3, snow);
+    }
+
+    /**
+     * README 95: W held on the ground and through the pop must not flip the rider, so the jump lands
+     * clean. The harness fails the test on a wipeout, and the honest report must pass the validator.
+     */
+    public static void holdingWThroughAJumpLandsClean(GameTestHelper helper) {
+        Replay run = replayOnServer(helper, kickerCourse(helper), 3, false, z -> new RideInput(0, 1, 0, false, false, GrabType.NONE));
+        check(run.launchVy > 0, "the kicker never launched");
+        check(run.lastAir != null, "no air session was reported");
+        check(run.maxFlip == 0 && run.lastAir.pitchAccum() == 0, "a held W flipped the rider: " + run.maxFlip);
+        check(run.lastAir.yawAccum() == 0, "a held W spun the rider: " + run.lastAir.yawAccum());
+        check(run.lastQuality != LandingQuality.BAIL, "landed " + run.lastQuality);
+        helper.succeed();
+    }
+
+    /**
+     * README 95: W released after takeoff and pressed again flips, and letting go levels the rider out
+     * before the landing. The honest report passes {@link TrickValidator} at the board's rates.
+     */
+    public static void aFreshPressFlipsAndReleasingLevelsOut(GameTestHelper helper) {
+        // W held on the ground (z < 12), let go in the air, pressed again for a tick or two, then let go.
+        Replay run = replayOnServer(helper, kickerCourse(helper), 3, false,
+                z -> new RideInput(0, z < 12 || (z >= 16 && z < 18) ? 1 : 0, 0, false, false, GrabType.NONE));
+        check(run.launchVy > 0, "the kicker never launched");
+        check(run.lastAir != null, "no air session was reported");
+        check(run.maxFlip >= 10, "the fresh press did not flip: " + run.maxFlip);
+        AirReport report = run.lastAir;
+        check(Math.abs(report.pitchAccum()) < 1.0e-6, "did not level out: " + report.pitchAccum());
+        check(run.lastQuality != LandingQuality.BAIL, "landed " + run.lastQuality);
+        String why = TrickValidator.check(report, report.airTicks(), report.apex(), 24, TuningData.tuning().airFlipMax);
+        check(why == null, "the honest report was rejected: " + why);
         helper.succeed();
     }
 
     /** What a replayed run did, for the per-course checks. */
     static final class Replay {
         double maxSpeed, launchVy, gearSpeed;
+        /** The most the rider flipped in any air session, and the last session's report and landing. */
+        double maxFlip;
+        AirReport lastAir;
+        LandingQuality lastQuality;
         int airTicks;
         boolean popped, climbed;
         /** Every state the client was in, and ticks on rails, boxes and pipes. */
@@ -527,6 +571,7 @@ public final class RideGameTests {
                 run.maxSpeed = Math.max(run.maxSpeed, c.speed());
                 run.states.add(c.state());
                 if (c.state() == RideState.AIR) run.airTicks++;
+                run.maxFlip = Math.max(run.maxFlip, Math.abs(c.flipAngle()));
                 if (c.state() == RideState.GRIND) run.grindTicks++;
                 if (c.state() == RideState.SLIDE) run.slideTicks++;
                 if (c.inPipe()) run.pipeTicks++;
@@ -554,6 +599,9 @@ public final class RideGameTests {
                     } else if (e instanceof SlideController.Launched launch) {
                         run.launchVy = launch.velocity();
                         RideServer.handleAction(server, RideAction.LAUNCH, (int) Math.round(launch.velocity() * 1000));
+                    } else if (e instanceof SlideController.TrickLanded landed) {
+                        run.lastAir = landed.report();
+                        run.lastQuality = landed.quality();
                     } else if (e instanceof SlideController.WipedOut) {
                         throw new GameTestAssertException("wiped out at tick " + tick + "\n" + String.join("\n", tail(trace)));
                     }

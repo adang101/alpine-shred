@@ -206,6 +206,7 @@
   "message.alpineshred.design.ok": "Design saved",
   "message.alpineshred.design.rate_limited": "Wait a moment before saving again",
   "message.alpineshred.design.too_large": "Too large to save",
+  "message.alpineshred.hint.air": "In the air: press W/S to flip, A/D to spin. Let go to level out for the landing",
   "message.alpineshred.hint.steer": "Look to steer, A or D to dig an edge, sneak to brake",
   "message.alpineshred.lift.bar_down": "Safety bar down",
   "message.alpineshred.lift.bar_up": "Safety bar up",

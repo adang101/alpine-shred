@@ -79,6 +79,8 @@ public final class MovementTuning {
         s.put("airFlipMax", new Spec(24.0, 0.0, 90.0, "ext: max flip rate, degrees per tick"));
         s.put("airRampTicks", new Spec(4, 1, 20, "ext: ticks for rotation to ramp from 0 to max"));
         s.put("airGrabRotationMul", new Spec(0.8, 0.0, 1.0, "ext: rotation rate multiplier while grabbing"));
+        s.put("airFlipRecover", new Spec(8.0, 0.0, 90.0, "ext: with no flip key held, pitch eases to the nearest whole flip at this, degrees per tick"));
+        s.put("airSpinRecover", new Spec(5.0, 0.0, 90.0, "ext: with no spin key held, heading eases to the nearest forward or switch at this, degrees per tick"));
         // ext (phase 2): getting moving on flat ground
         s.put("skateMaxSpeed", new Spec(0.14, 0.0, 1.0, "ext: W skates on flat snow up to this speed"));
         s.put("skateAccel", new Spec(0.006, 0.0, 0.1, "ext: skating acceleration per tick"));
@@ -146,6 +148,8 @@ public final class MovementTuning {
     public final double airFlipMax;
     public final int airRampTicks;
     public final double airGrabRotationMul;
+    public final double airFlipRecover;
+    public final double airSpinRecover;
     public final double skateMaxSpeed;
     public final double skateAccel;
     public final double scrapeSlideMinSpeed;
@@ -216,6 +220,8 @@ public final class MovementTuning {
         airFlipMax = get("airFlipMax");
         airRampTicks = (int) Math.round(get("airRampTicks"));
         airGrabRotationMul = get("airGrabRotationMul");
+        airFlipRecover = get("airFlipRecover");
+        airSpinRecover = get("airSpinRecover");
         skateMaxSpeed = get("skateMaxSpeed");
         skateAccel = get("skateAccel");
         scrapeSlideMinSpeed = get("scrapeSlideMinSpeed");

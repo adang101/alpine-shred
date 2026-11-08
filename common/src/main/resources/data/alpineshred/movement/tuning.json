@@ -47,6 +47,8 @@
   "airFlipMax": 24.0,
   "airRampTicks": 4.0,
   "airGrabRotationMul": 0.8,
+  "airFlipRecover": 8.0,
+  "airSpinRecover": 5.0,
   "skateMaxSpeed": 0.14,
   "skateAccel": 0.006,
   "scrapeSlideMinSpeed": 0.25,
