@@ -98,18 +98,28 @@ public final class PlayerBody implements SlideController.Body {
      * do not count. Reads at most a few cells (the box is 0.6 by 1.8 by 0.6) and allocates nothing.
      */
     private boolean touches(AABB box, TagKey<Block> tag) {
-        Level level = player.level();
+        return firstTagged(player.level(), box, tag, cell) != null;
+    }
+
+    /**
+     * The first block in {@code tag} among the cells {@code box} overlaps, or null. {@code cell} is the
+     * caller's scratch position. Public so the client can name the leaf block a rider entered (it asks
+     * once per entry, on the event tick, with a throwaway position).
+     */
+    @Nullable
+    public static BlockState firstTagged(Level level, AABB box, TagKey<Block> tag, BlockPos.MutableBlockPos cell) {
         int x1 = Mth.floor(box.minX + EDGE), x2 = Mth.floor(box.maxX - EDGE);
         int y1 = Mth.floor(box.minY + EDGE), y2 = Mth.floor(box.maxY - EDGE);
         int z1 = Mth.floor(box.minZ + EDGE), z2 = Mth.floor(box.maxZ - EDGE);
         for (int y = y1; y <= y2; y++) {
             for (int x = x1; x <= x2; x++) {
                 for (int z = z1; z <= z2; z++) {
-                    if (level.getBlockState(cell.set(x, y, z)).is(tag)) return true;
+                    BlockState state = level.getBlockState(cell.set(x, y, z));
+                    if (state.is(tag)) return state;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     @Override

@@ -7,14 +7,17 @@ import io.github.adang101.alpineshred.movement.SlideModel;
 import io.github.adang101.alpineshred.movement.SurfaceProfile;
 import io.github.adang101.alpineshred.park.GrindMaterial;
 import io.github.adang101.alpineshred.registry.ModParticles;
+import io.github.adang101.alpineshred.registry.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Client-side particles from the synced rider state (design doc section 17): snow spray off the
@@ -74,7 +77,11 @@ final class RiderParticles {
         }
         if (view.throughLeaves) {
             // Entering leaves: one capped burst of vanilla leaf particles, thrown ahead.
-            BlockParticleOption leaf = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_LEAVES.defaultBlockState());
+            // The block the rider is in (spruce, cherry, another mod's leaves); one lookup, on the event tick only.
+            BlockState entered = io.github.adang101.alpineshred.movement.PlayerBody.firstTagged(level,
+                    view.player.getBoundingBox(), ModTags.Blocks.RIDE_THROUGH, new BlockPos.MutableBlockPos());
+            BlockParticleOption leaf = new BlockParticleOption(ParticleTypes.BLOCK,
+                    entered != null ? entered : Blocks.OAK_LEAVES.defaultBlockState());
             for (int i = 0; i < ParticleRules.LEAF_BURST; i++) {
                 FeelStats.particlesSpawned++;
                 level.addParticle(leaf, x + (random.nextDouble() - 0.5) * 0.6, y + 0.2 + random.nextDouble() * 1.4,
