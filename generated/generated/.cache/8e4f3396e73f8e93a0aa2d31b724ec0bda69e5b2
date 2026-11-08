@@ -1,0 +1,15 @@
+// 1.20.1	2026-11-08T18:55:58.816602771	Alpine Shred/Tags for minecraft:block
+e1f8ccfed937ff42c81a9f3cad2c989cd199f149 data/alpineshred/tags/blocks/slide/powder.json
+8941dbf316e1b9c382a7b03723353969239a9eac data/minecraft/tags/blocks/mineable/shovel.json
+308bedfc074d78c7db5e2c1bd38eae4d21178b70 data/alpineshred/tags/blocks/slide/ice.json
+aeda96bcc634298da9a5e190a3ad286ed2b69c0f data/alpineshred/tags/blocks/grindable.json
+418c6852c35d7765898381fe82f760064b84df36 data/alpineshred/tags/blocks/wrench/lift_pickup.json
+c9a0fa2b480198219c3eaf0a6232213c6a8fed16 data/alpineshred/tags/blocks/ride_through.json
+cf1e659fa3cdacd51f1073d31b8a2f443851900d data/minecraft/tags/blocks/mineable/pickaxe.json
+f1e5211cd92b32cae2792d2bb356b29a902e553d data/create/tags/blocks/non_breakable.json
+84a7f17e1795d3b7f4172fe802aa592d893f5984 data/alpineshred/tags/blocks/slide/snow.json
+34dfb6931cdaa74584be6401d6f5416a7beabdef data/alpineshred/tags/blocks/grindable_vanilla.json
+43e090072e33c4d99508974943aeb7124eba1f40 data/alpineshred/tags/blocks/slide/boxes.json
+eb96cf41c0979c15a595b7813e7837c3007afb0c data/alpineshred/tags/blocks/tree_trunks.json
+8941dbf316e1b9c382a7b03723353969239a9eac data/minecraft/tags/blocks/snow.json
+0414661059aca9116590e2d2deae484a45b040e5 data/minecraft/tags/blocks/mineable/axe.json

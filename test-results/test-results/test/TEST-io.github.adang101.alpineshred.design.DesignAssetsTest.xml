@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.design.DesignAssetsTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:39.249Z" hostname="runnervmwuk1x" time="0.628">
+  <properties/>
+  <testcase name="defaultLooksAreAtlasesCutToTheOutline()" classname="io.github.adang101.alpineshred.design.DesignAssetsTest" time="0.587"/>
+  <testcase name="theBenchHasItsAssetsAndTheAdvancementItsTrigger()" classname="io.github.adang101.alpineshred.design.DesignAssetsTest" time="0.006"/>
+  <testcase name="everyDesignTextIsTranslated()" classname="io.github.adang101.alpineshred.design.DesignAssetsTest" time="0.016"/>
+  <testcase name="theMeshIsClosedAroundTheOutline()" classname="io.github.adang101.alpineshred.design.DesignAssetsTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

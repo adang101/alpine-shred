@@ -1,0 +1,289 @@
+server up
+clients done
+=== forge/build/smoke-server/alpineshred-server-smoke.txt
+t4771 gt4771 OFF at z 10.5
+lift: rider strap OK
+t4811 gt4811 IDLE at z 10.5
+stall gt4984 405 ms
+t4984 gt4984 LIFT at z 9.4
+lift: rider boarded chair 17 by auto-board at gt4984, line speed 2.50
+lift: placed watcher1 at the bottom station, gt5064
+lift: watcher1 strap OK
+lift: watcher1 boarded chair 16 by auto-board at gt5181, line speed 2.50
+lift: placed watcher2 at the bottom station, gt5261
+lift: watcher1 logs out on chair 16 at gt5281, line travel 62.7
+lift: watcher2 strap OK
+lift: watcher2 boarded chair 15 by auto-board at gt5378, line speed 2.50
+joined: watcher1
+lift: watcher1 is back after 125 ticks, gt5406
+lift: watcher1 re-attached to chair 16
+lift: breaking the head at 36, -30, 156 with a command at gt6368, line speed 2.50, travel 198.6, aboard [watcher2, watcher1, rider]
+lift: line faulted: head broken at 36 -30 156
+t6370 gt6370 IDLE at z 177.4
+lift: rider dismounted 2 ticks after the fault, line speed 2.30
+lift: watcher2 dismounted 3 ticks after the fault, line speed 2.20
+lift: watcher1 dismounted 4 ticks after the fault, line speed 2.10
+lift: faulted line slowed at 2.000 blocks per second squared over 24 ticks (start 2.50, end 0.00, stopped true)
+server states [OFF, IDLE, GLIDE, CARVE, BRAKE, POWDER, AIR, LIFT], violations 0
+RESULT PASS
+=== forge/build/smoke-rider/alpineshred-smoke.txt
+lift: sync stamp 5900 at client gt5899, clock moved -1 since the last tick
+lift: client clock moved 3 ticks in one tick, now gt5920
+lift: client clock moved 0 ticks in one tick, now gt5960
+lift: sync stamp 6000 at client gt5999, clock moved 1 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6020
+lift: client clock moved 2 ticks in one tick, now gt6060
+lift: sync stamp 6100 at client gt6099, clock moved -1 since the last tick
+lift: client clock moved 2 ticks in one tick, now gt6120
+lift: client clock moved 0 ticks in one tick, now gt6140
+lift: client clock moved 2 ticks in one tick, now gt6160
+lift: sync stamp 6200 at client gt6199, clock moved -1 since the last tick
+lift: client clock moved 2 ticks in one tick, now gt6220
+lift: client clock moved 0 ticks in one tick, now gt6240
+lift: client clock moved 2 ticks in one tick, now gt6280
+lift: sync stamp 6300 at client gt6299, clock moved 0 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6320
+lift: sync stamp 6368 at client gt6367, clock moved 0 since the last tick
+lift: rider sees its line faulted at gt6368 (speed 2.40), sneaking to get off
+lift: rider is off the chair at gt6370
+lift: client clock moved 2 ticks in one tick, now gt6400
+lift: sync stamp 6400 at client gt6400, clock moved 0 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6420
+lift: client clock moved 2 ticks in one tick, now gt6440
+screenshots: 0
+RESULT PASS
+=== forge/build/smoke-watcher1/alpineshred-smoke.txt
+lift: client clock moved 2 ticks in one tick, now gt5760
+lift: client clock moved 0 ticks in one tick, now gt5780
+lift: sync stamp 5800 at client gt5799, clock moved 0 since the last tick
+lift: client clock moved 2 ticks in one tick, now gt5820
+lift: client clock moved 0 ticks in one tick, now gt5840
+lift: client clock moved 2 ticks in one tick, now gt5860
+lift: client clock moved 0 ticks in one tick, now gt5880
+lift: sync stamp 5900 at client gt5899, clock moved 0 since the last tick
+lift: client clock moved 2 ticks in one tick, now gt5920
+lift: client clock moved 0 ticks in one tick, now gt5940
+lift: sync stamp 6000 at client gt5999, clock moved 0 since the last tick
+lift: client clock moved 2 ticks in one tick, now gt6040
+lift: sync stamp 6100 at client gt6100, clock moved 0 since the last tick
+lift: sync stamp 6200 at client gt6199, clock moved 0 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6220
+lift: client clock moved 2 ticks in one tick, now gt6260
+lift: sync stamp 6300 at client gt6299, clock moved 0 since the last tick
+lift: sync stamp 6368 at client gt6368, clock moved 0 since the last tick
+lift: watcher1 sees its line faulted at gt6369 (speed 2.40), sneaking to get off
+lift: watcher1 is off the chair at gt6372
+lift: client clock moved 2 ticks in one tick, now gt6380
+lift: sync stamp 6400 at client gt6399, clock moved -1 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6440
+screenshots: 3
+RESULT PASS
+=== forge/build/smoke-watcher2/alpineshred-smoke.txt
+lift: client clock moved 2 ticks in one tick, now gt5760
+lift: client clock moved 0 ticks in one tick, now gt5780
+lift: sync stamp 5800 at client gt5799, clock moved 1 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt5860
+lift: client clock moved 2 ticks in one tick, now gt5880
+lift: sync stamp 5900 at client gt5899, clock moved 0 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt5920
+lift: client clock moved 2 ticks in one tick, now gt5960
+lift: client clock moved 0 ticks in one tick, now gt5980
+lift: sync stamp 6000 at client gt5999, clock moved 0 since the last tick
+lift: client clock moved 2 ticks in one tick, now gt6040
+lift: client clock moved 0 ticks in one tick, now gt6080
+lift: sync stamp 6100 at client gt6099, clock moved 1 since the last tick
+lift: sync stamp 6200 at client gt6199, clock moved 0 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6280
+lift: sync stamp 6300 at client gt6299, clock moved 2 since the last tick
+lift: client clock moved -1 ticks in one tick, now gt6320
+lift: client clock moved 2 ticks in one tick, now gt6360
+lift: sync stamp 6368 at client gt6368, clock moved 0 since the last tick
+lift: watcher2 sees its line faulted at gt6369 (speed 2.40), sneaking to get off
+lift: watcher2 is off the chair at gt6372
+lift: sync stamp 6400 at client gt6399, clock moved 0 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6440
+screenshots: 3
+RESULT PASS
+multiplayer check: server stalls gt929 (894 ms), gt930 (192 ms), gt1008 (609 ms), gt2295 (295 ms), gt4093 (280 ms), gt4549 (994 ms), gt4731 (405 ms), gt4984 (405 ms)
+multiplayer check: forge/build/smoke-watcher1/alpineshred-smoke.txt: 22 samples while riding, 0 off the track, 1 in a state the rider was not in
+multiplayer check: forge/build/smoke-watcher2/alpineshred-smoke.txt: 22 samples while riding, 0 off the track, 1 in a state the rider was not in
+multiplayer check: lift: built at BlockPos{x=36, y=-60, z=0}, loop 442 blocks, 18 chairs, powered true target 2.5, boarding stretch to 4.0, eject at 213.9
+multiplayer check: lift: placed rider at the bottom station, gt4770
+multiplayer check: lift: rider strap OK
+multiplayer check: lift: rider boarded chair 17 by auto-board at gt4984, line speed 2.50
+multiplayer check: lift: placed watcher1 at the bottom station, gt5064
+multiplayer check: lift: watcher1 strap OK
+multiplayer check: lift: watcher1 boarded chair 16 by auto-board at gt5181, line speed 2.50
+multiplayer check: lift: placed watcher2 at the bottom station, gt5261
+multiplayer check: lift: watcher1 logs out on chair 16 at gt5281, line travel 62.7
+multiplayer check: lift: watcher2 strap OK
+multiplayer check: lift: watcher2 boarded chair 15 by auto-board at gt5378, line speed 2.50
+multiplayer check: lift: watcher1 is back after 125 ticks, gt5406
+multiplayer check: lift: watcher1 re-attached to chair 16
+multiplayer check: lift: breaking the head at 36, -30, 156 with a command at gt6368, line speed 2.50, travel 198.6, aboard [watcher2, watcher1, rider]
+multiplayer check: lift: line faulted: head broken at 36 -30 156
+multiplayer check: lift: rider dismounted 2 ticks after the fault, line speed 2.30
+multiplayer check: lift: watcher2 dismounted 3 ticks after the fault, line speed 2.20
+multiplayer check: lift: watcher1 dismounted 4 ticks after the fault, line speed 2.10
+multiplayer check: lift: faulted line slowed at 2.000 blocks per second squared over 24 ticks (start 2.50, end 0.00, stopped true)
+multiplayer check: forge/build/smoke-rider/alpineshred-smoke.txt: 1844 chair samples, max deviation 0.126, median 0.125, 0 over 0.25 (0 of them within it a tick or two off in time)
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt4620
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4660
+multiplayer check:   lift: client clock moved 3 ticks in one tick, now gt4740
+multiplayer check:   lift: sync stamp 4760 at client gt4759, clock moved -3 since the last tick
+multiplayer check:   lift: client clock moved 8 ticks in one tick, now gt4780
+multiplayer check:   lift: sync stamp 4800 at client gt4799, clock moved -7 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4860
+multiplayer check:   lift: sync stamp 4900 at client gt4900, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt4920
+multiplayer check:   lift: sync stamp 5000 at client gt4999, clock moved 0 since the last tick
+multiplayer check:   lift: sync stamp 5100 at client gt5099, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5140
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5160
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5180
+multiplayer check:   lift: sync stamp 5200 at client gt5199, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5220
+multiplayer check:   lift: sync stamp 5300 at client gt5299, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5360
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5380
+multiplayer check:   lift: sync stamp 5400 at client gt5399, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5440
+multiplayer check:   lift: sync stamp 5500 at client gt5499, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5540
+multiplayer check:   lift: sync stamp 5600 at client gt5599, clock moved -1 since the last tick
+multiplayer check:   lift: sync stamp 5700 at client gt5699, clock moved 0 since the last tick
+multiplayer check:   lift: sync stamp 5800 at client gt5799, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5820
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5840
+multiplayer check:   lift: sync stamp 5900 at client gt5899, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 3 ticks in one tick, now gt5920
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5960
+multiplayer check:   lift: sync stamp 6000 at client gt5999, clock moved 1 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6020
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6060
+multiplayer check:   lift: sync stamp 6100 at client gt6099, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6120
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6140
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6160
+multiplayer check:   lift: sync stamp 6200 at client gt6199, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6220
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6240
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6280
+multiplayer check:   lift: sync stamp 6300 at client gt6299, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6320
+multiplayer check:   lift: sync stamp 6368 at client gt6367, clock moved 0 since the last tick
+multiplayer check:   lift: rider sees its line faulted at gt6368 (speed 2.40), sneaking to get off
+multiplayer check:   lift: rider is off the chair at gt6370
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6400
+multiplayer check:   lift: sync stamp 6400 at client gt6400, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6420
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6440
+multiplayer check: forge/build/smoke-watcher1/alpineshred-smoke.txt: 1485 chair samples, max deviation 0.126, median 0.125, 0 over 0.25 (0 of them within it a tick or two off in time)
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4740
+multiplayer check:   lift: sync stamp 4760 at client gt4759, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4780
+multiplayer check:   lift: sync stamp 4800 at client gt4799, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt4820
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4840
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt4860
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4880
+multiplayer check:   lift: sync stamp 4900 at client gt4899, clock moved 0 since the last tick
+multiplayer check:   lift: sync stamp 5000 at client gt4999, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5020
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5060
+multiplayer check:   lift: sync stamp 5100 at client gt5099, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 6 ticks in one tick, now gt5120
+multiplayer check:   lift: sync stamp 5200 at client gt5199, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5220
+multiplayer check:   lift: disconnected after 100 ticks aboard; reconnecting in 3 seconds
+multiplayer check:   lift: sync stamp 5406 at client gt5406, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 14 ticks in one tick, now gt5420
+multiplayer check:   lift: watcher1 is back after 34 ticks, vehicle ChairEntity['Lift Chair'/64, l='ClientLevel', x=38.21, y=-56.57, z=31.18]
+multiplayer check:   lift: client clock moved 11 ticks in one tick, now gt5440
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5500
+multiplayer check:   lift: sync stamp 5500 at client gt5501, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5520
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5540
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5560
+multiplayer check:   lift: sync stamp 5600 at client gt5600, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5620
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5640
+multiplayer check:   lift: sync stamp 5700 at client gt5699, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5760
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5780
+multiplayer check:   lift: sync stamp 5800 at client gt5799, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5820
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5840
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5860
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5880
+multiplayer check:   lift: sync stamp 5900 at client gt5899, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5920
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5940
+multiplayer check:   lift: sync stamp 6000 at client gt5999, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6040
+multiplayer check:   lift: sync stamp 6100 at client gt6100, clock moved 0 since the last tick
+multiplayer check:   lift: sync stamp 6200 at client gt6199, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6220
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6260
+multiplayer check:   lift: sync stamp 6300 at client gt6299, clock moved 0 since the last tick
+multiplayer check:   lift: sync stamp 6368 at client gt6368, clock moved 0 since the last tick
+multiplayer check:   lift: watcher1 sees its line faulted at gt6369 (speed 2.40), sneaking to get off
+multiplayer check:   lift: watcher1 is off the chair at gt6372
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6380
+multiplayer check:   lift: sync stamp 6400 at client gt6399, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6440
+multiplayer check: forge/build/smoke-watcher2/alpineshred-smoke.txt: 1815 chair samples, max deviation 0.126, median 0.125, 0 over 0.25 (0 of them within it a tick or two off in time)
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4720
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt4740
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4760
+multiplayer check:   lift: sync stamp 4760 at client gt4760, clock moved 0 since the last tick
+multiplayer check:   lift: sync stamp 4800 at client gt4799, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt4820
+multiplayer check:   lift: client clock moved 3 ticks in one tick, now gt4860
+multiplayer check:   lift: client clock moved -1 ticks in one tick, now gt4880
+multiplayer check:   lift: sync stamp 4900 at client gt4899, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt4920
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt4960
+multiplayer check:   lift: sync stamp 5000 at client gt4999, clock moved 1 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5020
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5080
+multiplayer check:   lift: sync stamp 5100 at client gt5099, clock moved 0 since the last tick
+multiplayer check:   lift: sync stamp 5200 at client gt5199, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5260
+multiplayer check:   lift: sync stamp 5300 at client gt5299, clock moved 1 since the last tick
+multiplayer check:   lift: client clock moved 4 ticks in one tick, now gt5320
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5360
+multiplayer check:   lift: sync stamp 5400 at client gt5399, clock moved -1 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5420
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5460
+multiplayer check:   lift: sync stamp 5500 at client gt5499, clock moved -2 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5520
+multiplayer check:   lift: sync stamp 5600 at client gt5599, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5620
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5640
+multiplayer check:   lift: sync stamp 5700 at client gt5699, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5720
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5760
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5780
+multiplayer check:   lift: sync stamp 5800 at client gt5799, clock moved 1 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5860
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5880
+multiplayer check:   lift: sync stamp 5900 at client gt5899, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5920
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt5960
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt5980
+multiplayer check:   lift: sync stamp 6000 at client gt5999, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6040
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6080
+multiplayer check:   lift: sync stamp 6100 at client gt6099, clock moved 1 since the last tick
+multiplayer check:   lift: sync stamp 6200 at client gt6199, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6280
+multiplayer check:   lift: sync stamp 6300 at client gt6299, clock moved 2 since the last tick
+multiplayer check:   lift: client clock moved -1 ticks in one tick, now gt6320
+multiplayer check:   lift: client clock moved 2 ticks in one tick, now gt6360
+multiplayer check:   lift: sync stamp 6368 at client gt6368, clock moved 0 since the last tick
+multiplayer check:   lift: watcher2 sees its line faulted at gt6369 (speed 2.40), sneaking to get off
+multiplayer check:   lift: watcher2 is off the chair at gt6372
+multiplayer check:   lift: sync stamp 6400 at client gt6399, clock moved 0 since the last tick
+multiplayer check:   lift: client clock moved 0 ticks in one tick, now gt6440
+multiplayer check: PASS

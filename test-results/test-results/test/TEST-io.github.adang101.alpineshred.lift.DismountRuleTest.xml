@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.lift.DismountRuleTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:40.480Z" hostname="runnervmwuk1x" time="0.008">
+  <properties/>
+  <testcase name="aFaultedLineAllowsIt()" classname="io.github.adang101.alpineshred.lift.DismountRuleTest" time="0.0"/>
+  <testcase name="anOpenBarAllowsIt()" classname="io.github.adang101.alpineshred.lift.DismountRuleTest" time="0.0"/>
+  <testcase name="closeToTheGroundAllowsIt()" classname="io.github.adang101.alpineshred.lift.DismountRuleTest" time="0.001"/>
+  <testcase name="dismountAnywhereAllowsIt()" classname="io.github.adang101.alpineshred.lift.DismountRuleTest" time="0.0"/>
+  <testcase name="aClosedBarHighAboveTheGroundRefusesTheDismount()" classname="io.github.adang101.alpineshred.lift.DismountRuleTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

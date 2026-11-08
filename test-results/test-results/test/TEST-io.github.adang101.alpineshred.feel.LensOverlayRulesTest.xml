@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:40.395Z" hostname="runnervmwuk1x" time="0.012">
+  <properties/>
+  <testcase name="powderBuildsUpNoticeablyWithinAFewSeconds()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.001"/>
+  <testcase name="aPowderLandingAndAWipeoutEachThrowABurst()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.001"/>
+  <testcase name="hardCarvingAndSnowfallAddToSpeed()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.002"/>
+  <testcase name="resetClears()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.001"/>
+  <testcase name="aSingleTickInLeavesIsStillFelt()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.001"/>
+  <testcase name="notRidingBuildsNothing()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.001"/>
+  <testcase name="leavesCloseQuicklyAndFadeOverTheFadeWindow()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.0"/>
+  <testcase name="itClearsSlowlyOnceStopped()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.0"/>
+  <testcase name="gogglesCutLeavesToSixtyPercentAndTheFrameIsInterpolated()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.001"/>
+  <testcase name="goggleWearersNeverBuildUpAndWipeOffTheRest()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.0"/>
+  <testcase name="opacityNeverPassesTheCapAndReducedMotionLowersIt()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.0"/>
+  <testcase name="aGroomedRunAtModerateSpeedStaysMild()" classname="io.github.adang101.alpineshred.feel.LensOverlayRulesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "pattern": [
+    "III",
+    "N N"
+  ],
+  "result": {
+    "count": 6,
+    "item": "alpineshred:pipe_rail"
+  },
+  "show_notification": true
+}

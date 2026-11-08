@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.lift.PassengerRuleTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:41.122Z" hostname="runnervmwuk1x" time="0.007">
+  <properties/>
+  <testcase name="mobsOffRefusesMobsButNotPlayers()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.001"/>
+  <testcase name="seatsAreLimited()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.001"/>
+  <testcase name="aBlockedMobIsRefused()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.0"/>
+  <testcase name="aListedTypeIsAllowedEvenWhenTooBig()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.002"/>
+  <testcase name="aNonLivingEntityIsRefusedUnlessListed()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.001"/>
+  <testcase name="aCowSizedMobIsAllowed()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.0"/>
+  <testcase name="aTooWideOrTooTallMobIsRefused()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.0"/>
+  <testcase name="seatsAreCentredAndNinetyCentimetresApart()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.0"/>
+  <testcase name="aPlayerIsAllowed()" classname="io.github.adang101.alpineshred.lift.PassengerRuleTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:smooth_stone"
+    }
+  },
+  "pattern": [
+    "III",
+    "SSS"
+  ],
+  "result": {
+    "count": 4,
+    "item": "alpineshred:pipe_coping"
+  },
+  "show_notification": true
+}

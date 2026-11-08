@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:42.549Z" hostname="runnervmwuk1x" time="0.058">
+  <properties/>
+  <testcase name="chairsClearTheGroundByAtLeastTwoBlocks()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.014"/>
+  <testcase name="nodesAreSpacedAboutFortyApartAndNeverBeyondMaxSpan()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.005"/>
+  <testcase name="theLimitsAreChecked()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.003"/>
+  <testcase name="towersAreTerrainRelative()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.003"/>
+  <testcase name="everyNodeStandsBesideTheRunNotOnIt()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.007"/>
+  <testcase name="theSameInputGivesTheSamePlan()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.005"/>
+  <testcase name="aCliffTooTallForTowersGetsNoLift()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.002"/>
+  <testcase name="waterAtANodeGetsNoLift()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.002"/>
+  <testcase name="aShortRunGetsNoLift()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.001"/>
+  <testcase name="theTwoSeedBitsChooseOppositeSides()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.005"/>
+  <testcase name="theStationsStandOnTheirPlatforms()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.001"/>
+  <testcase name="theLineIsAboutTheRunsLength()" classname="io.github.adang101.alpineshred.worldgen.ResortLiftPlannerTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

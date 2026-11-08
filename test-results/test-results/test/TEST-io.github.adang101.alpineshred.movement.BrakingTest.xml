@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.BrakingTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:41.134Z" hostname="runnervmwuk1x" time="0.028">
+  <properties/>
+  <testcase name="skisStopSlightlyLaterThanABoardButStillWithinFourSeconds()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.01"/>
+  <testcase name="powderBrakesAndStopsARider()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.001"/>
+  <testcase name="aBoardStopsFromMaxSpeedOnATwentyDegreeSlopeInTwoToThreeSeconds()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.001"/>
+  <testcase name="iceBrakesWeakerThanSnowButStillHoldsAGentleSlope()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.004"/>
+  <testcase name="brakeDecelerationIsSurfaceGripScaledAndNeverNegative()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.0"/>
+  <testcase name="aFlatStopFromAJogIsQuick()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.0"/>
+  <testcase name="aBrakingRiderHoldsOnASteepSlopeInsteadOfSlidingBack()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.002"/>
+  <testcase name="whenTheSlopePullsHarderThanTheBrakeHoldsTheRiderCreeps()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.008"/>
+  <testcase name="aBoardStopsFromOneBlockPerTickOnAThirtyFiveDegreeSlopeWithinThreeSeconds()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.001"/>
+  <testcase name="aBrakingRiderStoppedFacingUphillHoldsToo()" classname="io.github.adang101.alpineshred.movement.BrakingTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

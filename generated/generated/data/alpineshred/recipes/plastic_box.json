@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "C": {
+      "item": "minecraft:white_concrete"
+    },
+    "S": {
+      "item": "minecraft:slime_ball"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "C C",
+    "CCC"
+  ],
+  "result": {
+    "count": 4,
+    "item": "alpineshred:plastic_box"
+  },
+  "show_notification": true
+}

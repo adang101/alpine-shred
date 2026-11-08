@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.lift.LinkValidatorTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:40.971Z" hostname="runnervmwuk1x" time="0.15">
+  <properties/>
+  <testcase name="aWallBesideTheLoadedCableBlocksOnlyTheLoadedSide()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.007"/>
+  <testcase name="theValidatorsCableMatchesLiftPath()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.095"/>
+  <testcase name="theFirstBlockedSampleIsReported()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.001"/>
+  <testcase name="theCableBetweenTheLastTwoNodesIsCheckedIncrementally()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.0"/>
+  <testcase name="tooSteepIsRejected()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.0"/>
+  <testcase name="aFullLevelIsRejected()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.001"/>
+  <testcase name="twoNodesInTheSameColumnAreRejected()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.0"/>
+  <testcase name="tooFarIsRejectedWhenTheHeadIsAdded()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.001"/>
+  <testcase name="tooLongIsRejected()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.005"/>
+  <testcase name="aTenHeadChainPasses()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.023"/>
+  <testcase name="tooManyHeadsIsRejected()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.0"/>
+  <testcase name="theBlockBelowTheCableCountsToo()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.001"/>
+  <testcase name="aWallBesideTheReturnCableBlocksOnlyTheReturnSide()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.003"/>
+  <testcase name="aSimpleLinePasses()" classname="io.github.adang101.alpineshred.lift.LinkValidatorTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

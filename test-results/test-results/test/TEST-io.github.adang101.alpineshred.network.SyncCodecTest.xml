@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.network.SyncCodecTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-08T18:56:41.842Z" hostname="runnervmwuk1x" time="0.096">
+  <properties/>
+  <testcase name="tuningPayloadRoundTripsThroughCompression()" classname="io.github.adang101.alpineshred.network.SyncCodecTest" time="0.011"/>
+  <testcase name="decompressionBombsAreRejected()" classname="io.github.adang101.alpineshred.network.SyncCodecTest" time="0.078"/>
+  <testcase name="missingSectionsFallBackToDefaults()" classname="io.github.adang101.alpineshred.network.SyncCodecTest" time="0.0"/>
+  <testcase name="truncatedAndGarbagePayloadsAreRejected()" classname="io.github.adang101.alpineshred.network.SyncCodecTest" time="0.001"/>
+  <testcase name="configPayloadRoundTripsAndToleratesJunk()" classname="io.github.adang101.alpineshred.network.SyncCodecTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
