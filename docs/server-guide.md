@@ -297,7 +297,7 @@ one small record per chair once a second.
 Reloaded with the data packs; `/alpineshred tuning reload` reloads them and resyncs clients without a full `/reload`.
 - `data/alpineshred/movement/tuning.json`, `data/alpineshred/surface_profiles`, `data/alpineshred/gear/*.json`,
   `data/alpineshred/box_materials.json`: ride feel, surface behaviour, gear stats and box materials. Synced to clients.
-  Air rotation keys in `tuning.json` (README 92): `airFlipRecover` (default 8, 0 to 90) and `airSpinRecover` (default 5, 0 to 90) are the
+  Air rotation keys in `tuning.json` (README 95): `airFlipRecover` (default 8, 0 to 90) and `airSpinRecover` (default 5, 0 to 90) are the
   degrees per tick at which a rider with no W/S (or no A/D) held levels out toward the nearest whole flip (or the nearest
   forward or switch heading) for the landing; 0 turns the recovery off. Each is capped at the matching hand rate
   (`airFlipMax`, `airSpinMaxBoard`/`airSpinMaxSkis`), so the validator's rate bounds hold whatever is set. A key held at
