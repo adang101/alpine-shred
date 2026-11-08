@@ -96,6 +96,13 @@ loom {
             property 'alpineshred.smoke.scenario', 'lift'
             runDir 'build/smoke-lift'
         }
+        // Dev tool: builds the showcase test world from tools/showcase (see ShowcaseWorld), then stops.
+        showcaseServer {
+            server()
+            name 'Showcase World Builder'
+            property 'alpineshred.showcase', 'true'
+            runDir 'build/showcase-server'
+        }
         // A park line: rail, boxes, quarter pipe, then the wrench overlay and rail ghost (phase 4).
         parkClient {
             client()

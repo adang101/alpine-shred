@@ -62,6 +62,7 @@ public final class AlpineShred {
         io.github.adang101.alpineshred.lift.LiftManager.register();
         io.github.adang101.alpineshred.lift.LiftSync.register();
         io.github.adang101.alpineshred.smoke.ServerSmoke.register();
+        io.github.adang101.alpineshred.smoke.ShowcaseWorld.register();
 
         LOGGER.info("Alpine Shred initialized on {}", Platform.isForge() ? "Forge" : "Fabric");
     }

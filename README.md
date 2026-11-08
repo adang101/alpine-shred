@@ -65,6 +65,14 @@ open blockers, then publishing to Modrinth, CurseForge and GitHub Releases.
 Requires a JDK 21 to run Gradle (Architectury Loom 1.11); the mod itself compiles and runs on a
 Java 17 toolchain, which Gradle downloads if none is installed.
 
+Start Minecraft manually (PowerShell, from C:\Repos\alpine-shred)
+$env:JAVA_HOME = "$HOME\.jdks\corretto-21.0.6"
+./gradlew :forge:runClient
+Then go to Singleplayer → Alpine Shred Showcase. The first launch takes a minute or two; later ones are faster.
+
+To skip the JAVA_HOME line, add this line to C:\Users\alvin\.gradle\gradle.properties, which makes Gradle always use JDK 21:
+org.gradle.java.home=C:/Users/alvin/.jdks/corretto-21.0.6
+
 | Task | Command |
 | --- | --- |
 | Build all jars, run unit tests | `./gradlew build` |
