@@ -39,7 +39,7 @@ Fabric), goggles and mitts in theirs, and the matching boots on your feet. A run
 
 ## Controls to tell testers
 
-- **G** straps in and out. Look where you want to go; the board follows.
+- **H** straps in and out. Look where you want to go; the board follows.
 - **W** skates on flat snow to get moving. **Shift** brakes.
 - Hold **Space** to crouch for a pop and release to jump; ramps and ledges launch you on their own.
 - On skis, **right-click** with poles in hand to push.

@@ -8,6 +8,13 @@ heading matches the tag (`v1.0.0` publishes `## [1.0.0]`). Edit the heading's da
 First release, for Minecraft 1.20.1 on Fabric and Forge (the Forge jar also runs on NeoForge 1.20.1). Create is
 optional.
 
+### Playtest feedback: goggles, leaves and the strap key
+- Without goggles, snow builds up on your lens as a frosted edge, fastest in powder and after powder landings
+  and wipeouts; goggles keep it off completely.
+- Leaves over your head darken the view, less with goggles.
+- Strap in now defaults to `H`: Curios uses `G` for its inventory. Saved keybinds are kept, so rebind it in
+  Controls on an existing install.
+
 ### Create compatibility and polish (phase 9)
 - The kinetic lift drive: a Create gearbox beside a drive station runs the lift. Speed follows rpm (64 rpm is
   1 block a second, capped at 4), the stress is a flat 4 su per rpm, and losing rotation or overstress is an

@@ -71,7 +71,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("tooltip.alpineshred.snowboard_boots", "Binds with snowboards");
         t.add("tooltip.alpineshred.ski_helmet", "Cuts wipeout damage by 40%");
         t.add("tooltip.alpineshred.goggles.lens", "Lens: %s");
-        t.add("tooltip.alpineshred.goggles", "Clears snow spray and whiteout. Craft with a dye to change the lens.");
+        t.add("tooltip.alpineshred.goggles", "Keeps snow off your face: no lens build-up, whiteout or powder flash. Craft with a dye to change the lens.");
         t.add("tooltip.alpineshred.mitts", "+10% pole push and grab score");
         t.add("tooltip.alpineshred.ski_poles", "Hold while skiing and use to push off");
         t.add("tooltip.alpineshred.board_wax", "Craft with a board or skis: +8% speed on snow for 3000 blocks");

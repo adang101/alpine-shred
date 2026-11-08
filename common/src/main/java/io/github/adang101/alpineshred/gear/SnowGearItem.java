@@ -15,7 +15,7 @@ import java.util.Locale;
 /**
  * A snowboard or a pair of skis. Stats come from {@link GearStatsRegistry} (data-driven); wax and
  * edge live in stack NBT ({@link GearNbt}). The item goes in the snow gear slot (Curios
- * {@code snow_gear}, Trinkets {@code feet/snow_gear}) and the player straps in with {@code G}.
+ * {@code snow_gear}, Trinkets {@code feet/snow_gear}) and the player straps in with {@code H}.
  */
 public class SnowGearItem extends Item {
     private final GearKind kind;

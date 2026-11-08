@@ -325,7 +325,7 @@
   "tooltip.alpineshred.gear.stats2": "Powder %s · Landing %s",
   "tooltip.alpineshred.gear.unwaxed": "Unwaxed",
   "tooltip.alpineshred.gear.wax": "Waxed: %s blocks left",
-  "tooltip.alpineshred.goggles": "Clears snow spray and whiteout. Craft with a dye to change the lens.",
+  "tooltip.alpineshred.goggles": "Keeps snow off your face: no lens build-up, whiteout or powder flash. Craft with a dye to change the lens.",
   "tooltip.alpineshred.goggles.lens": "Lens: %s",
   "tooltip.alpineshred.kinetic_lift_drive": "Place it against a lift drive station and turn it: 64 rpm is 1 block/s",
   "tooltip.alpineshred.kinetic_lift_drive.stress": "Stress: %s su at full speed",

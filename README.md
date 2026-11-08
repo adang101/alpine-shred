@@ -461,7 +461,9 @@ line. The server's validator must flag nobody on the lift.
 - **HUD.** Goggle lens tint and frame in first person (`client.gogglesOverlay`), speed lines, a
   whiteout vignette in snowfall without goggles, a flash on hitting powder at speed without
   goggles and a red pulse on wipeouts (both off with `client.flashSafe`), and, with
-  `client.hudSpeed`, a speedometer and the board's wax and edge, scaled by `client.hudScale`.
+  `client.hudSpeed`, a speedometer and the board's wax and edge, scaled by `client.hudScale`. Without
+  goggles, snow builds up on the lens as a frosted edge (clarification 92); leaves over the rider's head
+  darken the view (clarification 93).
 - **Client smoke test** (`ClientSmoke`, CI step 6). A Forge client on a virtual display builds a
   snow run in a flat world, rides it on a snowboard and then on skis with poles (skate, pole push,
   carve both ways, pop, kicker, powder, brake), and photographs each moment from behind, from the
@@ -530,7 +532,7 @@ rider was in. Watcher screenshots are on the `ci-logs` branch under `multi/`.
   lift pass are described placeholders until their blocks ship.
 - Snow gear, goggles and mitts slots on Curios (Forge) and Trinkets (Fabric) behind `GearAccess`,
   and a cached `GearProfile` rebuilt on equip events with a 10-tick fallback.
-- Strap in/out on `G`, validated on the server: gear, matching boots, vehicle, fluid, elytra,
+- Strap in/out on `H`, validated on the server: gear, matching boots, vehicle, fluid, elytra,
   spectator. Auto-unstraps on fluid, vehicles, death, dimension change, gear or boot removal.
   While strapped: -35% walk speed, no sprinting.
 - The packed rider state as synced entity data, so every client sees every rider's state.
@@ -1046,6 +1048,33 @@ covered by a test or noted in code.
     nothing, because spacing belongs to the structure sets. A dead range invites a setting that cannot work, so the
     range now ends at 1.0 and a value above it is clamped with a warning like any other. Nothing else read the old
     10.0 (no test, generated file or sync key). Written up in `docs/server-guide.md` (WP7).
+
+92. **Snow builds up on the rider's lens, and goggles are what stops it.** Without goggles a build-up level (0 to 1,
+    `LensBuildup`) climbs toward a target each tick: speed up to 0.30 (from 0.25 blocks per tick, full at 1.25),
+    powder 0.70, a hard carve up to 0.25 (lean times speed), snowfall 0.15 (scaled by speed). It rises 0.015 a tick
+    (about 3 s to 0.9) and clears 0.004 a tick (12.5 s from full) once the target falls below it. A powder landing
+    (from `AIR`, above 0.2 blocks per tick) adds 0.4 and a wipeout 0.6. A groomed run at 0.6 blocks per tick settles
+    near 0.1; powder goes past 0.7 in about 3 s. With goggles the level only falls, 0.05 a tick (a second). It is
+    drawn in first person as a frosted edge vignette (`lens_frost.png`) plus snow blotches (`lens_blotches.png`,
+    opacity scaled by the level again, so they only show when it is heavy). Opacity peaks at 0.5 in the corners
+    (0.3 under `client.reduceMotion`), reaches about 0.33 at the edge midpoints, and is zero inside 40% of the way
+    out. Textured quads only, like the other overlays: no blur shader, so Iris and Oculus are unaffected. There is no
+    config key, because it is the goggles' purpose; `client.flashSafe` has nothing to tone down since it never
+    flashes. The goggles tooltip now says what they do. The textures are placeholders from
+    `art/placeholder/generate_effects.py` (fixed seeds).
+
+93. **Leaves in the face.** While the local rider is strapped in and riding, the client looks up the block at the
+    eye once a tick (a reused `MutableBlockPos`) and checks the `ride_through` tag. Inside it, `LeafCover` closes in
+    four ticks to 0.8 opacity; after the head leaves it fades over 12 ticks. Goggles cut it to 0.6 of that (0.48),
+    because they protect the eyes but not the view. Drawn in first person only (the third-person camera sees
+    through branches), with `leaves.png`. The pass-through and slowdown are the physics package's. Not under
+    `client.reduceMotion` (it is no motion effect); nothing is drawn at zero opacity.
+
+94. **Strap in defaults to `H`, not `G`.** Curios binds `G` to its inventory screen, so on Forge one press opened
+    the Curios inventory and strapped the player in. `H` is unbound in vanilla 1.20.1 and in Curios; I could not
+    check every popular mod from here, and the Controls screen marks any conflict a player has. Saved bindings stay
+    in `options.txt`, so an existing install keeps `G` until the player rebinds it (reset the key in Controls to
+    take the new default). Nothing else names the key in code; the docs and playtest lists now say `H`.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
