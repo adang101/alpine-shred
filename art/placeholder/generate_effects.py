@@ -111,6 +111,73 @@ def overlays():
     img[..., 3] = (frame * 235).astype(np.uint8)
     save(Image.fromarray(img, "RGBA"), "textures/gui/overlay/goggles_frame.png")
 
+    lens_overlays(size, xx, yy, d)
+    leaves_overlay(size, xx, yy, d)
+
+
+def smooth_noise(size, cells, seed):
+    """Low-frequency noise in 0..1 (a coarse random grid, bicubically upscaled)."""
+    grid = np.random.default_rng(seed).uniform(0, 255, (cells, cells)).astype(np.uint8)
+    up = Image.fromarray(grid, "L").resize((size, size), Image.BICUBIC)
+    return np.asarray(up, np.float64) / 255.0
+
+
+def lens_overlays(size, xx, yy, d):
+    """Snow build-up on the lens (README clarification 92), tinted and faded at draw time.
+
+    Frost: a pale edge vignette that is 0 inside 0.4 of the way out, mottled by noise, so the
+    middle of the screen stays clear. Blotches: soft snow smears in the outer ring, drawn only
+    once the build-up is heavy. Fixed seeds, so the output is reproducible."""
+    mottle = 0.75 + 0.25 * smooth_noise(size, 12, 41)
+    frost = np.clip((d - 0.4) / 0.6, 0, 1) ** 1.3 * mottle
+    img = np.zeros((size, size, 4), np.uint8)
+    img[..., 0], img[..., 1], img[..., 2] = 236, 244, 252
+    img[..., 3] = (np.clip(frost, 0, 1) * 255).astype(np.uint8)
+    save(Image.fromarray(img, "RGBA"), "textures/gui/overlay/lens_frost.png")
+
+    r = np.random.default_rng(43)
+    blot = np.zeros((size, size))
+    placed = 0
+    while placed < 38:
+        cx, cy = r.uniform(0, size, 2)
+        if math.hypot((cx - size / 2) / (size / 2), (cy - size / 2) / (size / 2)) < 0.55:
+            continue
+        radius = r.uniform(10, 34)
+        blot = np.maximum(blot, np.exp(-(((xx - cx) ** 2 + (yy - cy) ** 2) / (2 * (radius * 0.55) ** 2))) * r.uniform(0.6, 1.0))
+        placed += 1
+    img = np.zeros((size, size, 4), np.uint8)
+    img[..., 0], img[..., 1], img[..., 2] = 244, 249, 255
+    img[..., 3] = (np.clip(blot * np.clip((d - 0.4) / 0.3, 0, 1), 0, 1) * 230).astype(np.uint8)
+    save(Image.fromarray(img, "RGBA"), "textures/gui/overlay/lens_blotches.png")
+
+
+def leaves_overlay(size, xx, yy, d):
+    """Leaves in the rider's face (README clarification 93): a dark green wash that thickens toward
+    the edges, under a scatter of leaf shapes in vanilla-ish greens. Holes stay in the middle so the
+    overlay reads as foliage, not a black screen; the draw alpha does the fade."""
+    from PIL import ImageDraw
+    r = np.random.default_rng(47)
+    base = np.zeros((size, size, 4), np.uint8)
+    base[..., 0], base[..., 1], base[..., 2] = 22, 52, 20
+    base[..., 3] = (np.clip(0.35 + 0.5 * d, 0, 1) * 255).astype(np.uint8)
+    img = Image.fromarray(base, "RGBA")
+    draw = ImageDraw.Draw(img)
+    greens = [(38, 92, 32), (52, 118, 40), (30, 76, 28), (66, 134, 48), (26, 64, 24)]
+    placed = 0
+    while placed < 170:
+        cx, cy = r.uniform(0, size, 2)
+        dist = math.hypot((cx - size / 2) / (size / 2), (cy - size / 2) / (size / 2))
+        if r.uniform(0, 1.2) > dist:  # sparser in the middle
+            continue
+        length, width, angle = r.uniform(26, 56), r.uniform(12, 24), r.uniform(0, math.pi)
+        pts = []
+        for t in np.linspace(0, 2 * math.pi, 14, endpoint=False):
+            px, py = math.cos(t) * length / 2, math.sin(t) * width / 2 * (1 - 0.3 * math.cos(t))
+            pts.append((cx + px * math.cos(angle) - py * math.sin(angle), cy + px * math.sin(angle) + py * math.cos(angle)))
+        draw.polygon(pts, fill=(*greens[int(r.integers(len(greens)))], 255))
+        placed += 1
+    save(img, "textures/gui/overlay/leaves.png")
+
 
 def poles():
     """Held ski poles (drawn by SnowGearLayer from boxes): 32 x 16, one flat colour per box.

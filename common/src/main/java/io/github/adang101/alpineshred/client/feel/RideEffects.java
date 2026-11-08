@@ -5,6 +5,8 @@ import dev.architectury.event.events.client.ClientGuiEvent;
 import io.github.adang101.alpineshred.AlpineShred;
 import io.github.adang101.alpineshred.config.AlpineConfig;
 import io.github.adang101.alpineshred.feel.CameraEffects;
+import io.github.adang101.alpineshred.feel.LeafCover;
+import io.github.adang101.alpineshred.feel.LensBuildup;
 import io.github.adang101.alpineshred.feel.ScreenEffects;
 import io.github.adang101.alpineshred.gear.GearAccess;
 import io.github.adang101.alpineshred.gear.GearNbt;
@@ -14,6 +16,7 @@ import io.github.adang101.alpineshred.gear.GearWear;
 import io.github.adang101.alpineshred.gear.GogglesItem;
 import io.github.adang101.alpineshred.gear.Lens;
 import io.github.adang101.alpineshred.movement.RideState;
+import io.github.adang101.alpineshred.registry.ModTags;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -39,10 +42,17 @@ public final class RideEffects {
     private static final ResourceLocation VIGNETTE = AlpineShred.id("textures/gui/overlay/vignette.png");
     private static final ResourceLocation SPEED_LINES = AlpineShred.id("textures/gui/overlay/speed_lines.png");
     private static final ResourceLocation GOGGLES_FRAME = AlpineShred.id("textures/gui/overlay/goggles_frame.png");
+    private static final ResourceLocation LENS_FROST = AlpineShred.id("textures/gui/overlay/lens_frost.png");
+    private static final ResourceLocation LENS_BLOTCHES = AlpineShred.id("textures/gui/overlay/lens_blotches.png");
+    private static final ResourceLocation LEAVES = AlpineShred.id("textures/gui/overlay/leaves.png");
     private static final int OVERLAY_SIZE = 256;
 
     private static final CameraEffects CAMERA = new CameraEffects();
     private static final ScreenEffects SCREEN = new ScreenEffects();
+    private static final LensBuildup LENS = new LensBuildup();
+    private static final LeafCover LEAF_COVER = new LeafCover();
+    /** Reused for the eye-position block lookup, so the tick does not allocate. */
+    private static final BlockPos.MutableBlockPos EYE = new BlockPos.MutableBlockPos();
     private static double speed;
     private static boolean riding;
     private static int lineFrame;
@@ -71,7 +81,11 @@ public final class RideEffects {
         RideState state = view == null ? RideState.OFF : view.state;
         CAMERA.tick(riding, state == RideState.WIPEOUT, view == null ? 0 : view.lean, speed,
                 AlpineConfig.CLIENT_FOV_EFFECT.value(), reduceMotion);
-        SCREEN.tick(state, speed, inSnowfall(player), goggles(player).isPresent(), AlpineConfig.CLIENT_FLASH_SAFE.on(), reduceMotion);
+        boolean goggles = goggles(player).isPresent();
+        boolean snowfall = inSnowfall(player);
+        SCREEN.tick(state, speed, snowfall, goggles, AlpineConfig.CLIENT_FLASH_SAFE.on(), reduceMotion);
+        LENS.tick(state, speed, view == null ? 0 : view.lean, snowfall, goggles);
+        LEAF_COVER.tick(riding && headInRideThrough(player));
         FeelStats.maxFovAdded = Math.max(FeelStats.maxFovAdded, (float) CAMERA.fov(1));
         FeelStats.maxRoll = Math.max(FeelStats.maxRoll, (float) Math.abs(CAMERA.roll(1)));
         lineFrame++;
@@ -80,8 +94,16 @@ public final class RideEffects {
     static void reset() {
         CAMERA.reset();
         SCREEN.reset();
+        LENS.reset();
+        LEAF_COVER.reset();
         riding = false;
         speed = 0;
+    }
+
+    /** One block-state lookup at the eye, only for the local rider (README clarification 93). */
+    private static boolean headInRideThrough(LocalPlayer player) {
+        EYE.set(player.getX(), player.getEyeY(), player.getZ());
+        return player.level().getBlockState(EYE).is(ModTags.Blocks.RIDE_THROUGH);
     }
 
     private static boolean inSnowfall(LocalPlayer player) {
@@ -106,6 +128,14 @@ public final class RideEffects {
         GuiGraphics graphics = new GuiGraphics(mc, mc.renderBuffers().bufferSource());
         int w = graphics.guiWidth(), h = graphics.guiHeight();
         if (mc.options.getCameraType().isFirstPerson()) {
+            boolean reduceMotion = AlpineConfig.CLIENT_REDUCE_MOTION.on();
+            // Snow on the lens, then leaves over it. Nothing is drawn at zero opacity.
+            if (LENS.level() > 0) {
+                overlay(graphics, LENS_FROST, w, h, 1, 1, 1, (float) LENS.alpha(reduceMotion));
+                overlay(graphics, LENS_BLOTCHES, w, h, 1, 1, 1, (float) LENS.blotchAlpha(reduceMotion));
+            }
+            float leaves = (float) LEAF_COVER.alpha(partialTick, goggles(player).isPresent());
+            if (leaves > 0.004f) overlay(graphics, LEAVES, w, h, 1, 1, 1, leaves);
             goggles(player).ifPresent(stack -> {
                 if (!AlpineConfig.CLIENT_GOGGLES_OVERLAY.on()) return;
                 Lens lens = GogglesItem.lens(stack);

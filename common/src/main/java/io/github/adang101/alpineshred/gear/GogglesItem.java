@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * Goggles, worn in the Curios {@code goggles} or Trinkets {@code head/face} slot. The lens is stack
- * NBT {@code Lens}; goggles remove snow-spray and whiteout screen effects (section 17, phase 3).
+ * NBT {@code Lens}; goggles stop the lens build-up, whiteout and powder flash (section 17, README clarification 92).
  */
 public class GogglesItem extends Item {
     public static final String LENS = "Lens";
