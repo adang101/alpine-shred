@@ -1,6 +1,11 @@
 package io.github.adang101.alpineshred.movement;
 
+import io.github.adang101.alpineshred.registry.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -20,7 +25,13 @@ import java.util.Optional;
  * {@link SurfaceResolver}.
  */
 public final class PlayerBody implements SlideController.Body {
+    /** How far past the box a trunk still counts as the thing the rider hit, in blocks. */
+    private static final double CONTACT_REACH = 0.1;
+    /** Shrinks a box's edges so a block it only touches is not overlapped. */
+    private static final double EDGE = 1.0e-7;
+
     private final Player player;
+    private final BlockPos.MutableBlockPos cell = new BlockPos.MutableBlockPos();
     private io.github.adang101.alpineshred.park.ParkView park;
 
     public PlayerBody(Player player) {
@@ -68,6 +79,37 @@ public final class PlayerBody implements SlideController.Body {
         Vec3 after = player.position();
         return new SlideController.Moved(after.x - before.x, after.y - before.y, after.z - before.z,
                 player.onGround(), player.horizontalCollision);
+    }
+
+    @Override
+    public boolean overlapsRideThrough() {
+        return touches(player.getBoundingBox(), ModTags.Blocks.RIDE_THROUGH);
+    }
+
+    /** A trunk within {@link #CONTACT_REACH} of the box on the side of the move: what the rider ran into. */
+    @Override
+    public boolean hitTrunk(double dx, double dz) {
+        AABB reach = player.getBoundingBox().expandTowards(Math.signum(dx) * CONTACT_REACH, 0, Math.signum(dz) * CONTACT_REACH);
+        return touches(reach, ModTags.Blocks.TREE_TRUNKS);
+    }
+
+    /**
+     * Whether any block cell the box overlaps is in {@code tag}. Cells whose face only touches the box
+     * do not count. Reads at most a few cells (the box is 0.6 by 1.8 by 0.6) and allocates nothing.
+     */
+    private boolean touches(AABB box, TagKey<Block> tag) {
+        Level level = player.level();
+        int x1 = Mth.floor(box.minX + EDGE), x2 = Mth.floor(box.maxX - EDGE);
+        int y1 = Mth.floor(box.minY + EDGE), y2 = Mth.floor(box.maxY - EDGE);
+        int z1 = Mth.floor(box.minZ + EDGE), z2 = Mth.floor(box.maxZ - EDGE);
+        for (int y = y1; y <= y2; y++) {
+            for (int x = x1; x <= x2; x++) {
+                for (int z = z1; z <= z2; z++) {
+                    if (level.getBlockState(cell.set(x, y, z)).is(tag)) return true;
+                }
+            }
+        }
+        return false;
     }
 
     @Override

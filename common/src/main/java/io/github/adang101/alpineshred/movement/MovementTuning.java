@@ -35,7 +35,7 @@ public final class MovementTuning {
         s.put("baseTurnRate", new Spec(7.0, 0.0, 45.0, "Degrees per tick at zero speed"));
         s.put("turnSpeedRef", new Spec(0.45, 0.01, 5.0, "Speed at which turn rate halves"));
         s.put("gripBlend", new Spec(0.35, 0.02, 1.0, "Velocity-to-heading blend at grip 1.0"));
-        s.put("brakeFrictionMul", new Spec(8.0, 1.0, 50.0, "Brake friction multiplier (board)"));
+        s.put("brakeDecel", new Spec(0.022, 0.0, 0.2, "Brake deceleration, blocks per tick squared, whatever the surface (board)"));
         s.put("tuckDragMul", new Spec(0.8, 0.1, 2.0, "W drag multiplier"));
         s.put("flareDragMul", new Spec(1.6, 0.5, 10.0, "S drag multiplier"));
         s.put("popVelocity", new Spec(0.42, 0.0, 2.0, "Base pop"));
@@ -56,7 +56,7 @@ public final class MovementTuning {
         s.put("pivotSpeed", new Spec(0.1, 0.0, 1.0, "Below this speed A and D pivot the board"));
         s.put("pivotRate", new Spec(6.0, 0.0, 45.0, "Pivot degrees per tick"));
         // ext: constants the doc states in prose
-        s.put("skiBrakeFrictionMul", new Spec(6.0, 1.0, 50.0, "ext: brake friction multiplier on skis"));
+        s.put("skiBrakeDecelMul", new Spec(0.9, 0.0, 5.0, "ext: brake deceleration multiplier on skis (a snowplow bites less than a board edge)"));
         s.put("skiBrakeSteerMul", new Spec(0.5, 0.0, 1.0, "ext: steering multiplier while snowplowing"));
         s.put("boardTurnMul", new Spec(0.9, 0.1, 5.0, "ext: board turn-rate multiplier"));
         s.put("skiTurnMul", new Spec(1.1, 0.1, 5.0, "ext: ski turn-rate multiplier"));
@@ -95,6 +95,10 @@ public final class MovementTuning {
         s.put("lipAssistTicks", new Spec(3, 0, 20, "Ticks after leaving a lip ramp in which jump adds the lip assist"));
         s.put("lipAssistPop", new Spec(0.2, 0.0, 2.0, "Lip assist: extra pop, as a fraction of a full pop"));
         s.put("lipAssistMinSpeed", new Spec(0.45, 0.0, 3.0, "Minimum speed for the lip assist"));
+        // Feedback round 1: braking, ride-through blocks (leaves) and tree trunks. Appended last.
+        s.put("brakeSpeedDecel", new Spec(0.03, 0.0, 1.0, "ext: extra brake deceleration per unit of speed, so a fast rider sheds speed quickly"));
+        s.put("leafDrag", new Spec(0.10, 0.0, 1.0, "ext: fraction of speed lost per tick while the rider's body overlaps a ride-through block"));
+        s.put("treeHitSpeed", new Spec(0.2, 0.0, 5.0, "ext: minimum head-on speed for a wipeout against a tree trunk (wallHitSpeed for other walls)"));
         SPECS = Collections.unmodifiableMap(s);
     }
 
@@ -106,7 +110,7 @@ public final class MovementTuning {
     public final double baseTurnRate;
     public final double turnSpeedRef;
     public final double gripBlend;
-    public final double brakeFrictionMul;
+    public final double brakeDecel;
     public final double tuckDragMul;
     public final double flareDragMul;
     public final double popVelocity;
@@ -125,7 +129,7 @@ public final class MovementTuning {
     public final double lookDeadzone;
     public final double pivotSpeed;
     public final double pivotRate;
-    public final double skiBrakeFrictionMul;
+    public final double skiBrakeDecelMul;
     public final double skiBrakeSteerMul;
     public final double boardTurnMul;
     public final double skiTurnMul;
@@ -162,6 +166,9 @@ public final class MovementTuning {
     public final int lipAssistTicks;
     public final double lipAssistPop;
     public final double lipAssistMinSpeed;
+    public final double brakeSpeedDecel;
+    public final double leafDrag;
+    public final double treeHitSpeed;
 
     private final Map<String, Double> values;
 
@@ -178,7 +185,7 @@ public final class MovementTuning {
         baseTurnRate = get("baseTurnRate");
         turnSpeedRef = get("turnSpeedRef");
         gripBlend = get("gripBlend");
-        brakeFrictionMul = get("brakeFrictionMul");
+        brakeDecel = get("brakeDecel");
         tuckDragMul = get("tuckDragMul");
         flareDragMul = get("flareDragMul");
         popVelocity = get("popVelocity");
@@ -197,7 +204,7 @@ public final class MovementTuning {
         lookDeadzone = get("lookDeadzone");
         pivotSpeed = get("pivotSpeed");
         pivotRate = get("pivotRate");
-        skiBrakeFrictionMul = get("skiBrakeFrictionMul");
+        skiBrakeDecelMul = get("skiBrakeDecelMul");
         skiBrakeSteerMul = get("skiBrakeSteerMul");
         boardTurnMul = get("boardTurnMul");
         skiTurnMul = get("skiTurnMul");
@@ -234,6 +241,9 @@ public final class MovementTuning {
         lipAssistTicks = (int) Math.round(get("lipAssistTicks"));
         lipAssistPop = get("lipAssistPop");
         lipAssistMinSpeed = get("lipAssistMinSpeed");
+        brakeSpeedDecel = get("brakeSpeedDecel");
+        leafDrag = get("leafDrag");
+        treeHitSpeed = get("treeHitSpeed");
     }
 
     /** Value by key; throws for unknown keys so typos fail loudly in tests. */

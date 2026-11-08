@@ -8,6 +8,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
 import java.util.EnumMap;
@@ -68,6 +69,7 @@ final class RiderSoundManager {
         }
         if (view.wipedOut) oneShot(view, ModSounds.WIPEOUT, 1.0f, 0.95f);
         if (view.caught) oneShot(view, ModSounds.GRIND_CATCH, 0.7f, 0.95f + view.player.getRandom().nextFloat() * 0.1f);
+        if (view.throughLeaves) oneShot(view, SoundEvents.AZALEA_LEAVES_HIT, 0.7f, 0.9f + view.player.getRandom().nextFloat() * 0.2f);
         if (view.polePushed) oneShot(view, ModSounds.POLE_PUSH, 0.6f, 0.9f + view.player.getRandom().nextFloat() * 0.2f);
     }
 
@@ -82,8 +84,12 @@ final class RiderSoundManager {
     }
 
     private static void oneShot(RiderView view, RegistrySupplier<SoundEvent> sound, float volume, float pitch) {
+        oneShot(view, sound.get(), volume, pitch);
+    }
+
+    private static void oneShot(RiderView view, SoundEvent sound, float volume, float pitch) {
         FeelStats.oneShotsPlayed++;
-        view.player.level().playLocalSound(view.player.getX(), view.player.getY(), view.player.getZ(), sound.get(),
+        view.player.level().playLocalSound(view.player.getX(), view.player.getY(), view.player.getZ(), sound,
                 SoundSource.PLAYERS, volume, pitch, false);
     }
 

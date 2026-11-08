@@ -446,9 +446,9 @@ public final class RideGameTests {
         course.flat(0, 25, 5, snow)                    // in-run; the pop lands here
                 .flat(26, 33, 6, snow)                 // one-block step up, at speed
                 .flat(34, 36, 5, snow).flat(37, 39, 4, snow) // staircase down
-                .flat(40, 59, 3, snow)                 // braking from z 45 on
+                .flat(40, 59, 3, snow)                 // braking from z 52 to 62: a full brake sheds 1.4 in about 15 blocks
                 .flat(60, 71, 2, snow);                // ledge, taken while braking
-        Replay run = replayOnServer(helper, course, 5, true, z -> new RideInput(0, 0, 0, z >= 45, z >= 2.5 && z < 4.5, GrabType.NONE));
+        Replay run = replayOnServer(helper, course, 5, true, z -> new RideInput(0, 0, 0, z >= 52 && z < 62, z >= 2.5 && z < 4.5, GrabType.NONE));
         double cap = TuningData.tuning().maxSpeed * run.gearSpeed;
         check(run.maxSpeed >= cap - 1.0e-6, String.format(Locale.ROOT, "never reached the cap %.3f (max %.3f)", cap, run.maxSpeed));
         check(run.popped, "the pop never fired");

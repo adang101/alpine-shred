@@ -305,6 +305,15 @@ Reloaded with the data packs; `/alpineshred tuning reload` reloads them and resy
 - `data/alpineshred/worldgen/`: the structure sets (spacing) and template pools.
 - Tags: `alpineshred:lift_blocked`, `alpineshred:lift_passengers` (entity types), `alpineshred:design_cost` (the
   dyes `design.saveCostCount` takes; all 16 vanilla dyes by default).
+- Terrain tags (README 97, 98): `alpineshred:ride_through` (blocks a strapped rider passes through, slowed by
+  `leafDrag`; default `#minecraft:leaves`) and `alpineshred:tree_trunks` (blocks that wipe a rider out from
+  `treeHitSpeed`; default `#minecraft:logs` and `minecraft:mangrove_roots`). Adding a block to `ride_through` removes
+  its collision for strapped riders only, on the client and the server. Both are looked up only while riding.
+- Tuning keys added in `movement/tuning.json` (README 96 to 98): `brakeDecel` (0.022) and `brakeSpeedDecel` (0.03),
+  the brake's deceleration in blocks per tick squared and per unit of speed; `skiBrakeDecelMul` (0.9); `leafDrag`
+  (0.10), the fraction of speed lost per tick inside ride-through blocks; `treeHitSpeed` (0.2), the head-on speed that
+  wipes a rider out on a trunk. They replace `brakeFrictionMul` and `skiBrakeFrictionMul`, which are gone (an old
+  override logs one "unknown key" warning). They sync to clients with the rest of the tuning, with no protocol change.
 
 ## 11. NeoForge and known issues
 
