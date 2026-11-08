@@ -1078,7 +1078,7 @@ covered by a test or noted in code.
 
 95. **Air rotation waits for a fresh press and levels out on release.** Riders hold W (skate, tuck) and A/D (carve) on the
     ground, and `AirRotation` took those keys from the first air tick, so every jump started as an uncontrolled flip and
-    ended in a bail. Now a W/S or A/D key held when the air session starts is ignored until it is released (tracked per
+    ended in a bail. Now a W/S or A/D key that was down on the tick that left the ground (the input of the tick that called `enterAir`, not the first air tick, so a key pressed as the rider leaves the lip rotates at once) is ignored until it is released (tracked per
     axis, reset in `enterAir`, so it covers a pop, a ramp or lip launch, a rail, box or pipe exit and a fall). While an axis
     has no key held, it eases to a landable angle: pitch toward the nearest whole flip at `airFlipRecover` (8 degrees per
     tick) and the heading relative to the way of travel (`takeoffRelative + yawAccum`) toward the nearest multiple of 180
