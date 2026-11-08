@@ -1047,6 +1047,21 @@ covered by a test or noted in code.
     range now ends at 1.0 and a value above it is clamped with a warning like any other. Nothing else read the old
     10.0 (no test, generated file or sync key). Written up in `docs/server-guide.md` (WP7).
 
+92. **Air rotation waits for a fresh press and levels out on release.** Riders hold W (skate, tuck) and A/D (carve) on the
+    ground, and `AirRotation` took those keys from the first air tick, so every jump started as an uncontrolled flip and
+    ended in a bail. Now a W/S or A/D key held when the air session starts is ignored until it is released (tracked per
+    axis, reset in `enterAir`, so it covers a pop, a ramp or lip launch, a rail, box or pipe exit and a fall). While an axis
+    has no key held, it eases to a landable angle: pitch toward the nearest whole flip at `airFlipRecover` (8 degrees per
+    tick) and the heading relative to the way of travel (`takeoffRelative + yawAccum`) toward the nearest multiple of 180
+    at `airSpinRecover` (5). Recovery never overshoots, scales with a held grab like any rotation, and moves `yawAccum`
+    and `motion.heading` together. A whole flip the `FlipLimit` does not allow yet is out: the rider recovers to the one
+    below. Recovery is slower than a held key, so a committed trick still has to be timed, and a short hop with half a
+    flip can still bail. Server parity: each recovery rate is capped at its hand rate (`airFlipMax`, the gear's spin max),
+    so a report never moves faster than `TrickValidator` and `FlipLimit` allow, and no protocol bump is needed (the
+    tuning sync is a JSON map; a client on the old build simply lacks the behaviour). Recovery shifts the final angle to
+    a whole rotation, which `TrickScorer` rounds the same way (170 recovering to 180 scores as a 180). The first
+    airborne moment shows a one-time hint (`hint.air`).
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
 Real animation clips, sounds and textures replace the placeholders file by file under the same

@@ -137,6 +137,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("message.alpineshred.unstrap.disabled", "Riding was disabled on this server");
         t.add("message.alpineshred.stance.regular", "Stance: regular");
         t.add("message.alpineshred.stance.goofy", "Stance: goofy");
+        t.add("message.alpineshred.hint.air", "In the air: press W/S to flip, A/D to spin. Let go to level out for the landing");
         t.add("message.alpineshred.hint.steer", "Look to steer, A or D to dig an edge, sneak to brake");
         t.add("message.alpineshred.tuner.no_gear", "Hold a board or skis in your off hand");
         t.add("message.alpineshred.tuner.sharp", "Edges are already sharp");

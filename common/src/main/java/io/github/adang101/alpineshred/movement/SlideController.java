@@ -482,6 +482,8 @@ public final class SlideController {
     /**
      * Section 8, "Inputs in the air": A and D spin, W and S flip, the grab keys (or sneak, for a
      * Method) grab. The board turns with the spin; the flip only counts, and shows in the animation.
+     * A key held from takeoff is ignored until released, and a released axis levels out for the
+     * landing (README 92, see {@link AirRotation}).
      */
     private void airInputs(Body body, RideInput in, RideContext ctx) {
         apexY = Double.isNaN(apexY) ? body.y() : Math.max(apexY, body.y());
@@ -491,7 +493,8 @@ public final class SlideController {
         }
         int spin = in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
         grab = in.grab() != GrabType.NONE ? in.grab() : in.sneak() ? GrabType.METHOD : GrabType.NONE;
-        double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE, airTicks);
+        double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE, airTicks,
+                takeoffRelative);
         double align = Math.max(-EXIT_ALIGN_RATE, Math.min(EXIT_ALIGN_RATE, exitAlign));
         exitAlign -= align;
         motion.heading = SlideModel.wrapDegrees(motion.heading + spun + align);

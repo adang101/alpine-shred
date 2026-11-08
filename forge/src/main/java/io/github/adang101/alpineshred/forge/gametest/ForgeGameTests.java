@@ -149,6 +149,16 @@ public final class ForgeGameTests {
         RideGameTests.vanillaAcceptsKickerAir(helper);
     }
 
+    @GameTest(template = RideGameTests.LARGE)
+    public static void holdingWThroughAJumpLandsClean(GameTestHelper helper) {
+        RideGameTests.holdingWThroughAJumpLandsClean(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void aFreshPressFlipsAndReleasingLevelsOut(GameTestHelper helper) {
+        RideGameTests.aFreshPressFlipsAndReleasingLevelsOut(helper);
+    }
+
     // ---- phase 3: feel ----
 
     @GameTest(template = AlpineGameTests.TEMPLATE)

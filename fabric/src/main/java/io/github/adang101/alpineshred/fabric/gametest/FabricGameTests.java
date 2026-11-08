@@ -148,6 +148,16 @@ public final class FabricGameTests implements FabricGameTest {
         RideGameTests.vanillaAcceptsKickerAir(helper);
     }
 
+    @GameTest(template = LARGE)
+    public void holdingWThroughAJumpLandsClean(GameTestHelper helper) {
+        RideGameTests.holdingWThroughAJumpLandsClean(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void aFreshPressFlipsAndReleasingLevelsOut(GameTestHelper helper) {
+        RideGameTests.aFreshPressFlipsAndReleasingLevelsOut(helper);
+    }
+
     // ---- phase 3: feel ----
 
     @GameTest(template = TEMPLATE)
