@@ -14,6 +14,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 /**
  * Client-side particles from the synced rider state (design doc section 17): snow spray off the
@@ -69,6 +70,15 @@ final class RiderParticles {
                 // Direction rides in the velocity arguments; the trail particle does not move.
                 FeelStats.particlesSpawned++;
                 level.addParticle(ModParticles.SNOW_TRAIL.get(), x + rx * side * 0.15, y + 0.02, z + rz * side * 0.15, fx, 0, fz);
+            }
+        }
+        if (view.throughLeaves) {
+            // Entering leaves: one capped burst of vanilla leaf particles, thrown ahead.
+            BlockParticleOption leaf = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.OAK_LEAVES.defaultBlockState());
+            for (int i = 0; i < ParticleRules.LEAF_BURST; i++) {
+                FeelStats.particlesSpawned++;
+                level.addParticle(leaf, x + (random.nextDouble() - 0.5) * 0.6, y + 0.2 + random.nextDouble() * 1.4,
+                        z + (random.nextDouble() - 0.5) * 0.6, fx * 0.1, 0.05, fz * 0.1);
             }
         }
         if (!Double.isNaN(view.landedImpact) && snowy) {

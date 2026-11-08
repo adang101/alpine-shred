@@ -382,6 +382,67 @@ class SlideControllerTest {
     }
 
     @Test
+    void ridingThroughLeavesSlowsTheRiderAndAnnouncesTheEntryOnce() {
+        VoxelBody clear = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        VoxelBody leafy = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        leafy.leaves = (x, z) -> z >= 5 && z < 9;
+        SlideController a = riding(clear, 0.8);
+        SlideController b = riding(leafy, 0.8);
+        List<SlideController.Event> events = run(b, leafy, BOARD, RideInput.coast(0), 15);
+        run(a, clear, BOARD, RideInput.coast(0), 15);
+        long entries = events.stream().filter(e -> e instanceof SlideController.ThroughLeaves).count();
+        assertEquals(1, entries, "one rustle per entry, not per tick");
+        assertTrue(b.speed() < a.speed() * 0.6, "leaves slow the rider: " + b.speed() + " vs " + a.speed());
+        assertTrue(b.state() != RideState.WIPEOUT, "leaves are not a wall");
+        assertTrue(leafy.z > 9, "rode through to the far side: " + leafy.z);
+    }
+
+    @Test
+    void leafDragIsTheTunedFractionOfSpeedPerTick() {
+        VoxelBody body = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        body.leaves = (x, z) -> true;
+        SlideController c = riding(body, 0.8);
+        double before = c.speed();
+        c.tick(body, RideInput.coast(0), BOARD);
+        assertEquals(before * (1 - MovementTuning.DEFAULT.leafDrag), c.speed(), 0.01, "about leafDrag of speed lost");
+    }
+
+    @Test
+    void leavingLeavesAndReenteringAnnouncesAgain() {
+        VoxelBody body = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        body.leaves = (x, z) -> z >= 4 && z < 5 || z >= 12 && z < 13;
+        SlideController c = riding(body, 0.9);
+        List<SlideController.Event> events = run(c, body, BOARD, RideInput.coast(0), 40);
+        assertEquals(2, events.stream().filter(e -> e instanceof SlideController.ThroughLeaves).count());
+    }
+
+    @Test
+    void aTreeTrunkWipesOutARiderBelowTheNormalWallSpeed() {
+        VoxelBody.Terrain wall = VoxelBody.Terrain.of((x, z) -> z < 3 ? 0 : 5, SurfaceProfile.GROOMED);
+        VoxelBody log = new VoxelBody(wall, 0.5, 0.5);
+        log.trunks = (x, z) -> z >= 3;
+        SlideController c = riding(log, 0.3);
+        List<SlideController.Event> events = run(c, log, BOARD, RideInput.coast(0), 20);
+        SlideController.WipedOut hit = (SlideController.WipedOut) events.stream()
+                .filter(e -> e instanceof SlideController.WipedOut).findFirst().orElseThrow();
+        assertTrue(hit.impactSpeed() >= MovementTuning.DEFAULT.treeHitSpeed
+                && hit.impactSpeed() < MovementTuning.DEFAULT.wallHitSpeed, "impact " + hit.impactSpeed());
+
+        VoxelBody stone = new VoxelBody(wall, 0.5, 0.5);
+        SlideController s = riding(stone, 0.3);
+        assertFalse(run(s, stone, BOARD, RideInput.coast(0), 20).stream().anyMatch(e -> e instanceof SlideController.WipedOut),
+                "the same speed into stone is a bump");
+    }
+
+    @Test
+    void aTrunkBelowTheTreeHitSpeedIsOnlyABump() {
+        VoxelBody log = new VoxelBody(VoxelBody.Terrain.of((x, z) -> z < 3 ? 0 : 5, SurfaceProfile.GROOMED), 0.5, 0.5);
+        log.trunks = (x, z) -> z >= 3;
+        SlideController c = riding(log, 0.1);
+        assertFalse(run(c, log, BOARD, RideInput.coast(0), 40).stream().anyMatch(e -> e instanceof SlideController.WipedOut));
+    }
+
+    @Test
     void popChargesWhileHeldAndFiresOnRelease() {
         VoxelBody body = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
         SlideController c = riding(body, 0.5);

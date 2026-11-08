@@ -75,6 +75,22 @@ public final class SlideController {
         /** Surface of the block the rider stands on or floats over, or null when nothing is underfoot. */
         SurfaceProfile surfaceUnderFeet();
 
+        /**
+         * True while the rider's body overlaps a ride-through block (leaves, {@code #alpineshred:ride_through}).
+         * Called once per riding tick: no allocation, only the block cells the body's box touches.
+         */
+        default boolean overlapsRideThrough() {
+            return false;
+        }
+
+        /**
+         * True if a tree trunk ({@code #alpineshred:tree_trunks}) is what the rider just ran into, looking
+         * only at the blocks in the way of a move by (dx, dz). Called only after a horizontal collision.
+         */
+        default boolean hitTrunk(double dx, double dz) {
+            return false;
+        }
+
         /** Park features around the rider (rails, pipes, lips). */
         default ParkView park() {
             return ParkView.NONE;
@@ -99,7 +115,7 @@ public final class SlideController {
     public enum Mode {WALK, RIDE}
 
     /** Things that happened this tick, for packets, sounds and the validator. */
-    public sealed interface Event permits Popped, Launched, Landed, WipedOut, Pushed, Caught, TrickLanded, GrindEnded {
+    public sealed interface Event permits Popped, Launched, Landed, WipedOut, Pushed, Caught, TrickLanded, GrindEnded, ThroughLeaves {
     }
 
     /**
@@ -132,6 +148,10 @@ public final class SlideController {
     public record Pushed() implements Event {
     }
 
+    /** The rider's body just entered ride-through blocks (README clarification 93); for a rustle and leaf particles. */
+    public record ThroughLeaves() implements Event {
+    }
+
     private static final int TERRAIN_SAMPLES = 8;
     private static final double TERRAIN_WINDOW = 3.0;
 
@@ -159,6 +179,8 @@ public final class SlideController {
     private int wipeoutTicks;
     private int airTicks;
     private double lean;
+    /** Whether the body overlapped ride-through blocks last tick, so entering them is an event, not a state. */
+    private boolean inLeaves;
 
     // ---- park sub-modes ----
     /** The rail being ground, or null. */
@@ -215,8 +237,10 @@ public final class SlideController {
         } else if (state != RideState.WIPEOUT && tryPipe(body, ctx)) {
             pipeTick(body, in, ctx);
         } else if (grounded) {
+            dragThroughLeaves(body, ctx.tuning());
             groundTick(body, in, ctx);
         } else {
+            dragThroughLeaves(body, ctx.tuning());
             airTick(body, in, ctx);
         }
         strafeWasHeld = in.strafe() != 0;
@@ -268,6 +292,20 @@ public final class SlideController {
         };
     }
 
+    /**
+     * Leaves slow the rider by {@code leafDrag} of its speed per tick, on the ground and in the air, and
+     * announce the entry once (README clarification 93). Not applied on rails, boxes and pipes, which
+     * follow their own paths.
+     */
+    private void dragThroughLeaves(Body body, MovementTuning t) {
+        boolean inside = body.overlapsRideThrough();
+        if (inside) {
+            motion.speed *= 1 - t.leafDrag;
+            if (!inLeaves) events.add(new ThroughLeaves());
+        }
+        inLeaves = inside;
+    }
+
     private void groundTick(Body body, RideInput in, RideContext ctx) {
         MovementTuning t = ctx.tuning();
         surface = body.surfaceUnderFeet();
@@ -310,7 +348,7 @@ public final class SlideController {
         Moved moved = body.move(SlideModel.dirX(motion.travelYaw) * speedBefore,
                 popped ? popVelocity : -GROUND_STICK,
                 SlideModel.dirZ(motion.travelYaw) * speedBefore);
-        handleWall(moved, speedBefore, t);
+        handleWall(body, moved, speedBefore, t);
 
         if (popped) {
             grounded = false;
@@ -391,7 +429,7 @@ public final class SlideController {
         double vyBefore = vy;
         Moved moved = body.move(SlideModel.dirX(motion.travelYaw) * speedBefore, vy,
                 SlideModel.dirZ(motion.travelYaw) * speedBefore);
-        handleWall(moved, speedBefore, t);
+        handleWall(body, moved, speedBefore, t);
         jumpWasHeld = in.jump();
         if (moved.onGround() && vyBefore <= 0) {
             grounded = true;
@@ -424,15 +462,20 @@ public final class SlideController {
      * is the stopped part of the velocity, not the distance lost this tick: a head-on hit at 0.8 is
      * an 0.8 impact even when the rider was 0.7 blocks short of the wall when the tick began, and
      * glancing along a wall at a shallow angle is not a crash.
+     *
+     * <p>A tree trunk wipes the rider out from {@code treeHitSpeed}, below {@code wallHitSpeed}
+     * (README clarification 94). The trunk query runs only for an impact in between, so a crash
+     * that wipes out anyway, and a bump too soft to matter, cost nothing extra.
      */
-    private void handleWall(Moved moved, double speedBefore, MovementTuning t) {
+    private void handleWall(Body body, Moved moved, double speedBefore, MovementTuning t) {
         if (!moved.horizontalCollision()) return;
         double ix = SlideModel.dirX(motion.travelYaw) * speedBefore;
         double iz = SlideModel.dirZ(motion.travelYaw) * speedBefore;
         boolean stopX = Math.abs(moved.dx()) < Math.abs(ix) - 1.0e-6;
         boolean stopZ = Math.abs(moved.dz()) < Math.abs(iz) - 1.0e-6;
         double impact = Math.hypot(stopX ? ix : 0, stopZ ? iz : 0);
-        if (impact >= t.wallHitSpeed && state != RideState.WIPEOUT) {
+        if (state != RideState.WIPEOUT && (impact >= t.wallHitSpeed
+                || impact >= t.treeHitSpeed && body.hitTrunk(ix, iz))) {
             startWipeout(impact, t);
         }
         double vx = stopX ? 0 : ix, vz = stopZ ? 0 : iz;
@@ -577,6 +620,7 @@ public final class SlideController {
 
     private void stopRiding() {
         endFeature();
+        inLeaves = false;
         mode = Mode.WALK;
         state = RideState.IDLE;
         lean = 0;

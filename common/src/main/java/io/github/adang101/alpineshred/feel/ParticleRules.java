@@ -30,6 +30,8 @@ public final class ParticleRules {
 
     /** The catch cue: a burst of sparks on a metal rail. */
     public static final int CATCH_SPARKS = 8;
+    /** Leaf particles on entering leaves: one burst, never per tick. */
+    public static final int LEAF_BURST = 8;
 
     /** Box slides: block dust from the box, one every few ticks at speed. */
     public static double boxDustPerTick(double speed) {

@@ -5,6 +5,7 @@ import io.github.adang101.alpineshred.gametest.AlpineGameTests;
 import io.github.adang101.alpineshred.gametest.ParkGameTests;
 import io.github.adang101.alpineshred.gametest.TrickGameTests;
 import io.github.adang101.alpineshred.gametest.RideGameTests;
+import io.github.adang101.alpineshred.gametest.TerrainGameTests;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraftforge.gametest.GameTestHolder;
@@ -102,6 +103,26 @@ public final class ForgeGameTests {
     @GameTest(template = RideGameTests.LARGE)
     public static void wallHitWipesOutAndLocksInput(GameTestHelper helper) {
         RideGameTests.wallHitWipesOutAndLocksInput(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void brakingOnASteepSlopeStopsAndHolds(GameTestHelper helper) {
+        TerrainGameTests.brakingOnASteepSlopeStopsAndHolds(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void leavesHaveNoCollisionForRidersOnly(GameTestHelper helper) {
+        TerrainGameTests.leavesHaveNoCollisionForRidersOnly(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void ridingIntoLeavesPassesThroughAndSlowsDown(GameTestHelper helper) {
+        TerrainGameTests.ridingIntoLeavesPassesThroughAndSlowsDown(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void aLogWipesOutAtModerateSpeedButStoneDoesNot(GameTestHelper helper) {
+        TerrainGameTests.aLogWipesOutAtModerateSpeedButStoneDoesNot(helper);
     }
 
     @GameTest(template = RideGameTests.LARGE)

@@ -170,18 +170,20 @@ public final class SlideModel {
 
         // Step 5: integrate speed along the travel direction.
         double accel = slopeAcceleration(t, c.slopeAngle(), s.travelYaw, c.downhillYaw());
-        double friction = friction(t, c, in.brake());
+        double friction = friction(t, c);
+        double brake = in.brake() ? brakeDeceleration(t, c, speed) : 0;
         double drag = drag(t, c, in, speed);
-        double next = speed + accel - friction - drag;
+        double next = speed + accel - friction - brake - drag;
         if (next < 0) {
-            // Stopped. If the slope pulls harder than friction holds, slide back down tail-first.
+            // Stopped. If the slope pulls harder than friction and the brake's grip hold, slide back down tail-first.
             double pull = -slopeAcceleration(t, c.slopeAngle(), s.travelYaw, c.downhillYaw());
-            if (pull > friction) {
+            double hold = friction + (in.brake() ? brakeDeceleration(t, c, 0) : 0);
+            if (pull > hold) {
                 // Reversing direction swaps which end leads; flip the stance now rather than
                 // waiting for SWITCH_MIN_SPEED, or the grip blend would pull velocity back uphill.
                 s.travelYaw = wrapDegrees(s.travelYaw + 180);
                 s.switchStance = !s.switchStance;
-                next = pull - friction;
+                next = pull - hold;
             } else {
                 next = 0;
             }
@@ -216,11 +218,23 @@ public final class SlideModel {
         return t.effectiveGravity() * Math.sin(slopeAngle) * cosToDownhill;
     }
 
-    public static double friction(MovementTuning t, Conditions c, boolean braking) {
-        double mul = 1.0;
-        if (c.waxed() && c.surface().isSnow()) mul *= t.waxFrictionMul;
-        if (braking) mul *= c.gear().kind() == GearKind.SKIS ? t.skiBrakeFrictionMul : t.brakeFrictionMul;
+    /** Surface friction, with wax. Braking is {@link #brakeDeceleration}, not a friction multiplier. */
+    public static double friction(MovementTuning t, Conditions c) {
+        double mul = c.waxed() && c.surface().isSnow() ? t.waxFrictionMul : 1.0;
         return c.surface().friction() * mul;
+    }
+
+    /**
+     * Braking (README clarification 92): {@code (brakeDecel + brakeSpeedDecel * speed)} blocks per tick
+     * squared, times the ski multiplier, times the surface's grip capped at 1. It does not scale with
+     * the surface's friction, which on snow (0.0006 to 0.0014) is far below a slope's pull, so a
+     * friction multiplier could not stop a rider on any real slope. Slick surfaces still bite less
+     * (ice grip 0.55: a brake holds a 20 degree ice slope but not a 35 degree one); the speed term
+     * makes a fast rider shed speed quickly and the constant term makes the stop finish.
+     */
+    public static double brakeDeceleration(MovementTuning t, Conditions c, double speed) {
+        double kindMul = c.gear().kind() == GearKind.SKIS ? t.skiBrakeDecelMul : 1.0;
+        return (t.brakeDecel + t.brakeSpeedDecel * Math.max(0, speed)) * kindMul * Math.min(1.0, c.surface().grip());
     }
 
     /**

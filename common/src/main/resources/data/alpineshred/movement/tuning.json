@@ -5,7 +5,7 @@
   "baseTurnRate": 7.0,
   "turnSpeedRef": 0.45,
   "gripBlend": 0.35,
-  "brakeFrictionMul": 8.0,
+  "brakeDecel": 0.022,
   "tuckDragMul": 0.8,
   "flareDragMul": 1.6,
   "popVelocity": 0.42,
@@ -24,7 +24,7 @@
   "lookDeadzone": 1.5,
   "pivotSpeed": 0.1,
   "pivotRate": 6.0,
-  "skiBrakeFrictionMul": 6.0,
+  "skiBrakeDecelMul": 0.9,
   "skiBrakeSteerMul": 0.5,
   "boardTurnMul": 0.9,
   "skiTurnMul": 1.1,
@@ -58,5 +58,8 @@
   "slideMinSpeed": 0.08,
   "lipAssistTicks": 3.0,
   "lipAssistPop": 0.2,
-  "lipAssistMinSpeed": 0.45
+  "lipAssistMinSpeed": 0.45,
+  "brakeSpeedDecel": 0.03,
+  "leafDrag": 0.1,
+  "treeHitSpeed": 0.2
 }
