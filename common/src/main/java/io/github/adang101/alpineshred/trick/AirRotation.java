@@ -24,9 +24,9 @@ public final class AirRotation {
     public double pitchAccum;
     private double spinRate;
     private double flipRate;
-    /** Whether the axis' key has been seen released this session; until then its input is ignored. */
-    private boolean spinArmed;
-    private boolean flipArmed;
+    /** Whether the axis' key was up at takeoff or has been seen released since; until then its input is ignored. */
+    private boolean spinArmed = true;
+    private boolean flipArmed = true;
 
     /**
      * @param spinInput       -1 (A), 0, or 1 (D)
@@ -97,8 +97,19 @@ public final class AirRotation {
         return flipRate;
     }
 
+    /** Clears the session with nothing held, as between sessions. */
     public void reset() {
+        reset(false, false);
+    }
+
+    /**
+     * Starts a session. A key down on the tick the air session began ({@code spinHeld}, {@code flipHeld})
+     * counts as held from takeoff and is ignored until released; a key up then and pressed on the
+     * first air tick rotates at once (README 95).
+     */
+    public void reset(boolean spinHeld, boolean flipHeld) {
         yawAccum = pitchAccum = spinRate = flipRate = 0;
-        spinArmed = flipArmed = false;
+        spinArmed = !spinHeld;
+        flipArmed = !flipHeld;
     }
 }

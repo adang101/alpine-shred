@@ -313,7 +313,7 @@ public final class SlideController {
             // Ground vanished from under us (block broken, edge): fall.
             grounded = false;
             vy = 0;
-            enterAir();
+            enterAir(in);
             airTick(body, in, ctx);
             return;
         }
@@ -353,7 +353,7 @@ public final class SlideController {
         if (popped) {
             grounded = false;
             vy = Ballistics.nextVerticalVelocity(popVelocity);
-            enterAir();
+            enterAir(in);
             return;
         }
         double horizontal = moved.horizontal();
@@ -369,7 +369,7 @@ public final class SlideController {
             // Section 11: sliding past the last box exits to AIR with the velocity kept, no snap.
             grounded = false;
             vy = 0;
-            enterAir();
+            enterAir(in);
             return;
         } else {
             double gap = gapBelow(body, GroundContact.snapDistance(t, motion.speed) + CAST_MARGIN);
@@ -392,7 +392,7 @@ public final class SlideController {
                         lip = body.park().lipNear(new V3(body.x() - SlideModel.dirX(motion.travelYaw) * back, body.y() - 0.5,
                                 body.z() - SlideModel.dirZ(motion.travelYaw) * back));
                     }
-                    enterAir();
+                    enterAir(in);
                     lipTicks = lip ? 0 : -1;
                     jumpWasHeld = in.jump();
                     return;
@@ -400,7 +400,7 @@ public final class SlideController {
                 case AIRBORNE -> {
                     grounded = false;
                     vy = 0;
-                    enterAir();
+                    enterAir(in);
                     return;
                 }
             }
@@ -490,13 +490,19 @@ public final class SlideController {
         events.add(new WipedOut(impact));
     }
 
-    private void enterAir() {
+    /** A/D as a spin key: -1, 0 or 1. */
+    private static int spinKey(RideInput in) {
+        return in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
+    }
+
+    private void enterAir(RideInput in) {
         airTicks = 0;
         chargeTicks = 0;
         lipTicks = -1;
         // Section 8: an air session starts on any transition into AIR.
         airFromRail = state == RideState.GRIND || state == RideState.SLIDE;
-        rotation.reset();
+        // Keys down on this tick, the one that left the ground, are "held from takeoff" (README 95).
+        rotation.reset(spinKey(in) != 0, in.forward() != 0);
         java.util.Arrays.fill(grabTicks, 0);
         grab = GrabType.NONE;
         apexY = Double.NaN;
@@ -534,7 +540,7 @@ public final class SlideController {
             grab = GrabType.NONE;
             return;
         }
-        int spin = in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
+        int spin = spinKey(in);
         grab = in.grab() != GrabType.NONE ? in.grab() : in.sneak() ? GrabType.METHOD : GrabType.NONE;
         double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE, airTicks,
                 takeoffRelative);
@@ -767,7 +773,7 @@ public final class SlideController {
             if (p.id() == g.path().id()) current = p;
         }
         if (current == null) {
-            leaveGrind(body, g.travel().scale(g.speed()), RideState.AIR);
+            leaveGrind(body, in, g.travel().scale(g.speed()), RideState.AIR);
             return;
         }
         pressing = in.sneak();
@@ -791,7 +797,7 @@ public final class SlideController {
             grounded = false;
             vy = Math.max(0, v.y()) + pop;
             events.add(new Popped(pop, 0));
-            enterAir();
+            enterAir(in);
             body.move(SlideModel.dirX(motion.travelYaw) * motion.speed, vy, SlideModel.dirZ(motion.travelYaw) * motion.speed);
             vy = Ballistics.nextVerticalVelocity(vy);
             return;
@@ -811,7 +817,7 @@ public final class SlideController {
         if (motion.speed > 1.0e-4) motion.travelYaw = SlideModel.yawOf(v.x(), v.z());
         lean = 0;
         if (step.exit() == GrindPhysics.Exit.END) {
-            leaveGrind(body, v, null);
+            leaveGrind(body, in, v, null);
             return;
         }
         if (grind.speed() <= 1.0e-3) {
@@ -822,7 +828,7 @@ public final class SlideController {
     }
 
     /** Leaves the rail with {@code velocity}: onto the ground below if there is some, otherwise into the air. */
-    private void leaveGrind(Body body, V3 velocity, RideState forced) {
+    private void leaveGrind(Body body, RideInput in, V3 velocity, RideState forced) {
         endFeature();
         grind = null;
         pressing = false;
@@ -837,7 +843,7 @@ public final class SlideController {
         } else {
             grounded = false;
             vy = velocity.y();
-            enterAir();
+            enterAir(in);
         }
     }
 
@@ -913,7 +919,7 @@ public final class SlideController {
             setTravel(v.x(), v.z());
             grounded = false;
             vy = v.y();
-            enterAir();
+            enterAir(in);
             return;
         }
         if (pipeTheta >= Math.PI / 2) {
@@ -925,7 +931,7 @@ public final class SlideController {
             grounded = false;
             vy = Math.max(0, pipeSpeed);
             events.add(new Launched(vy));
-            enterAir();
+            enterAir(in);
             // Straight up over the coping: the landing back in is judged against the wall's fall
             // line, not the little drift along it.
             airReference(SlideModel.yawOf(facing.x(), facing.z()));

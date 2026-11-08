@@ -64,6 +64,7 @@ class AirRotationTest {
     @Test
     void keysHeldFromTakeoffDoNothingUntilReleased() {
         AirRotation r = new AirRotation();
+        r.reset(true, true);
         for (int i = 1; i <= 20; i++) {
             assertEquals(0, step(r, 1, 1, i), 0);
         }
@@ -76,19 +77,29 @@ class AirRotationTest {
     }
 
     @Test
+    void aKeyUpAtTakeoffAndPressedOnTheFirstAirTickRotatesAtOnce() {
+        AirRotation r = new AirRotation();
+        r.reset(false, false);
+        assertEquals(6, step(r, 1, 0, 1), 1e-12);
+        step(r, 0, 1, 2);
+        assertEquals(6, r.pitchAccum, 1e-12);
+    }
+
+    @Test
     void armingIsPerAxis() {
         AirRotation r = new AirRotation();
-        step(r, 0, 1, 1); // A/D released, W held from takeoff
+        r.reset(false, true); // A/D up at takeoff, W held from takeoff
+        step(r, 0, 1, 1);
         step(r, 1, 1, 2);
         assertEquals(6, r.yawAccum, 1e-12, "the spin axis was armed");
         assertEquals(0, r.pitchAccum, 0, "the flip axis was not");
     }
 
     @Test
-    void resetDisarmsAgain() {
+    void resetSeedsTheSessionFromTheTakeoffKeys() {
         AirRotation r = armed();
         step(r, 1, 1, 2);
-        r.reset();
+        r.reset(true, true);
         step(r, 1, 1, 1);
         assertEquals(0, r.yawAccum, 0);
         assertEquals(0, r.pitchAccum, 0);
