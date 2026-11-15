@@ -464,13 +464,24 @@ public final class RideGameTests {
         helper.succeed();
     }
 
+    /** Run-in blocks before the kicker in the trick tests: with the start at 1.5 and the speed cap, over 8 ticks of held keys. */
+    private static final int KICKER_RUN_IN = 12;
+
     /** The kicker of {@link #vanillaAcceptsKickerAir}, on groomed snow. */
     private static Course kickerCourse(GameTestHelper helper) {
+        return kickerCourse(helper, 0);
+    }
+
+    /**
+     * The same kicker {@code runIn} blocks further on, so a rider has been holding keys for longer than
+     * {@code airHeldTicks} (8, README 101) when it takes off; at the speed cap that is 12 blocks.
+     */
+    private static Course kickerCourse(GameTestHelper helper, int runIn) {
         Course course = new Course(helper);
         Block snow = ModBlocks.GROOMED_SNOW.get();
-        return course.flat(0, 7, 3, snow)
-                .column(8, 3.375, snow).column(9, 3.75, snow).column(10, 4.125, snow).column(11, 4.5, snow)
-                .flat(12, 71, 3, snow);
+        return course.flat(0, 7 + runIn, 3, snow)
+                .column(8 + runIn, 3.375, snow).column(9 + runIn, 3.75, snow).column(10 + runIn, 4.125, snow).column(11 + runIn, 4.5, snow)
+                .flat(12 + runIn, 71, 3, snow);
     }
 
     /**
@@ -478,7 +489,8 @@ public final class RideGameTests {
      * clean. The harness fails the test on a wipeout, and the honest report must pass the validator.
      */
     public static void holdingWThroughAJumpLandsClean(GameTestHelper helper) {
-        Replay run = replayOnServer(helper, kickerCourse(helper), 3, false, z -> new RideInput(0, 1, 0, false, false, GrabType.NONE));
+        Replay run = replayOnServer(helper, kickerCourse(helper, KICKER_RUN_IN), 3, false,
+                z -> new RideInput(0, 1, 0, false, false, GrabType.NONE));
         check(run.launchVy > 0, "the kicker never launched");
         check(run.lastAir != null, "no air session was reported");
         check(run.maxFlip == 0 && run.lastAir.pitchAccum() == 0, "a held W flipped the rider: " + run.maxFlip);
@@ -488,13 +500,14 @@ public final class RideGameTests {
     }
 
     /**
-     * README 95: W released after takeoff and pressed again flips, and letting go levels the rider out
-     * before the landing. The honest report passes {@link TrickValidator} at the board's rates.
+     * README 95 and 101: W released after takeoff and pressed again flips, and a short tap then levels the
+     * rider out before the landing. The honest report passes {@link TrickValidator} at the board's rates.
      */
     public static void aFreshPressFlipsAndReleasingLevelsOut(GameTestHelper helper) {
-        // W held on the ground (z < 12), let go in the air, pressed again for a tick or two, then let go.
-        Replay run = replayOnServer(helper, kickerCourse(helper), 3, false,
-                z -> new RideInput(0, z < 12 || (z >= 16 && z < 18) ? 1 : 0, 0, false, false, GrabType.NONE));
+        // W held on the ground (z < launch), let go in the air, pressed again for a tick or two, then let go.
+        int launch = 12 + KICKER_RUN_IN;
+        Replay run = replayOnServer(helper, kickerCourse(helper, KICKER_RUN_IN), 3, false,
+                z -> new RideInput(0, z < launch || (z >= launch + 4 && z < launch + 7) ? 1 : 0, 0, false, false, GrabType.NONE));
         check(run.launchVy > 0, "the kicker never launched");
         check(run.lastAir != null, "no air session was reported");
         check(run.maxFlip >= 10, "the fresh press did not flip: " + run.maxFlip);

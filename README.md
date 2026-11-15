@@ -1089,7 +1089,7 @@ covered by a test or noted in code.
     so a report never moves faster than `TrickValidator` and `FlipLimit` allow, and no protocol bump is needed (the
     tuning sync is a JSON map; a client on the old build simply lacks the behaviour). Recovery shifts the final angle to
     a whole rotation, which `TrickScorer` rounds the same way (170 recovering to 180 scores as a 180). The first
-    airborne moment shows a one-time hint (`hint.air`).
+    airborne moment shows a one-time hint (`hint.air`). Clarification 101 supersedes the rounding and rates here (see 101).
 
 96. **Braking is a deceleration of its own, not a friction multiplier.** Player feedback: "a player can not slow
     down." The old brake multiplied the surface friction by 8 (skis 6). Snow friction is 0.0006 to 0.0014, so a full
@@ -1144,6 +1144,143 @@ covered by a test or noted in code.
     `startWipeout`. The server accepts any WIPEOUT claim from a strapped rider (`RideTransitions`) and takes the
     damage from its own observed speed with `wallHitSpeed`, so a trunk hit between 0.2 and 0.5 is a tumble with no
     damage and a harder hit hurts like any wall; damage is never decided on the client's say-so.
+
+99. **Boards and skis are drawn at real proportions: a wide board under both boots, and a ski under each foot.** Player
+    feedback: "The snowboard and ski renderings aren't that realistic. For example the snowboard should be a bit
+    longer and much wider to fit the player's entire leg footprint." The board was 4 pixels wide, exactly the depth of
+    one boot (the rider stands across it), and the bindings sat 2 to 4.5 pixels from the middle while the boots, with
+    the legs splayed by the stance clips, sit about 4.4 out. The skis were 2 pixels wide under 4-pixel legs. Rendering
+    only: no hitbox, physics or gear stat changed, and the painted canvases keep their sizes (64 x 16 and 64 x 8), so
+    saved designs, share codes, the codec and sync are untouched; the canvas is simply mapped onto the new, larger
+    geometry (`GearMesh`), and the outline mask is unchanged.
+    - *Board.* 8 x 27 pixels (was 4 x 23.5), centred on the rider's feet: 84 percent of the 32-pixel rider model
+      (1.58 blocks in the world), 8 pixels covering the 4-pixel boot with 2 pixels to spare each side, so a rider
+      who pitches the legs forward in the air stays over the deck. The nose and tail kick up 1.25 pixels over their
+      last 4 and the outline's rounded ends (stepped by the edge walls) are unchanged. Two bindings, 5.5 x 4.5
+      pixels and 1.1 high, are centred 4.25 either side of the middle under each boot; on the back the board hangs 1.5
+      pixels lower so its longer length still ends at the feet.
+    - *Skis.* Each 3 pixels wide (was 2) and still 28 long, centred under its leg 2.5 pixels from the middle, so the
+      two skis have a 2-pixel gap and never touch; the tail is flat and the tip curls up 1.5 pixels (was 1.1) over
+      its last 5; a 4.5-pixel binding block is centred under each boot. The poles are unchanged.
+    - *Assets.* `generate_models.py` now emits the board and ski item templates as they are committed
+      (`builtin/entity` with display transforms; the per-element boxes it used to write were stale since phase 6), and the
+      board's inventory scale is 0.6 so the longer board still fits a slot. The bench preview's board scale is 4.4.
+    - *Tests.* `GearProportionsTest` puts both soles from the stance clips on the mesh: the footprint lies inside the
+      board with 1.5 pixels to spare in the ground stances, board length is 82 to 95 percent of the rider and at least
+      1.75 times the foot's depth, each boot is over one binding, the skis are a foot wide, apart, and each under its leg,
+      and the canvas still spans the full length.
+
+100. **The lift no longer hops every second or so.** Player feedback: "When riding the lifts, every now and then there
+    is some sort of microstutter in the rendering of the entire lift." Two periodic, whole-lift causes, both on a
+    20-tick beat:
+    - *The clock jump (README 72, 73).* Client lines follow the level's game time, and the server's time packet (every
+      20 ticks) sets that game time to the server's, so a client that has drifted by k ticks jumps by k (-2 to +3 was
+      common, up to 9 after a stall). Every line moved k ticks of travel in one client tick (0.125 blocks a tick at
+      2.5 blocks a second), and chairs, cable texture and bullwheels, all drawn from the line, hopped together.
+    - *The position packets.* `ChairEntity` is tracked with `updateInterval(20)`, and vanilla's move/teleport packet
+      calls `lerpTo`, which set the chair to where the server's chair was when it sent the packet (latency ago). The
+      client's next tick put it back, so every chair drew a tick interval at the stale position, again together.
+    What changed: `ClientLine` keeps two distances. `travel` still follows the server's clock exactly (so syncs, the
+    rewind and the tests of 72 and 73 are unchanged), and `travel()` / `travelAt` (all that is drawn, and what chairs
+    are placed from) is `travel + offset`. A clock jump, or a sync that corrects the state, moves `travel`; the
+    difference goes into `offset`, which `tick` works off by `min(max(15% of a tick's travel, 25% of the offset),
+    75% of a tick's travel)` a tick, at least 0.01 blocks. So the drawn step per client tick stays between 25% and
+    175% of the line's (the drawn distance never runs backwards while the line moves faster than about 0.27 blocks a
+    second; slower than that it may creep back at 0.2 blocks a second at most), and a 3-tick jump (0.375 blocks) is
+    under 0.25 after 2 ticks and gone in about 15. A difference over 2.0 blocks (a stall of 16 ticks at 2.5 blocks a
+    second) is snapped, as before. The clock's pre-sync catch-up (`follow(..., 0)`) moves only the line's own
+    distance, whatever the jump, including a jump of exactly one tick: only a real client tick draws a tick on.
+    `ChairEntity.lerpTo` ignores the packet while the client has the chair's line (`clientLineLookup`), and keeps
+    vanilla's behaviour otherwise (line not synced yet or out of range). No protocol change. Server-side chair logic
+    is untouched. Cost: during convergence the drawn chairs can differ from the server's by the jump (up to about 0.4
+    blocks for a few seconds) where they used to differ by nothing for the one tick they hopped. Unit tests in
+    `LineClockTest` (jumps of +3, -2, +5, -4, +1, -1, +9, -7; a sync 0.2 blocks off; a stall) assert the per-tick
+    step stays within 25% to 175% of a tick's travel, that a pre-sync catch-up (+1, +3, -2) draws nothing, and that the
+    drawn distance meets the server's within 40 ticks.
+    The CI multiplayer chair check (more than 5% of a client's samples over 0.25 blocks from the server's chair fails)
+    reads the drawn position. At 2.5 blocks a second a jump of 2 ticks is exactly 0.25 and of 3 ticks 0.375: with the
+    jumps of README 72/73 (-2 to +3 every 20 ticks on software-rendered CI clients) a drawn deviation over 0.25 lasts
+    2 samples for a jump of 3 (0.375, then 0.281 blocks, then 0.21) and none for a smaller one (a jump of 2 is
+    exactly 0.25), so with each of -2 to +3 equally likely every 20 ticks about 2 of 120 samples, 1.7%, inside the
+    5% budget; real clients jump far less often.
+
+101. **Tricks are easy to start and forgiving to finish, and an unintended rotation still never happens.** Player
+    feedback: "The jump mechanic was modified slightly to make it such that a regular jump will guarantee the player will
+    stick the landing, but now it's too hard to do tricks and flips." Diagnosis (air lengths from `Ballistics`: an
+    uncharged pop 12 ticks, a half charge 15, a full charge 18; a 16 blocks/s kicker 10 ticks at half grade and 19 at full
+    grade, 23 to land three blocks lower; 20 blocks/s full grade 23; 28 blocks/s 31). Under clarification 95 a key that
+    was down at takeoff did nothing until released, so the natural trick (hold A/D or W through the lip) needed a release
+    and a re-press: 2 to 3 ticks of a 10 to 25 tick air (a hand takes 100 to 150 ms). Required air then, for a landing
+    inside the CLEAN windows (heading within 35, flip within 30 degrees), best case a fresh press on tick 1 against a
+    re-press on tick 3: a 180 needed 8 ticks (hold 8, one tick of slack) against 10 (hold 8 to 10); a 360 needed 16 ticks
+    (hold 16) against 18 (hold 16 to 18); a whole flip needed 22 (hold 21 to 22) against 22 (hold 19 to 22), so only a
+    20 blocks/s full-grade kicker or a deep landing (22 to 23 ticks) could flip at all, and then tick-tight. Four losses: (a) release and re-press, 2 to 3 ticks; (b) the
+    4-tick ramp (`airRampTicks`) gave away 36 degrees, 1.5 ticks of rotation; (c) a released axis eased to the nearest
+    whole rotation at 5 (spin) and 8 (flip) degrees per tick, so a flip let go at 170 of 360 was eased back to 0 over 21
+    ticks, and a 100 degree spin was 16 ticks from its 180; the game undid the trick the rider had committed to; (d)
+    `FlipLimit` capped the pitch at 179.99 every tick until tick 16 although the rate allows 330 by tick 15, so the
+    rider waited at half a flip and then spent 6 more ticks finishing it. What changed, keeping 95's guarantee: (1) A key
+    counts as held from the ground only if it has been down for `airHeldTicks` (8, 0.4 s) ticks when the rider leaves
+    the ground (`SlideController` counts consecutive ticks per axis and direction; 0 restores 95 exactly). A key pressed
+    more recently is a wind-up and rotates from the first air tick, like every snowboard game: tap or press D or W just
+    before the lip or the pop. Keys held through (skating with W, carving with A/D) are ignored until released, so a plain
+    jump, or no input, still lands clean. (2) Finishing: with an axis released, the angle settles to the whole rotation
+    in the direction the rider was turning once past `0.5 - airFinishBias` of the way (`airFinishBias` 0.15: past 126 of
+    360 degrees for a flip, 63 of 180 for a spin), otherwise it levels back to where it was, so a stray tap of a few ticks
+    still levels out. It does so at `airFlipRecover` (24) and `airSpinRecover` (20) degrees per tick, still capped at the
+    hand rates. Within 25 degrees of sideways the spin recovers at `airSpinSideRecover` (3) so a rider who lets go at
+    90 can catch a rail as a boardslide (holding 90 now takes a touch of the opposite key once past it). (3) `airRampTicks`
+    4 to 3. (4) The flip is no longer clamped to `FlipLimit` every tick; `AirRotation.reportPitch` clamps what is
+    reported at the end, so a whole flip still needs 16 air ticks and the validator, `FlipLimit` and the scoring are
+    unchanged (an honest client's report is always within the limit, README 82, and a server and client of the old
+    build still agree). The rider is also no longer held at half a flip mid-air. Result for a rider who presses on
+    tick 1 or a few ticks before takeoff: a 180 needs 8 ticks, and on 12 ticks of air the hold can be 6 to 10 ticks
+    (was 7 to 10 on a fresh press, 8 to 12 after a re-press); a 360 needs 15 ticks (hold 14 to 15) and on 19 ticks hold
+    13 to 18 (was 15 to 18, or 15 to 19 after a re-press); a whole flip needs 16 ticks, and from 16 on any hold from 7 ticks to the whole air
+    finishes it (was 22 ticks, tick-tight). Bigger tricks still need bigger air: a flat pop cannot flip or 360, a 16
+    blocks/s half-grade kicker (10 to 16 ticks) gives 180s and, near its top, a 360, and flips need a kicker with
+    16 or more ticks. Playtest: 180, press A or D just before the lip and hold 6 to 10 ticks; 360, hold 14 to 15 or more
+    on a big air; backflip, tap S for 7 or more ticks. New and changed tuning keys (`tuning.json`, synced, see
+    docs/server-guide.md): `airHeldTicks` 8 (0 to 100), `airFinishBias` 0.15 (0 to 0.5), `airSpinSideRecover` 3 (0 to
+    90); defaults changed `airRampTicks` 4 to 3, `airFlipRecover` 8 to 24, `airSpinRecover` 5 to 20. The hint
+    (`hint.air`) now reads "In the air: press W/S to flip, A/D to spin, then let go to finish the trick. Keys held since
+    before takeoff are ignored". No protocol change: tuning travels as a JSON map, scoring and validation are
+    server-side and unchanged, and an old client against this server sends reports the old rules produced, which pass.
+
+102. **Riders keep control in a powder bowl.** Player feedback: "When attempting to ride a powder bowl, the player has no
+    control. No matter their momentum, they can't change directions. They're only able to ride the direction that they
+    entered the bowl with and eventually they lose that momentum and go right back down."
+    - *Causes.* Two, found by driving a rider through a powder staircase in the game test world (the showcase bowl is
+      powder terrain stepping up one block at a time). (1) Vanilla's powder collision shape is solid only to an entity
+      whose feet are already above the block. A step-up sweep tests the next block against the feet's current height,
+      so a floating rider found no collision on a bowl wall, ran into the powder at foot level and was "inside powder
+      snow": vanilla's `makeStuckInBlock(0.9, 1.5, 0.9)` scaled every move to 0.9 of what the controller asked (before:
+      speed 0.71 moved 0.64 blocks a tick, `isInPowderSnow` true from the first step, the rider stayed at the height it
+      entered at). (2) Floating needed the float speed (0.25, the powder board's `powderFloatSpeed`) at every tick, and
+      riding up a wall, turning (slip and edge scrub) and powder's friction (0.004, against snow 0.0011) all cost
+      speed, so a rider that entered at 0.4 was below 0.25 within 3 ticks of a camera turn, handed over to walking and
+      sank. The steering itself was never the problem: in the headless bowl a powder carve turns the travel direction
+      as fast as snow does (the grip blend 0.8 is the same maths); the rider was simply no longer riding.
+    - *Collision.* `PowderSnowBlockMixin` also answers `getCollisionShape` with a full block for a floating rider
+      (`RideHooks.floatsOnPowder`) whose fall distance is at most 2.5, so a wall of powder is stepped up like snow and a
+      rider falling fast keeps vanilla's shorter shape. Walkers and sunk riders see vanilla's shape. Only the client
+      sets the flag; the server's replay still sees powder as empty and follows the client's upward delta, so nothing
+      changes for the validator.
+    - *Holding the float.* Getting onto powder still takes the float speed. A rider already riding keeps floating
+      while its speed is at least `powderHoldMul` (0.4) of the float speed (0.1 for a neutral board), or while the slope's
+      pull (`effectiveGravity * sin(angle)`) beats powder's friction, which on the default tuning is any slope over
+      about 8 degrees. So a rider who runs out of speed on a bowl wall is still afloat and slides back down
+      tail-first (the existing stop rule), keeps its steering, and can turn across the fall line and ride out; only a
+      rider on gentle or flat powder with almost no speed sinks. `SlideController.floatsOnPowder` is that rule for the
+      collision flag and `canRide` for the controller, so the two agree. Powder gear still matters: the float speed is
+      still `powderFloatSpeed / gear.powderFloat`, and the hold speed scales with it.
+    - *Tuning.* New key `powderHoldMul` (0.4, 0 to 1) in `movement/tuning.json`; 1 restores the old single threshold on
+      flat powder (a slope still holds the rider).
+    - *Tests.* `PowderBowlTest` (a paraboloid bowl of full blocks): powder turns within 75% of snow's authority at 0.35,
+      0.5 and 0.9 entry speed and never leaves RIDE or flaps into AIR; a rider who climbs, stalls and slides back keeps
+      riding; one who turns at the top rides back down; flat powder and walkers still sink. Before the change three of
+      these failed (sank at tick 31 and at tick 3 after a camera turn). The headless world always treats powder as
+      solid, so the step-up collision is covered by the game test `powderStaircaseIsClimbedLikeSnow`.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

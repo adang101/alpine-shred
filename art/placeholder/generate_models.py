@@ -53,21 +53,15 @@ HELD = {
     "fixed": {"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [1, 1, 1]},
 }
 
-# ---- snowboard: 4 x 23 px deck, stepped nose and tail kicks, two bindings -------------------
-board_elements = [
-    box("core", [6, 7.75, 0], [10, 8.25, 16], [0, 0, 4, 16], [4, 0, 8, 16], EDGE),
-    box("nose", [6, 8.0, 16], [10, 8.5, 18.5], [8, 0, 12, 2.5], [8, 3, 12, 5.5], EDGE),
-    box("nose_tip", [6.25, 8.35, 18.5], [9.75, 8.85, 19.75], [8, 0, 11.5, 1.25], [8, 3, 11.5, 4.25], EDGE),
-    box("tail", [6, 8.0, -2.5], [10, 8.5, 0], [8, 0, 12, 2.5], [8, 3, 12, 5.5], EDGE),
-    box("tail_tip", [6.25, 8.35, -3.75], [9.75, 8.85, -2.5], [8, 0, 11.5, 1.25], [8, 3, 11.5, 4.25], EDGE),
-    box("binding_front", [6.4, 8.25, 10], [9.6, 9.6, 12.5], [8, 8, 12, 12], [8, 8, 12, 12], [8, 8, 12, 12]),
-    box("binding_back", [6.4, 8.25, 3.5], [9.6, 9.6, 6], [8, 8, 12, 12], [8, 8, 12, 12], [8, 8, 12, 12]),
-]
+# ---- snowboard and skis: drawn procedurally ------------------------------------------------
+# Since phase 6 the boards and skis are drawn by DesignedGearRenderer from design/GearMesh.java
+# (the shape: an 8 x 27 px board, two 3 x 28 px skis, bindings on the boots' footprint), through
+# the item's built-in renderer. These templates only carry the particle texture and the display
+# transforms; the "board" texture is the sheet the bindings are textured from.
 write(os.path.join(MODELS, "item", "template_snowboard.json"), {
-    "gui_light": "front",
+    "parent": "builtin/entity",
     "textures": {"particle": "#board"},
-    "elements": board_elements,
-    "display": {"gui": {"rotation": [90, -45, 0], "translation": [0, 0, 0], "scale": [0.68, 0.68, 0.68]}, **HELD},
+    "display": {"gui": {"rotation": [90, -45, 0], "translation": [0, 0, 0], "scale": [0.6, 0.6, 0.6]}, **HELD},
 })
 for item in ["snowboard", "park_snowboard", "freeride_snowboard", "pro_snowboard"]:
     write(os.path.join(MODELS, "item", f"{item}.json"), {
@@ -75,21 +69,9 @@ for item in ["snowboard", "park_snowboard", "freeride_snowboard", "pro_snowboard
         "textures": {"board": f"alpineshred:item/gear/{item}"},
     })
 
-# ---- skis: a pair, 2 x 28 px each, centred 2 px either side so they sit under the legs -------
-ski_elements = []
-for side, x0 in (("right", 5.0), ("left", 9.0)):
-    x1 = x0 + 2
-    ski_elements += [
-        box(f"{side}_core", [x0, 7.75, -4], [x1, 8.25, 19], [0, 0, 2, 16], [4, 0, 6, 16], EDGE),
-        box(f"{side}_tip", [x0, 8.0, 19], [x1, 8.5, 21], [8, 0, 10, 2], [8, 3, 10, 5], EDGE),
-        box(f"{side}_tip_end", [x0 + 0.2, 8.4, 21], [x1 - 0.2, 8.9, 22.5], [8, 0, 9.6, 1.5], [8, 3, 9.6, 4.5], EDGE),
-        box(f"{side}_tail", [x0, 7.9, -5.5], [x1, 8.4, -4], [8, 0, 10, 1.5], [8, 3, 10, 4.5], EDGE),
-        box(f"{side}_binding", [x0 + 0.2, 8.25, 6], [x1 - 0.2, 9.25, 10.5], [8, 8, 12, 12], [8, 8, 12, 12], [8, 8, 12, 12]),
-    ]
 write(os.path.join(MODELS, "item", "template_skis.json"), {
-    "gui_light": "front",
+    "parent": "builtin/entity",
     "textures": {"particle": "#board"},
-    "elements": ski_elements,
     "display": {"gui": {"rotation": [90, -45, 0], "translation": [0, 0, 0], "scale": [0.6, 0.6, 0.6]}, **HELD},
 })
 for item in ["skis", "carving_skis", "powder_skis", "park_skis", "pro_skis"]:

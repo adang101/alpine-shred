@@ -121,6 +121,11 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = RideGameTests.LARGE)
+    public static void powderStaircaseIsClimbedLikeSnow(GameTestHelper helper) {
+        TerrainGameTests.powderStaircaseIsClimbedLikeSnow(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
     public static void aLogWipesOutAtModerateSpeedButStoneDoesNot(GameTestHelper helper) {
         TerrainGameTests.aLogWipesOutAtModerateSpeedButStoneDoesNot(helper);
     }

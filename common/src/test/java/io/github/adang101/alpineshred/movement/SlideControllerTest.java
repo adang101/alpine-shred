@@ -196,6 +196,49 @@ class SlideControllerTest {
         assertTrue(landed.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "landing " + landed.quality());
     }
 
+    /** README 101: a key pressed only just before the lip is a wind-up for a trick, and rotates from the first air tick. */
+    @Test
+    void aKeyPressedJustBeforeTheLipIsAWindUpAndRotatesAtOnce() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        SlideController.TrickLanded landed = null;
+        for (int tick = 0; tick < 150 && landed == null; tick++) {
+            // The lip is at z = 10; D goes down a few ticks (0.8 blocks each) before it and stays down.
+            double d = body.z > 7.5 ? 1 : 0;
+            c.tick(body, new RideInput(d, 0, 0, false, false, GrabType.NONE), BOARD);
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.TrickLanded l) landed = l;
+            }
+        }
+        assertTrue(landed != null, "never landed");
+        assertTrue(landed.report().yawAccum() > 150, "the wind-up spun: " + landed.report().yawAccum());
+    }
+
+    /** A pop with W and D held from long before it, charging the jump meanwhile, lands clean: the old complaint stays fixed. */
+    @Test
+    void aPopWithKeysHeldFromTheGroundLandsCleanButAWindUpPopSpins() {
+        for (int pressedAt : new int[]{0, 5, 6, 9}) {
+            VoxelBody body = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+            SlideController c = riding(body, 0.5);
+            SlideController.TrickLanded landed = null;
+            for (int tick = 0; tick < 150 && landed == null; tick++) {
+                boolean keys = tick >= pressedAt;
+                RideInput in = new RideInput(keys ? 1 : 0, keys ? 1 : 0, 0, false, tick < 12, GrabType.NONE);
+                c.tick(body, in, BOARD);
+                for (SlideController.Event e : c.events()) {
+                    if (e instanceof SlideController.TrickLanded l) landed = l;
+                }
+            }
+            assertTrue(landed != null, "never landed, keys down from tick " + pressedAt);
+            boolean rotated = landed.report().yawAccum() != 0 || landed.report().pitchAccum() != 0;
+            // The pop is on tick 12, so the keys are down 13, 8, 7 and 4 ticks by then; airHeldTicks is 8.
+            assertEquals(pressedAt > 5, rotated, "keys down from tick " + pressedAt + ": " + landed.report());
+            if (pressedAt == 0) {
+                assertTrue(landed.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "landing " + landed.quality());
+            }
+        }
+    }
+
     @Test
     void grabsAreCountedAndSlowTheSpin() {
         VoxelBody a = kicker(), b = kicker();
@@ -270,8 +313,11 @@ class SlideControllerTest {
         List<SlideController.TrickLanded> landings = new ArrayList<>();
         boolean slid = false;
         for (int tick = 0; tick < 200 && landings.stream().noneMatch(l -> l.report().fromRail()); tick++) {
-            boolean spin = c.state() == RideState.AIR && !slid && Math.abs(c.spinAngle()) < 80;
-            c.tick(body, spin ? new RideInput(1, 0, 0, false, false, GrabType.NONE) : RideInput.coast(0), BOARD);
+            // Taps D up to a quarter turn and A back if it drifts past it: a released spin finishes its turn (README 101),
+            // so holding sideways over the rail takes a touch of the opposite key.
+            double angle = c.spinAngle();
+            int key = c.state() == RideState.AIR && !slid ? (angle < 85 ? 1 : angle > 100 ? -1 : 0) : 0;
+            c.tick(body, new RideInput(key, 0, 0, false, false, GrabType.NONE), BOARD);
             slid |= c.state() == RideState.GRIND;
             for (SlideController.Event e : c.events()) {
                 if (e instanceof SlideController.TrickLanded l) landings.add(l);
