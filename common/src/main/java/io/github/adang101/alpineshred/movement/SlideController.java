@@ -286,7 +286,10 @@ public final class SlideController {
         MovementTuning t = ctx.tuning();
         return switch (under.category()) {
             case SNOW, ICE -> true;
-            case POWDER -> speed >= SlideModel.powderFloatSpeed(t, ctx.gear());
+            // Getting onto powder takes the float speed; a rider already riding keeps floating above the
+            // (lower) hold speed or while the slope pulls it, so a wall slash at the top of a bowl is not a sink.
+            case POWDER -> speed >= SlideModel.powderFloatSpeed(t, ctx.gear())
+                    || (mode == Mode.RIDE && SlideModel.holdsPowder(t, ctx.gear(), speed, slope.angle(), under.friction()));
             case SCRAPE -> ctx.scrapeEnabled() && speed >= t.scrapeSlideMinSpeed;
             case BOX -> speed >= t.slideMinSpeed && state != RideState.IDLE;
         };
@@ -625,6 +628,17 @@ public final class SlideController {
         } else if (featureOpen && featureBox) {
             endFeature();
         }
+    }
+
+    /**
+     * Whether the body floats on powder this tick: what the powder collision hooks read, and the same rule
+     * {@code canRide} applies to a rider already riding. Only meaningful while {@link #mode()} is RIDE.
+     */
+    public boolean floatsOnPowder(RideContext ctx) {
+        double friction = surface != null && surface.category() == SurfaceProfile.Category.POWDER
+                ? surface.friction() : SurfaceProfile.POWDER.friction();
+        return SlideModel.holdsPowder(ctx.tuning(), ctx.gear(), motion.speed, slope.angle(), friction)
+                || motion.speed >= SlideModel.powderFloatSpeed(ctx.tuning(), ctx.gear());
     }
 
     private void stopRiding() {

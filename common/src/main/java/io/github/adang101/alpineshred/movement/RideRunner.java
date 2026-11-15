@@ -54,14 +54,14 @@ public final class RideRunner {
 
         holder.alpineshred$setControlled(true);
         holder.alpineshred$setRideStep((float) GroundContact.stepHeight(t, surface != null && surface.isSnow(), speed));
-        holder.alpineshred$setFloatsOnPowder(speed >= floatSpeed);
+        holder.alpineshred$setFloatsOnPowder(riding ? controller.floatsOnPowder(ctx) : speed >= floatSpeed);
 
         SlideController.Mode mode = controller.tick(body, input, ctx);
         if (mode == SlideController.Mode.WALK) {
             clearFlags();
             return false;
         }
-        holder.alpineshred$setFloatsOnPowder(controller.speed() >= floatSpeed);
+        holder.alpineshred$setFloatsOnPowder(controller.floatsOnPowder(ctx));
         player.setDeltaMovement(controller.velocityX(), controller.verticalVelocity(), controller.velocityZ());
         player.walkAnimation.update(0.0f, 0.4f);
         return true;

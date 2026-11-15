@@ -1145,6 +1145,41 @@ covered by a test or noted in code.
     damage from its own observed speed with `wallHitSpeed`, so a trunk hit between 0.2 and 0.5 is a tumble with no
     damage and a harder hit hurts like any wall; damage is never decided on the client's say-so.
 
+102. **Riders keep control in a powder bowl.** Player feedback: "When attempting to ride a powder bowl, the player has no
+    control. No matter their momentum, they can't change directions. They're only able to ride the direction that they
+    entered the bowl with and eventually they lose that momentum and go right back down."
+    - *Causes.* Two, found by driving a rider through a powder staircase in the game test world (the showcase bowl is
+      powder terrain stepping up one block at a time). (1) Vanilla's powder collision shape is solid only to an entity
+      whose feet are already above the block. A step-up sweep tests the next block against the feet's current height,
+      so a floating rider found no collision on a bowl wall, ran into the powder at foot level and was "inside powder
+      snow": vanilla's `makeStuckInBlock(0.9, 1.5, 0.9)` scaled every move to 0.9 of what the controller asked (before:
+      speed 0.71 moved 0.64 blocks a tick, `isInPowderSnow` true from the first step, the rider stayed at the height it
+      entered at). (2) Floating needed the float speed (0.25, the powder board's `powderFloatSpeed`) at every tick, and
+      riding up a wall, turning (slip and edge scrub) and powder's friction (0.004, against snow 0.0011) all cost
+      speed, so a rider that entered at 0.4 was below 0.25 within 3 ticks of a camera turn, handed over to walking and
+      sank. The steering itself was never the problem: in the headless bowl a powder carve turns the travel direction
+      as fast as snow does (the grip blend 0.8 is the same maths); the rider was simply no longer riding.
+    - *Collision.* `PowderSnowBlockMixin` also answers `getCollisionShape` with a full block for a floating rider
+      (`RideHooks.floatsOnPowder`) whose fall distance is at most 2.5, so a wall of powder is stepped up like snow and a
+      rider falling fast keeps vanilla's shorter shape. Walkers and sunk riders see vanilla's shape. Only the client
+      sets the flag; the server's replay still sees powder as empty and follows the client's upward delta, so nothing
+      changes for the validator.
+    - *Holding the float.* Getting onto powder still takes the float speed. A rider already riding keeps floating
+      while its speed is at least `powderHoldMul` (0.4) of the float speed (0.1 for a neutral board), or while the slope's
+      pull (`effectiveGravity * sin(angle)`) beats powder's friction, which on the default tuning is any slope over
+      about 8 degrees. So a rider who runs out of speed on a bowl wall is still afloat and slides back down
+      tail-first (the existing stop rule), keeps its steering, and can turn across the fall line and ride out; only a
+      rider on gentle or flat powder with almost no speed sinks. `SlideController.floatsOnPowder` is that rule for the
+      collision flag and `canRide` for the controller, so the two agree. Powder gear still matters: the float speed is
+      still `powderFloatSpeed / gear.powderFloat`, and the hold speed scales with it.
+    - *Tuning.* New key `powderHoldMul` (0.4, 0 to 1) in `movement/tuning.json`; 1 restores the old single threshold on
+      flat powder (a slope still holds the rider).
+    - *Tests.* `PowderBowlTest` (a paraboloid bowl of full blocks): powder turns within 75% of snow's authority at 0.35,
+      0.5 and 0.9 entry speed and never leaves RIDE or flaps into AIR; a rider who climbs, stalls and slides back keeps
+      riding; one who turns at the top rides back down; flat powder and walkers still sink. Before the change three of
+      these failed (sank at tick 31 and at tick 3 after a camera turn). The headless world always treats powder as
+      solid, so the step-up collision is covered by the game test `powderStaircaseIsClimbedLikeSnow`.
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
 Real animation clips, sounds and textures replace the placeholders file by file under the same
