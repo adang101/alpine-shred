@@ -187,6 +187,13 @@ public final class SlideController {
     private GrindPhysics.Grind grind;
     private int switchUpCooldown;
     private boolean strafeWasHeld;
+    /** Consecutive ticks A/D (signed direction) and W/S have been down, this tick included (README 101). */
+    private int spinHeldTicks;
+    private int spinHeldDir;
+    private int flipHeldTicks;
+    private int flipHeldDir;
+    /** {@code airHeldTicks} of the tuning in force, for {@link #enterAir}. */
+    private int airHeldNeeded;
     private boolean pressing;
     /** The quarter pipe being ridden, or null; with the angle up the arc and the speeds along and across it. */
     private PipeSection pipe;
@@ -222,12 +229,20 @@ public final class SlideController {
      */
     public Mode tick(Body body, RideInput input, RideContext ctx) {
         events.clear();
+        airHeldNeeded = ctx.tuning().airHeldTicks;
         if (mode == Mode.WALK && !tryStartRiding(body, input, ctx)) {
             state = RideState.IDLE;
             lean = 0;
+            spinHeldTicks = flipHeldTicks = 0;
             return Mode.WALK;
         }
         RideInput in = state == RideState.WIPEOUT ? input.locked() : input;
+        int spinNow = spinKey(in);
+        spinHeldTicks = spinNow != 0 && spinNow == spinHeldDir ? spinHeldTicks + 1 : spinNow != 0 ? 1 : 0;
+        spinHeldDir = spinNow;
+        int flipNow = Integer.signum(in.forward());
+        flipHeldTicks = flipNow != 0 && flipNow == flipHeldDir ? flipHeldTicks + 1 : flipNow != 0 ? 1 : 0;
+        flipHeldDir = flipNow;
         if (grind != null) {
             grindTick(body, in, ctx);
         } else if (pipe != null) {
@@ -504,8 +519,9 @@ public final class SlideController {
         lipTicks = -1;
         // Section 8: an air session starts on any transition into AIR.
         airFromRail = state == RideState.GRIND || state == RideState.SLIDE;
-        // Keys down on this tick, the one that left the ground, are "held from takeoff" (README 95).
-        rotation.reset(spinKey(in) != 0, in.forward() != 0);
+        // A key down on this tick, the one that left the ground, and for airHeldTicks before it was being held
+        // (README 95); one pressed more recently is a wind-up for a trick and rotates at once (README 101).
+        rotation.reset(spinHeldTicks > 0 && spinHeldTicks >= airHeldNeeded, flipHeldTicks > 0 && flipHeldTicks >= airHeldNeeded);
         java.util.Arrays.fill(grabTicks, 0);
         grab = GrabType.NONE;
         apexY = Double.NaN;
@@ -534,8 +550,8 @@ public final class SlideController {
     /**
      * Section 8, "Inputs in the air": A and D spin, W and S flip, the grab keys (or sneak, for a
      * Method) grab. The board turns with the spin; the flip only counts, and shows in the animation.
-     * A key held from takeoff is ignored until released, and a released axis levels out for the
-     * landing (README 95, see {@link AirRotation}).
+     * A key held from the ground is ignored until released, and a released axis finishes its turn and
+     * levels out for the landing (README 95 and 101, see {@link AirRotation}).
      */
     private void airInputs(Body body, RideInput in, RideContext ctx) {
         apexY = Double.isNaN(apexY) ? body.y() : Math.max(apexY, body.y());
@@ -566,11 +582,12 @@ public final class SlideController {
         exitAlign = 0;
         double rel = SlideModel.wrapDegrees(takeoffRelative + rotation.yawAccum);
         double headingError = TrickAngles.residual(rel, 180);
-        double flipResidual = TrickAngles.residual(rotation.pitchAccum, 360);
+        double reportedPitch = rotation.reportPitch(ctx.tuning(), airTicks);
+        double flipResidual = TrickAngles.residual(reportedPitch, 360);
         LandingQuality quality = onRail ? LandingQuality.CLEAN
                 : LandingQuality.evaluate(headingError, flipResidual, slopeError, ctx.gear().landingForgiveness());
         double apex = Double.isNaN(apexY) ? 0 : Math.max(0, apexY - body.y());
-        AirReport report = new AirReport(rotation.yawAccum, rotation.pitchAccum, grabTicks, apex, airTicks, takeoffRelative,
+        AirReport report = new AirReport(rotation.yawAccum, reportedPitch, grabTicks, apex, airTicks, takeoffRelative,
                 headingError, flipResidual, Math.abs(rel) > 90, airFromRail, onRail);
         events.add(new TrickLanded(report, quality));
         rotation.reset();

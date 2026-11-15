@@ -297,11 +297,15 @@ one small record per chair once a second.
 Reloaded with the data packs; `/alpineshred tuning reload` reloads them and resyncs clients without a full `/reload`.
 - `data/alpineshred/movement/tuning.json`, `data/alpineshred/surface_profiles`, `data/alpineshred/gear/*.json`,
   `data/alpineshred/box_materials.json`: ride feel, surface behaviour, gear stats and box materials. Synced to clients.
-  Air rotation keys in `tuning.json` (README 95): `airFlipRecover` (default 8, 0 to 90) and `airSpinRecover` (default 5, 0 to 90) are the
-  degrees per tick at which a rider with no W/S (or no A/D) held levels out toward the nearest whole flip (or the nearest
-  forward or switch heading) for the landing; 0 turns the recovery off. Each is capped at the matching hand rate
-  (`airFlipMax`, `airSpinMaxBoard`/`airSpinMaxSkis`), so the validator's rate bounds hold whatever is set. A key held at
-  takeoff does nothing until it is released; that part has no setting.
+  Air rotation keys in `tuning.json` (README 95 and 101): `airFlipRecover` (default 24, 0 to 90) and `airSpinRecover` (default 20, 0 to 90) are the
+  degrees per tick at which a rider with no W/S (or no A/D) held finishes or levels out the rotation for the landing; 0 turns the
+  recovery off. Each is capped at the matching hand rate (`airFlipMax`, `airSpinMaxBoard`/`airSpinMaxSkis`), so the validator's rate
+  bounds hold whatever is set. `airSpinSideRecover` (3, 0 to 90) is the spin recovery within 25 degrees of sideways, slow so a rider who
+  lets go at 90 can still catch a rail as a boardslide. `airFinishBias` (0.15, 0 to 0.5): a released rotation past `0.5 - airFinishBias`
+  of the way to the next whole flip (or half turn) finishes in the direction it was turning, so 0.15 means a flip let go of past 126 of 360
+  degrees completes, and 0 rounds to the nearest as README 95 did. `airHeldTicks` (8, 0 to 100): a W/S/A/D key that has been down this
+  many ticks when the rider leaves the ground counts as held from the ground and does nothing until it is released; a key pressed more
+  recently is a wind-up and rotates at once; 0 means any key down at takeoff is ignored, as in README 95. `airRampTicks` now defaults to 3.
 - `data/alpineshred/worldgen/`: the structure sets (spacing) and template pools.
 - Tags: `alpineshred:lift_blocked`, `alpineshred:lift_passengers` (entity types), `alpineshred:design_cost` (the
   dyes `design.saveCostCount` takes; all 16 vanilla dyes by default).
