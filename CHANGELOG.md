@@ -8,6 +8,22 @@ heading matches the tag (`v1.0.0` publishes `## [1.0.0]`). Edit the heading's da
 First release, for Minecraft 1.20.1 on Fabric and Forge (the Forge jar also runs on NeoForge 1.20.1). Create is
 optional.
 
+### Playtest feedback: gear looks, lift stutter, tricks and powder bowls
+- Snowboards are drawn 8 pixels wide and 27 long (was 4 by 23.5), so both boots stand on the deck, with bindings
+  under the boots. Skis are 3 pixels wide under each leg (was 2), with a flat tail and a more upturned tip. Painted
+  designs and share codes are unchanged (README 99).
+- Fixed a microstutter of the whole lift while riding: the chairs, cable and bullwheels hopped when the server
+  corrected the client's clock or resent chair positions. The lift is now drawn continuously and any difference is
+  worked off smoothly (README 100).
+- Tricks are easier: a W/S/A/D press just before takeoff rotates at once (keys held for more than 0.4 seconds
+  before takeoff still do nothing, so a plain jump still lands clean), and letting go of a turn past about a third
+  of the way finishes it instead of undoing it. A 180 needs about 8 ticks of air, a 360 about 15 and a flip 16
+  (was 22). New `tuning.json` keys `airHeldTicks`, `airFinishBias` and `airSpinSideRecover`; `airRampTicks`,
+  `airFlipRecover` and `airSpinRecover` have new defaults (README 101).
+- Powder bowls are rideable: a floating rider steps up powder walls like snow instead of getting stuck in them, and
+  a rider already riding keeps floating down to 40 percent of the float speed (new `powderHoldMul`) or on any powder
+  slope steep enough to pull them. Walkers and riders stopped on flat powder still sink (README 102).
+
 ### Playtest feedback: goggles, leaves and the strap key
 - Without goggles, snow builds up on your lens as a frosted edge, fastest in powder and after powder landings
   and wipeouts; goggles keep it off completely.
