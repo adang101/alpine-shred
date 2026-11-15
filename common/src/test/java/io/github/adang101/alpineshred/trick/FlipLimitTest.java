@@ -24,8 +24,9 @@ class FlipLimitTest {
         assertNotNull(TrickValidator.check(report(228, 11), 11, 0, 24, T.airFlipMax));
         AirRotation r = new AirRotation();
         for (int tick = 1; tick <= 11; tick++) r.step(T, GearKind.BOARD, 0, tick == 1 ? 0 : 1, false, tick, 0);
-        assertTrue(Math.abs(r.pitchAccum) < 180, "held at the cap: " + r.pitchAccum);
-        assertNull(TrickValidator.check(report(r.pitchAccum, 11), 11, 0, 24, T.airFlipMax));
+        assertTrue(Math.abs(r.pitchAccum) > 180, "the rider keeps turning: " + r.pitchAccum);
+        assertTrue(Math.abs(r.reportPitch(T, 11)) < 180, "but reports only what 11 ticks allow: " + r.reportPitch(T, 11));
+        assertNull(TrickValidator.check(report(r.reportPitch(T, 11), 11), 11, 0, 24, T.airFlipMax));
     }
 
     @Test
@@ -45,9 +46,9 @@ class FlipLimitTest {
                         AirRotation r = new AirRotation();
                         for (int tick = 1; tick <= air; tick++) {
                             r.step(T, GearKind.BOARD, 0, tick > 1 && tick <= release ? dir : 0, grab == 1, tick, 0);
-                            assertTrue(FlipLimit.allows(r.pitchAccum, tick, T.airFlipMax), "air " + air + " tick " + tick);
+                            assertTrue(FlipLimit.allows(r.reportPitch(T, tick), tick, T.airFlipMax), "air " + air + " tick " + tick);
                         }
-                        String why = TrickValidator.check(report(r.pitchAccum, air), air, 0, 24, T.airFlipMax);
+                        String why = TrickValidator.check(report(r.reportPitch(T, air), air), air, 0, 24, T.airFlipMax);
                         assertNull(why, why);
                     }
                 }

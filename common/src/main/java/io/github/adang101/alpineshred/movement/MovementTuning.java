@@ -77,10 +77,13 @@ public final class MovementTuning {
         s.put("airSpinMaxBoard", new Spec(24.0, 0.0, 90.0, "ext: max spin rate on a board, degrees per tick"));
         s.put("airSpinMaxSkis", new Spec(28.0, 0.0, 90.0, "ext: max spin rate on skis, degrees per tick"));
         s.put("airFlipMax", new Spec(24.0, 0.0, 90.0, "ext: max flip rate, degrees per tick"));
-        s.put("airRampTicks", new Spec(4, 1, 20, "ext: ticks for rotation to ramp from 0 to max"));
+        s.put("airRampTicks", new Spec(3, 1, 20, "ext: ticks for rotation to ramp from 0 to max"));
         s.put("airGrabRotationMul", new Spec(0.8, 0.0, 1.0, "ext: rotation rate multiplier while grabbing"));
-        s.put("airFlipRecover", new Spec(8.0, 0.0, 90.0, "ext: with no flip key held, pitch eases to the nearest whole flip at this, degrees per tick"));
-        s.put("airSpinRecover", new Spec(5.0, 0.0, 90.0, "ext: with no spin key held, heading eases to the nearest forward or switch at this, degrees per tick"));
+        s.put("airFlipRecover", new Spec(24.0, 0.0, 90.0, "ext: with no flip key held, pitch eases to its whole flip at this, degrees per tick (capped at airFlipMax)"));
+        s.put("airSpinRecover", new Spec(20.0, 0.0, 90.0, "ext: with no spin key held, heading eases to forward or switch at this, degrees per tick (capped at the spin max)"));
+        s.put("airSpinSideRecover", new Spec(3.0, 0.0, 90.0, "ext: as airSpinRecover, within 25 degrees of sideways (a boardslide), degrees per tick"));
+        s.put("airFinishBias", new Spec(0.15, 0.0, 0.5, "ext: a released rotation past 0.5 minus this of the way finishes in the direction it was turning (0 = nearest)"));
+        s.put("airHeldTicks", new Spec(8, 0, 100, "ext: a W/S/A/D key down this many ticks at takeoff counts as held from the ground and is ignored until released; pressed more recently it rotates at once (0 = any key down)"));
         // ext (phase 2): getting moving on flat ground
         s.put("skateMaxSpeed", new Spec(0.14, 0.0, 1.0, "ext: W skates on flat snow up to this speed"));
         s.put("skateAccel", new Spec(0.006, 0.0, 0.1, "ext: skating acceleration per tick"));
@@ -154,6 +157,9 @@ public final class MovementTuning {
     public final double airGrabRotationMul;
     public final double airFlipRecover;
     public final double airSpinRecover;
+    public final double airSpinSideRecover;
+    public final double airFinishBias;
+    public final int airHeldTicks;
     public final double skateMaxSpeed;
     public final double skateAccel;
     public final double scrapeSlideMinSpeed;
@@ -229,6 +235,9 @@ public final class MovementTuning {
         airGrabRotationMul = get("airGrabRotationMul");
         airFlipRecover = get("airFlipRecover");
         airSpinRecover = get("airSpinRecover");
+        airSpinSideRecover = get("airSpinSideRecover");
+        airFinishBias = get("airFinishBias");
+        airHeldTicks = (int) Math.round(get("airHeldTicks"));
         skateMaxSpeed = get("skateMaxSpeed");
         skateAccel = get("skateAccel");
         scrapeSlideMinSpeed = get("scrapeSlideMinSpeed");

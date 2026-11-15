@@ -1089,7 +1089,7 @@ covered by a test or noted in code.
     so a report never moves faster than `TrickValidator` and `FlipLimit` allow, and no protocol bump is needed (the
     tuning sync is a JSON map; a client on the old build simply lacks the behaviour). Recovery shifts the final angle to
     a whole rotation, which `TrickScorer` rounds the same way (170 recovering to 180 scores as a 180). The first
-    airborne moment shows a one-time hint (`hint.air`).
+    airborne moment shows a one-time hint (`hint.air`). Clarification 101 supersedes the rounding and rates here (see 101).
 
 96. **Braking is a deceleration of its own, not a friction multiplier.** Player feedback: "a player can not slow
     down." The old brake multiplied the surface friction by 8 (skis 6). Snow friction is 0.0006 to 0.0014, so a full
@@ -1144,6 +1144,49 @@ covered by a test or noted in code.
     `startWipeout`. The server accepts any WIPEOUT claim from a strapped rider (`RideTransitions`) and takes the
     damage from its own observed speed with `wallHitSpeed`, so a trunk hit between 0.2 and 0.5 is a tumble with no
     damage and a harder hit hurts like any wall; damage is never decided on the client's say-so.
+
+101. **Tricks are easy to start and forgiving to finish, and an unintended rotation still never happens.** Player
+    feedback: "The jump mechanic was modified slightly to make it such that a regular jump will guarantee the player will
+    stick the landing, but now it's too hard to do tricks and flips." Diagnosis (air lengths from `Ballistics`: an
+    uncharged pop 12 ticks, a half charge 15, a full charge 18; a 16 blocks/s kicker 10 ticks at half grade and 19 at full
+    grade, 23 to land three blocks lower; 20 blocks/s full grade 23; 28 blocks/s 31). Under clarification 95 a key that
+    was down at takeoff did nothing until released, so the natural trick (hold A/D or W through the lip) needed a release
+    and a re-press: 2 to 3 ticks of a 10 to 25 tick air (a hand takes 100 to 150 ms). Required air then, for a landing
+    inside the CLEAN windows (heading within 35, flip within 30 degrees), best case a fresh press on tick 1 against a
+    re-press on tick 3: a 180 needed 8 ticks (hold 8, one tick of slack) against 10 (hold 8 to 10); a 360 needed 16 ticks
+    (hold 16) against 18 (hold 16 to 18); a whole flip needed 22 (hold 21 to 22) against 22 (hold 19 to 22), so only a
+    20 blocks/s full-grade kicker or a deep landing (22 to 23 ticks) could flip at all, and then tick-tight. Four losses: (a) release and re-press, 2 to 3 ticks; (b) the
+    4-tick ramp (`airRampTicks`) gave away 36 degrees, 1.5 ticks of rotation; (c) a released axis eased to the nearest
+    whole rotation at 5 (spin) and 8 (flip) degrees per tick, so a flip let go at 170 of 360 was eased back to 0 over 21
+    ticks, and a 100 degree spin was 16 ticks from its 180; the game undid the trick the rider had committed to; (d)
+    `FlipLimit` capped the pitch at 179.99 every tick until tick 16 although the rate allows 330 by tick 15, so the
+    rider waited at half a flip and then spent 6 more ticks finishing it. What changed, keeping 95's guarantee: (1) A key
+    counts as held from the ground only if it has been down for `airHeldTicks` (8, 0.4 s) ticks when the rider leaves
+    the ground (`SlideController` counts consecutive ticks per axis and direction; 0 restores 95 exactly). A key pressed
+    more recently is a wind-up and rotates from the first air tick, like every snowboard game: tap or press D or W just
+    before the lip or the pop. Keys held through (skating with W, carving with A/D) are ignored until released, so a plain
+    jump, or no input, still lands clean. (2) Finishing: with an axis released, the angle settles to the whole rotation
+    in the direction the rider was turning once past `0.5 - airFinishBias` of the way (`airFinishBias` 0.15: past 126 of
+    360 degrees for a flip, 63 of 180 for a spin), otherwise it levels back to where it was, so a stray tap of a few ticks
+    still levels out. It does so at `airFlipRecover` (24) and `airSpinRecover` (20) degrees per tick, still capped at the
+    hand rates. Within 25 degrees of sideways the spin recovers at `airSpinSideRecover` (3) so a rider who lets go at
+    90 can catch a rail as a boardslide (holding 90 now takes a touch of the opposite key once past it). (3) `airRampTicks`
+    4 to 3. (4) The flip is no longer clamped to `FlipLimit` every tick; `AirRotation.reportPitch` clamps what is
+    reported at the end, so a whole flip still needs 16 air ticks and the validator, `FlipLimit` and the scoring are
+    unchanged (an honest client's report is always within the limit, README 82, and a server and client of the old
+    build still agree). The rider is also no longer held at half a flip mid-air. Result for a rider who presses on
+    tick 1 or a few ticks before takeoff: a 180 needs 8 ticks, and on 12 ticks of air the hold can be 6 to 10 ticks
+    (was 7 to 10 on a fresh press, 8 to 12 after a re-press); a 360 needs 15 ticks (hold 14 to 15) and on 19 ticks hold
+    13 to 18 (was 15 to 18, or 15 to 19 after a re-press); a whole flip needs 16 ticks, and from 16 on any hold from 7 ticks to the whole air
+    finishes it (was 22 ticks, tick-tight). Bigger tricks still need bigger air: a flat pop cannot flip or 360, a 16
+    blocks/s half-grade kicker (10 to 16 ticks) gives 180s and, near its top, a 360, and flips need a kicker with
+    16 or more ticks. Playtest: 180, press A or D just before the lip and hold 6 to 10 ticks; 360, hold 14 to 15 or more
+    on a big air; backflip, tap S for 7 or more ticks. New and changed tuning keys (`tuning.json`, synced, see
+    docs/server-guide.md): `airHeldTicks` 8 (0 to 100), `airFinishBias` 0.15 (0 to 0.5), `airSpinSideRecover` 3 (0 to
+    90); defaults changed `airRampTicks` 4 to 3, `airFlipRecover` 8 to 24, `airSpinRecover` 5 to 20. The hint
+    (`hint.air`) now reads "In the air: press W/S to flip, A/D to spin, then let go to finish the trick. Keys held since
+    before takeoff are ignored". No protocol change: tuning travels as a JSON map, scoring and validation are
+    server-side and unchanged, and an old client against this server sends reports the old rules produced, which pass.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

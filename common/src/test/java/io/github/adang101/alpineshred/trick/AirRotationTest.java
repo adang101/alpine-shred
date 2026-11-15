@@ -22,13 +22,13 @@ class AirRotationTest {
     }
 
     @Test
-    void spinRampsToMaxOverFourTicks() {
+    void spinRampsToMaxOverThreeTicks() {
         AirRotation r = armed();
-        double[] expected = {6, 12, 18, 24, 24, 24};
+        double[] expected = {8, 16, 24, 24, 24, 24};
         for (double e : expected) {
             assertEquals(e, step(r, 1, 0, 99), 1e-12);
         }
-        assertEquals(108, r.yawAccum, 1e-12);
+        assertEquals(120, r.yawAccum, 1e-12);
     }
 
     @Test
@@ -39,7 +39,7 @@ class AirRotationTest {
         assertEquals(-28, skis.spinRate(), 1e-12);
         AirRotation grab = armed();
         for (int i = 0; i < 10; i++) grab.step(T, GearKind.BOARD, 1, 0, true, 99, 0);
-        assertEquals(0.8 * (6 + 12 + 18 + 24 * 7), grab.yawAccum, 1e-9);
+        assertEquals(0.8 * (8 + 16 + 24 * 8), grab.yawAccum, 1e-9);
     }
 
     @Test
@@ -48,14 +48,14 @@ class AirRotationTest {
         for (int i = 0; i < 5; i++) step(r, 1, 0, 99);
         double held = r.yawAccum;
         step(r, -1, 0, 99);
-        assertEquals(held - 6, r.yawAccum, 1e-12);
+        assertEquals(held - 8, r.yawAccum, 1e-12);
     }
 
     @Test
     void flipsUseTheirOwnRate() {
         AirRotation r = armed();
         for (int i = 0; i < 20; i++) step(r, 0, 1, 99);
-        assertEquals(6 + 12 + 18 + 24 * 17, r.pitchAccum, 1e-9);
+        assertEquals(8 + 16 + 24 * 18, r.pitchAccum, 1e-9);
         assertEquals(0, r.yawAccum, 0);
     }
 
@@ -72,17 +72,17 @@ class AirRotationTest {
         assertEquals(0, r.pitchAccum, 0);
         step(r, 0, 0, 21);
         step(r, 1, 1, 22);
-        assertEquals(6, r.yawAccum, 1e-12);
-        assertEquals(6, r.pitchAccum, 1e-12);
+        assertEquals(8, r.yawAccum, 1e-12);
+        assertEquals(8, r.pitchAccum, 1e-12);
     }
 
     @Test
     void aKeyUpAtTakeoffAndPressedOnTheFirstAirTickRotatesAtOnce() {
         AirRotation r = new AirRotation();
         r.reset(false, false);
-        assertEquals(6, step(r, 1, 0, 1), 1e-12);
+        assertEquals(8, step(r, 1, 0, 1), 1e-12);
         step(r, 0, 1, 2);
-        assertEquals(6, r.pitchAccum, 1e-12);
+        assertEquals(8, r.pitchAccum, 1e-12);
     }
 
     @Test
@@ -91,7 +91,7 @@ class AirRotationTest {
         r.reset(false, true); // A/D up at takeoff, W held from takeoff
         step(r, 0, 1, 1);
         step(r, 1, 1, 2);
-        assertEquals(6, r.yawAccum, 1e-12, "the spin axis was armed");
+        assertEquals(8, r.yawAccum, 1e-12, "the spin axis was armed");
         assertEquals(0, r.pitchAccum, 0, "the flip axis was not");
     }
 
@@ -147,11 +147,20 @@ class AirRotationTest {
     }
 
     @Test
-    void recoveryIsSlowerThanAHeldKey() {
+    void recoveryIsNoFasterThanAHeldKey() {
         AirRotation r = armed();
-        r.yawAccum = 90.5;
+        r.yawAccum = 120.5;
         assertEquals(T.airSpinRecover, Math.abs(r.step(T, GearKind.BOARD, 0, 0, false, 99, 0)), 1e-12);
-        assertTrue(T.airSpinRecover < T.airSpinMaxBoard && T.airFlipRecover < T.airFlipMax);
+        assertTrue(T.airSpinRecover <= T.airSpinMaxBoard && T.airFlipRecover <= T.airFlipMax);
+    }
+
+    @Test
+    void sidewaysRecoversSlowlySoARailCanCatchABoardslide() {
+        AirRotation r = armed();
+        r.yawAccum = 95;
+        assertEquals(T.airSpinSideRecover, Math.abs(r.step(T, GearKind.BOARD, 0, 0, false, 99, 0)), 1e-12);
+        r.yawAccum = 130;
+        assertEquals(T.airSpinRecover, Math.abs(r.step(T, GearKind.BOARD, 0, 0, false, 99, 0)), 1e-12);
     }
 
     @Test
@@ -160,7 +169,7 @@ class AirRotationTest {
         r.yawAccum = 100;
         r.pitchAccum = 100;
         step(r, 1, 0, 99);
-        assertEquals(106, r.yawAccum, 1e-12, "no recovery while spinning");
+        assertEquals(108, r.yawAccum, 1e-12, "no recovery while spinning");
         assertEquals(100 - T.airFlipRecover, r.pitchAccum, 1e-12, "the flip axis still levels out");
     }
 
@@ -176,28 +185,19 @@ class AirRotationTest {
     }
 
     @Test
-    void anUnreachableWholeFlipIsNotRecoveredTo() {
-        // 200 degrees with a limit of 300: the nearest whole flip (360) is not allowed yet, so settle to 0.
-        assertEquals(-8, AirRotation.recoverPitch(200, 8, 300), 0);
-        assertEquals(8, AirRotation.recoverPitch(-200, 8, 300), 0);
-        // With the whole flip reachable the same angle goes up to it.
-        assertEquals(8, AirRotation.recoverPitch(200, 8, 1000), 0);
-    }
-
-    @Test
-    void recoveryKeepsPitchWithinTheFlipLimitEveryTick() {
+    void theReportedPitchIsWithinTheFlipLimitEveryTick() {
         AirRotation r = armed();
         for (int tick = 2; tick < 60; tick++) {
             boolean press = tick < 14;
             step(r, 0, press ? 1 : 0, tick);
-            assertTrue(FlipLimit.allows(r.pitchAccum, tick, T.airFlipMax), "tick " + tick + " pitch " + r.pitchAccum);
+            assertTrue(FlipLimit.allows(r.reportPitch(T, tick), tick, T.airFlipMax), "tick " + tick + " pitch " + r.pitchAccum);
         }
     }
 
     @Test
     void grabbingSlowsRecoveryLikeAnyRotation() {
         AirRotation r = armed();
-        r.yawAccum = 90.5;
+        r.yawAccum = 120.5;
         double turned = r.step(T, GearKind.BOARD, 0, 0, true, 99, 0);
         assertEquals(T.airSpinRecover * T.airGrabRotationMul, Math.abs(turned), 1e-12);
     }
@@ -228,9 +228,9 @@ class AirRotationTest {
                                 int key = tick > 1 && tick <= release ? dir : 0;
                                 r.step(T, kind, key, -key, tick % 7 == 0, tick, takeoffRelative);
                             }
-                            AirReport report = new AirReport(r.yawAccum, r.pitchAccum, new int[GrabType.values().length], 0, air,
+                            AirReport report = new AirReport(r.yawAccum, r.reportPitch(T, air), new int[GrabType.values().length], 0, air,
                                     takeoffRelative, TrickAngles.headingError(takeoffRelative, r.yawAccum),
-                                    TrickAngles.residual(r.pitchAccum, 360), false, false, false);
+                                    TrickAngles.residual(r.reportPitch(T, air), 360), false, false, false);
                             String why = TrickValidator.check(report, air, 0, spinMax, T.airFlipMax);
                             assertEquals(null, why, why);
                         }
