@@ -153,6 +153,35 @@ public final class TerrainGameTests {
         helper.succeed();
     }
 
+    /**
+     * Feedback round 2, powder bowls (README clarification 102): a floating rider climbs a powder
+     * staircase like a snow one. Vanilla's powder collision shape is solid only to an entity whose feet
+     * are above the block, so the step-up (the sweep tests the next block against the feet's current
+     * height) used to meet no collision at all and the rider ran into the powder and sank.
+     */
+    public static void powderStaircaseIsClimbedLikeSnow(GameTestHelper helper) {
+        Course course = new Course(helper);
+        course.flat(0, 70, 1, Blocks.STONE);
+        for (int z = 0; z <= 70; z++) {
+            int height = z < 14 ? 1 : z < 24 ? 2 : 3; // powder tops at 2, 3, 4
+            for (int y = 1; y <= height; y++) {
+                for (int x = Course.LANE_MIN_X; x <= Course.LANE_MAX_X; x++) course.set(x, y, z, Blocks.POWDER_SNOW.defaultBlockState());
+            }
+        }
+        Player rider = Course.boarder(helper);
+        course.place(rider, 2, 4.5, 0.8);
+        Ride ride = new Ride(rider);
+        double topY = 0;
+        for (int tick = 0; tick < 40; tick++) {
+            ride.tick(RideInput.coast(0));
+            topY = Math.max(topY, course.relative(rider).y);
+            check(!rider.isInPowderSnow, "the rider ran into the powder at tick " + tick + " " + ride.describe());
+        }
+        check(topY > 3.99, "the rider did not climb the powder stairs, best height " + topY + " " + ride.describe());
+        check(ride.mode() == SlideController.Mode.RIDE, "the rider stopped riding: " + ride.describe());
+        helper.succeed();
+    }
+
     private static BlockState persistentLeaves() {
         return Blocks.OAK_LEAVES.defaultBlockState().setValue(LeavesBlock.PERSISTENT, true);
     }

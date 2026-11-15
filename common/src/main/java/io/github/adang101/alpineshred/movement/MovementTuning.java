@@ -45,6 +45,7 @@ public final class MovementTuning {
         s.put("stepUp", new Spec(1.0, 0.6, 1.5, "Step height while riding"));
         s.put("poleImpulse", new Spec(0.10, 0.0, 1.0, "Push speed gain"));
         s.put("powderFloatSpeed", new Spec(0.25, 0.0, 3.0, "Minimum speed to float on powder"));
+        s.put("powderHoldMul", new Spec(0.4, 0.0, 1.0, "A rider already floating keeps floating above this fraction of the float speed"));
         s.put("wallHitSpeed", new Spec(0.5, 0.0, 5.0, "Minimum head-on speed for a wipeout"));
         s.put("wipeoutTicks", new Spec(30, 0, 200, "Input lock duration"));
         s.put("strappedWalkMod", new Spec(-0.35, -1.0, 0.0, "Walk speed modifier when strapped off snow"));
@@ -120,6 +121,7 @@ public final class MovementTuning {
     public final double stepUp;
     public final double poleImpulse;
     public final double powderFloatSpeed;
+    public final double powderHoldMul;
     public final double wallHitSpeed;
     public final int wipeoutTicks;
     public final double strappedWalkMod;
@@ -195,6 +197,7 @@ public final class MovementTuning {
         stepUp = get("stepUp");
         poleImpulse = get("poleImpulse");
         powderFloatSpeed = get("powderFloatSpeed");
+        powderHoldMul = get("powderHoldMul");
         wallHitSpeed = get("wallHitSpeed");
         wipeoutTicks = (int) Math.round(get("wipeoutTicks"));
         strappedWalkMod = get("strappedWalkMod");

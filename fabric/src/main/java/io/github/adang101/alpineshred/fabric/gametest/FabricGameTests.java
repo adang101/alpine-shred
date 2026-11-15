@@ -120,6 +120,11 @@ public final class FabricGameTests implements FabricGameTest {
     }
 
     @GameTest(template = LARGE)
+    public void powderStaircaseIsClimbedLikeSnow(GameTestHelper helper) {
+        TerrainGameTests.powderStaircaseIsClimbedLikeSnow(helper);
+    }
+
+    @GameTest(template = LARGE)
     public void aLogWipesOutAtModerateSpeedButStoneDoesNot(GameTestHelper helper) {
         TerrainGameTests.aLogWipesOutAtModerateSpeedButStoneDoesNot(helper);
     }

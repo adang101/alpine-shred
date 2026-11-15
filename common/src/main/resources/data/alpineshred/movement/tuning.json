@@ -15,6 +15,7 @@
   "stepUp": 1.0,
   "poleImpulse": 0.1,
   "powderFloatSpeed": 0.25,
+  "powderHoldMul": 0.4,
   "wallHitSpeed": 0.5,
   "wipeoutTicks": 30.0,
   "strappedWalkMod": -0.35,

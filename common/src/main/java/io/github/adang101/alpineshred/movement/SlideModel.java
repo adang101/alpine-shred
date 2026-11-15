@@ -278,6 +278,18 @@ public final class SlideModel {
         return t.powderFloatSpeed / gear.powderFloat();
     }
 
+    /**
+     * Whether a rider that is already riding keeps floating on powder (README clarification 102).
+     * Getting onto powder needs {@link #powderFloatSpeed}; staying on it needs only
+     * {@code powderHoldMul} of that, or a slope whose pull beats the powder's friction (a rider
+     * stalled on a bowl wall is sliding back, not standing). Only a rider with neither has stopped
+     * and sinks.
+     */
+    public static boolean holdsPowder(MovementTuning t, GearStats gear, double speed, double slopeAngle, double powderFriction) {
+        if (speed >= powderFloatSpeed(t, gear) * t.powderHoldMul) return true;
+        return t.effectiveGravity() * Math.sin(slopeAngle) > powderFriction;
+    }
+
     /** Wipeout damage {@code (impactSpeed - wallHitSpeed) * 8}, reduced 40% by a helmet. */
     public static double wipeoutDamage(MovementTuning t, double impactSpeed, boolean helmet) {
         double damage = Math.max(0, impactSpeed - t.wallHitSpeed) * t.wipeoutDamagePerSpeed;

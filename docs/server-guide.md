@@ -314,6 +314,9 @@ Reloaded with the data packs; `/alpineshred tuning reload` reloads them and resy
   (0.10), the fraction of speed lost per tick inside ride-through blocks; `treeHitSpeed` (0.2), the head-on speed that
   wipes a rider out on a trunk. They replace `brakeFrictionMul` and `skiBrakeFrictionMul`, which are gone (an old
   override logs one "unknown key" warning). They sync to clients with the rest of the tuning, with no protocol change.
+- Tuning key added in `movement/tuning.json` (README 102): `powderHoldMul` (0.4, 0 to 1), the fraction of the powder float
+  speed a rider who is already riding keeps floating above (or on any slope whose pull beats powder's friction). Getting
+  onto powder still takes the full `powderFloatSpeed`. It syncs to clients with the rest of the tuning.
 
 ## 11. NeoForge and known issues
 
