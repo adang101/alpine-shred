@@ -32,6 +32,15 @@ public final class ClientLine implements LineView {
     public boolean faulted;
     public boolean emergency;
 
+    /**
+     * Blocks from {@link #travel}, which follows the server's clock, to the distance drawn (README clarification
+     * 100). A clock jump or a correcting sync moves {@code travel} at once; the drawn distance would hop with it,
+     * every chair, the cable and the bullwheels together, so the difference is kept here and worked off by
+     * {@link #tick} at a bounded rate. Negative: the drawn distance trails the server's.
+     */
+    private double offset;
+    private boolean placed;
+
     /** Builds the line from a (non-removed) sync and catches it up to {@code now}. */
     public ClientLine(LiftLineSync sync, long now) {
         this.id = sync.id();
@@ -45,13 +54,22 @@ public final class ClientLine implements LineView {
      */
     public static final long MAX_REWIND = 10;
 
+    /** The drawn distance catches up by at most this fraction of a tick's travel each tick (a 15% speed change). */
+    static final double SLEW_FRACTION = 0.15;
+    /** ...and by at least this many blocks a tick, so a stopped line still settles (0.2 blocks a second). */
+    static final double MIN_SLEW = 0.01;
+    /** A difference above this many blocks (16 ticks at 2.5 blocks a second) is a stall, not drift: the drawn distance snaps. */
+    static final double MAX_OFFSET = 2.0;
+
     /**
      * Takes the packet's state, then runs it forward from the packet's game time to {@code now} with
      * {@link LiftMotion#advance}. A packet stamped a few ticks after {@code now} (see {@link #MAX_REWIND})
      * is rewound at its own speed instead, so the line is where the server's was at the client's game time.
      */
     public void apply(LiftLineSync sync, long now) {
-        if (path == null || !nodes.equals(sync.nodes())) {
+        double shown = shownTravel();
+        boolean rebuilt = path == null || !nodes.equals(sync.nodes());
+        if (rebuilt) {
             List<V3> v = new ArrayList<>(sync.nodes().size());
             for (BlockPos p : sync.nodes()) v.add(LiftLine.node(p));
             path = LiftPath.of(v);
@@ -68,6 +86,29 @@ public final class ClientLine implements LineView {
         long gap = now - sync.gameTime();
         if (gap > 0) advance(gap);
         else if (gap < 0 && gap >= -MAX_REWIND) rewind(-gap);
+        absorb(shown, rebuilt);
+    }
+
+    /** The drawn distance before a change to {@link #travel}: that change then leaves it where it was. */
+    private double shownTravel() {
+        return placed ? travel + offset : 0;
+    }
+
+    /** Keeps the drawn distance at {@code shown} after {@link #travel} moved, up to {@link #MAX_OFFSET}. */
+    private void absorb(double shown, boolean reset) {
+        if (!placed || reset) {
+            placed = true;
+            offset = 0;
+            return;
+        }
+        double d = shown - travel;
+        double loop = path.loopLength();
+        if (loop > 0) {
+            d %= loop;
+            if (d > loop / 2) d -= loop;
+            else if (d < -loop / 2) d += loop;
+        }
+        offset = Math.abs(d) > MAX_OFFSET ? 0 : d;
     }
 
     /** Moves {@code travel} back by {@code ticks} ticks at the current speed. */
@@ -92,11 +133,15 @@ public final class ClientLine implements LineView {
     /**
      * The level's game time moved by {@code ticks} since the last client tick (one, normally; the server's
      * time packet moves it by the amount the client had drifted): runs the line forward by that many ticks, or
-     * back by up to {@link #MAX_REWIND}, so the line stays where the server's was at the client's game time.
+     * back by up to {@link #MAX_REWIND}, so the line stays where the server's was at the client's game time. The
+     * drawn distance does not follow the jump: it moves {@code drawnTicks} ticks and the rest becomes the offset.
      */
-    public void shift(long ticks) {
+    public void shift(long ticks, long drawnTicks) {
+        // The drawn distance moves on by the ticks the client really ran (one for a client tick, none before a sync).
+        double shown = shownTravel() + speed / LiftMotion.TICKS_PER_SECOND * drawnTicks;
         if (ticks > 0) advance(ticks);
         else if (ticks < 0 && ticks >= -MAX_REWIND) rewind(-ticks);
+        absorb(shown, false);
     }
 
     /** One client tick. */
@@ -104,6 +149,10 @@ public final class ClientLine implements LineView {
         double after = LiftMotion.nextSpeed(speed, target(), LiftMotion.isStopping(faulted, emergency));
         travel = LiftMotion.nextTravel(travel, after, path.loopLength());
         speed = after;
+        if (offset != 0) {
+            double slew = Math.max(SLEW_FRACTION * Math.abs(after) / LiftMotion.TICKS_PER_SECOND, MIN_SLEW);
+            offset = Math.abs(offset) <= slew ? 0 : offset - Math.copySign(slew, offset);
+        }
     }
 
     private double target() {
@@ -117,7 +166,7 @@ public final class ClientLine implements LineView {
 
     /** The loop distance run {@code partialTick} of a tick after the last client tick, for drawing between ticks. */
     public double travelAt(float partialTick) {
-        return travel + speed / 20.0 * partialTick;
+        return travel() + speed / 20.0 * partialTick;
     }
 
     @Override
@@ -125,9 +174,17 @@ public final class ClientLine implements LineView {
         return path;
     }
 
+    /** The distance drawn this tick: {@link #travel} plus the offset still being worked off, on the loop. */
     @Override
     public double travel() {
-        return travel;
+        if (offset == 0) return travel;
+        double t = travel + offset;
+        double loop = path.loopLength();
+        if (loop > 0) {
+            t %= loop;
+            if (t < 0) t += loop;
+        }
+        return t;
     }
 
     @Override
