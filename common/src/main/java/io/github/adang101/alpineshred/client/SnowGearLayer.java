@@ -189,7 +189,7 @@ public class SnowGearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel
             // out that the top end clears the back of the head (skis are longer than boards).
             model.body.translateAndRotate(pose);
             if (kind == GearKind.BOARD) {
-                pose.translate(0, 9.5f * PX, 4.3f * PX);
+                pose.translate(0, 11f * PX, 4.3f * PX);
             } else {
                 pose.translate(0, 8.5f * PX, 4.7f * PX);
             }
