@@ -54,8 +54,12 @@ public final class ClientLine implements LineView {
      */
     public static final long MAX_REWIND = 10;
 
-    /** The drawn distance catches up by at most this fraction of a tick's travel each tick (a 15% speed change). */
+    /** The drawn distance works off at least this fraction of a tick's travel each tick (a 15% speed change)... */
     static final double SLEW_FRACTION = 0.15;
+    /** ...or this fraction of the offset, so a large one does not take long (a 0.375 offset is under 0.25 in 2 ticks)... */
+    static final double OFFSET_FRACTION = 0.25;
+    /** ...but never more than this fraction of a tick's travel, so the drawn distance keeps running forward. */
+    static final double MAX_SLEW_FRACTION = 0.75;
     /** ...and by at least this many blocks a tick, so a stopped line still settles (0.2 blocks a second). */
     static final double MIN_SLEW = 0.01;
     /** A difference above this many blocks (16 ticks at 2.5 blocks a second) is a stall, not drift: the drawn distance snaps. */
@@ -150,7 +154,9 @@ public final class ClientLine implements LineView {
         travel = LiftMotion.nextTravel(travel, after, path.loopLength());
         speed = after;
         if (offset != 0) {
-            double slew = Math.max(SLEW_FRACTION * Math.abs(after) / LiftMotion.TICKS_PER_SECOND, MIN_SLEW);
+            double stepLength = Math.abs(after) / LiftMotion.TICKS_PER_SECOND;
+            double slew = Math.max(Math.min(Math.max(SLEW_FRACTION * stepLength, OFFSET_FRACTION * Math.abs(offset)),
+                    MAX_SLEW_FRACTION * stepLength), MIN_SLEW);
             offset = Math.abs(offset) <= slew ? 0 : offset - Math.copySign(slew, offset);
         }
     }

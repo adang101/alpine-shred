@@ -1145,6 +1145,31 @@ covered by a test or noted in code.
     damage from its own observed speed with `wallHitSpeed`, so a trunk hit between 0.2 and 0.5 is a tumble with no
     damage and a harder hit hurts like any wall; damage is never decided on the client's say-so.
 
+99. **Boards and skis are drawn at real proportions: a wide board under both boots, and a ski under each foot.** Player
+    feedback: "The snowboard and ski renderings aren't that realistic. For example the snowboard should be a bit
+    longer and much wider to fit the player's entire leg footprint." The board was 4 pixels wide, exactly the depth of
+    one boot (the rider stands across it), and the bindings sat 2 to 4.5 pixels from the middle while the boots, with
+    the legs splayed by the stance clips, sit about 4.4 out. The skis were 2 pixels wide under 4-pixel legs. Rendering
+    only: no hitbox, physics or gear stat changed, and the painted canvases keep their sizes (64 x 16 and 64 x 8), so
+    saved designs, share codes, the codec and sync are untouched; the canvas is simply mapped onto the new, larger
+    geometry (`GearMesh`), and the outline mask is unchanged.
+    - *Board.* 8 x 27 pixels (was 4 x 23.5), centred on the rider's feet: 84 percent of the 32-pixel rider model
+      (1.58 blocks in the world), 8 pixels covering the 4-pixel boot with 2 pixels to spare each side, so a rider
+      who pitches the legs forward in the air stays over the deck. The nose and tail kick up 1.25 pixels over their
+      last 4 and the outline's rounded ends (stepped by the edge walls) are unchanged. Two bindings, 5.5 x 4.5
+      pixels and 1.1 high, are centred 4.25 either side of the middle under each boot; on the back the board hangs 1.5
+      pixels lower so its longer length still ends at the feet.
+    - *Skis.* Each 3 pixels wide (was 2) and still 28 long, centred under its leg 2.5 pixels from the middle, so the
+      two skis have a 2-pixel gap and never touch; the tail is flat and the tip curls up 1.5 pixels (was 1.1) over
+      its last 5; a 4.5-pixel binding block is centred under each boot. The poles are unchanged.
+    - *Assets.* `generate_models.py` now emits the board and ski item templates as they are committed
+      (`builtin/entity` with display transforms; the per-element boxes it used to write were stale since phase 6), and the
+      board's inventory scale is 0.6 so the longer board still fits a slot. The bench preview's board scale is 4.4.
+    - *Tests.* `GearProportionsTest` puts both soles from the stance clips on the mesh: the footprint lies inside the
+      board with 1.5 pixels to spare in the ground stances, board length is 82 to 95 percent of the rider and at least
+      1.75 times the foot's depth, each boot is over one binding, the skis are a foot wide, apart, and each under its leg,
+      and the canvas still spans the full length.
+
 100. **The lift no longer hops every second or so.** Player feedback: "When riding the lifts, every now and then there
     is some sort of microstutter in the rendering of the entire lift." Two periodic, whole-lift causes, both on a
     20-tick beat:
@@ -1158,16 +1183,26 @@ covered by a test or noted in code.
     What changed: `ClientLine` keeps two distances. `travel` still follows the server's clock exactly (so syncs, the
     rewind and the tests of 72 and 73 are unchanged), and `travel()` / `travelAt` (all that is drawn, and what chairs
     are placed from) is `travel + offset`. A clock jump, or a sync that corrects the state, moves `travel`; the
-    difference goes into `offset`, which `tick` works off by `max(15% of a tick's travel, 0.01 blocks)` a tick, so
-    the drawn speed is within 15% of the line's while it converges (a 3-tick jump, 0.375 blocks, in about 20 ticks).
-    A difference over 2.0 blocks (a stall of 16 ticks at 2.5 blocks a second) is snapped, as before. The drawn
-    distance therefore runs forward every tick, never backwards, and within 15% of the line's speed per tick.
+    difference goes into `offset`, which `tick` works off by `min(max(15% of a tick's travel, 25% of the offset),
+    75% of a tick's travel)` a tick, at least 0.01 blocks. So the drawn step per client tick stays between 25% and
+    175% of the line's (the drawn distance never runs backwards while the line moves faster than about 0.27 blocks a
+    second; slower than that it may creep back at 0.2 blocks a second at most), and a 3-tick jump (0.375 blocks) is
+    under 0.25 after 2 ticks and gone in about 15. A difference over 2.0 blocks (a stall of 16 ticks at 2.5 blocks a
+    second) is snapped, as before. The clock's pre-sync catch-up (`follow(..., 0)`) moves only the line's own
+    distance, whatever the jump, including a jump of exactly one tick: only a real client tick draws a tick on.
     `ChairEntity.lerpTo` ignores the packet while the client has the chair's line (`clientLineLookup`), and keeps
     vanilla's behaviour otherwise (line not synced yet or out of range). No protocol change. Server-side chair logic
     is untouched. Cost: during convergence the drawn chairs can differ from the server's by the jump (up to about 0.4
     blocks for a few seconds) where they used to differ by nothing for the one tick they hopped. Unit tests in
     `LineClockTest` (jumps of +3, -2, +5, -4, +1, -1, +9, -7; a sync 0.2 blocks off; a stall) assert the per-tick
-    step stays in (0, 1.25 x a tick] and that the drawn distance meets the server's within 40 ticks.
+    step stays within 25% to 175% of a tick's travel, that a pre-sync catch-up (+1, +3, -2) draws nothing, and that the
+    drawn distance meets the server's within 40 ticks.
+    The CI multiplayer chair check (more than 5% of a client's samples over 0.25 blocks from the server's chair fails)
+    reads the drawn position. At 2.5 blocks a second a jump of 2 ticks is exactly 0.25 and of 3 ticks 0.375: with the
+    jumps of README 72/73 (-2 to +3 every 20 ticks on software-rendered CI clients) a drawn deviation over 0.25 lasts
+    2 samples for a jump of 3 (0.375, then 0.281 blocks, then 0.21) and none for a smaller one (a jump of 2 is
+    exactly 0.25), so with each of -2 to +3 equally likely every 20 ticks about 2 of 120 samples, 1.7%, inside the
+    5% budget; real clients jump far less often.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

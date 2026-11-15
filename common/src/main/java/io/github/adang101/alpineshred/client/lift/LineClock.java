@@ -31,7 +31,8 @@ final class LineClock {
         // A client tick in which the clock net-moved 0 still draws one tick on, so only the line's own distance waits.
         if (delta == 0 && firstDelta == 0) return 0;
         for (ClientLine line : lines) {
-            if (delta == 1) line.tick();
+            // A plain tick only for a client tick: before a sync, a clock that moved by one is a jump like any other.
+            if (delta == 1 && firstDelta == 1) line.tick();
             else line.shift(delta, firstDelta);
         }
         return delta;

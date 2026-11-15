@@ -707,7 +707,7 @@ public class DesignEditorScreen extends Screen {
         PoseStack pose = g.pose();
         pose.pushPose();
         pose.translate(panelX + PANEL_W / 2f, previewY + previewH / 2f, 150);
-        float s = (kind == DesignKind.BOARD ? 5.0f : 4.2f) * Math.min(1f, previewH / 52f);
+        float s = (kind == DesignKind.BOARD ? 4.4f : 4.2f) * Math.min(1f, previewH / 52f);
         pose.scale(16 * s, -16 * s, 16 * s);
         pose.mulPose(Axis.XP.rotationDegrees(25));
         pose.mulPose(Axis.YP.rotationDegrees(previewSpin));
