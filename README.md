@@ -1170,6 +1170,40 @@ covered by a test or noted in code.
       1.75 times the foot's depth, each boot is over one binding, the skis are a foot wide, apart, and each under its leg,
       and the canvas still spans the full length.
 
+100. **The lift no longer hops every second or so.** Player feedback: "When riding the lifts, every now and then there
+    is some sort of microstutter in the rendering of the entire lift." Two periodic, whole-lift causes, both on a
+    20-tick beat:
+    - *The clock jump (README 72, 73).* Client lines follow the level's game time, and the server's time packet (every
+      20 ticks) sets that game time to the server's, so a client that has drifted by k ticks jumps by k (-2 to +3 was
+      common, up to 9 after a stall). Every line moved k ticks of travel in one client tick (0.125 blocks a tick at
+      2.5 blocks a second), and chairs, cable texture and bullwheels, all drawn from the line, hopped together.
+    - *The position packets.* `ChairEntity` is tracked with `updateInterval(20)`, and vanilla's move/teleport packet
+      calls `lerpTo`, which set the chair to where the server's chair was when it sent the packet (latency ago). The
+      client's next tick put it back, so every chair drew a tick interval at the stale position, again together.
+    What changed: `ClientLine` keeps two distances. `travel` still follows the server's clock exactly (so syncs, the
+    rewind and the tests of 72 and 73 are unchanged), and `travel()` / `travelAt` (all that is drawn, and what chairs
+    are placed from) is `travel + offset`. A clock jump, or a sync that corrects the state, moves `travel`; the
+    difference goes into `offset`, which `tick` works off by `min(max(15% of a tick's travel, 25% of the offset),
+    75% of a tick's travel)` a tick, at least 0.01 blocks. So the drawn step per client tick stays between 25% and
+    175% of the line's (the drawn distance never runs backwards while the line moves faster than about 0.27 blocks a
+    second; slower than that it may creep back at 0.2 blocks a second at most), and a 3-tick jump (0.375 blocks) is
+    under 0.25 after 2 ticks and gone in about 15. A difference over 2.0 blocks (a stall of 16 ticks at 2.5 blocks a
+    second) is snapped, as before. The clock's pre-sync catch-up (`follow(..., 0)`) moves only the line's own
+    distance, whatever the jump, including a jump of exactly one tick: only a real client tick draws a tick on.
+    `ChairEntity.lerpTo` ignores the packet while the client has the chair's line (`clientLineLookup`), and keeps
+    vanilla's behaviour otherwise (line not synced yet or out of range). No protocol change. Server-side chair logic
+    is untouched. Cost: during convergence the drawn chairs can differ from the server's by the jump (up to about 0.4
+    blocks for a few seconds) where they used to differ by nothing for the one tick they hopped. Unit tests in
+    `LineClockTest` (jumps of +3, -2, +5, -4, +1, -1, +9, -7; a sync 0.2 blocks off; a stall) assert the per-tick
+    step stays within 25% to 175% of a tick's travel, that a pre-sync catch-up (+1, +3, -2) draws nothing, and that the
+    drawn distance meets the server's within 40 ticks.
+    The CI multiplayer chair check (more than 5% of a client's samples over 0.25 blocks from the server's chair fails)
+    reads the drawn position. At 2.5 blocks a second a jump of 2 ticks is exactly 0.25 and of 3 ticks 0.375: with the
+    jumps of README 72/73 (-2 to +3 every 20 ticks on software-rendered CI clients) a drawn deviation over 0.25 lasts
+    2 samples for a jump of 3 (0.375, then 0.281 blocks, then 0.21) and none for a smaller one (a jump of 2 is
+    exactly 0.25), so with each of -2 to +3 equally likely every 20 ticks about 2 of 120 samples, 1.7%, inside the
+    5% budget; real clients jump far less often.
+
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).
 Real animation clips, sounds and textures replace the placeholders file by file under the same

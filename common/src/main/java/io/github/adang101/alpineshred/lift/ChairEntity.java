@@ -173,6 +173,21 @@ public class ChairEntity extends Entity {
         if (!Double.isNaN(at[3])) setYRot((float) at[3]);
     }
 
+    /**
+     * The server's position and teleport packets (every 20 ticks, {@code updateInterval}) arrive here. A client that
+     * has the line draws the chair from the line's clock, and the packet's position is where the server's chair was
+     * a few ticks ago: taking it would put every chair back by the latency for the rest of that tick, then forward
+     * again at the next one (README clarification 100). The chair keeps what {@link #place} set; without the line
+     * (not synced yet, or out of range) the packet is all there is.
+     */
+    @Override
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int lerpSteps, boolean teleport) {
+        UUID id = level().isClientSide ? lineId() : null;
+        LineView view = id == null ? null : clientLineLookup.apply(id);
+        if (view != null && chairIndex() < view.chairCount()) return;
+        super.lerpTo(x, y, z, yRot, xRot, lerpSteps, teleport);
+    }
+
     /** Reused by {@link #place}, which runs every tick: x, y, z and yaw. */
     private final double[] placeBuffer = new double[4];
 
