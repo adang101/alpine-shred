@@ -44,7 +44,8 @@ class ServerGuideTest {
         Path file = Path.of("docs/server-guide.md");
         if (!Files.isRegularFile(file)) file = Path.of("../docs/server-guide.md");
         assertTrue(Files.isRegularFile(file), "docs/server-guide.md not found from " + Path.of("").toAbsolutePath());
-        String text = Files.readString(file, StandardCharsets.UTF_8);
+        // A Windows checkout with autocrlf has CRLF line ends; the generated table has LF.
+        String text = Files.readString(file, StandardCharsets.UTF_8).replace("\r\n", "\n");
         int from = text.indexOf(start), to = text.indexOf(end);
         assertTrue(from >= 0 && to > from, "docs/server-guide.md needs " + start + " ... " + end);
         String actual = text.substring(from + start.length(), to).strip();
