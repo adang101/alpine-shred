@@ -11,9 +11,12 @@ import java.util.List;
  * design atlas, and edge walls that follow the outline mask pixel by pixel (so they match the
  * cutout of the faces). Bindings are boxes textured from the item's model sheet.
  *
- * <p>Positions are item model pixels (16 to a block), as the JSON models before were laid out: the
- * board's middle runs z 0 to 16 at x 6 to 10 with its deck at y 8.25; skis run z -5.5 to 22.5 at x 5
- * to 7 and 9 to 11. The nose (canvas x high) points +z. Seen from above with the nose to the right,
+ * <p>Positions are item model pixels (16 to a block), as the JSON models before were laid out. The
+ * board is 27 long (z -5.5 to 21.5) and 8 wide (x 4 to 12), so it covers both boots of a rider
+ * standing across it (the rider model's feet are 4 deep, and the legs splay to about 4.4 either side
+ * of the middle); its deck is at y 8.25 with a 1.25 kick at each end. Skis run z -5.5 to 22.5 (28 long),
+ * 3 wide each at x 4 to 7 and 9 to 12, under the two legs with a 2 gap between them: flat tail, tip
+ * curled up 1.5. Bindings sit on the boots' footprint. The nose (canvas x high) points +z. Seen from above with the nose to the right,
  * the top canvas's first row is at +x; seen from below, the base canvas's first row is at -x, so
  * each face reads the right way from its own side.
  */
@@ -47,12 +50,21 @@ public final class GearMesh {
 
     public static final float BASE_Y = 7.75f;
     public static final float THICK = 0.5f;
-    private static final float[] BOARD_Z = {-3.75f, 0f, 16f, 19.75f};
-    private static final float[] BOARD_RISE = {1.0f, 0f, 0f, 1.0f};
-    private static final float[] BOARD_X = {6f, 10f};
-    private static final float[] SKI_Z = {-5.5f, -4f, 19f, 22.5f};
-    private static final float[] SKI_RISE = {0.2f, 0f, 0f, 1.1f};
-    private static final float[][] SKI_X = {{5f, 7f}, {9f, 11f}};
+    /** The item origin along the length and across: the rider's feet are centred on (CENTRE, CENTRE). */
+    static final float CENTRE = 8f;
+    static final float[] BOARD_Z = {-5.5f, -1.5f, 17.5f, 21.5f};
+    static final float[] BOARD_RISE = {1.25f, 0f, 0f, 1.25f};
+    static final float[] BOARD_X = {4f, 12f};
+    /** Board bindings: centre distance from the middle along the board, half length, and half width across it. */
+    static final float BOARD_BINDING_OFFSET = 4.25f;
+    static final float BOARD_BINDING_HALF_LENGTH = 2.25f;
+    static final float BOARD_BINDING_HALF_WIDTH = 2.75f;
+    static final float BINDING_HEIGHT = 1.1f;
+    static final float[] SKI_Z = {-5.5f, -4f, 17.5f, 22.5f};
+    static final float[] SKI_RISE = {0f, 0f, 0f, 1.5f};
+    static final float[][] SKI_X = {{4f, 7f}, {9f, 12f}};
+    /** Ski bindings: z range, and the inset from each side of the ski. */
+    static final float SKI_BINDING_Z0 = 5.75f, SKI_BINDING_Z1 = 10.25f, SKI_BINDING_INSET = 0.3f;
 
     private static final Mesh BOARD = build(DesignKind.BOARD, false);
     private static final Mesh SKIS = build(DesignKind.SKI, false);
@@ -73,12 +85,17 @@ public final class GearMesh {
         float top = BASE_Y + THICK;
         if (kind == DesignKind.BOARD) {
             deck(deck, kind, BOARD_X[0], BOARD_X[1], BOARD_Z, BOARD_RISE, false);
-            box(bindings, 6.4f, top, 3.5f, 9.6f, 9.6f, 6f);
-            box(bindings, 6.4f, top, 10f, 9.6f, 9.6f, 12.5f);
+            for (int side = -1; side <= 1; side += 2) {
+                float c = CENTRE + side * BOARD_BINDING_OFFSET;
+                box(bindings, CENTRE - BOARD_BINDING_HALF_WIDTH, top, c - BOARD_BINDING_HALF_LENGTH,
+                        CENTRE + BOARD_BINDING_HALF_WIDTH, top + BINDING_HEIGHT, c + BOARD_BINDING_HALF_LENGTH);
+            }
         } else {
             deck(deck, kind, SKI_X[0][0], SKI_X[0][1], SKI_Z, SKI_RISE, false);
             deck(deck, kind, SKI_X[1][0], SKI_X[1][1], SKI_Z, SKI_RISE, mirrorPair);
-            for (float[] x : SKI_X) box(bindings, x[0] + 0.2f, top, 6f, x[1] - 0.2f, 9.25f, 10.5f);
+            for (float[] x : SKI_X) {
+                box(bindings, x[0] + SKI_BINDING_INSET, top, SKI_BINDING_Z0, x[1] - SKI_BINDING_INSET, top + BINDING_HEIGHT, SKI_BINDING_Z1);
+            }
         }
         return new Mesh(Collections.unmodifiableList(deck), Collections.unmodifiableList(bindings));
     }
