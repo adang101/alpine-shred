@@ -71,7 +71,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("tooltip.alpineshred.snowboard_boots", "Binds with snowboards");
         t.add("tooltip.alpineshred.ski_helmet", "Cuts wipeout damage by 40%");
         t.add("tooltip.alpineshred.goggles.lens", "Lens: %s");
-        t.add("tooltip.alpineshred.goggles", "Clears snow spray and whiteout. Craft with a dye to change the lens.");
+        t.add("tooltip.alpineshred.goggles", "Keeps snow off your face: no lens build-up, whiteout or powder flash. Craft with a dye to change the lens.");
         t.add("tooltip.alpineshred.mitts", "+10% pole push and grab score");
         t.add("tooltip.alpineshred.ski_poles", "Hold while skiing and use to push off");
         t.add("tooltip.alpineshred.board_wax", "Craft with a board or skis: +8% speed on snow for 3000 blocks");
@@ -137,6 +137,7 @@ public final class AlpineLangProvider extends FabricLanguageProvider {
         t.add("message.alpineshred.unstrap.disabled", "Riding was disabled on this server");
         t.add("message.alpineshred.stance.regular", "Stance: regular");
         t.add("message.alpineshred.stance.goofy", "Stance: goofy");
+        t.add("message.alpineshred.hint.air", "In the air: press W/S to flip, A/D to spin. Let go to level out for the landing");
         t.add("message.alpineshred.hint.steer", "Look to steer, A or D to dig an edge, sneak to brake");
         t.add("message.alpineshred.tuner.no_gear", "Hold a board or skis in your off hand");
         t.add("message.alpineshred.tuner.sharp", "Edges are already sharp");

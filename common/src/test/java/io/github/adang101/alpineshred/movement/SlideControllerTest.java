@@ -158,6 +158,44 @@ class SlideControllerTest {
         assertTrue(landed.report().pitchAccum() > 300, "flipped " + landed.report().pitchAccum());
     }
 
+    /** The complaint: W and D held on the ground and through the jump must not throw the rider into a flip and spin. */
+    @Test
+    void keysHeldFromTakeoffThroughTheAirLandClean() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        RideInput held = new RideInput(1, 1, 0, false, false, GrabType.NONE);
+        SlideController.TrickLanded landed = null;
+        for (int tick = 0; tick < 120 && landed == null; tick++) {
+            c.tick(body, held, BOARD);
+            for (SlideController.Event e : c.events()) {
+                if (e instanceof SlideController.TrickLanded l) landed = l;
+            }
+        }
+        assertTrue(landed != null, "never landed");
+        assertEquals(0, landed.report().pitchAccum(), 0, "W held from the ground does not flip");
+        assertEquals(0, landed.report().yawAccum(), 0, "D held from the ground does not spin");
+        assertTrue(landed.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "landing " + landed.quality());
+        assertTrue(c.state() != RideState.WIPEOUT);
+    }
+
+    /** A fresh W press flips; letting go levels the rider back out, so a half-done flip is not a bail. */
+    @Test
+    void aFreshPressFlipsAndReleasingLevelsOutForTheLanding() {
+        VoxelBody body = kicker();
+        SlideController c = riding(body, 0.8);
+        // airOffTheKicker's takeoff tick is spent with the keys up, so W pressed on the first air tick counts; four ticks, then let go.
+        int[] airTick = {0};
+        double[] peak = {0};
+        SlideController.TrickLanded landed = airOffTheKicker(body, c, ctl -> {
+            int n = airTick[0]++;
+            peak[0] = Math.max(peak[0], ctl.flipAngle());
+            return new RideInput(0, n < 4 ? 1 : 0, 0, false, false, GrabType.NONE);
+        });
+        assertTrue(peak[0] >= 60, "the fresh press flipped: " + peak[0]);
+        assertEquals(0, landed.report().pitchAccum(), 1.0e-9, "levelled out before the landing");
+        assertTrue(landed.quality() != io.github.adang101.alpineshred.trick.LandingQuality.BAIL, "landing " + landed.quality());
+    }
+
     @Test
     void grabsAreCountedAndSlowTheSpin() {
         VoxelBody a = kicker(), b = kicker();
@@ -379,6 +417,67 @@ class SlideControllerTest {
         for (int i = 0; i < 2000 && brake.speed() > 0.02; i++) brake.tick(b, sneak, BOARD);
         assertTrue(b.z < a.z / 3, "brake stops in " + b.z + " blocks, coasting takes " + a.z);
         assertTrue(b.z < 25, "12 b/s to a stop in under 25 blocks: " + b.z);
+    }
+
+    @Test
+    void ridingThroughLeavesSlowsTheRiderAndAnnouncesTheEntryOnce() {
+        VoxelBody clear = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        VoxelBody leafy = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        leafy.leaves = (x, z) -> z >= 5 && z < 9;
+        SlideController a = riding(clear, 0.8);
+        SlideController b = riding(leafy, 0.8);
+        List<SlideController.Event> events = run(b, leafy, BOARD, RideInput.coast(0), 15);
+        run(a, clear, BOARD, RideInput.coast(0), 15);
+        long entries = events.stream().filter(e -> e instanceof SlideController.ThroughLeaves).count();
+        assertEquals(1, entries, "one rustle per entry, not per tick");
+        assertTrue(b.speed() < a.speed() * 0.6, "leaves slow the rider: " + b.speed() + " vs " + a.speed());
+        assertTrue(b.state() != RideState.WIPEOUT, "leaves are not a wall");
+        assertTrue(leafy.z > 9, "rode through to the far side: " + leafy.z);
+    }
+
+    @Test
+    void leafDragIsTheTunedFractionOfSpeedPerTick() {
+        VoxelBody body = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        body.leaves = (x, z) -> true;
+        SlideController c = riding(body, 0.8);
+        double before = c.speed();
+        c.tick(body, RideInput.coast(0), BOARD);
+        assertEquals(before * (1 - MovementTuning.DEFAULT.leafDrag), c.speed(), 0.01, "about leafDrag of speed lost");
+    }
+
+    @Test
+    void leavingLeavesAndReenteringAnnouncesAgain() {
+        VoxelBody body = new VoxelBody(VoxelBody.Terrain.flat(SurfaceProfile.GROOMED), 0.5, 0.5);
+        body.leaves = (x, z) -> z >= 4 && z < 5 || z >= 12 && z < 13;
+        SlideController c = riding(body, 0.9);
+        List<SlideController.Event> events = run(c, body, BOARD, RideInput.coast(0), 40);
+        assertEquals(2, events.stream().filter(e -> e instanceof SlideController.ThroughLeaves).count());
+    }
+
+    @Test
+    void aTreeTrunkWipesOutARiderBelowTheNormalWallSpeed() {
+        VoxelBody.Terrain wall = VoxelBody.Terrain.of((x, z) -> z < 3 ? 0 : 5, SurfaceProfile.GROOMED);
+        VoxelBody log = new VoxelBody(wall, 0.5, 0.5);
+        log.trunks = (x, z) -> z >= 3;
+        SlideController c = riding(log, 0.3);
+        List<SlideController.Event> events = run(c, log, BOARD, RideInput.coast(0), 20);
+        SlideController.WipedOut hit = (SlideController.WipedOut) events.stream()
+                .filter(e -> e instanceof SlideController.WipedOut).findFirst().orElseThrow();
+        assertTrue(hit.impactSpeed() >= MovementTuning.DEFAULT.treeHitSpeed
+                && hit.impactSpeed() < MovementTuning.DEFAULT.wallHitSpeed, "impact " + hit.impactSpeed());
+
+        VoxelBody stone = new VoxelBody(wall, 0.5, 0.5);
+        SlideController s = riding(stone, 0.3);
+        assertFalse(run(s, stone, BOARD, RideInput.coast(0), 20).stream().anyMatch(e -> e instanceof SlideController.WipedOut),
+                "the same speed into stone is a bump");
+    }
+
+    @Test
+    void aTrunkBelowTheTreeHitSpeedIsOnlyABump() {
+        VoxelBody log = new VoxelBody(VoxelBody.Terrain.of((x, z) -> z < 3 ? 0 : 5, SurfaceProfile.GROOMED), 0.5, 0.5);
+        log.trunks = (x, z) -> z >= 3;
+        SlideController c = riding(log, 0.1);
+        assertFalse(run(c, log, BOARD, RideInput.coast(0), 40).stream().anyMatch(e -> e instanceof SlideController.WipedOut));
     }
 
     @Test

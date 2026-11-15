@@ -110,7 +110,7 @@ Iris (Fabric) with Sodium, and Oculus (Forge) with Embeddium; one popular shader
 Fabric has no client run in CI. Create (Fabric) and the Create wrench, a creative flat world on a dedicated Fabric
 server (so the pickup has to reach a real server).
 
-- [ ] The Fabric client starts and a board rides on snow: strap in (G), steer, jump.
+- [ ] The Fabric client starts and a board rides on snow: strap in (H), steer, jump.
 - [ ] A lift: link it, ride it, get put down at the top.
 - [ ] **Wrench pickup reaches the server.** With Create's wrench in hand, sneak-right-click a pole, a head, a
       station and the kinetic drive: each is picked up (an item drops into your inventory), the line faults as it does when you break the block by hand, and the server log shows no error. Break the block, relog, and check it is still gone (the pickup is a server action, not just a client one).

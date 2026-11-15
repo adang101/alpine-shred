@@ -4,6 +4,7 @@
   "package": "io.github.adang101.alpineshred.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BlockStateBaseMixin",
     "EntityMixin",
     "LivingEntityMixin",
     "MobAccessor",

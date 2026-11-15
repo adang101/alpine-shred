@@ -67,6 +67,8 @@ final class RiderView {
     double landedImpact = Double.NaN;
     boolean wipedOut;
     boolean polePushed;
+    /** The local rider just entered leaves this tick (the rustle and leaf burst). */
+    boolean throughLeaves;
     /** Caught a rail this tick (the catch cue). */
     boolean caught;
     /** What the rail being ground or the box being slid on is made of, or null. */
@@ -121,6 +123,7 @@ final class RiderView {
         popped = false;
         wipedOut = false;
         polePushed = false;
+        throughLeaves = false;
         caught = false;
         pressing = false;
         landedQuality = null;
@@ -153,6 +156,8 @@ final class RiderView {
                     wipedOut = true;
                 } else if (e instanceof SlideController.Pushed) {
                     polePushed = true;
+                } else if (e instanceof SlideController.ThroughLeaves) {
+                    throughLeaves = true;
                 } else if (e instanceof SlideController.Caught) {
                     caught = true;
                 } else if (e instanceof SlideController.TrickLanded landed && !landed.report().endsOnRail()) {

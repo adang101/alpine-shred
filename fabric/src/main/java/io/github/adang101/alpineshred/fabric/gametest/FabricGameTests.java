@@ -4,6 +4,7 @@ import io.github.adang101.alpineshred.gametest.AlpineGameTests;
 import io.github.adang101.alpineshred.gametest.ParkGameTests;
 import io.github.adang101.alpineshred.gametest.TrickGameTests;
 import io.github.adang101.alpineshred.gametest.RideGameTests;
+import io.github.adang101.alpineshred.gametest.TerrainGameTests;
 import net.fabricmc.fabric.api.gametest.v1.FabricGameTest;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -104,6 +105,26 @@ public final class FabricGameTests implements FabricGameTest {
     }
 
     @GameTest(template = LARGE)
+    public void brakingOnASteepSlopeStopsAndHolds(GameTestHelper helper) {
+        TerrainGameTests.brakingOnASteepSlopeStopsAndHolds(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void leavesHaveNoCollisionForRidersOnly(GameTestHelper helper) {
+        TerrainGameTests.leavesHaveNoCollisionForRidersOnly(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void ridingIntoLeavesPassesThroughAndSlowsDown(GameTestHelper helper) {
+        TerrainGameTests.ridingIntoLeavesPassesThroughAndSlowsDown(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void aLogWipesOutAtModerateSpeedButStoneDoesNot(GameTestHelper helper) {
+        TerrainGameTests.aLogWipesOutAtModerateSpeedButStoneDoesNot(helper);
+    }
+
+    @GameTest(template = LARGE)
     public void ridersStepUpOneBlockAtSpeedOnly(GameTestHelper helper) {
         RideGameTests.ridersStepUpOneBlockAtSpeedOnly(helper);
     }
@@ -146,6 +167,16 @@ public final class FabricGameTests implements FabricGameTest {
     @GameTest(template = LARGE)
     public void vanillaAcceptsKickerAir(GameTestHelper helper) {
         RideGameTests.vanillaAcceptsKickerAir(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void holdingWThroughAJumpLandsClean(GameTestHelper helper) {
+        RideGameTests.holdingWThroughAJumpLandsClean(helper);
+    }
+
+    @GameTest(template = LARGE)
+    public void aFreshPressFlipsAndReleasingLevelsOut(GameTestHelper helper) {
+        RideGameTests.aFreshPressFlipsAndReleasingLevelsOut(helper);
     }
 
     // ---- phase 3: feel ----

@@ -461,7 +461,9 @@ line. The server's validator must flag nobody on the lift.
 - **HUD.** Goggle lens tint and frame in first person (`client.gogglesOverlay`), speed lines, a
   whiteout vignette in snowfall without goggles, a flash on hitting powder at speed without
   goggles and a red pulse on wipeouts (both off with `client.flashSafe`), and, with
-  `client.hudSpeed`, a speedometer and the board's wax and edge, scaled by `client.hudScale`.
+  `client.hudSpeed`, a speedometer and the board's wax and edge, scaled by `client.hudScale`. Without
+  goggles, snow builds up on the lens as a frosted edge (clarification 92); leaves over the rider's head
+  darken the view (clarification 93).
 - **Client smoke test** (`ClientSmoke`, CI step 6). A Forge client on a virtual display builds a
   snow run in a flat world, rides it on a snowboard and then on skis with poles (skate, pole push,
   carve both ways, pop, kicker, powder, brake), and photographs each moment from behind, from the
@@ -530,7 +532,7 @@ rider was in. Watcher screenshots are on the `ci-logs` branch under `multi/`.
   lift pass are described placeholders until their blocks ship.
 - Snow gear, goggles and mitts slots on Curios (Forge) and Trinkets (Fabric) behind `GearAccess`,
   and a cached `GearProfile` rebuilt on equip events with a 10-tick fallback.
-- Strap in/out on `G`, validated on the server: gear, matching boots, vehicle, fluid, elytra,
+- Strap in/out on `H`, validated on the server: gear, matching boots, vehicle, fluid, elytra,
   spectator. Auto-unstraps on fluid, vehicles, death, dimension change, gear or boot removal.
   While strapped: -35% walk speed, no sprinting.
 - The packed rider state as synced entity data, so every client sees every rider's state.
@@ -1046,6 +1048,102 @@ covered by a test or noted in code.
     nothing, because spacing belongs to the structure sets. A dead range invites a setting that cannot work, so the
     range now ends at 1.0 and a value above it is clamped with a warning like any other. Nothing else read the old
     10.0 (no test, generated file or sync key). Written up in `docs/server-guide.md` (WP7).
+
+92. **Snow builds up on the rider's lens, and goggles are what stops it.** Without goggles a build-up level (0 to 1,
+    `LensBuildup`) climbs toward a target each tick: speed up to 0.30 (from 0.25 blocks per tick, full at 1.25),
+    powder 0.70, a hard carve up to 0.25 (lean times speed), snowfall 0.15 (scaled by speed). It rises 0.015 a tick
+    (about 3 s to 0.9) and clears 0.004 a tick (12.5 s from full) once the target falls below it. A powder landing
+    (from `AIR`, above 0.2 blocks per tick) adds 0.4 and a wipeout 0.6. A groomed run at 0.6 blocks per tick settles
+    near 0.1; powder goes past 0.7 in about 3 s. With goggles the level only falls, 0.05 a tick (a second). It is
+    drawn in first person as a frosted edge vignette (`lens_frost.png`) plus snow blotches (`lens_blotches.png`,
+    opacity scaled by the level again, so they only show when it is heavy). Opacity peaks at 0.5 in the corners
+    (0.3 under `client.reduceMotion`), reaches about 0.33 at the edge midpoints, and is zero inside 40% of the way
+    out. Textured quads only, like the other overlays: no blur shader, so Iris and Oculus are unaffected. There is no
+    config key, because it is the goggles' purpose; `client.flashSafe` has nothing to tone down since it never
+    flashes. The goggles tooltip now says what they do. The textures are placeholders from
+    `art/placeholder/generate_effects.py` (fixed seeds).
+
+93. **Leaves in the face.** While the local rider is strapped in and riding, the client looks up the block at the
+    eye once a tick (a reused `MutableBlockPos`) and checks the `ride_through` tag. Inside it, `LeafCover` closes in
+    four ticks to 0.8 opacity; after the head leaves it fades over 12 ticks. Goggles cut it to 0.6 of that (0.48),
+    because they protect the eyes but not the view. Drawn in first person only (the third-person camera sees
+    through branches), with `leaves.png`. The pass-through and slowdown are clarification 97. Not under
+    `client.reduceMotion` (it is no motion effect); nothing is drawn at zero opacity.
+
+94. **Strap in defaults to `H`, not `G`.** Curios binds `G` to its inventory screen, so on Forge one press opened
+    the Curios inventory and strapped the player in. `H` is unbound in vanilla 1.20.1 and in Curios; I could not
+    check every popular mod from here, and the Controls screen marks any conflict a player has. Saved bindings stay
+    in `options.txt`, so an existing install keeps `G` until the player rebinds it (reset the key in Controls to
+    take the new default). Nothing else names the key in code; the docs and playtest lists now say `H`.
+
+95. **Air rotation waits for a fresh press and levels out on release.** Riders hold W (skate, tuck) and A/D (carve) on the
+    ground, and `AirRotation` took those keys from the first air tick, so every jump started as an uncontrolled flip and
+    ended in a bail. Now a W/S or A/D key that was down on the tick that left the ground (the input of the tick that called `enterAir`, not the first air tick, so a key pressed as the rider leaves the lip rotates at once) is ignored until it is released (tracked per
+    axis, reset in `enterAir`, so it covers a pop, a ramp or lip launch, a rail, box or pipe exit and a fall). While an axis
+    has no key held, it eases to a landable angle: pitch toward the nearest whole flip at `airFlipRecover` (8 degrees per
+    tick) and the heading relative to the way of travel (`takeoffRelative + yawAccum`) toward the nearest multiple of 180
+    at `airSpinRecover` (5). Recovery never overshoots, scales with a held grab like any rotation, and moves `yawAccum`
+    and `motion.heading` together. A whole flip the `FlipLimit` does not allow yet is out: the rider recovers to the one
+    below. Recovery is slower than a held key, so a committed trick still has to be timed, and a short hop with half a
+    flip can still bail. Server parity: each recovery rate is capped at its hand rate (`airFlipMax`, the gear's spin max),
+    so a report never moves faster than `TrickValidator` and `FlipLimit` allow, and no protocol bump is needed (the
+    tuning sync is a JSON map; a client on the old build simply lacks the behaviour). Recovery shifts the final angle to
+    a whole rotation, which `TrickScorer` rounds the same way (170 recovering to 180 scores as a 180). The first
+    airborne moment shows a one-time hint (`hint.air`).
+
+96. **Braking is a deceleration of its own, not a friction multiplier.** Player feedback: "a player can not slow
+    down." The old brake multiplied the surface friction by 8 (skis 6). Snow friction is 0.0006 to 0.0014, so a full
+    brake was about 0.009 blocks per tick squared, and the slope's pull is `0.08 x 0.35 x sin(theta)`, 0.0096 at 20
+    degrees: on most slopes the brake could not even stop the acceleration. Now sneaking applies
+    `(brakeDecel + brakeSpeedDecel x speed)` per tick squared (0.022 and 0.03), times `skiBrakeDecelMul` (0.9) on
+    skis, times the surface grip capped at 1, on top of the ordinary friction and drag. The constant term finishes
+    the stop and holds a rider on a slope; the speed term sheds speed quickly from a fast run, so it feels like a hard
+    sideslip or hockey stop and not a wall.
+    - *Numbers (straight downhill, snow block, neutral gear; pinned in `BrakingTest`).* From 1.0 blocks per tick on a
+      35 degree slope a board stops in 50 ticks (18 blocks), skis in about 60. From max speed (1.4) on a 20 degree
+      slope a board stops in 43 ticks (22 blocks). On the flat, 0.6 to a stop takes 18 ticks (5 blocks).
+    - *Hold or creep.* A stopped rider slides back only if the slope's pull beats friction plus the brake's grip at
+      zero speed (`SlideModel.stepGround`). On snow the brake holds up to about 55 degrees; a braking rider on a steep
+      slope holds, and creeps only where the surface is too slick: packed ice (grip 0.6) at 35 degrees creeps and
+      never stops, ice at 20 degrees stops slowly. Powder (grip 0.8, friction 0.004) stops quickly.
+    - *Config.* `brakeFrictionMul` and `skiBrakeFrictionMul` are removed, not deprecated: the tuning loader warns about
+      and ignores an unknown key, so an old override only logs one line, and keeping a key that does nothing would
+      mislead. New keys: `brakeDecel`, `skiBrakeDecelMul`, `brakeSpeedDecel`. The ski snowplow steering multiplier
+      (`skiBrakeSteerMul`) is unchanged.
+    - *Server.* `RideValidator` bounds speed above and rise only, so slowing down is never flagged, and the
+      controller is the same pure `SlideModel` on every side. The tuning keys travel in `tuning_sync` as a JSON
+      object that already tolerates missing and extra keys, so the protocol version is unchanged: a client without
+      these keys uses its defaults, and a server with an old `tuning.json` gets the new keys' defaults.
+
+97. **Riders pass through leaves, slowed.** Player feedback: leaves should be rideable, obscure vision a bit and slow
+    the rider. A block in `#alpineshred:ride_through` (default `#minecraft:leaves`, so other mods' leaves that join
+    that tag follow) has no collision for a player whose synced ride state `isControllerDriven()` (a strapped rider on
+    the ground, in the air, on a feature, or wiped out; not LIFT, not OFF).
+    - *Where.* A mixin on `BlockStateBase.getCollisionShape(BlockGetter, BlockPos, CollisionContext)`, the one
+      call every collision query makes, so the client's move and the server's replay of it agree and vanilla's "moved
+      wrongly" check needs no exception. The checks run cheapest first and allocate nothing: the context is an
+      `EntityCollisionContext`, its entity is a `Player`, the block is in the tag (a set lookup), and last the ride
+      state is read.
+    - *Slowdown.* While the rider's body box overlaps a ride-through block, the controller multiplies its speed by
+      `1 - leafDrag` (0.10) each tick, on the ground and in the air. `Body.overlapsRideThrough` reads only the cells
+      the box touches with one mutable position. Entering leaves emits a `ThroughLeaves` controller event once per
+      entry; the local client plays vanilla azalea-leaf sounds and a burst of 8 oak-leaf block particles
+      (`ParticleRules.LEAF_BURST`). Other players' leaf entries make no sound, because only the local controller
+      emits events. The vision effect is the client overlay's, computed from the same tag.
+    - *Edge cases.* A rider who unstraps or whose state drops to OFF inside leaves sees the leaves solid again;
+      leaves are not suffocating, so there is no damage, and vanilla lets an entity inside a block move out. Landing
+      on a canopy from above falls through it (no collision), with ordinary fall damage on the ground below; that is
+      accepted. An admin may put any block in the tag and riders then pass through it; the tag is a datapack knob.
+      Riding through leaves is not offered to rails, boxes and pipes, which follow their own paths.
+
+98. **A tree trunk wipes the rider out at a lower impact speed.** Player feedback: hitting a trunk is a wipeout. A
+    horizontal collision wipes the rider out from `treeHitSpeed` (0.2) when the block it hit is in
+    `#alpineshred:tree_trunks` (default `#minecraft:logs` and `minecraft:mangrove_roots`), and from `wallHitSpeed`
+    (0.5) for any other block. The trunk is looked up (`Body.hitTrunk`) only after a collision whose impact is
+    between the two, so the ordinary path and an ordinary crash cost nothing. The wipeout is the usual
+    `startWipeout`. The server accepts any WIPEOUT claim from a strapped rider (`RideTransitions`) and takes the
+    damage from its own observed speed with `wallHitSpeed`, so a trunk hit between 0.2 and 0.5 is a tumble with no
+    damage and a harder hit hurts like any wall; damage is never decided on the client's say-so.
 
 Not in phases 5 to 8, by design: line fill and waxing vanilla blocks (v1.1), PNG import of designs
 (v1.1). The kinetic lift drive arrived in phase 9 (README 78).

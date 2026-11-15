@@ -50,6 +50,10 @@ public final class ModTags {
         public static final TagKey<Block> GRINDABLE_VANILLA = tag("grindable_vanilla");
         /** Lift blocks Create's wrench may pick up (sneak-click). Other lift blocks can join by tag (README 80). */
         public static final TagKey<Block> WRENCH_LIFT_PICKUP = tag("wrench/lift_pickup");
+        /** Blocks a rider sliding on gear passes through, slowed and with vision obscured (default: #minecraft:leaves). */
+        public static final TagKey<Block> RIDE_THROUGH = tag("ride_through");
+        /** Blocks a riding player wipes out on at a lower impact speed than other walls (default: logs, mangrove roots). */
+        public static final TagKey<Block> TREE_TRUNKS = tag("tree_trunks");
 
         private Blocks() {
         }

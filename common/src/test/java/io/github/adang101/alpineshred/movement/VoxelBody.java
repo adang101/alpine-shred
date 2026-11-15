@@ -178,6 +178,20 @@ final class VoxelBody implements SlideController.Body {
         return new SlideController.Moved(x - sx, y - sy, z - sz, landed, wall);
     }
 
+    /** Columns whose blocks are ride-through (leaves) or tree trunks; none by default. */
+    java.util.function.BiPredicate<Integer, Integer> leaves = (cx, cz) -> false;
+    java.util.function.BiPredicate<Integer, Integer> trunks = (cx, cz) -> false;
+
+    @Override
+    public boolean overlapsRideThrough() {
+        return leaves.test((int) Math.floor(x), (int) Math.floor(z));
+    }
+
+    @Override
+    public boolean hitTrunk(double dx, double dz) {
+        return trunks.test((int) Math.floor(x + Math.signum(dx) * 0.1), (int) Math.floor(z + Math.signum(dz) * 0.1));
+    }
+
     @Override
     public void snapDown(double dy) {
         y -= dy;

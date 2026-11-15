@@ -23,8 +23,8 @@ class MovementTuningTest {
         assertEquals(7.0, t.baseTurnRate, 0);
         assertEquals(0.45, t.turnSpeedRef, 0);
         assertEquals(0.35, t.gripBlend, 0);
-        assertEquals(8.0, t.brakeFrictionMul, 0);
-        assertEquals(6.0, t.skiBrakeFrictionMul, 0);
+        assertEquals(0.022, t.brakeDecel, 0);
+        assertEquals(0.9, t.skiBrakeDecelMul, 0);
         assertEquals(0.8, t.tuckDragMul, 0);
         assertEquals(1.6, t.flareDragMul, 0);
         assertEquals(0.42, t.popVelocity, 0);

@@ -40,7 +40,7 @@ Write down each player's time, and anything that confused them.
 
 ## Look (5 minutes)
 
-1. Everyone equips their board and straps in (G) near each other. Check every board shows its
+1. Everyone equips their board and straps in (H) near each other. Check every board shows its
    own design on the deck, the base (during a flip, or carried on the back unstrapped) and the
    edges, from your own view and from the others'.
 2. Hold the board: the design shows in hand, in the hotbar and in the inventory; drop it: it

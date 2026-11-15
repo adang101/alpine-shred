@@ -5,6 +5,7 @@ import io.github.adang101.alpineshred.gametest.AlpineGameTests;
 import io.github.adang101.alpineshred.gametest.ParkGameTests;
 import io.github.adang101.alpineshred.gametest.TrickGameTests;
 import io.github.adang101.alpineshred.gametest.RideGameTests;
+import io.github.adang101.alpineshred.gametest.TerrainGameTests;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraftforge.gametest.GameTestHolder;
@@ -105,6 +106,26 @@ public final class ForgeGameTests {
     }
 
     @GameTest(template = RideGameTests.LARGE)
+    public static void brakingOnASteepSlopeStopsAndHolds(GameTestHelper helper) {
+        TerrainGameTests.brakingOnASteepSlopeStopsAndHolds(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void leavesHaveNoCollisionForRidersOnly(GameTestHelper helper) {
+        TerrainGameTests.leavesHaveNoCollisionForRidersOnly(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void ridingIntoLeavesPassesThroughAndSlowsDown(GameTestHelper helper) {
+        TerrainGameTests.ridingIntoLeavesPassesThroughAndSlowsDown(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void aLogWipesOutAtModerateSpeedButStoneDoesNot(GameTestHelper helper) {
+        TerrainGameTests.aLogWipesOutAtModerateSpeedButStoneDoesNot(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
     public static void ridersStepUpOneBlockAtSpeedOnly(GameTestHelper helper) {
         RideGameTests.ridersStepUpOneBlockAtSpeedOnly(helper);
     }
@@ -147,6 +168,16 @@ public final class ForgeGameTests {
     @GameTest(template = RideGameTests.LARGE)
     public static void vanillaAcceptsKickerAir(GameTestHelper helper) {
         RideGameTests.vanillaAcceptsKickerAir(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void holdingWThroughAJumpLandsClean(GameTestHelper helper) {
+        RideGameTests.holdingWThroughAJumpLandsClean(helper);
+    }
+
+    @GameTest(template = RideGameTests.LARGE)
+    public static void aFreshPressFlipsAndReleasingLevelsOut(GameTestHelper helper) {
+        RideGameTests.aFreshPressFlipsAndReleasingLevelsOut(helper);
     }
 
     // ---- phase 3: feel ----

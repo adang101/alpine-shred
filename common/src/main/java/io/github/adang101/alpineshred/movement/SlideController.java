@@ -75,6 +75,22 @@ public final class SlideController {
         /** Surface of the block the rider stands on or floats over, or null when nothing is underfoot. */
         SurfaceProfile surfaceUnderFeet();
 
+        /**
+         * True while the rider's body overlaps a ride-through block (leaves, {@code #alpineshred:ride_through}).
+         * Called once per riding tick: no allocation, only the block cells the body's box touches.
+         */
+        default boolean overlapsRideThrough() {
+            return false;
+        }
+
+        /**
+         * True if a tree trunk ({@code #alpineshred:tree_trunks}) is what the rider just ran into, looking
+         * only at the blocks in the way of a move by (dx, dz). Called only after a horizontal collision.
+         */
+        default boolean hitTrunk(double dx, double dz) {
+            return false;
+        }
+
         /** Park features around the rider (rails, pipes, lips). */
         default ParkView park() {
             return ParkView.NONE;
@@ -99,7 +115,7 @@ public final class SlideController {
     public enum Mode {WALK, RIDE}
 
     /** Things that happened this tick, for packets, sounds and the validator. */
-    public sealed interface Event permits Popped, Launched, Landed, WipedOut, Pushed, Caught, TrickLanded, GrindEnded {
+    public sealed interface Event permits Popped, Launched, Landed, WipedOut, Pushed, Caught, TrickLanded, GrindEnded, ThroughLeaves {
     }
 
     /**
@@ -132,6 +148,10 @@ public final class SlideController {
     public record Pushed() implements Event {
     }
 
+    /** The rider's body just entered ride-through blocks (README clarification 97); for a rustle and leaf particles. */
+    public record ThroughLeaves() implements Event {
+    }
+
     private static final int TERRAIN_SAMPLES = 8;
     private static final double TERRAIN_WINDOW = 3.0;
 
@@ -159,6 +179,8 @@ public final class SlideController {
     private int wipeoutTicks;
     private int airTicks;
     private double lean;
+    /** Whether the body overlapped ride-through blocks last tick, so entering them is an event, not a state. */
+    private boolean inLeaves;
 
     // ---- park sub-modes ----
     /** The rail being ground, or null. */
@@ -215,8 +237,10 @@ public final class SlideController {
         } else if (state != RideState.WIPEOUT && tryPipe(body, ctx)) {
             pipeTick(body, in, ctx);
         } else if (grounded) {
+            dragThroughLeaves(body, ctx.tuning());
             groundTick(body, in, ctx);
         } else {
+            dragThroughLeaves(body, ctx.tuning());
             airTick(body, in, ctx);
         }
         strafeWasHeld = in.strafe() != 0;
@@ -268,6 +292,20 @@ public final class SlideController {
         };
     }
 
+    /**
+     * Leaves slow the rider by {@code leafDrag} of its speed per tick, on the ground and in the air, and
+     * announce the entry once (README clarification 97). Not applied on rails, boxes and pipes, which
+     * follow their own paths.
+     */
+    private void dragThroughLeaves(Body body, MovementTuning t) {
+        boolean inside = body.overlapsRideThrough();
+        if (inside) {
+            motion.speed *= 1 - t.leafDrag;
+            if (!inLeaves) events.add(new ThroughLeaves());
+        }
+        inLeaves = inside;
+    }
+
     private void groundTick(Body body, RideInput in, RideContext ctx) {
         MovementTuning t = ctx.tuning();
         surface = body.surfaceUnderFeet();
@@ -275,7 +313,7 @@ public final class SlideController {
             // Ground vanished from under us (block broken, edge): fall.
             grounded = false;
             vy = 0;
-            enterAir();
+            enterAir(in);
             airTick(body, in, ctx);
             return;
         }
@@ -310,12 +348,12 @@ public final class SlideController {
         Moved moved = body.move(SlideModel.dirX(motion.travelYaw) * speedBefore,
                 popped ? popVelocity : -GROUND_STICK,
                 SlideModel.dirZ(motion.travelYaw) * speedBefore);
-        handleWall(moved, speedBefore, t);
+        handleWall(body, moved, speedBefore, t);
 
         if (popped) {
             grounded = false;
             vy = Ballistics.nextVerticalVelocity(popVelocity);
-            enterAir();
+            enterAir(in);
             return;
         }
         double horizontal = moved.horizontal();
@@ -331,7 +369,7 @@ public final class SlideController {
             // Section 11: sliding past the last box exits to AIR with the velocity kept, no snap.
             grounded = false;
             vy = 0;
-            enterAir();
+            enterAir(in);
             return;
         } else {
             double gap = gapBelow(body, GroundContact.snapDistance(t, motion.speed) + CAST_MARGIN);
@@ -354,7 +392,7 @@ public final class SlideController {
                         lip = body.park().lipNear(new V3(body.x() - SlideModel.dirX(motion.travelYaw) * back, body.y() - 0.5,
                                 body.z() - SlideModel.dirZ(motion.travelYaw) * back));
                     }
-                    enterAir();
+                    enterAir(in);
                     lipTicks = lip ? 0 : -1;
                     jumpWasHeld = in.jump();
                     return;
@@ -362,7 +400,7 @@ public final class SlideController {
                 case AIRBORNE -> {
                     grounded = false;
                     vy = 0;
-                    enterAir();
+                    enterAir(in);
                     return;
                 }
             }
@@ -391,7 +429,7 @@ public final class SlideController {
         double vyBefore = vy;
         Moved moved = body.move(SlideModel.dirX(motion.travelYaw) * speedBefore, vy,
                 SlideModel.dirZ(motion.travelYaw) * speedBefore);
-        handleWall(moved, speedBefore, t);
+        handleWall(body, moved, speedBefore, t);
         jumpWasHeld = in.jump();
         if (moved.onGround() && vyBefore <= 0) {
             grounded = true;
@@ -424,15 +462,20 @@ public final class SlideController {
      * is the stopped part of the velocity, not the distance lost this tick: a head-on hit at 0.8 is
      * an 0.8 impact even when the rider was 0.7 blocks short of the wall when the tick began, and
      * glancing along a wall at a shallow angle is not a crash.
+     *
+     * <p>A tree trunk wipes the rider out from {@code treeHitSpeed}, below {@code wallHitSpeed}
+     * (README clarification 98). The trunk query runs only for an impact in between, so a crash
+     * that wipes out anyway, and a bump too soft to matter, cost nothing extra.
      */
-    private void handleWall(Moved moved, double speedBefore, MovementTuning t) {
+    private void handleWall(Body body, Moved moved, double speedBefore, MovementTuning t) {
         if (!moved.horizontalCollision()) return;
         double ix = SlideModel.dirX(motion.travelYaw) * speedBefore;
         double iz = SlideModel.dirZ(motion.travelYaw) * speedBefore;
         boolean stopX = Math.abs(moved.dx()) < Math.abs(ix) - 1.0e-6;
         boolean stopZ = Math.abs(moved.dz()) < Math.abs(iz) - 1.0e-6;
         double impact = Math.hypot(stopX ? ix : 0, stopZ ? iz : 0);
-        if (impact >= t.wallHitSpeed && state != RideState.WIPEOUT) {
+        if (state != RideState.WIPEOUT && (impact >= t.wallHitSpeed
+                || impact >= t.treeHitSpeed && body.hitTrunk(ix, iz))) {
             startWipeout(impact, t);
         }
         double vx = stopX ? 0 : ix, vz = stopZ ? 0 : iz;
@@ -447,13 +490,19 @@ public final class SlideController {
         events.add(new WipedOut(impact));
     }
 
-    private void enterAir() {
+    /** A/D as a spin key: -1, 0 or 1. */
+    private static int spinKey(RideInput in) {
+        return in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
+    }
+
+    private void enterAir(RideInput in) {
         airTicks = 0;
         chargeTicks = 0;
         lipTicks = -1;
         // Section 8: an air session starts on any transition into AIR.
         airFromRail = state == RideState.GRIND || state == RideState.SLIDE;
-        rotation.reset();
+        // Keys down on this tick, the one that left the ground, are "held from takeoff" (README 95).
+        rotation.reset(spinKey(in) != 0, in.forward() != 0);
         java.util.Arrays.fill(grabTicks, 0);
         grab = GrabType.NONE;
         apexY = Double.NaN;
@@ -482,6 +531,8 @@ public final class SlideController {
     /**
      * Section 8, "Inputs in the air": A and D spin, W and S flip, the grab keys (or sneak, for a
      * Method) grab. The board turns with the spin; the flip only counts, and shows in the animation.
+     * A key held from takeoff is ignored until released, and a released axis levels out for the
+     * landing (README 95, see {@link AirRotation}).
      */
     private void airInputs(Body body, RideInput in, RideContext ctx) {
         apexY = Double.isNaN(apexY) ? body.y() : Math.max(apexY, body.y());
@@ -489,9 +540,10 @@ public final class SlideController {
             grab = GrabType.NONE;
             return;
         }
-        int spin = in.strafe() > 0.5 ? 1 : in.strafe() < -0.5 ? -1 : 0;
+        int spin = spinKey(in);
         grab = in.grab() != GrabType.NONE ? in.grab() : in.sneak() ? GrabType.METHOD : GrabType.NONE;
-        double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE, airTicks);
+        double spun = rotation.step(ctx.tuning(), ctx.kind(), spin, in.forward(), grab != GrabType.NONE, airTicks,
+                takeoffRelative);
         double align = Math.max(-EXIT_ALIGN_RATE, Math.min(EXIT_ALIGN_RATE, exitAlign));
         exitAlign -= align;
         motion.heading = SlideModel.wrapDegrees(motion.heading + spun + align);
@@ -577,6 +629,7 @@ public final class SlideController {
 
     private void stopRiding() {
         endFeature();
+        inLeaves = false;
         mode = Mode.WALK;
         state = RideState.IDLE;
         lean = 0;
@@ -720,7 +773,7 @@ public final class SlideController {
             if (p.id() == g.path().id()) current = p;
         }
         if (current == null) {
-            leaveGrind(body, g.travel().scale(g.speed()), RideState.AIR);
+            leaveGrind(body, in, g.travel().scale(g.speed()), RideState.AIR);
             return;
         }
         pressing = in.sneak();
@@ -744,7 +797,7 @@ public final class SlideController {
             grounded = false;
             vy = Math.max(0, v.y()) + pop;
             events.add(new Popped(pop, 0));
-            enterAir();
+            enterAir(in);
             body.move(SlideModel.dirX(motion.travelYaw) * motion.speed, vy, SlideModel.dirZ(motion.travelYaw) * motion.speed);
             vy = Ballistics.nextVerticalVelocity(vy);
             return;
@@ -764,7 +817,7 @@ public final class SlideController {
         if (motion.speed > 1.0e-4) motion.travelYaw = SlideModel.yawOf(v.x(), v.z());
         lean = 0;
         if (step.exit() == GrindPhysics.Exit.END) {
-            leaveGrind(body, v, null);
+            leaveGrind(body, in, v, null);
             return;
         }
         if (grind.speed() <= 1.0e-3) {
@@ -775,7 +828,7 @@ public final class SlideController {
     }
 
     /** Leaves the rail with {@code velocity}: onto the ground below if there is some, otherwise into the air. */
-    private void leaveGrind(Body body, V3 velocity, RideState forced) {
+    private void leaveGrind(Body body, RideInput in, V3 velocity, RideState forced) {
         endFeature();
         grind = null;
         pressing = false;
@@ -790,7 +843,7 @@ public final class SlideController {
         } else {
             grounded = false;
             vy = velocity.y();
-            enterAir();
+            enterAir(in);
         }
     }
 
@@ -866,7 +919,7 @@ public final class SlideController {
             setTravel(v.x(), v.z());
             grounded = false;
             vy = v.y();
-            enterAir();
+            enterAir(in);
             return;
         }
         if (pipeTheta >= Math.PI / 2) {
@@ -878,7 +931,7 @@ public final class SlideController {
             grounded = false;
             vy = Math.max(0, pipeSpeed);
             events.add(new Launched(vy));
-            enterAir();
+            enterAir(in);
             // Straight up over the coping: the landing back in is judged against the wall's fall
             // line, not the little drift along it.
             airReference(SlideModel.yawOf(facing.x(), facing.z()));

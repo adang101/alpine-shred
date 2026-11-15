@@ -16,7 +16,7 @@ import org.lwjgl.glfw.GLFW;
 public final class KeyBinds {
     public static final String CATEGORY = "key.categories.alpineshred";
 
-    public static final KeyMapping STRAP = key("strap", GLFW.GLFW_KEY_G);
+    public static final KeyMapping STRAP = key("strap", GLFW.GLFW_KEY_H);
     public static final KeyMapping GRAB_INDY = key("grab_indy", GLFW.GLFW_KEY_Z);
     public static final KeyMapping GRAB_MUTE = key("grab_mute", GLFW.GLFW_KEY_X);
     public static final KeyMapping GRAB_NOSE = key("grab_nose", GLFW.GLFW_KEY_C);

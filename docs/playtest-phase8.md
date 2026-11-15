@@ -43,7 +43,7 @@ Check `/alpineshred lift list` finds it.
 Build a line with a loop over 400 blocks (about 200 blocks long, a drive at the top, four or five heads, a
 return station at the bottom) and power the drive with a redstone block or lever.
 
-1. All three strap in (G) in the boarding stretch at the bottom and board by walking up to the next chair, or
+1. All three strap in (H) in the boarding stretch at the bottom and board by walking up to the next chair, or
    right-click a chair. Two can share a chair.
 2. The bar closes about a second after boarding; right-click it open and shut.
 3. Ride to the top. At the end the chair opens its bar, you are put down on the platform and glide off.
