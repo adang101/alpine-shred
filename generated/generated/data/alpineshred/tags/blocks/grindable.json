@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "alpineshred:pipe_rail",
+    "alpineshred:flat_rail",
+    "alpineshred:copper_pipe_rail",
+    "alpineshred:exposed_copper_pipe_rail",
+    "alpineshred:weathered_copper_pipe_rail",
+    "alpineshred:oxidized_copper_pipe_rail",
+    "alpineshred:waxed_copper_pipe_rail",
+    "alpineshred:waxed_exposed_copper_pipe_rail",
+    "alpineshred:waxed_weathered_copper_pipe_rail",
+    "alpineshred:waxed_oxidized_copper_pipe_rail",
+    "alpineshred:rail_post",
+    "alpineshred:pipe_coping"
+  ]
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.trick.AirRotationTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-11-15T17:56:33.143Z" hostname="runnervmccnms" time="0.098">
+  <properties/>
+  <testcase name="recoveryIsNoFasterThanAHeldKey()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.0"/>
+  <testcase name="releasedSpinEasesToForwardOrSwitchWithoutOvershoot()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.008"/>
+  <testcase name="reversingRestartsTheRamp()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.001"/>
+  <testcase name="skisSpinFasterAndGrabsSlowRotation()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.0"/>
+  <testcase name="armingIsPerAxis()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.0"/>
+  <testcase name="releasingNeverSnapsTheRider()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.001"/>
+  <testcase name="theReportedPitchIsWithinTheFlipLimitEveryTick()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.002"/>
+  <testcase name="resetSeedsTheSessionFromTheTakeoffKeys()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.0"/>
+  <testcase name="aHeldKeyBeatsRecoveryOnItsOwnAxisOnly()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.001"/>
+  <testcase name="keysHeldFromTakeoffDoNothingUntilReleased()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.001"/>
+  <testcase name="sidewaysRecoversSlowlySoARailCanCatchABoardslide()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.001"/>
+  <testcase name="grabbingSlowsRecoveryLikeAnyRotation()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.0"/>
+  <testcase name="aKeyUpAtTakeoffAndPressedOnTheFirstAirTickRotatesAtOnce()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.0"/>
+  <testcase name="spinRampsToMaxOverThreeTicks()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.003"/>
+  <testcase name="anHonestReportWithRecoveryPassesTheServerValidator()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.072"/>
+  <testcase name="flipsUseTheirOwnRate()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.0"/>
+  <testcase name="recoveryRateNeverExceedsTheHandRate()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.001"/>
+  <testcase name="releasedFlipEasesToTheNearestWholeFlipWithoutOvershoot()" classname="io.github.adang101.alpineshred.trick.AirRotationTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

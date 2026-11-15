@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "P": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "PPP"
+  ],
+  "result": {
+    "count": 4,
+    "item": "alpineshred:wood_box"
+  },
+  "show_notification": true
+}

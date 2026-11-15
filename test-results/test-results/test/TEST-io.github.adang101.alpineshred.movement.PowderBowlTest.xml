@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.movement.PowderBowlTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-11-15T17:56:32.083Z" hostname="runnervmccnms" time="0.06">
+  <properties/>
+  <testcase name="aRiderWhoClimbsTheWallStallsSlidesBackAndKeepsRiding()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.03"/>
+  <testcase name="steeringTurnsTheTravelDirectionAtEverySpeedAboveFloatSpeed()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.006"/>
+  <testcase name="steeringByTheCameraFollowsInRideMode()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.001"/>
+  <testcase name="aRiderWhoTurnsAtTheTopOfTheWallRidesBackDownUnderControl()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.006"/>
+  <testcase name="aStoppedRiderOnFlatPowderStillSinks()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.008"/>
+  <testcase name="holdRuleKeepsASlowRiderOnlyWhileMovingOrPulledByTheSlope()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.0"/>
+  <testcase name="powderGearStillFloatsEarlier()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.0"/>
+  <testcase name="walkersAndSlowStartersStillSink()" classname="io.github.adang101.alpineshred.movement.PowderBowlTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

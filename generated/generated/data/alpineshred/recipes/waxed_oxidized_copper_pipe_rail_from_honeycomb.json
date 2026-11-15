@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "alpineshred:oxidized_copper_pipe_rail"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
+  ],
+  "result": {
+    "item": "alpineshred:waxed_oxidized_copper_pipe_rail"
+  }
+}

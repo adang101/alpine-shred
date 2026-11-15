@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-15T17:56:33.245Z" hostname="runnervmccnms" time="0.362">
+  <properties/>
+  <testcase name="keysHeldFromTheGroundThroughAnyAirNeverRotate()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.009"/>
+  <testcase name="aThreeSixtyNeedsABigKickerAndSloppyTimingStillLands()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.006"/>
+  <testcase name="theCommitPointFollowsTheDirectionAndBiasZeroIsTheNearest()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.001"/>
+  <testcase name="noInputLandsCleanOnAnyAir()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.001"/>
+  <testcase name="randomInputSequencesAlwaysPassTheFlipLimitAndTheValidator()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.34"/>
+  <testcase name="aShortTapLevelsOutSoNoAccidentalTrickLands()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.001"/>
+  <testcase name="aOneEightyOnAnUnchargedPopNeedsOnlyARoughHold()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.001"/>
+  <testcase name="aBackflipNeedsAKickerAndATapOfSFinishesIt()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.001"/>
+  <testcase name="aReleasedFlipPastTheCommitPointFinishesInTheDirectionItWasTurning()" classname="io.github.adang101.alpineshred.trick.AirTrickScenarioTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

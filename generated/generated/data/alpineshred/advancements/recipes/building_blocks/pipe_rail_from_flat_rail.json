@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_flat_rail": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "alpineshred:flat_rail"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "alpineshred:pipe_rail_from_flat_rail"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_flat_rail",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "alpineshred:pipe_rail_from_flat_rail"
+    ]
+  },
+  "sends_telemetry_event": false
+}

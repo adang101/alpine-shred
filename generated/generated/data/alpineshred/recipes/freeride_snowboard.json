@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "minecraft:phantom_membrane"
+    },
+    "H": {
+      "item": "minecraft:packed_ice"
+    },
+    "P": {
+      "item": "minecraft:spruce_planks"
+    }
+  },
+  "pattern": [
+    " PH",
+    "PCP",
+    "HP "
+  ],
+  "result": {
+    "item": "alpineshred:freeride_snowboard"
+  },
+  "show_notification": true
+}

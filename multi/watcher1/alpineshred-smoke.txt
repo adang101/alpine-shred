@@ -1,0 +1,2287 @@
+joined as watcher1
+stage MULTI_WAIT
+stage WATCH
+rider's board design bbd69afa (expected bbd69afa)
+watch gt2960 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2960 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2965 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2970 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2975 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2980 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2985 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2990 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt2995 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3000 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3000 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3005 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3010 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3020 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3025 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3030 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3035 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3040 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3045 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3040 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3045 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3050 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3055 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3060 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3065 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3070 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3075 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3080 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3080 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3085 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3090 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3095 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3100 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3105 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3110 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3115 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3120 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3125 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3130 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3135 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3140 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3145 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3150 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3155 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3160 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3160 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3165 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3170 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3175 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3180 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3185 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3190 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3195 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3200 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3205 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3210 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3215 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3220 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3220 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3225 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3230 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3235 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3240 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3245 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3250 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3255 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3260 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3260 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3265 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3270 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3275 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3280 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3285 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3290 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3295 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3300 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3305 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3310 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3315 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3320 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3325 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3330 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3335 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3340 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3345 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3350 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3355 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3360 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3360 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3365 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3370 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3375 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3380 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3385 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3390 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3395 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3400 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3400 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3405 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3410 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3415 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3420 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3420 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3425 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3430 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3435 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3440 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3445 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3450 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3455 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3460 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3465 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3470 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3475 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3480 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3485 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3490 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3495 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3500 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3500 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3505 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3510 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3515 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3520 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3525 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3530 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3535 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3540 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3545 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3550 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3555 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3560 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3565 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3570 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3575 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3580 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3580 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3585 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3590 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3595 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3600 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3605 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3610 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3615 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3620 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3620 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3625 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3630 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3635 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3640 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3645 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3650 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3655 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3660 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3665 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3670 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3675 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3680 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3685 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3690 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3695 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3700 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3705 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3710 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3715 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3720 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3725 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3730 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3735 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3740 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3745 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3750 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3755 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3760 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3760 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3765 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3770 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3775 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3780 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3785 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3790 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3795 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3800 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3805 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3810 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3815 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3820 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3825 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3830 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3835 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3840 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3845 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3850 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3855 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3860 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3860 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3865 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3870 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3875 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3880 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3885 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3890 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3895 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3900 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3905 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3910 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3915 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3920 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3925 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3930 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3935 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3940 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3945 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3950 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3955 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3960 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3960 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3965 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3970 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3975 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3980 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3980 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3985 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3990 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt3995 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4000 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4005 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4010 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4015 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4020 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4025 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4030 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4035 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4040 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4045 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4050 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4055 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4060 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4065 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4070 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4075 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4080 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4080 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4085 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4090 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4095 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4100 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4105 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4110 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4115 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4120 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4125 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4130 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4135 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4140 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4145 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4150 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4155 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4160 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4165 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4170 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4175 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4180 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4180 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4185 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4190 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4195 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4200 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4205 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4210 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4215 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4220 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4225 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4230 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4235 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4240 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4240 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4245 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4250 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4255 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4260 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4265 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4270 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4275 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4280 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4285 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4290 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4295 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4300 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4305 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4310 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4315 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4320 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4320 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4325 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4330 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4335 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4340 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4345 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4350 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4355 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4360 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4365 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4370 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4375 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4380 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4385 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4390 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4395 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4400 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4405 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4410 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4415 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4420 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4425 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4430 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4435 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4440 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4440 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4445 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4450 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4455 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4460 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4465 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4470 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4475 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4480 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4485 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4490 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4495 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4500 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4505 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4510 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4515 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4520 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4525 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4530 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4535 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4540 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4540 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4545 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4550 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4555 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4560 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4565 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4570 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4575 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4580 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4580 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4585 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4590 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4595 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4600 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4605 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4610 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4615 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4620 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4625 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4630 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4635 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4640 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4640 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4645 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4650 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4655 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4660 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4665 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4670 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4675 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4680 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4685 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4690 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4695 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4700 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4705 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4710 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4715 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4720 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4720 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4725 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4730 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4735 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4740 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4745 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4750 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4755 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4760 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4765 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4770 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4775 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4780 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4785 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4790 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4795 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4800 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4805 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4810 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4815 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4820 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4825 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4830 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4835 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4840 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4840 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4845 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4850 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4855 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4860 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4865 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4870 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4875 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4880 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4885 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4890 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4895 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4900 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4905 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4910 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4915 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4920 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4925 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4930 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4935 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4940 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4945 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4950 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4955 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4960 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4965 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4970 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4975 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4980 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4980 IDLE 6.50 -44.00 -6.50 clip idle_board
+watch gt4985 IDLE 6.50 -44.00 -6.49 clip idle_board
+watch gt4987 GLIDE 6.50 -44.00 -6.47 clip glide_board_regular
+watch gt4990 GLIDE 6.50 -44.00 -6.40 clip glide_board_regular
+watch gt4995 GLIDE 6.50 -44.00 -6.26 clip glide_board_regular
+watch gt5000 GLIDE 6.50 -44.00 -5.91 clip glide_board_regular
+watch gt5005 GLIDE 6.50 -44.00 -5.58 clip glide_board_regular
+watch gt5010 GLIDE 6.50 -44.33 -4.55 clip glide_board_regular
+watch gt5015 GLIDE 6.50 -45.00 -3.09 clip glide_board_regular
+watch gt5020 GLIDE 6.50 -45.00 -2.31 clip glide_board_regular
+watch gt5025 GLIDE 6.50 -45.89 -0.30 clip glide_board_regular
+watch gt5030 GLIDE 6.50 -46.33 1.06 clip glide_board_regular
+watch gt5035 GLIDE 6.50 -47.00 3.27 clip glide_board_regular
+watch gt5039 CARVE 6.50 -47.33 4.65 clip glide_board_regular
+screenshot watcher1_sees_carve
+watch gt5075 CARVE 6.50 -53.67 22.74 clip glide_board_regular
+watch gt5080 CARVE 6.50 -55.00 27.57 clip glide_board_regular
+watch gt5080 CARVE 6.50 -55.00 27.57 clip glide_board_regular
+watch gt5081 GLIDE 6.50 -55.33 28.25 clip glide_board_regular
+watch gt5085 GLIDE 6.50 -56.00 30.08 clip glide_board_regular
+watch gt5090 GLIDE 6.50 -56.89 33.68 clip glide_board_regular
+watch gt5095 GLIDE 6.50 -58.25 37.62 clip glide_board_regular
+watch gt5100 GLIDE 6.50 -58.94 41.82 clip glide_board_regular
+watch gt5105 AIR 6.50 -58.83 44.81 clip pop_launch
+screenshot watcher1_sees_air
+watch gt5135 AIR 4.14 -58.73 64.14 clip -
+watch gt5140 AIR 4.14 -58.73 64.14 clip -
+watch gt5145 AIR 4.14 -58.73 64.14 clip -
+watch gt5150 AIR 4.14 -58.73 64.14 clip -
+watch gt5155 AIR 4.14 -58.73 64.14 clip -
+watch gt5160 AIR 4.14 -58.73 64.14 clip -
+watch gt5165 AIR 4.14 -58.73 64.14 clip -
+watch gt5167 GLIDE 3.84 -58.82 68.66 clip -
+screenshot watcher1_sees_glide
+watch gt5200 BRAKE 2.89 -59.00 99.96 clip -
+watch gt5202 GLIDE 2.89 -59.00 100.07 clip -
+watch gt5205 GLIDE 2.89 -59.00 100.17 clip -
+watch gt5210 GLIDE 2.89 -59.00 100.35 clip -
+watch gt5215 GLIDE 2.89 -59.00 100.47 clip -
+watch gt5220 GLIDE 2.89 -59.00 100.58 clip -
+watch gt5220 IDLE 2.88 -59.00 100.60 clip -
+watch gt5225 IDLE 2.88 -59.00 100.72 clip -
+watch gt5230 IDLE 2.88 -59.00 100.79 clip -
+watch gt5235 IDLE 2.88 -59.00 100.86 clip -
+watch gt5240 IDLE 2.88 -59.00 100.90 clip -
+watch gt5245 IDLE 2.88 -59.00 100.94 clip -
+watch gt5250 IDLE 2.88 -59.00 100.97 clip -
+watch gt5255 IDLE 2.88 -59.00 100.98 clip -
+watch gt5260 IDLE 2.88 -59.00 100.98 clip -
+watch gt5260 IDLE 2.88 -59.00 100.98 clip -
+watch gt5265 IDLE 2.88 -59.00 100.98 clip -
+watch gt5270 IDLE 2.88 -59.00 100.98 clip -
+watch gt5275 IDLE 2.88 -59.00 100.98 clip -
+watch gt5280 IDLE 2.88 -59.00 100.98 clip -
+watch gt5285 IDLE 2.88 -59.00 100.98 clip -
+watch gt5290 IDLE 2.88 -59.00 100.98 clip -
+watch gt5295 IDLE 2.88 -59.00 100.98 clip -
+watch gt5300 IDLE 2.88 -59.00 100.98 clip -
+watcher1: 18 design textures held; 18 built, mean 1.507 ms (defaults 0.007, atlas 0.139, upload 1.361), longest 8.712 ms
+watcher1 saw the rider in [IDLE, GLIDE, CARVE, BRAKE, AIR], 107 blocks down the run, clips=6 loops=2 oneShots=0 particles=109 polePushes=0 maxFov=0.0 maxRoll=0.0
+stage MULTI_LIFT
+lift: sync stamp 5320 at client gt5319, clock moved -4 since the last tick
+lchair gt5330 0 38.498 -58.626 0.726
+lchair gt5330 1 38.262 -57.840 25.201
+lchair gt5330 17 34.673 -58.757 18.532
+lchair gt5330 16 34.903 -53.061 42.361
+lchair gt5330 2 38.038 -50.471 48.576
+lchair gt5330 3 38.000 -48.519 72.679
+lchair gt5330 15 35.000 -49.081 65.970
+lchair gt5330 14 35.000 -44.589 90.052
+lchair gt5330 4 38.000 -42.272 96.374
+lift: client clock moved 9 ticks in one tick, now gt5340
+lchair gt5340 0 38.497 -58.631 0.776
+lchair gt5340 1 38.262 -57.831 25.251
+lchair gt5340 17 34.673 -58.761 18.482
+lchair gt5340 16 34.902 -53.079 42.315
+lchair gt5340 2 38.037 -50.450 48.622
+lchair gt5340 3 38.000 -48.513 72.729
+lchair gt5340 15 35.000 -49.083 65.920
+lchair gt5340 14 35.000 -44.605 90.004
+lchair gt5340 4 38.000 -42.254 96.420
+lchair gt5350 0 38.491 -58.703 1.436
+lchair gt5350 1 38.256 -57.712 25.904
+lchair gt5350 17 34.667 -58.823 17.821
+lchair gt5350 16 34.896 -53.312 41.693
+lchair gt5350 2 38.031 -50.174 49.225
+lchair gt5350 3 38.000 -48.429 73.387
+lchair gt5350 15 35.000 -49.109 65.256
+lchair gt5350 14 35.000 -44.810 89.373
+lchair gt5350 4 38.000 -42.003 97.035
+lchair gt5360 0 38.485 -58.761 2.013
+lchair gt5360 1 38.250 -57.605 26.474
+lchair gt5360 17 34.661 -58.873 17.243
+lchair gt5360 16 34.891 -53.513 41.149
+lchair gt5360 2 38.026 -49.930 49.751
+lchair gt5360 3 38.000 -48.351 73.962
+lchair gt5360 15 35.000 -49.128 64.677
+lchair gt5360 14 35.000 -44.985 88.820
+lchair gt5360 4 38.000 -41.781 97.570
+lift: client clock moved 0 ticks in one tick, now gt5360
+lchair gt5370 0 38.479 -58.824 2.691
+lchair gt5370 1 38.244 -57.474 27.142
+lchair gt5370 17 34.654 -58.927 16.564
+lchair gt5370 16 34.885 -53.745 40.509
+lchair gt5370 2 38.021 -49.639 50.368
+lchair gt5370 15 35.000 -49.144 63.996
+lchair gt5370 3 38.000 -48.255 74.636
+lchair gt5370 14 35.000 -45.187 88.169
+lchair gt5370 4 38.000 -41.516 98.198
+lchair gt5380 0 38.471 -58.892 3.494
+lchair gt5380 17 34.647 -58.983 15.760
+lchair gt5380 1 38.236 -57.312 27.932
+lchair gt5380 16 34.877 -54.014 39.749
+lchair gt5380 2 38.014 -49.291 51.095
+lchair gt5380 15 35.000 -49.157 63.190
+lchair gt5380 3 38.000 -48.134 75.433
+lchair gt5380 14 35.000 -45.420 87.398
+lchair gt5380 4 38.000 -41.198 98.939
+lift: client clock moved 0 ticks in one tick, now gt5380
+lchair gt5390 0 38.462 -58.962 4.423
+lchair gt5390 17 34.638 -59.038 14.830
+lchair gt5390 1 38.227 -57.117 28.842
+lchair gt5390 16 34.869 -54.316 38.868
+lchair gt5390 2 38.005 -48.882 51.931
+lchair gt5390 15 35.000 -49.162 62.258
+lchair gt5390 3 38.000 -47.986 76.353
+lchair gt5390 14 35.000 -45.682 86.504
+lchair gt5390 4 38.000 -40.823 99.791
+lift: sync stamp 5400 at client gt5399, clock moved 0 since the last tick
+lchair gt5400 0 38.452 -59.026 5.452
+lchair gt5400 17 34.628 -59.088 13.800
+lchair gt5400 1 38.218 -56.890 29.848
+lchair gt5400 16 34.860 -54.642 37.890
+lchair gt5400 2 38.000 -48.644 52.894
+lchair gt5400 15 35.000 -49.156 61.227
+lchair gt5400 3 38.000 -47.810 77.369
+lchair gt5400 14 35.000 -45.961 85.511
+lchair gt5400 4 38.000 -40.400 100.732
+lchair gt5410 0 38.442 -59.082 6.557
+lchair gt5410 17 34.617 -59.127 12.695
+lchair gt5410 1 38.207 -56.633 30.924
+lchair gt5410 16 34.849 -54.980 36.836
+lchair gt5410 2 38.000 -48.759 53.994
+lchair gt5410 15 35.000 -49.136 60.121
+lchair gt5410 3 38.000 -47.608 78.457
+lchair gt5410 14 35.000 -46.248 84.443
+lchair gt5410 4 38.000 -39.937 101.736
+lift: client clock moved 2 ticks in one tick, now gt5420
+lchair gt5420 0 38.431 -59.123 7.681
+lchair gt5420 17 34.606 -59.152 11.570
+lchair gt5420 16 34.839 -55.311 35.761
+lchair gt5420 1 38.197 -56.359 32.015
+lchair gt5420 2 38.000 -48.861 55.114
+lchair gt5420 15 35.000 -49.100 58.997
+lchair gt5420 3 38.000 -47.389 79.560
+lchair gt5420 14 35.000 -46.527 83.353
+lchair gt5420 4 38.000 -39.455 102.753
+lchair gt5420 13 35.000 -38.801 106.435
+lchair gt5430 0 38.418 -59.154 9.056
+lchair gt5430 17 34.593 -59.162 10.195
+lchair gt5430 16 34.826 -55.699 34.442
+lchair gt5430 1 38.184 -56.007 33.344
+lchair gt5430 2 38.000 -48.966 56.485
+lchair gt5430 15 35.000 -49.036 57.623
+lchair gt5430 14 35.000 -46.851 82.016
+lchair gt5430 3 38.000 -47.103 80.905
+lchair gt5430 4 38.000 -38.854 103.990
+lchair gt5430 13 35.000 -38.663 105.066
+lchair gt5440 0 38.406 -59.162 10.305
+lchair gt5440 17 34.581 -59.152 8.946
+lchair gt5440 16 34.815 -56.035 33.238
+lchair gt5440 1 38.173 -55.669 34.548
+lchair gt5440 2 38.000 -49.042 57.733
+lchair gt5440 15 35.000 -48.958 56.376
+lchair gt5440 14 35.000 -47.127 80.797
+lchair gt5440 3 38.000 -46.825 82.124
+lchair gt5440 4 38.000 -38.675 105.176
+lchair gt5440 13 35.000 -38.902 103.891
+lift: client clock moved 0 ticks in one tick, now gt5440
+lchair gt5450 0 38.394 -59.152 11.555
+lchair gt5450 17 34.569 -59.124 7.696
+lchair gt5450 16 34.803 -56.356 32.030
+lchair gt5450 1 38.161 -55.316 35.747
+lchair gt5450 2 38.000 -49.099 58.982
+lchair gt5450 15 35.000 -48.862 55.129
+lchair gt5450 14 35.000 -47.386 79.575
+lchair gt5450 3 38.000 -46.531 83.338
+lchair gt5450 4 38.000 -38.800 106.420
+lchair gt5450 13 35.000 -39.449 102.767
+lchair gt5460 0 38.382 -59.124 12.805
+lchair gt5460 17 34.557 -59.077 6.447
+lchair gt5460 16 34.792 -56.659 30.817
+lchair gt5460 1 38.150 -54.947 36.941
+lchair gt5460 2 38.000 -49.138 60.231
+lchair gt5460 15 35.000 -48.748 53.885
+lchair gt5460 14 35.000 -47.629 78.348
+lchair gt5460 3 38.000 -46.220 84.549
+lchair gt5460 4 38.000 -38.906 107.665
+lchair gt5460 13 35.000 -39.983 101.637
+lchair gt5470 0 38.370 -59.077 14.054
+lchair gt5470 17 34.545 -59.012 5.199
+lchair gt5470 16 34.780 -56.947 29.601
+lchair gt5470 1 38.138 -54.563 38.131
+lchair gt5470 2 38.000 -49.159 61.481
+lchair gt5470 15 35.000 -48.616 52.642
+lchair gt5470 14 35.000 -47.854 77.119
+lchair gt5470 3 38.000 -45.893 85.756
+lchair gt5470 4 38.000 -38.994 108.912
+lchair gt5470 13 35.000 -40.505 100.501
+lift: client clock moved 2 ticks in one tick, now gt5480
+lchair gt5480 0 38.359 -59.019 15.177
+lchair gt5480 17 34.534 -58.937 4.076
+lchair gt5480 16 34.769 -57.191 28.503
+lchair gt5480 1 38.128 -54.204 39.197
+lchair gt5480 2 38.000 -49.162 62.606
+lchair gt5480 15 34.992 -49.036 51.619
+lchair gt5480 14 35.000 -48.042 76.010
+lchair gt5480 3 38.000 -45.585 86.838
+lchair gt5480 13 35.000 -40.964 99.474
+lchair gt5490 17 34.521 -58.826 2.706
+lchair gt5490 16 34.756 -57.471 27.157
+lchair gt5490 0 38.346 -58.928 16.549
+lchair gt5490 1 38.115 -53.750 40.495
+lchair gt5490 2 38.000 -49.145 63.981
+lchair gt5490 15 34.980 -49.633 50.381
+lchair gt5490 14 35.000 -48.253 74.651
+lchair gt5490 3 38.000 -45.192 88.155
+lchair gt5490 13 35.000 -41.510 98.212
+lchair gt5500 17 34.509 -58.705 1.462
+lchair gt5500 16 34.745 -57.708 25.930
+lchair gt5500 0 38.334 -58.826 17.795
+lchair gt5500 1 38.104 -53.321 41.669
+lchair gt5500 15 34.969 -50.163 49.249
+lchair gt5500 14 35.000 -48.425 73.413
+lchair gt5500 2 38.000 -49.110 65.230
+lchair gt5500 3 38.000 -44.818 89.348
+lchair gt5500 13 35.000 -41.993 97.059
+lift: sync stamp 5500 at client gt5499, clock moved -1 since the last tick
+lchair gt5510 17 34.519 -58.600 0.233
+lchair gt5510 16 34.733 -57.925 24.714
+lchair gt5510 0 38.322 -58.707 19.024
+lchair gt5510 1 38.093 -52.884 42.824
+lchair gt5510 15 34.958 -50.674 48.125
+lchair gt5510 14 35.000 -48.578 72.187
+lchair gt5510 2 38.000 -49.057 66.464
+lchair gt5510 3 38.000 -44.433 90.521
+lchair gt5510 13 35.000 -42.457 95.914
+lchair gt5520 16 34.721 -58.127 23.480
+lchair gt5520 0 38.310 -58.569 20.267
+lchair gt5520 1 38.082 -52.428 43.987
+lchair gt5520 15 34.947 -51.179 46.981
+lchair gt5520 14 35.000 -48.715 70.945
+lchair gt5520 2 38.000 -48.986 67.712
+lchair gt5520 3 38.000 -44.029 91.704
+lchair gt5520 13 35.000 -42.912 94.750
+lchair gt5520 17 35.051 -58.600 -0.875
+lchair gt5530 16 34.709 -58.311 22.244
+lchair gt5530 0 38.298 -58.413 21.507
+lchair gt5530 1 38.071 -51.957 45.145
+lchair gt5530 15 34.936 -51.671 45.832
+lchair gt5530 14 35.000 -48.834 69.701
+lchair gt5530 2 38.000 -48.896 68.959
+lchair gt5530 3 38.000 -43.610 92.882
+lchair gt5530 13 35.000 -43.354 93.581
+lchair gt5530 17 36.130 -58.600 -1.462
+lchair gt5540 16 34.697 -58.478 21.005
+lchair gt5540 0 38.286 -58.239 22.744
+lchair gt5540 1 38.060 -51.473 46.298
+lchair gt5540 15 34.925 -52.149 44.677
+lchair gt5540 14 35.000 -48.935 68.455
+lchair gt5540 2 38.000 -48.788 70.204
+lchair gt5540 3 38.000 -43.177 94.055
+lchair gt5540 13 35.000 -43.781 92.406
+lchair gt5540 17 37.349 -58.600 -1.307
+lchair gt5550 16 34.685 -58.627 19.764
+lchair gt5550 0 38.274 -58.047 23.980
+lchair gt5550 1 38.049 -50.976 47.445
+lchair gt5550 15 34.914 -52.614 43.517
+lchair gt5550 14 35.000 -49.017 67.207
+lchair gt5550 2 38.000 -48.662 71.448
+lchair gt5550 3 38.000 -42.730 95.222
+lchair gt5550 13 35.000 -44.194 91.226
+lchair gt5550 17 38.247 -58.600 -0.469
+lchair gt5560 17 38.498 -58.627 0.737
+lchair gt5560 16 34.673 -58.758 18.521
+lchair gt5560 0 38.262 -57.838 25.212
+lchair gt5560 15 34.902 -53.065 42.351
+lchair gt5560 1 38.038 -50.466 48.586
+lchair gt5560 14 35.000 -49.081 65.959
+lchair gt5560 2 38.000 -48.518 72.690
+lchair gt5560 13 35.000 -44.592 90.041
+lchair gt5560 3 38.000 -42.268 96.384
+lchair gt5570 17 38.486 -58.758 1.980
+lchair gt5570 16 34.661 -58.870 17.276
+lchair gt5570 0 38.251 -57.611 26.441
+lchair gt5570 15 34.891 -53.502 41.180
+lchair gt5570 1 38.027 -49.944 49.721
+lchair gt5570 14 35.000 -49.127 64.710
+lchair gt5570 2 38.000 -48.355 73.929
+lchair gt5570 13 35.000 -44.975 88.852
+lchair gt5570 3 38.000 -41.793 97.540
+lchair gt5580 17 38.474 -58.870 3.225
+lchair gt5580 16 34.649 -58.965 16.030
+lchair gt5580 0 38.239 -57.367 27.667
+lchair gt5580 15 34.880 -53.924 40.004
+lchair gt5580 1 38.016 -49.408 50.851
+lchair gt5580 14 35.000 -49.154 63.460
+lchair gt5580 2 38.000 -48.175 75.166
+lchair gt5580 13 35.000 -45.343 87.657
+lchair gt5580 3 38.000 -41.305 98.690
+lchair gt5590 17 38.462 -58.965 4.471
+lchair gt5590 16 34.637 -59.041 14.782
+lchair gt5590 0 38.227 -57.107 28.890
+lchair gt5590 15 34.868 -54.332 38.822
+lchair gt5590 1 38.005 -48.861 51.975
+lchair gt5590 14 35.000 -49.162 62.210
+lchair gt5590 2 38.000 -47.978 76.400
+lchair gt5590 13 35.000 -45.695 86.457
+lchair gt5590 3 38.000 -40.804 99.835
+lift: sync stamp 5600 at client gt5599, clock moved 0 since the last tick
+lchair gt5600 17 38.450 -59.041 5.719
+lchair gt5600 16 34.625 -59.099 13.534
+lchair gt5600 0 38.215 -56.829 30.108
+lchair gt5600 15 34.857 -54.725 37.636
+lchair gt5600 1 38.000 -48.673 53.159
+lchair gt5600 14 35.000 -49.153 60.960
+lchair gt5600 2 38.000 -47.763 77.631
+lchair gt5600 13 35.000 -46.031 85.254
+lchair gt5600 3 38.000 -40.289 100.975
+lchair gt5610 17 38.438 -59.099 6.967
+lchair gt5610 16 34.613 -59.138 12.284
+lchair gt5610 0 38.204 -56.535 31.323
+lchair gt5610 15 34.846 -55.102 36.444
+lchair gt5610 1 38.000 -48.798 54.403
+lchair gt5610 14 35.000 -49.124 59.711
+lchair gt5610 2 38.000 -47.530 78.860
+lchair gt5610 13 35.000 -46.352 84.045
+lchair gt5610 3 38.000 -39.762 102.108
+lchair gt5620 17 38.426 -59.138 8.216
+lchair gt5620 16 34.601 -59.159 11.035
+lchair gt5620 15 34.834 -55.465 35.248
+lchair gt5620 0 38.192 -56.224 32.534
+lchair gt5620 1 38.000 -48.905 55.648
+lchair gt5620 14 35.000 -49.078 58.462
+lchair gt5620 13 35.000 -46.656 82.833
+lchair gt5620 2 38.000 -47.280 80.084
+lchair gt5620 3 38.000 -39.223 103.236
+lchair gt5620 12 35.000 -38.750 105.901
+lchair gt5630 17 38.414 -59.159 9.466
+lchair gt5630 16 34.589 -59.161 9.785
+lchair gt5630 15 34.823 -55.812 34.047
+lchair gt5630 0 38.180 -55.897 33.740
+lchair gt5630 1 38.000 -48.993 56.895
+lchair gt5630 14 35.000 -49.012 57.213
+lchair gt5630 13 35.000 -46.943 81.616
+lchair gt5630 2 38.000 -47.014 81.306
+lchair gt5630 3 38.000 -38.671 104.357
+lchair gt5630 12 35.000 -38.618 104.658
+lchair gt5640 17 38.402 -59.161 10.716
+lchair gt5640 16 34.577 -59.145 8.535
+lchair gt5640 15 34.811 -56.142 32.842
+lchair gt5640 0 38.169 -55.555 34.942
+lchair gt5640 1 38.000 -49.063 58.143
+lchair gt5640 14 35.000 -48.929 55.966
+lchair gt5640 13 35.000 -47.214 80.396
+lchair gt5640 2 38.000 -46.731 82.523
+lchair gt5640 3 38.000 -38.718 105.584
+lchair gt5640 12 35.000 -39.083 103.522
+lchair gt5650 17 38.390 -59.145 11.966
+lchair gt5650 16 34.565 -59.110 7.286
+lchair gt5650 15 34.799 -56.457 31.632
+lchair gt5650 0 38.157 -55.196 36.140
+lchair gt5650 1 38.000 -49.114 59.392
+lchair gt5650 14 35.000 -48.827 54.720
+lchair gt5650 13 35.000 -47.468 79.172
+lchair gt5650 2 38.000 -46.431 83.737
+lift: client clock moved 2 ticks in one tick, now gt5660
+lchair gt5660 17 38.379 -59.115 13.090
+lchair gt5660 16 34.554 -59.064 6.162
+lchair gt5660 15 34.789 -56.727 30.540
+lchair gt5660 0 38.147 -54.861 37.213
+lchair gt5660 1 38.000 -49.145 60.517
+lchair gt5660 14 35.000 -48.720 53.600
+lchair gt5660 13 35.000 -47.682 78.068
+lchair gt5660 2 38.000 -46.147 84.825
+lchair gt5670 17 38.366 -59.057 14.464
+lchair gt5670 16 34.541 -58.986 4.789
+lchair gt5670 15 34.776 -57.037 29.201
+lchair gt5670 0 38.134 -54.433 38.520
+lchair gt5670 1 38.000 -49.162 61.892
+lchair gt5670 14 34.998 -48.720 52.260
+lchair gt5670 13 35.000 -47.924 76.714
+lchair gt5670 2 38.000 -45.782 86.151
+lchair gt5680 17 38.354 -58.986 15.712
+lchair gt5680 16 34.529 -58.896 3.542
+lchair gt5680 15 34.764 -57.303 27.979
+lchair gt5680 0 38.123 -54.029 39.703
+lchair gt5680 1 38.000 -49.158 63.142
+lchair gt5680 14 34.987 -49.270 51.138
+lchair gt5680 13 35.000 -48.127 75.481
+lchair gt5680 2 38.000 -45.434 87.352
+lift: client clock moved 0 ticks in one tick, now gt5680
+lift: sync stamp 5700 at client gt5699, clock moved 11 since the last tick
+lchair gt5700 16 34.518 -58.791 2.328
+lchair gt5700 15 34.753 -57.545 26.785
+lchair gt5700 17 38.342 -58.899 16.928
+lchair gt5700 0 38.112 -53.621 40.851
+lchair gt5700 14 34.976 -49.795 50.038
+lchair gt5700 13 35.000 -48.307 74.275
+lchair gt5700 1 38.000 -49.136 64.360
+lchair gt5700 2 38.000 -45.080 88.518
+lchair gt5700 12 35.000 -41.658 97.862
+lchair gt5710 16 34.534 -58.600 0.153
+lchair gt5710 15 34.732 -57.938 24.633
+lchair gt5710 17 38.321 -58.698 19.106
+lchair gt5710 0 38.092 -52.855 42.900
+lchair gt5710 14 34.957 -50.708 48.050
+lchair gt5710 13 35.000 -48.588 72.106
+lchair gt5710 1 38.000 -49.053 66.546
+lchair gt5710 2 38.000 -44.407 90.599
+lchair gt5710 12 35.000 -42.487 95.838
+lift: client clock moved 8 ticks in one tick, now gt5720
+lchair gt5720 15 34.727 -58.025 24.115
+lchair gt5720 17 38.316 -58.642 19.628
+lchair gt5720 0 38.088 -52.664 43.390
+lchair gt5720 14 34.953 -50.921 47.570
+lchair gt5720 13 35.000 -48.647 71.584
+lchair gt5720 1 38.000 -49.025 67.071
+lchair gt5720 2 38.000 -44.239 91.097
+lchair gt5720 12 35.000 -42.680 95.349
+lchair gt5720 16 34.692 -58.600 -0.346
+lchair gt5730 15 34.707 -58.346 22.000
+lchair gt5730 17 38.296 -58.380 21.751
+lchair gt5730 0 38.069 -51.863 45.373
+lchair gt5730 14 34.934 -51.766 45.605
+lchair gt5730 13 35.000 -48.855 69.455
+lchair gt5730 1 38.000 -48.876 69.205
+lchair gt5730 2 38.000 -43.526 93.114
+lchair gt5730 12 35.000 -43.439 93.350
+lchair gt5730 16 36.375 -58.600 -1.492
+lchair gt5740 15 34.693 -58.531 20.583
+lchair gt5740 17 38.282 -58.175 23.165
+lchair gt5740 0 38.056 -51.306 46.689
+lchair gt5740 14 34.921 -52.309 44.283
+lchair gt5740 13 35.000 -48.965 68.030
+lchair gt5740 1 38.000 -48.747 70.628
+lchair gt5740 2 38.000 -43.026 94.453
+lchair gt5740 12 35.000 -43.924 92.005
+lchair gt5740 16 37.712 -58.600 -1.087
+lift: client clock moved -2 ticks in one tick, now gt5740
+lchair gt5750 15 34.681 -58.673 19.341
+lchair gt5750 17 38.270 -57.978 24.400
+lchair gt5750 0 38.045 -50.804 47.834
+lchair gt5750 14 34.910 -52.769 43.121
+lchair gt5750 13 35.000 -49.041 66.782
+lchair gt5750 1 38.000 -48.615 71.871
+lchair gt5750 2 38.000 -42.574 95.618
+lchair gt5750 12 35.000 -44.331 90.823
+lchair gt5750 16 38.411 -58.600 -0.077
+lchair gt5760 16 38.494 -58.674 1.160
+lchair gt5760 15 34.669 -58.798 18.097
+lchair gt5760 17 38.258 -57.763 25.631
+lchair gt5760 14 34.899 -53.215 41.953
+lchair gt5760 0 38.034 -50.290 48.973
+lchair gt5760 13 35.000 -49.099 65.534
+lchair gt5760 1 38.000 -48.464 73.112
+lchair gt5760 12 35.000 -44.724 89.637
+lchair gt5760 2 38.000 -42.108 96.778
+lchair gt5770 16 38.482 -58.798 2.403
+lchair gt5770 15 34.657 -58.905 16.852
+lchair gt5770 17 38.247 -57.530 26.859
+lchair gt5770 14 34.887 -53.647 40.780
+lchair gt5770 0 38.023 -49.763 50.107
+lchair gt5770 13 35.000 -49.138 64.284
+lchair gt5770 1 38.000 -48.296 74.350
+lchair gt5770 12 35.000 -45.102 88.445
+lchair gt5770 2 38.000 -41.629 97.932
+lchair gt5780 16 38.470 -58.905 3.649
+lchair gt5780 15 34.645 -58.993 15.605
+lchair gt5780 17 38.235 -57.281 28.084
+lchair gt5780 14 34.876 -54.065 39.602
+lchair gt5780 0 38.012 -49.223 51.234
+lchair gt5780 13 35.000 -49.159 63.035
+lchair gt5780 1 38.000 -48.110 75.587
+lchair gt5780 12 35.000 -45.465 87.249
+lchair gt5780 2 38.000 -41.136 99.081
+lchair gt5790 16 38.458 -58.993 4.896
+lchair gt5790 15 34.633 -59.063 14.357
+lchair gt5790 17 38.223 -57.014 29.305
+lchair gt5790 14 34.865 -54.467 38.419
+lchair gt5790 0 38.001 -48.672 52.356
+lchair gt5790 13 35.000 -49.161 61.785
+lchair gt5790 1 38.000 -47.906 76.820
+lchair gt5790 12 35.000 -45.811 86.048
+lchair gt5790 2 38.000 -40.630 100.224
+lift: client clock moved 2 ticks in one tick, now gt5800
+lchair gt5800 16 38.447 -59.057 6.019
+lchair gt5800 15 34.622 -59.110 13.233
+lchair gt5800 17 38.212 -56.760 30.401
+lchair gt5800 14 34.854 -54.817 37.350
+lchair gt5800 0 38.000 -48.705 53.458
+lchair gt5800 13 35.000 -49.147 60.660
+lchair gt5800 1 38.000 -47.708 77.927
+lchair gt5800 12 35.000 -46.110 84.963
+lchair gt5800 2 38.000 -40.163 101.248
+lift: sync stamp 5800 at client gt5801, clock moved 0 since the last tick
+lchair gt5810 16 38.434 -59.114 7.392
+lchair gt5810 15 34.609 -59.147 11.859
+lchair gt5810 17 38.200 -56.431 31.736
+lchair gt5810 14 34.842 -55.228 36.037
+lchair gt5810 0 38.000 -48.836 54.827
+lchair gt5810 13 35.000 -49.110 59.285
+lchair gt5810 1 38.000 -47.447 79.277
+lchair gt5810 12 35.000 -46.457 83.633
+lchair gt5810 2 38.000 -39.580 102.493
+lchair gt5820 16 38.422 -59.147 8.642
+lchair gt5820 15 34.597 -59.162 10.609
+lchair gt5820 14 34.830 -55.585 34.840
+lchair gt5820 17 38.188 -56.115 32.945
+lchair gt5820 0 38.000 -48.937 56.073
+lchair gt5820 13 35.000 -49.057 58.036
+lchair gt5820 12 35.000 -46.755 82.419
+lchair gt5820 1 38.000 -47.191 80.501
+lchair gt5820 2 38.000 -39.036 103.618
+lchair gt5830 16 38.410 -59.162 9.892
+lchair gt5830 15 34.585 -59.158 9.359
+lchair gt5830 14 34.819 -55.926 33.637
+lchair gt5830 17 38.176 -55.783 34.150
+lchair gt5830 0 38.000 -49.019 57.320
+lchair gt5830 13 35.000 -48.986 56.788
+lchair gt5830 12 35.000 -47.037 81.201
+lchair gt5830 1 38.000 -46.919 81.721
+lchair gt5830 2 38.000 -38.630 104.765
+lchair gt5830 11 35.000 -38.719 104.262
+lchair gt5840 16 38.398 -59.158 11.142
+lchair gt5840 15 34.573 -59.135 8.109
+lchair gt5840 14 34.807 -56.251 32.430
+lchair gt5840 17 38.165 -55.434 35.351
+lchair gt5840 0 38.000 -49.082 58.569
+lchair gt5840 13 35.000 -48.896 55.542
+lchair gt5840 12 35.000 -47.302 79.980
+lchair gt5840 1 38.000 -46.630 82.937
+lchair gt5840 2 38.000 -38.761 106.008
+lchair gt5840 11 35.000 -39.269 103.139
+lift: client clock moved 0 ticks in one tick, now gt5840
+lchair gt5850 16 38.386 -59.135 12.391
+lchair gt5850 15 34.561 -59.094 6.860
+lchair gt5850 14 34.795 -56.561 31.219
+lchair gt5850 17 38.153 -55.071 36.546
+lchair gt5850 0 38.000 -49.127 59.818
+lchair gt5850 13 35.000 -48.788 54.296
+lchair gt5850 12 35.000 -47.551 78.755
+lchair gt5850 1 38.000 -46.325 84.149
+lchair gt5850 2 38.000 -38.873 107.253
+lchair gt5850 11 35.000 -39.808 102.011
+lchair gt5860 16 38.374 -59.094 13.641
+lchair gt5860 15 34.549 -59.035 5.612
+lchair gt5860 14 34.784 -56.853 30.004
+lchair gt5860 17 38.142 -54.692 37.738
+lchair gt5860 0 38.000 -49.154 61.067
+lchair gt5860 13 35.000 -48.662 53.053
+lchair gt5860 12 35.000 -47.782 77.526
+lchair gt5860 1 38.000 -46.003 85.357
+lchair gt5860 2 38.000 -38.967 108.499
+lchair gt5860 11 35.000 -40.334 100.877
+lift: disconnected after 101 ticks aboard; reconnecting in 3 seconds
+lift: sync stamp 5993 at client gt5993, clock moved 0 since the last tick
+lift: sync stamp 6000 at client gt5999, clock moved 6 since the last tick
+lift: client clock moved 21 ticks in one tick, now gt6020
+lift: watcher1 is back after 39 ticks, vehicle ChairEntity['Lift Chair'/64, l='ClientLevel', x=38.18, y=-56.00, z=33.36]
+lift: client clock moved 7 ticks in one tick, now gt6040
+lift: sync stamp 6100 at client gt6099, clock moved 1 since the last tick
+lift: client clock moved 0 ticks in one tick, now gt6140
+lift: client clock moved 2 ticks in one tick, now gt6160
+lift: sync stamp 6200 at client gt6199, clock moved -1 since the last tick
+lift: client clock moved 2 ticks in one tick, now gt6220
+lchair gt6230 14 38.402 -59.161 10.743
+lchair gt6230 13 34.577 -59.144 8.508
+lchair gt6230 12 34.811 -56.149 32.816
+lchair gt6230 15 38.169 -55.547 34.968
+lchair gt6230 16 38.000 -49.064 58.170
+lchair gt6230 11 35.000 -48.927 55.939
+lchair gt6230 17 38.000 -46.724 82.549
+lchair gt6230 10 35.000 -47.220 80.370
+lchair gt6230 0 38.000 -38.721 105.611
+lchair gt6230 1 38.000 -37.680 130.078
+lchair gt6230 2 38.000 -30.099 153.387
+lchair gt6230 7 35.000 -31.018 151.350
+lchair gt6240 14 38.389 -59.145 11.993
+lchair gt6240 13 34.565 -59.109 7.259
+lchair gt6240 12 34.799 -56.464 31.606
+lchair gt6240 15 38.157 -55.188 36.166
+lchair gt6240 16 38.000 -49.115 59.419
+lchair gt6240 11 35.000 -48.825 54.693
+lchair gt6240 10 35.000 -47.473 79.146
+lchair gt6240 17 38.000 -46.424 83.763
+lchair gt6240 0 38.000 -38.839 106.856
+lchair gt6240 1 38.000 -37.441 131.305
+lchair gt6240 2 38.000 -29.567 154.519
+lchair gt6240 7 35.000 -31.514 150.202
+lift: client clock moved 0 ticks in one tick, now gt6240
+lchair gt6250 14 38.377 -59.109 13.242
+lchair gt6250 13 34.553 -59.056 6.010
+lchair gt6250 12 34.787 -56.762 30.392
+lchair gt6250 15 38.146 -54.814 37.358
+lchair gt6250 16 38.000 -49.148 60.669
+lchair gt6250 11 35.000 -48.704 53.449
+lchair gt6250 10 35.000 -47.710 77.918
+lchair gt6250 17 38.000 -46.107 84.972
+lchair gt6250 0 38.000 -38.939 108.102
+lchair gt6250 1 38.000 -37.185 132.529
+lchair gt6250 2 38.000 -29.024 155.644
+lchair gt6250 7 35.000 -31.997 149.049
+lchair gt6260 14 38.365 -59.056 14.491
+lchair gt6260 13 34.541 -58.984 4.762
+lchair gt6260 12 34.776 -57.043 29.174
+lchair gt6260 15 38.134 -54.425 38.546
+lchair gt6260 16 38.000 -49.162 61.919
+lchair gt6260 11 34.997 -48.732 52.236
+lchair gt6260 10 35.000 -47.929 76.688
+lchair gt6260 17 38.000 -45.775 86.177
+lchair gt6260 0 38.000 -39.020 109.349
+lchair gt6260 1 38.000 -36.913 133.749
+lchair gt6260 7 35.000 -32.466 147.891
+lchair gt6260 2 38.003 -28.633 156.793
+lchair gt6270 14 38.353 -58.984 15.739
+lchair gt6270 13 34.529 -58.894 3.515
+lchair gt6270 12 34.764 -57.308 27.953
+lchair gt6270 15 38.123 -54.021 39.729
+lchair gt6270 16 38.000 -49.157 63.169
+lchair gt6270 11 34.987 -49.282 51.114
+lchair gt6270 10 35.000 -48.131 75.454
+lchair gt6270 17 38.000 -45.426 87.377
+lchair gt6270 0 38.000 -39.083 110.597
+lchair gt6270 1 38.000 -36.623 134.965
+lchair gt6270 7 35.000 -32.921 146.727
+lchair gt6270 2 38.015 -28.763 158.036
+lchair gt6280 13 34.517 -58.786 2.270
+lchair gt6280 12 34.752 -57.556 26.728
+lchair gt6280 14 38.341 -58.894 16.986
+lchair gt6280 15 38.111 -53.601 40.906
+lchair gt6280 11 34.976 -49.820 49.985
+lchair gt6280 10 35.000 -48.315 74.218
+lchair gt6280 16 38.000 -49.135 64.418
+lchair gt6280 17 38.000 -45.062 88.573
+lchair gt6280 0 38.000 -39.128 111.846
+lchair gt6280 1 38.000 -36.318 136.177
+lchair gt6280 7 35.000 -33.363 145.557
+lchair gt6280 2 38.027 -28.875 159.281
+lchair gt6290 13 34.505 -58.659 1.026
+lchair gt6290 12 34.740 -57.787 25.499
+lchair gt6290 14 38.330 -58.786 18.231
+lchair gt6290 15 38.100 -53.168 42.079
+lchair gt6290 11 34.965 -50.346 48.851
+lchair gt6290 10 35.000 -48.481 72.979
+lchair gt6290 16 38.000 -49.093 65.668
+lchair gt6290 17 38.000 -44.683 89.764
+lchair gt6290 0 38.000 -39.155 113.096
+lchair gt6290 1 38.000 -35.996 137.385
+lchair gt6290 7 35.000 -33.790 144.382
+lchair gt6290 2 38.039 -28.969 160.528
+lift: sync stamp 6300 at client gt6299, clock moved 0 since the last tick
+lchair gt6300 12 34.729 -58.000 24.267
+lchair gt6300 14 38.318 -58.659 19.474
+lchair gt6300 15 38.089 -52.720 43.246
+lchair gt6300 11 34.954 -50.859 47.711
+lchair gt6300 10 35.000 -48.630 71.738
+lchair gt6300 16 38.000 -49.034 66.916
+lchair gt6300 17 38.000 -44.288 90.950
+lchair gt6300 0 38.000 -39.162 114.346
+lchair gt6300 1 38.000 -35.658 138.588
+lchair gt6300 7 35.000 -34.202 143.202
+lchair gt6300 2 38.051 -29.044 161.775
+lchair gt6300 13 34.629 -58.600 -0.205
+lchair gt6310 12 34.717 -58.196 23.033
+lchair gt6310 14 38.306 -58.514 20.716
+lchair gt6310 15 38.078 -52.259 44.407
+lchair gt6310 11 34.943 -51.359 46.566
+lchair gt6310 10 35.000 -48.760 70.495
+lchair gt6310 16 38.000 -48.955 68.164
+lchair gt6310 17 38.000 -43.879 92.131
+lchair gt6310 0 38.000 -39.152 115.596
+lchair gt6310 1 38.000 -35.304 139.787
+lchair gt6310 7 35.000 -34.600 142.017
+lchair gt6310 2 38.063 -29.101 163.024
+lchair gt6310 13 35.396 -58.600 -1.166
+lchair gt6320 12 34.705 -58.374 21.796
+lchair gt6320 14 38.294 -58.352 21.955
+lchair gt6320 15 38.067 -51.784 45.563
+lchair gt6320 11 34.932 -51.846 45.415
+lchair gt6320 10 35.000 -48.873 69.250
+lchair gt6320 16 38.000 -48.859 69.410
+lchair gt6320 17 38.000 -43.455 93.307
+lchair gt6320 0 38.000 -39.123 116.846
+lchair gt6320 1 38.000 -34.934 140.981
+lchair gt6320 7 35.000 -34.983 140.827
+lchair gt6320 2 38.075 -29.139 164.273
+lchair gt6320 13 36.580 -58.600 -1.495
+lchair gt6330 12 34.693 -58.534 20.556
+lchair gt6330 14 38.282 -58.171 23.192
+lchair gt6330 15 38.056 -51.295 46.714
+lchair gt6330 11 34.921 -52.319 44.258
+lchair gt6330 10 35.000 -48.967 68.003
+lchair gt6330 16 38.000 -48.744 70.655
+lchair gt6330 17 38.000 -43.017 94.478
+lchair gt6330 0 38.000 -39.075 118.095
+lchair gt6330 1 38.000 -34.550 142.170
+lchair gt6330 7 35.000 -35.350 139.633
+lchair gt6330 2 38.087 -29.159 165.523
+lchair gt6330 13 37.733 -58.600 -1.070
+lchair gt6340 12 34.681 -58.676 19.314
+lchair gt6340 14 38.270 -57.973 24.426
+lchair gt6340 15 38.045 -50.793 47.859
+lchair gt6340 11 34.910 -52.779 43.096
+lchair gt6340 10 35.000 -49.042 66.756
+lchair gt6340 16 38.000 -48.612 71.898
+lchair gt6340 17 38.000 -42.564 95.643
+lchair gt6340 0 38.000 -39.009 119.343
+lchair gt6340 1 38.000 -34.150 143.355
+lchair gt6340 7 35.000 -35.702 138.433
+lchair gt6340 2 38.099 -29.161 166.773
+lchair gt6340 13 38.419 -58.600 -0.051
+lift: client clock moved 0 ticks in one tick, now gt6340
+lchair gt6350 13 38.493 -58.676 1.187
+lchair gt6350 12 34.669 -58.801 18.071
+lchair gt6350 14 38.258 -57.758 25.657
+lchair gt6350 11 34.898 -53.225 41.928
+lchair gt6350 15 38.034 -50.279 48.998
+lchair gt6350 10 35.000 -49.100 65.507
+lchair gt6350 16 38.000 -48.461 73.139
+lchair gt6350 9 35.000 -44.733 89.611
+lchair gt6350 17 38.000 -42.098 96.803
+lchair gt6350 0 38.000 -38.925 120.590
+lchair gt6350 8 35.000 -39.152 112.935
+lchair gt6350 7 35.000 -36.038 137.229
+lchair gt6350 1 38.000 -33.736 144.534
+lchair gt6350 2 38.111 -29.144 168.023
+lchair gt6350 6 34.963 -28.958 160.367
+lift: client clock moved 3 ticks in one tick, now gt6360
+lchair gt6360 13 38.484 -58.777 2.181
+lchair gt6360 12 34.659 -58.887 17.074
+lchair gt6360 14 38.249 -57.573 26.640
+lchair gt6360 11 34.889 -53.571 40.990
+lchair gt6360 15 38.025 -49.858 49.905
+lchair gt6360 10 35.000 -49.132 64.507
+lchair gt6360 16 38.000 -48.327 74.130
+lchair gt6360 9 35.000 -45.036 88.658
+lchair gt6360 17 38.000 -41.715 97.727
+lchair gt6360 8 35.000 -39.131 111.935
+lchair gt6360 0 38.000 -38.844 121.587
+lchair gt6360 7 35.000 -36.295 136.263
+lchair gt6360 1 38.000 -33.394 145.474
+lchair gt6360 6 34.972 -28.882 159.370
+lchair gt6360 2 38.120 -29.117 169.022
+lchair gt6370 13 38.469 -58.907 3.676
+lchair gt6370 12 34.645 -58.994 15.578
+lchair gt6370 14 38.235 -57.275 28.110
+lchair gt6370 11 34.876 -54.073 39.577
+lchair gt6370 15 38.012 -49.212 51.258
+lchair gt6370 10 35.000 -49.159 63.008
+lchair gt6370 16 38.000 -48.106 75.613
+lchair gt6370 9 35.000 -45.472 87.223
+lchair gt6370 17 38.000 -41.125 99.106
+lchair gt6370 8 35.000 -39.076 110.436
+lchair gt6370 0 38.000 -38.701 123.080
+lchair gt6370 7 35.000 -36.662 134.808
+lchair gt6370 1 38.000 -32.864 146.877
+lchair gt6370 6 34.987 -28.748 157.876
+lchair gt6370 2 38.135 -29.055 170.521
+lchair gt6380 13 38.457 -58.995 4.923
+lchair gt6380 12 34.633 -59.064 14.330
+lchair gt6380 14 38.223 -57.008 29.331
+lchair gt6380 11 34.864 -54.476 38.393
+lchair gt6380 15 38.001 -48.660 52.380
+lchair gt6380 10 35.000 -49.161 61.758
+lchair gt6380 16 38.000 -47.902 76.846
+lchair gt6380 9 35.000 -45.819 86.022
+lchair gt6380 17 38.000 -40.619 100.249
+lchair gt6380 8 35.000 -39.011 109.188
+lchair gt6380 0 38.000 -38.562 124.322
+lchair gt6380 7 35.000 -36.949 133.592
+lchair gt6380 1 38.000 -32.406 148.040
+lchair gt6380 6 34.999 -28.615 156.633
+lchair gt6380 2 38.147 -28.982 171.769
+lift: client clock moved 0 ticks in one tick, now gt6380
+lchair gt6390 13 38.445 -59.064 6.171
+lchair gt6390 12 34.621 -59.115 13.081
+lchair gt6390 14 38.211 -56.724 30.549
+lchair gt6390 11 34.853 -54.863 37.205
+lchair gt6390 15 38.000 -48.721 53.609
+lchair gt6390 10 35.000 -49.144 60.508
+lchair gt6390 16 38.000 -47.680 78.077
+lchair gt6390 9 35.000 -46.149 84.817
+lchair gt6390 17 38.000 -40.100 101.386
+lchair gt6390 8 35.000 -38.927 107.941
+lchair gt6390 0 38.000 -38.405 125.562
+lchair gt6390 7 35.000 -37.219 132.371
+lchair gt6390 6 35.000 -29.094 155.500
+lchair gt6390 1 38.000 -31.935 149.198
+lchair gt6390 2 38.159 -28.892 173.016
+lift: sync stamp 6400 at client gt6399, clock moved 0 since the last tick
+lchair gt6400 13 38.433 -59.115 7.419
+lchair gt6400 12 34.609 -59.148 11.832
+lchair gt6400 14 38.199 -56.424 31.762
+lchair gt6400 11 34.841 -55.235 36.012
+lchair gt6400 15 38.000 -48.839 54.854
+lchair gt6400 10 35.000 -49.109 59.258
+lchair gt6400 16 38.000 -47.442 79.304
+lchair gt6400 9 35.000 -46.464 83.607
+lchair gt6400 17 38.000 -39.568 102.517
+lchair gt6400 8 35.000 -38.825 106.695
+lchair gt6400 0 38.000 -38.230 126.800
+lchair gt6400 7 35.000 -37.473 131.147
+lchair gt6400 6 35.000 -29.637 154.373
+lchair gt6400 1 38.000 -31.451 150.350
+lchair gt6400 2 38.171 -28.783 174.261
+lchair gt6410 13 38.421 -59.148 8.669
+lchair gt6410 12 34.597 -59.162 10.582
+lchair gt6410 11 34.830 -55.592 34.814
+lchair gt6410 14 38.188 -56.108 32.971
+lchair gt6410 15 38.000 -48.939 56.100
+lchair gt6410 10 35.000 -49.056 58.009
+lchair gt6410 9 35.000 -46.762 82.393
+lchair gt6410 16 38.000 -47.186 80.527
+lchair gt6410 17 38.000 -39.024 103.643
+lchair gt6410 8 35.000 -38.704 105.451
+lchair gt6410 7 35.000 -37.709 129.920
+lchair gt6410 0 38.000 -38.038 128.035
+lchair gt6410 6 35.000 -30.167 153.241
+lchair gt6410 1 38.000 -30.953 151.497
+lchair gt6410 2 38.183 -28.656 175.504
+lchair gt6420 13 38.409 -59.162 9.919
+lchair gt6420 12 34.585 -59.157 9.332
+lchair gt6420 11 34.818 -55.933 33.611
+lchair gt6420 14 38.176 -55.775 34.176
+lchair gt6420 15 38.000 -49.020 57.347
+lchair gt6420 10 35.000 -48.984 56.762
+lchair gt6420 9 35.000 -47.043 81.175
+lchair gt6420 16 38.000 -46.913 81.747
+lchair gt6420 17 38.000 -38.633 104.791
+lchair gt6420 8 35.000 -38.731 104.237
+lchair gt6420 7 35.000 -37.929 128.689
+lchair gt6420 0 38.000 -37.828 129.267
+lchair gt6420 6 35.000 -30.684 152.103
+lchair gt6420 1 38.000 -30.443 152.638
+lchair gt6420 2 38.195 -28.511 176.746
+lchair gt6420 5 34.811 -28.581 176.163
+lchair gt6430 13 38.397 -59.157 11.169
+lchair gt6430 12 34.573 -59.135 8.082
+lchair gt6430 11 34.807 -56.258 32.404
+lchair gt6430 14 38.165 -55.427 35.376
+lchair gt6430 15 38.000 -49.083 58.595
+lchair gt6430 10 35.000 -48.894 55.515
+lchair gt6430 9 35.000 -47.308 79.953
+lchair gt6430 16 38.000 -46.624 82.963
+lchair gt6430 17 38.000 -38.763 106.035
+lchair gt6430 8 35.000 -39.281 103.115
+lchair gt6430 7 35.000 -38.131 127.456
+lchair gt6430 0 38.000 -37.601 130.497
+lchair gt6430 6 35.000 -31.189 150.960
+lchair gt6430 1 38.000 -29.919 153.773
+lchair gt6430 5 34.823 -28.718 174.921
+lchair gt6430 2 38.207 -28.348 177.985
+lchair gt6440 13 38.385 -59.135 12.418
+lchair gt6440 12 34.561 -59.093 6.833
+lchair gt6440 11 34.795 -56.567 31.193
+lchair gt6440 14 38.153 -55.063 36.572
+lchair gt6440 15 38.000 -49.128 59.845
+lchair gt6440 10 35.000 -48.786 54.269
+lchair gt6440 9 35.000 -47.556 78.728
+lchair gt6440 16 38.000 -46.318 84.175
+lchair gt6440 17 38.000 -38.875 107.280
+lchair gt6440 8 35.000 -39.819 101.987
+lchair gt6440 7 35.000 -38.315 126.219
+lchair gt6440 0 38.000 -37.356 131.722
+lchair gt6440 6 35.000 -31.680 149.810
+lchair gt6440 1 38.000 -29.384 154.903
+lchair gt6440 5 34.835 -28.836 173.676
+lchair gt6440 2 38.218 -28.167 179.222
+lchair gt6450 13 38.373 -59.093 13.668
+lchair gt6450 12 34.549 -59.034 5.585
+lchair gt6450 11 34.783 -56.860 29.978
+lchair gt6450 14 38.142 -54.683 37.763
+lchair gt6450 15 38.000 -49.155 61.094
+lchair gt6450 10 35.000 -48.659 53.026
+lchair gt6450 9 35.000 -47.786 77.500
+lchair gt6450 16 38.000 -45.996 85.383
+lchair gt6450 17 38.000 -38.969 108.526
+lchair gt6450 8 35.000 -40.345 100.853
+lchair gt6450 7 35.000 -38.481 124.981
+lchair gt6450 0 38.000 -37.094 132.945
+lchair gt6450 6 35.000 -32.158 148.655
+lchair gt6450 1 38.000 -28.836 156.026
+lchair gt6450 5 34.847 -28.936 172.431
+lchair gt6450 2 38.230 -27.968 180.456
+lift: client clock moved 2 ticks in one tick, now gt6460
+lchair gt6460 13 38.363 -59.040 14.791
+lchair gt6460 12 34.538 -58.964 4.462
+lchair gt6460 11 34.773 -57.109 28.881
+lchair gt6460 14 38.131 -54.329 38.831
+lchair gt6460 15 38.000 -49.162 62.219
+lchair gt6460 10 34.995 -48.865 51.966
+lchair gt6460 9 35.000 -47.979 76.391
+lchair gt6460 16 38.000 -45.692 86.466
+lchair gt6460 17 38.000 -39.037 109.649
+lchair gt6460 8 35.000 -40.807 99.827
+lchair gt6460 7 35.000 -38.616 123.864
+lchair gt6460 0 38.000 -36.845 134.042
+lchair gt6460 6 35.000 -32.577 147.611
+lchair gt6460 1 38.006 -28.666 157.092
+lchair gt6460 5 34.858 -29.011 171.308
+lchair gt6460 2 38.241 -27.775 181.564
+lchair gt6470 12 34.525 -58.859 3.091
+lchair gt6470 11 34.760 -57.394 27.536
+lchair gt6470 13 38.349 -58.955 16.164
+lchair gt6470 14 38.119 -53.879 40.130
+lchair gt6470 15 38.000 -49.152 63.594
+lchair gt6470 10 34.983 -49.466 50.730
+lchair gt6470 9 35.000 -48.195 75.033
+lchair gt6470 16 38.000 -45.304 87.785
+lchair gt6470 17 38.000 -39.101 111.023
+lchair gt6470 8 35.000 -41.358 98.567
+lchair gt6470 7 35.000 -38.760 122.496
+lchair gt6470 0 38.000 -36.521 135.378
+lchair gt6470 6 35.000 -33.073 146.329
+lchair gt6470 1 38.019 -28.803 158.460
+lchair gt6470 5 34.871 -29.082 169.935
+lchair gt6470 2 38.254 -27.519 182.915
+lchair gt6480 12 34.513 -58.745 1.846
+lchair gt6480 11 34.748 -57.636 26.310
+lchair gt6480 13 38.337 -58.859 17.410
+lchair gt6480 14 38.108 -53.455 41.306
+lchair gt6480 10 34.972 -50.000 49.600
+lchair gt6480 9 35.000 -48.374 73.796
+lchair gt6480 15 38.000 -49.123 64.844
+lchair gt6480 16 38.000 -44.935 88.979
+lchair gt6480 8 35.000 -41.845 97.416
+lchair gt6480 7 35.000 -38.872 121.251
+lchair gt6480 17 38.000 -39.139 112.272
+lchair gt6480 0 38.000 -36.210 136.589
+lchair gt6480 6 35.000 -33.510 145.158
+lchair gt6480 1 38.031 -28.909 159.706
+lchair gt6480 5 34.883 -29.127 168.686
+lchair gt6480 2 38.266 -27.269 184.139
+lift: client clock moved 0 ticks in one tick, now gt6480
+lchair gt6490 12 34.501 -58.612 0.603
+lchair gt6490 11 34.736 -57.861 25.080
+lchair gt6490 13 38.325 -58.744 18.655
+lchair gt6490 14 38.096 -53.017 42.477
+lchair gt6490 10 34.961 -50.522 48.464
+lchair gt6490 9 35.000 -48.534 72.556
+lchair gt6490 15 38.000 -49.075 66.093
+lchair gt6490 16 38.000 -44.550 90.169
+lchair gt6490 8 35.000 -42.318 96.259
+lchair gt6490 7 35.000 -38.966 120.005
+lchair gt6490 17 38.000 -39.159 113.522
+lchair gt6490 0 38.000 -35.882 137.795
+lchair gt6490 6 35.000 -33.932 143.981
+lchair gt6490 5 34.895 -29.154 167.436
+lchair gt6490 1 38.043 -28.996 160.952
+lchair gt6490 2 38.278 -27.001 185.360
+lift: sync stamp 6500 at client gt6499, clock moved 1 since the last tick
+lchair gt6500 11 34.725 -58.054 23.940
+lchair gt6500 13 38.314 -58.622 19.804
+lchair gt6500 14 38.086 -52.599 43.555
+lchair gt6500 10 34.951 -50.993 47.408
+lchair gt6500 9 35.000 -48.666 71.408
+lchair gt6500 15 38.000 -49.015 67.248
+lchair gt6500 16 38.000 -44.181 91.264
+lchair gt6500 8 35.000 -42.744 95.184
+lchair gt6500 7 35.000 -39.037 118.851
+lchair gt6500 17 38.000 -39.161 114.678
+lchair gt6500 0 38.000 -35.565 138.907
+lchair gt6500 6 35.000 -34.309 142.888
+lchair gt6500 5 34.906 -29.162 166.280
+lchair gt6500 1 38.054 -29.061 162.107
+lchair gt6500 2 38.288 -26.739 186.487
+lchair gt6500 12 34.774 -58.600 -0.503
+lchair gt6510 11 34.713 -58.258 22.612
+lchair gt6510 13 38.302 -58.461 21.138
+lchair gt6510 14 38.074 -52.099 44.802
+lchair gt6510 10 34.939 -51.526 46.175
+lchair gt6510 9 35.000 -48.801 70.071
+lchair gt6510 15 38.000 -48.925 68.588
+lchair gt6510 16 38.000 -43.736 92.532
+lchair gt6510 8 35.000 -43.224 93.929
+lchair gt6510 7 35.000 -39.100 117.509
+lchair gt6510 17 38.000 -39.144 116.022
+lchair gt6510 0 38.000 -35.180 140.194
+lchair gt6510 6 35.000 -34.732 141.613
+lchair gt6510 5 34.919 -29.152 164.936
+lchair gt6510 1 38.067 -29.116 163.449
+lchair gt6510 2 38.301 -26.417 187.791
+lchair gt6510 12 35.773 -58.600 -1.362
+lchair gt6520 11 34.701 -58.430 21.374
+lchair gt6520 13 38.290 -58.292 22.377
+lchair gt6520 14 38.063 -51.619 45.956
+lchair gt6520 10 34.928 -52.008 45.021
+lchair gt6520 9 35.000 -48.907 68.825
+lchair gt6520 15 38.000 -48.822 69.834
+lchair gt6520 16 38.000 -43.307 93.707
+lchair gt6520 8 35.000 -43.656 92.756
+lchair gt6520 7 35.000 -39.139 116.259
+lchair gt6520 17 38.000 -39.108 117.271
+lchair gt6520 0 38.000 -34.805 141.387
+lchair gt6520 6 35.000 -35.110 140.421
+lchair gt6520 5 34.931 -29.124 163.687
+lchair gt6520 1 38.079 -29.148 164.699
+lchair gt6520 2 38.313 -26.100 189.000
+lchair gt6520 4 34.697 -26.358 188.021
+lchair gt6520 12 37.001 -58.600 -1.435
+lift: client clock moved 0 ticks in one tick, now gt6520
+lchair gt6530 11 34.689 -58.584 20.133
+lchair gt6530 13 38.278 -58.106 23.613
+lchair gt6530 14 38.052 -51.126 47.104
+lchair gt6530 10 34.917 -52.477 43.863
+lchair gt6530 9 35.000 -48.994 67.578
+lchair gt6530 15 38.000 -48.701 71.078
+lchair gt6530 16 38.000 -42.864 94.875
+lchair gt6530 8 35.000 -44.073 91.578
+lchair gt6530 7 35.000 -39.159 115.009
+lchair gt6530 17 38.000 -39.055 118.520
+lchair gt6530 0 38.000 -34.415 142.574
+lchair gt6530 6 35.000 -35.472 139.225
+lchair gt6530 5 34.943 -29.076 162.438
+lchair gt6530 1 38.091 -29.162 165.949
+lchair gt6530 2 38.324 -25.767 190.205
+lchair gt6530 4 34.709 -26.662 186.809
+lchair gt6530 12 38.037 -58.600 -0.775
+lchair gt6540 12 38.492 -58.600 0.367
+lchair gt6540 11 34.677 -58.721 18.891
+lchair gt6540 13 38.266 -57.902 24.846
+lchair gt6540 10 34.906 -52.932 42.699
+lchair gt6540 14 38.041 -50.619 48.247
+lchair gt6540 9 35.000 -49.064 66.330
+lchair gt6540 15 38.000 -48.562 72.321
+lchair gt6540 8 35.000 -44.475 90.394
+lchair gt6540 16 38.000 -42.407 96.039
+lchair gt6540 7 35.000 -39.161 113.759
+lchair gt6540 17 38.000 -38.982 119.768
+lchair gt6540 0 38.000 -34.011 143.757
+lchair gt6540 6 35.000 -35.818 138.024
+lchair gt6540 5 34.955 -29.011 161.190
+lchair gt6540 1 38.103 -29.157 167.199
+lchair gt6540 2 38.336 -25.418 191.405
+lchair gt6540 4 34.720 -26.949 185.592
+lchair gt6550 12 38.489 -58.721 1.610
+lchair gt6550 11 34.665 -58.839 17.647
+lchair gt6550 13 38.254 -57.680 26.076
+lchair gt6550 10 34.895 -53.373 41.529
+lchair gt6550 14 38.030 -50.100 49.384
+lchair gt6550 9 35.000 -49.115 65.081
+lchair gt6550 15 38.000 -48.405 73.561
+lchair gt6550 8 35.000 -44.863 89.206
+lchair gt6550 16 38.000 -41.936 97.197
+lchair gt6550 7 35.000 -39.145 112.510
+lchair gt6550 17 38.000 -38.892 121.015
+lchair gt6550 6 35.000 -36.149 136.818
+lchair gt6550 0 38.000 -33.591 144.934
+lchair gt6550 5 34.967 -28.927 159.943
+lchair gt6550 1 38.115 -29.134 168.448
+lchair gt6550 4 34.732 -27.219 184.372
+lchair gt6550 2 38.347 -25.054 192.601
+lchair gt6560 12 38.477 -58.839 2.854
+lchair gt6560 11 34.653 -58.939 16.401
+lchair gt6560 13 38.242 -57.442 27.303
+lchair gt6560 10 34.883 -53.800 40.354
+lchair gt6560 14 38.019 -49.569 50.516
+lchair gt6560 9 35.000 -49.148 63.832
+lchair gt6560 15 38.000 -48.231 74.798
+lchair gt6560 8 35.000 -45.235 88.013
+lchair gt6560 16 38.000 -41.452 98.349
+lchair gt6560 7 35.000 -39.110 111.260
+lchair gt6560 17 38.000 -38.783 122.260
+lchair gt6560 6 35.000 -36.463 135.608
+lchair gt6560 0 38.000 -33.157 146.107
+lchair gt6560 5 34.979 -28.825 158.697
+lchair gt6560 1 38.127 -29.092 169.698
+lchair gt6560 4 34.744 -27.473 183.148
+lchair gt6560 2 38.359 -24.674 193.792
+lchair gt6570 12 38.465 -58.939 4.100
+lchair gt6570 11 34.641 -59.020 15.153
+lchair gt6570 13 38.231 -57.186 28.526
+lchair gt6570 10 34.872 -54.212 39.174
+lchair gt6570 14 38.008 -49.025 51.641
+lchair gt6570 9 35.000 -49.162 62.582
+lchair gt6570 15 38.000 -48.038 76.033
+lchair gt6570 8 35.000 -45.592 86.815
+lchair gt6570 16 38.000 -40.954 99.496
+lchair gt6570 7 35.000 -39.056 110.011
+lchair gt6570 17 38.000 -38.656 123.503
+lchair gt6570 6 35.000 -36.761 134.395
+lchair gt6570 0 38.000 -32.709 147.274
+lchair gt6570 5 34.991 -28.704 157.453
+lchair gt6570 1 38.139 -29.032 170.946
+lchair gt6570 4 34.756 -27.709 181.921
+lchair gt6570 2 38.370 -24.279 194.978
+lchair gt6580 12 38.453 -59.020 5.347
+lchair gt6580 11 34.629 -59.083 13.905
+lchair gt6580 13 38.219 -56.913 29.746
+lchair gt6580 10 34.860 -54.609 37.989
+lchair gt6580 14 38.000 -48.633 52.790
+lchair gt6580 9 35.000 -49.157 61.332
+lchair gt6580 15 38.000 -47.828 77.266
+lchair gt6580 8 35.000 -45.933 85.612
+lchair gt6580 16 38.000 -40.443 100.636
+lchair gt6580 7 35.000 -38.984 108.763
+lchair gt6580 17 38.000 -38.511 124.745
+lchair gt6580 6 35.000 -37.043 133.177
+lchair gt6580 0 38.000 -32.247 148.435
+lchair gt6580 5 35.000 -28.730 156.239
+lchair gt6580 1 38.151 -28.953 172.194
+lchair gt6580 4 34.767 -27.929 180.690
+lchair gt6580 2 38.381 -23.869 196.158
+lchair gt6590 12 38.441 -59.083 6.596
+lchair gt6590 11 34.617 -59.128 12.656
+lchair gt6590 13 38.207 -56.624 30.962
+lchair gt6590 10 34.849 -54.992 36.799
+lchair gt6590 14 38.000 -48.763 54.033
+lchair gt6590 9 35.000 -49.135 60.082
+lchair gt6590 15 38.000 -47.601 78.495
+lchair gt6590 8 35.000 -46.258 84.405
+lchair gt6590 16 38.000 -39.920 101.772
+lchair gt6590 7 35.000 -38.894 107.517
+lchair gt6590 17 38.000 -38.348 125.984
+lchair gt6590 6 35.000 -37.308 131.955
+lchair gt6590 5 35.000 -29.280 155.117
+lchair gt6590 0 38.000 -31.772 149.591
+lchair gt6590 1 38.163 -28.857 173.440
+lchair gt6590 4 34.779 -28.130 179.457
+lchair gt6590 2 38.393 -23.445 197.334
+lift: sync stamp 6600 at client gt6599, clock moved 1 since the last tick
+lchair gt6600 12 38.430 -59.126 7.751
+lchair gt6600 11 34.606 -59.153 11.500
+lchair gt6600 10 34.838 -55.332 35.694
+lchair gt6600 13 38.196 -56.342 32.083
+lchair gt6600 14 38.000 -48.867 55.184
+lchair gt6600 9 35.000 -49.097 58.927
+lchair gt6600 15 38.000 -47.375 79.629
+lchair gt6600 8 35.000 -46.544 83.285
+lchair gt6600 16 38.000 -39.425 102.817
+lchair gt6600 7 35.000 -38.795 106.365
+lchair gt6600 17 38.000 -38.181 127.128
+lchair gt6600 6 35.000 -37.537 130.822
+lchair gt6600 5 35.000 -29.778 154.073
+lchair gt6600 0 38.000 -31.320 150.656
+lchair gt6600 1 38.174 -28.751 174.591
+lchair gt6600 4 34.790 -28.301 178.313
+lchair gt6600 2 38.403 -23.040 198.417
+lchair gt6610 12 38.417 -59.155 9.095
+lchair gt6610 11 34.593 -59.162 10.156
+lchair gt6610 10 34.826 -55.710 34.405
+lchair gt6610 13 38.184 -55.996 33.382
+lchair gt6610 14 38.000 -48.968 56.524
+lchair gt6610 9 35.000 -49.034 57.584
+lchair gt6610 8 35.000 -46.859 81.979
+lchair gt6610 15 38.000 -47.095 80.943
+lchair gt6610 16 38.000 -38.836 104.025
+lchair gt6610 7 35.000 -38.659 105.028
+lchair gt6610 6 35.000 -37.786 129.501
+lchair gt6610 17 38.000 -37.968 128.455
+lchair gt6610 5 35.000 -30.344 152.854
+lchair gt6610 0 38.000 -30.781 151.886
+lchair gt6610 1 38.187 -28.608 175.927
+lchair gt6610 4 34.803 -28.481 176.981
+lchair gt6610 2 38.415 -22.554 199.670
+lchair gt6620 12 38.405 -59.162 10.344
+lchair gt6620 11 34.581 -59.152 8.907
+lchair gt6620 10 34.814 -56.046 33.201
+lchair gt6620 13 38.172 -55.658 34.585
+lchair gt6620 14 38.000 -49.044 57.772
+lchair gt6620 9 35.000 -48.956 56.337
+lchair gt6620 8 35.000 -47.135 80.759
+lchair gt6620 15 38.000 -46.816 82.162
+lchair gt6620 16 38.000 -38.679 105.215
+lchair gt6620 7 35.000 -38.920 103.856
+lchair gt6620 6 35.000 -37.999 128.270
+lchair gt6620 17 38.000 -37.753 129.686
+lchair gt6620 5 35.000 -30.857 151.714
+lchair gt6620 0 38.000 -30.266 153.025
+lchair gt6620 4 34.815 -28.630 175.740
+lchair gt6620 1 38.199 -28.457 177.168
+lchair gt6620 2 38.426 -22.087 200.829
+lchair gt6620 3 34.587 -22.623 199.495
+lift: client clock moved 0 ticks in one tick, now gt6620
+lchair gt6630 12 38.393 -59.152 11.594
+lchair gt6630 10 34.803 -56.365 31.992
+lchair gt6630 13 38.161 -55.304 35.784
+lchair gt6630 14 38.000 -49.101 59.021
+lchair gt6630 9 35.000 -48.859 55.091
+lchair gt6630 8 35.000 -47.394 79.536
+lchair gt6630 15 38.000 -46.522 83.376
+lchair gt6630 16 38.000 -38.803 106.458
+lchair gt6630 7 35.000 -39.466 102.732
+lchair gt6630 6 35.000 -38.195 127.035
+lchair gt6630 17 38.000 -37.519 130.914
+lchair gt6630 5 35.000 -31.357 150.569
+lchair gt6630 0 38.000 -29.738 154.159
+lchair gt6630 4 34.827 -28.760 174.497
+lchair gt6630 1 38.211 -28.288 178.406
+lchair gt6630 2 38.437 -21.607 201.983
+lchair gt6630 3 34.598 -23.073 198.329
+lift: client clock moved 2 ticks in one tick, now gt6640
+lchair gt6640 12 38.383 -59.126 12.719
+lchair gt6640 10 34.792 -56.639 30.901
+lchair gt6640 13 38.150 -54.973 36.859
+lchair gt6640 14 38.000 -49.136 60.145
+lchair gt6640 9 35.000 -48.757 53.970
+lchair gt6640 8 35.000 -47.613 78.433
+lchair gt6640 15 38.000 -46.242 84.466
+lchair gt6640 16 38.000 -38.899 107.579
+lchair gt6640 7 35.000 -39.947 101.715
+lchair gt6640 6 35.000 -38.356 125.922
+lchair gt6640 17 38.000 -37.295 132.017
+lchair gt6640 5 35.000 -31.796 149.533
+lchair gt6640 0 38.000 -29.253 155.173
+lchair gt6640 4 34.838 -28.862 173.377
+lchair gt6640 1 38.221 -28.121 179.519
+lchair gt6640 2 38.447 -21.163 203.017
+lchair gt6640 3 34.608 -23.467 197.275
+lchair gt6650 12 38.369 -59.075 14.093
+lchair gt6650 10 34.779 -56.955 29.563
+lchair gt6650 13 38.138 -54.551 38.168
+lchair gt6650 14 38.000 -49.159 61.520
+lchair gt6650 9 35.000 -48.612 52.603
+lchair gt6650 8 35.000 -47.861 77.081
+lchair gt6650 15 38.000 -45.883 85.793
+lchair gt6650 16 38.000 -38.996 108.951
+lchair gt6650 7 35.000 -40.521 100.465
+lchair gt6650 6 35.000 -38.534 124.558
+lchair gt6650 17 38.000 -37.002 133.360
+lchair gt6650 5 35.000 -32.318 148.261
+lchair gt6650 0 38.000 -28.646 156.407
+lchair gt6650 4 34.851 -28.966 172.006
+lchair gt6650 1 38.234 -27.897 180.875
+lchair gt6650 2 38.459 -20.607 204.274
+lchair gt6650 3 34.620 -23.932 195.981
+lchair gt6660 12 38.357 -59.009 15.341
+lchair gt6660 10 34.768 -57.225 28.343
+lchair gt6660 13 38.126 -54.151 39.352
+lchair gt6660 14 38.000 -49.161 62.770
+lchair gt6660 9 34.990 -49.108 51.472
+lchair gt6660 8 35.000 -48.068 75.848
+lchair gt6660 15 38.000 -45.539 86.995
+lchair gt6660 16 38.000 -39.065 110.199
+lchair gt6660 7 35.000 -41.030 99.323
+lchair gt6660 6 35.000 -38.676 123.316
+lchair gt6660 17 38.000 -36.717 134.577
+lchair gt6660 5 35.000 -32.778 147.099
+lchair gt6660 0 38.011 -28.724 157.640
+lchair gt6660 4 34.863 -29.042 170.758
+lchair gt6660 1 38.246 -27.675 182.105
+lchair gt6660 2 38.470 -20.088 205.411
+lchair gt6660 3 34.632 -24.340 194.800
+lift: client clock moved 0 ticks in one tick, now gt6660
+lchair gt6670 10 34.756 -57.479 27.119
+lchair gt6670 12 38.345 -58.925 16.588
+lchair gt6670 13 38.115 -53.737 40.531
+lchair gt6670 9 34.979 -49.650 50.346
+lchair gt6670 8 35.000 -48.258 74.612
+lchair gt6670 14 38.000 -49.144 64.020
+lchair gt6670 15 38.000 -45.180 88.192
+lchair gt6670 16 38.000 -39.116 111.448
+lchair gt6670 7 35.000 -41.525 98.176
+lchair gt6670 6 35.000 -38.800 122.073
+lchair gt6670 17 38.000 -36.417 135.791
+lchair gt6670 5 35.000 -33.224 145.931
+lchair gt6670 0 38.023 -28.841 158.884
+lchair gt6670 4 34.875 -29.100 169.510
+lchair gt6670 1 38.258 -27.436 183.332
+lchair gt6670 2 38.481 -19.556 206.543
+lchair gt6670 3 34.643 -24.732 193.613
+lchair gt6680 10 34.744 -57.715 25.891
+lchair gt6680 12 38.333 -58.822 17.834
+lchair gt6680 13 38.104 -53.308 41.705
+lchair gt6680 9 34.968 -50.179 49.214
+lchair gt6680 8 35.000 -48.430 73.374
+lchair gt6680 14 38.000 -49.109 65.269
+lchair gt6680 15 38.000 -44.806 89.385
+lchair gt6680 7 35.000 -42.008 97.023
+lchair gt6680 6 35.000 -38.906 120.827
+lchair gt6680 16 38.000 -39.148 112.698
+lchair gt6680 17 38.000 -36.100 137.000
+lchair gt6680 5 35.000 -33.655 144.758
+lchair gt6680 4 34.887 -29.139 168.260
+lchair gt6680 0 38.035 -28.941 160.130
+lchair gt6680 1 38.270 -27.180 184.556
+lchair gt6680 2 38.492 -19.012 207.668
+lchair gt6680 3 34.655 -25.110 192.421
+lchair gt6690 10 34.732 -57.934 24.661
+lchair gt6690 12 38.321 -58.701 19.078
+lchair gt6690 13 38.093 -52.865 42.874
+lchair gt6690 9 34.957 -50.696 48.076
+lchair gt6690 8 35.000 -48.584 72.134
+lchair gt6690 14 38.000 -49.055 66.518
+lchair gt6690 15 38.000 -44.416 90.573
+lchair gt6690 7 35.000 -42.477 95.864
+lchair gt6690 6 35.000 -38.994 119.580
+lchair gt6690 16 38.000 -39.162 113.947
+lchair gt6690 17 38.000 -35.767 138.205
+lchair gt6690 5 35.000 -34.072 143.579
+lchair gt6690 4 34.899 -29.159 167.011
+lchair gt6690 0 38.047 -29.022 161.377
+lchair gt6690 1 38.281 -26.907 185.775
+lchair gt6690 3 34.666 -25.472 191.225
+lchair gt6690 2 38.471 -18.600 208.820
+lchair gt6700 10 34.720 -58.135 23.427
+lchair gt6700 12 38.309 -58.562 20.320
+lchair gt6700 13 38.081 -52.407 44.037
+lchair gt6700 9 34.946 -51.201 46.932
+lchair gt6700 8 35.000 -48.721 70.891
+lchair gt6700 14 38.000 -48.982 67.766
+lchair gt6700 15 38.000 -44.011 91.755
+lchair gt6700 7 35.000 -42.932 94.700
+lchair gt6700 6 35.000 -39.064 118.332
+lchair gt6700 16 38.000 -39.157 115.197
+lchair gt6700 17 38.000 -35.418 139.405
+lchair gt6700 5 35.000 -34.475 142.396
+lchair gt6700 4 34.911 -29.161 165.761
+lchair gt6700 0 38.059 -29.085 162.626
+lchair gt6700 1 38.293 -26.617 186.991
+lchair gt6700 3 34.678 -25.818 190.024
+lchair gt6700 2 37.910 -18.600 209.913
+lift: sync stamp 6700 at client gt6700, clock moved 0 since the last tick
+lchair gt6710 10 34.709 -58.319 22.191
+lchair gt6710 12 38.297 -58.406 21.560
+lchair gt6710 13 38.070 -51.937 45.195
+lchair gt6710 9 34.935 -51.692 45.782
+lchair gt6710 8 35.000 -48.839 69.647
+lchair gt6710 14 38.000 -48.892 69.013
+lchair gt6710 15 38.000 -43.592 92.933
+lchair gt6710 7 35.000 -43.373 93.530
+lchair gt6710 6 35.000 -39.115 117.083
+lchair gt6710 16 38.000 -39.134 116.447
+lchair gt6710 17 38.000 -35.054 140.601
+lchair gt6710 5 35.000 -34.862 141.208
+lchair gt6710 4 34.923 -29.145 164.511
+lchair gt6710 0 38.071 -29.129 163.875
+lchair gt6710 1 38.305 -26.311 188.203
+lchair gt6710 3 34.689 -26.149 188.818
+lchair gt6710 2 36.816 -18.600 210.472
+lift: client clock moved 2 ticks in one tick, now gt6720
+lchair gt6720 12 38.287 -58.249 22.674
+lchair gt6720 13 38.060 -51.501 46.233
+lchair gt6720 9 34.925 -52.122 44.743
+lchair gt6720 8 35.000 -48.929 68.526
+lchair gt6720 14 38.000 -48.795 70.134
+lchair gt6720 15 38.000 -43.202 93.988
+lchair gt6720 7 35.000 -43.757 92.473
+lchair gt6720 6 35.000 -39.145 115.959
+lchair gt6720 16 38.000 -39.097 117.572
+lchair gt6720 17 38.000 -34.713 141.673
+lchair gt6720 5 35.000 -35.198 140.134
+lchair gt6720 4 34.934 -29.114 163.386
+lchair gt6720 0 38.082 -29.153 164.999
+lchair gt6720 1 38.315 -26.021 189.290
+lchair gt6720 3 34.700 -26.432 187.730
+lchair gt6720 2 35.716 -18.600 210.336
+lchair gt6730 12 38.274 -58.038 24.033
+lchair gt6730 13 38.048 -50.955 47.494
+lchair gt6730 9 34.913 -52.634 43.467
+lchair gt6730 8 35.000 -49.020 67.154
+lchair gt6730 14 38.000 -48.656 71.502
+lchair gt6730 15 38.000 -42.710 95.272
+lchair gt6730 7 35.000 -44.212 91.175
+lchair gt6730 6 35.000 -39.162 114.584
+lchair gt6730 16 38.000 -39.032 118.945
+lchair gt6730 17 38.000 -34.279 142.978
+lchair gt6730 5 35.000 -35.591 138.816
+lchair gt6730 4 34.947 -29.056 162.013
+lchair gt6730 0 38.095 -29.162 166.374
+lchair gt6730 1 38.328 -25.650 190.614
+lchair gt6730 3 34.713 -26.761 186.395
+lchair gt6730 2 34.726 -18.600 209.422
+lchair gt6740 12 38.262 -57.828 25.265
+lchair gt6740 9 34.902 -53.084 42.301
+lchair gt6740 13 38.037 -50.444 48.635
+lchair gt6740 8 35.000 -49.083 65.905
+lchair gt6740 14 38.000 -48.511 72.743
+lchair gt6740 7 35.000 -44.609 89.990
+lchair gt6740 15 38.000 -42.248 96.434
+lchair gt6740 6 35.000 -39.157 113.334
+lchair gt6740 16 38.000 -38.953 120.193
+lchair gt6740 5 35.000 -35.932 137.614
+lchair gt6740 17 38.000 -33.869 144.159
+lchair gt6740 4 34.959 -28.984 160.765
+lchair gt6740 0 38.107 -29.151 167.624
+lchair gt6740 1 38.340 -25.296 191.813
+lchair gt6740 3 34.724 -27.043 185.177
+lchair gt6740 2 34.503 -18.730 208.239
+lift: client clock moved 0 ticks in one tick, now gt6740
+lchair gt6750 12 38.250 -57.601 26.494
+lchair gt6750 9 34.891 -53.520 41.130
+lchair gt6750 13 38.026 -49.921 49.770
+lchair gt6750 8 35.000 -49.128 64.656
+lchair gt6750 14 38.000 -48.348 73.982
+lchair gt6750 7 35.000 -44.991 88.800
+lchair gt6750 15 38.000 -41.773 97.590
+lchair gt6750 6 35.000 -39.135 112.084
+lchair gt6750 16 38.000 -38.857 121.439
+lchair gt6750 5 35.000 -36.258 136.407
+lchair gt6750 17 38.000 -33.445 145.334
+lchair gt6750 4 34.971 -28.894 159.518
+lchair gt6750 0 38.119 -29.122 168.874
+lchair gt6750 3 34.736 -27.308 183.956
+lchair gt6750 1 38.351 -24.926 193.007
+lchair gt6750 2 34.513 -19.281 207.116
+lift: client clock moved 2 ticks in one tick, now gt6760
+lchair gt6760 12 38.239 -57.382 27.598
+lchair gt6760 9 34.880 -53.900 40.071
+lchair gt6760 13 38.016 -49.439 50.787
+lchair gt6760 8 35.000 -49.153 63.531
+lchair gt6760 14 38.000 -48.186 75.096
+lchair gt6760 7 35.000 -45.322 87.725
+lchair gt6760 15 38.000 -41.333 98.625
+lchair gt6760 6 35.000 -39.098 110.960
+lchair gt6760 16 38.000 -38.754 122.559
+lchair gt6760 5 35.000 -36.536 135.317
+lchair gt6760 17 38.000 -33.051 146.388
+lchair gt6760 4 34.982 -28.798 158.397
+lchair gt6760 0 38.130 -29.079 169.998
+lchair gt6760 3 34.747 -27.531 182.853
+lchair gt6760 1 38.361 -24.580 194.077
+lchair gt6760 2 34.523 -19.765 206.101
+lchair gt6770 12 38.227 -57.095 28.942
+lchair gt6770 9 34.868 -54.349 38.771
+lchair gt6770 13 38.005 -48.837 52.023
+lchair gt6770 8 35.000 -49.162 62.156
+lchair gt6770 14 38.000 -47.969 76.453
+lchair gt6770 7 35.000 -45.710 86.406
+lchair gt6770 15 38.000 -40.782 99.885
+lchair gt6770 6 35.000 -39.034 109.586
+lchair gt6770 16 38.000 -38.608 123.926
+lchair gt6770 5 35.000 -36.859 133.980
+lchair gt6770 17 38.000 -32.554 147.670
+lchair gt6770 4 34.995 -28.659 157.029
+lchair gt6770 0 38.143 -29.007 171.371
+lchair gt6770 3 34.760 -27.786 181.502
+lchair gt6770 1 38.374 -24.141 195.380
+lchair gt6770 2 34.535 -20.344 204.854
+lchair gt6780 12 38.215 -56.817 30.161
+lchair gt6780 9 34.857 -54.741 37.584
+lchair gt6780 13 38.000 -48.679 53.213
+lchair gt6780 8 35.000 -49.152 60.906
+lchair gt6780 14 38.000 -47.753 77.685
+lchair gt6780 7 35.000 -46.045 85.201
+lchair gt6780 15 38.000 -40.267 101.024
+lchair gt6780 6 35.000 -38.956 108.339
+lchair gt6780 16 38.000 -38.457 125.167
+lchair gt6780 5 35.000 -37.135 132.761
+lchair gt6780 17 38.000 -32.087 148.830
+lchair gt6780 4 35.000 -28.919 155.857
+lchair gt6780 0 38.155 -28.922 172.618
+lchair gt6780 3 34.771 -27.999 180.270
+lchair gt6780 1 38.385 -23.727 196.559
+lchair gt6780 2 34.546 -20.857 203.714
+lift: client clock moved 0 ticks in one tick, now gt6780
+lchair gt6790 12 38.203 -56.522 31.375
+lchair gt6790 9 34.845 -55.118 36.393
+lchair gt6790 13 38.000 -48.803 54.457
+lchair gt6790 8 35.000 -49.123 59.657
+lchair gt6790 14 38.000 -47.520 78.913
+lchair gt6790 7 35.000 -46.365 83.993
+lchair gt6790 15 38.000 -39.739 102.157
+lchair gt6790 6 35.000 -38.859 107.092
+lchair gt6790 16 38.000 -38.288 126.406
+lchair gt6790 5 35.000 -37.394 131.538
+lchair gt6790 4 35.000 -29.465 154.733
+lchair gt6790 17 38.000 -31.607 149.984
+lchair gt6790 0 38.167 -28.819 173.864
+lchair gt6790 3 34.783 -28.195 179.036
+lchair gt6790 1 38.396 -23.297 197.733
+lchair gt6790 2 34.557 -21.357 202.569
+lift: sync stamp 6800 at client gt6799, clock moved 0 since the last tick
+lchair gt6800 9 34.834 -55.480 35.196
+lchair gt6800 12 38.191 -56.210 32.586
+lchair gt6800 13 38.000 -48.909 55.702
+lchair gt6800 8 35.000 -49.075 58.408
+lchair gt6800 7 35.000 -46.668 82.780
+lchair gt6800 14 38.000 -47.269 80.137
+lchair gt6800 15 38.000 -39.199 103.284
+lchair gt6800 6 35.000 -38.745 105.848
+lchair gt6800 16 38.000 -38.101 127.642
+lchair gt6800 5 35.000 -37.636 130.312
+lchair gt6800 4 35.000 -29.999 153.603
+lchair gt6800 17 38.000 -31.113 151.132
+lchair gt6800 0 38.179 -28.698 175.108
+lchair gt6800 3 34.795 -28.373 177.799
+lchair gt6800 1 38.408 -22.854 198.902
+lchair gt6800 2 34.568 -21.844 201.417
+lchair gt6810 9 34.822 -55.826 33.995
+lchair gt6810 12 38.180 -55.883 33.792
+lchair gt6810 13 38.000 -48.996 56.949
+lchair gt6810 8 35.000 -49.009 57.159
+lchair gt6810 7 35.000 -46.955 81.564
+lchair gt6810 14 38.000 -47.002 81.358
+lchair gt6810 15 38.000 -38.647 104.406
+lchair gt6810 6 35.000 -38.612 104.605
+lchair gt6810 5 35.000 -37.861 129.082
+lchair gt6810 16 38.000 -37.897 128.875
+lchair gt6810 4 35.000 -30.520 152.467
+lchair gt6810 17 38.000 -30.607 152.275
+lchair gt6810 3 34.807 -28.534 176.559
+lchair gt6810 0 38.191 -28.559 176.350
+lchair gt6810 1 38.419 -22.396 200.065
+lchair gt6810 2 34.579 -22.318 200.261
+lift: client clock moved 2 ticks in one tick, now gt6820
+lchair gt6820 12 38.169 -55.575 34.874
+lchair gt6820 13 38.000 -49.059 58.072
+lchair gt6820 8 35.000 -48.934 56.037
+lchair gt6820 7 35.000 -47.199 80.466
+lchair gt6820 14 38.000 -46.747 82.454
+lchair gt6820 15 38.000 -38.711 105.514
+lchair gt6820 6 35.000 -39.052 103.586
+lchair gt6820 5 35.000 -38.048 127.973
+lchair gt6820 16 38.000 -37.698 129.982
+lchair gt6820 4 35.000 -30.979 151.439
+lchair gt6820 17 38.000 -30.140 153.298
+lchair gt6820 3 34.818 -28.663 175.442
+lchair gt6820 0 38.202 -28.418 177.466
+lchair gt6820 1 38.429 -21.973 201.107
+lchair gt6820 2 34.589 -22.732 199.215
+lchair gt6830 12 38.157 -55.180 36.191
+lchair gt6830 13 38.000 -49.116 59.446
+lchair gt6830 8 35.000 -48.822 54.666
+lchair gt6830 7 35.000 -47.479 79.119
+lchair gt6830 14 38.000 -46.417 83.789
+lchair gt6830 15 38.000 -38.841 106.882
+lchair gt6830 6 35.000 -39.649 102.347
+lchair gt6830 5 35.000 -38.258 126.614
+lchair gt6830 16 38.000 -37.436 131.332
+lchair gt6830 4 35.000 -31.525 150.178
+lchair gt6830 17 38.000 -29.556 154.543
+lchair gt6830 3 34.831 -28.800 174.074
+lchair gt6830 0 38.215 -28.226 178.828
+lchair gt6830 1 38.441 -21.440 202.375
+lchair gt6830 2 34.602 -23.224 197.931
+lchair gt6840 12 38.145 -54.806 37.384
+lchair gt6840 13 38.000 -49.148 60.696
+lchair gt6840 8 35.000 -48.701 53.422
+lchair gt6840 7 35.000 -47.715 77.892
+lchair gt6840 14 38.000 -46.100 84.998
+lchair gt6840 15 38.000 -38.941 108.128
+lchair gt6840 6 35.000 -40.179 101.215
+lchair gt6840 5 35.000 -38.430 125.376
+lchair gt6840 16 38.000 -37.180 132.555
+lchair gt6840 4 35.000 -32.007 149.024
+lchair gt6840 17 38.000 -29.012 155.668
+lchair gt6840 3 34.843 -28.906 172.828
+lchair gt6840 0 38.227 -28.034 180.062
+lchair gt6840 1 38.452 -20.943 203.522
+lchair gt6840 2 34.613 -23.655 196.758
+lift: client clock moved 0 ticks in one tick, now gt6840
+lchair gt6850 12 38.134 -54.416 38.571
+lchair gt6850 13 38.000 -49.162 61.946
+lchair gt6850 8 34.997 -48.744 52.212
+lchair gt6850 7 35.000 -47.934 76.661
+lchair gt6850 14 38.000 -45.768 86.203
+lchair gt6850 15 38.000 -39.022 109.376
+lchair gt6850 6 35.000 -40.696 100.077
+lchair gt6850 5 35.000 -38.584 124.136
+lchair gt6850 16 38.000 -36.907 133.775
+lchair gt6850 4 35.000 -32.476 147.866
+lchair gt6850 17 38.003 -28.636 156.820
+lchair gt6850 3 34.855 -28.994 171.581
+lchair gt6850 0 38.238 -27.823 181.295
+lchair gt6850 1 38.463 -20.432 204.662
+lchair gt6850 2 34.624 -24.072 195.579
+lift: client clock moved 2 ticks in one tick, now gt6860
+lchair gt6860 12 38.124 -54.053 39.636
+lchair gt6860 13 38.000 -49.158 63.071
+lchair gt6860 8 34.988 -49.239 51.202
+lchair gt6860 7 35.000 -48.116 75.551
+lchair gt6860 14 38.000 -45.454 87.283
+lchair gt6860 15 38.000 -39.079 110.499
+lchair gt6860 6 35.000 -41.150 99.048
+lchair gt6860 5 35.000 -38.708 123.017
+lchair gt6860 16 38.000 -36.647 134.870
+lchair gt6860 4 35.000 -32.886 146.818
+lchair gt6860 17 38.014 -28.754 157.939
+lchair gt6860 3 34.866 -29.058 170.458
+lchair gt6860 0 38.249 -27.619 182.401
+lchair gt6860 1 38.473 -19.961 205.684
+lchair gt6860 2 34.634 -24.435 194.515
+lchair gt6870 12 38.111 -53.592 40.932
+lchair gt6870 8 34.976 -49.831 49.961
+lchair gt6870 7 35.000 -48.319 74.191
+lchair gt6870 13 38.000 -49.134 64.445
+lchair gt6870 14 38.000 -45.054 88.599
+lchair gt6870 15 38.000 -39.129 111.873
+lchair gt6870 6 35.000 -41.691 97.784
+lchair gt6870 5 35.000 -38.839 121.649
+lchair gt6870 16 38.000 -36.311 136.203
+lchair gt6870 4 35.000 -33.372 145.532
+lchair gt6870 17 38.027 -28.877 159.308
+lchair gt6870 3 34.879 -29.115 169.084
+lchair gt6870 0 38.262 -27.350 183.749
+lchair gt6870 1 38.485 -19.372 206.926
+lchair gt6870 2 34.647 -24.862 193.208
+lchair gt6880 12 38.100 -53.158 42.104
+lchair gt6880 8 34.965 -50.357 48.827
+lchair gt6880 7 35.000 -48.485 72.952
+lchair gt6880 13 38.000 -49.092 65.695
+lchair gt6880 14 38.000 -44.675 89.790
+lchair gt6880 6 35.000 -42.169 96.629
+lchair gt6880 5 35.000 -38.938 120.403
+lchair gt6880 15 38.000 -39.155 113.123
+lchair gt6880 16 38.000 -35.988 137.411
+lchair gt6880 4 35.000 -33.799 144.357
+lchair gt6880 3 34.891 -29.148 167.835
+lchair gt6880 17 38.039 -28.971 160.555
+lchair gt6880 0 38.274 -27.089 184.971
+lchair gt6880 2 34.659 -25.235 192.014
+lchair gt6880 1 38.496 -18.824 208.050
+lift: client clock moved 0 ticks in one tick, now gt6880
+lchair gt6890 12 38.089 -52.711 43.271
+lchair gt6890 8 34.954 -50.869 47.687
+lchair gt6890 7 35.000 -48.633 71.711
+lchair gt6890 13 38.000 -49.032 66.943
+lchair gt6890 14 38.000 -44.280 90.976
+lchair gt6890 6 35.000 -42.633 95.468
+lchair gt6890 5 35.000 -39.020 119.155
+lchair gt6890 15 38.000 -39.162 114.373
+lchair gt6890 16 38.000 -35.650 138.614
+lchair gt6890 4 35.000 -34.211 143.177
+lchair gt6890 3 34.903 -29.162 166.585
+lchair gt6890 17 38.051 -29.045 161.802
+lchair gt6890 0 38.285 -26.810 186.190
+lchair gt6890 2 34.670 -25.591 190.816
+lchair gt6890 1 38.361 -18.600 209.230
+lift: sync stamp 6900 at client gt6899, clock moved 0 since the last tick
+lchair gt6900 12 38.078 -52.249 44.432
+lchair gt6900 8 34.943 -51.369 46.541
+lchair gt6900 7 35.000 -48.763 70.468
+lchair gt6900 13 38.000 -48.954 68.191
+lchair gt6900 14 38.000 -43.870 92.157
+lchair gt6900 6 35.000 -43.084 94.302
+lchair gt6900 5 35.000 -39.083 117.907
+lchair gt6900 15 38.000 -39.151 115.623
+lchair gt6900 16 38.000 -35.296 139.813
+lchair gt6900 4 35.000 -34.609 141.992
+lchair gt6900 3 34.915 -29.157 165.335
+lchair gt6900 17 38.063 -29.102 163.051
+lchair gt6900 0 38.297 -26.514 187.404
+lchair gt6900 2 34.682 -25.932 189.614
+lchair gt6900 1 37.580 -18.600 210.180
+lchair gt6910 12 38.066 -51.773 45.588
+lchair gt6910 8 34.932 -51.856 45.390
+lchair gt6910 7 35.000 -48.875 69.223
+lchair gt6910 13 38.000 -48.857 69.437
+lchair gt6910 14 38.000 -43.446 93.333
+lchair gt6910 6 35.000 -43.520 93.131
+lchair gt6910 5 35.000 -39.128 116.658
+lchair gt6910 15 38.000 -39.122 116.873
+lchair gt6910 16 38.000 -34.926 141.007
+lchair gt6910 4 35.000 -34.991 140.802
+lchair gt6910 3 34.927 -29.135 164.085
+lchair gt6910 17 38.075 -29.140 164.300
+lchair gt6910 0 38.309 -26.203 188.615
+lchair gt6910 2 34.693 -26.258 188.407
+lchair gt6910 1 36.393 -18.600 210.494
+lchair gt6920 12 38.055 -51.284 46.739
+lchair gt6920 7 35.000 -48.968 67.976
+lchair gt6920 13 38.000 -48.742 70.682
+lchair gt6920 14 38.000 -43.007 94.503
+lchair gt6920 6 35.000 -43.942 91.954
+lchair gt6920 5 35.000 -39.155 115.408
+lchair gt6920 15 38.000 -39.074 118.122
+lchair gt6920 16 38.000 -34.541 142.196
+lchair gt6920 4 35.000 -35.358 139.607
+lchair gt6920 3 34.939 -29.093 162.836
+lchair gt6920 17 38.087 -29.160 165.550
+lchair gt6920 0 38.320 -25.875 189.821
+lchair gt6920 2 34.705 -26.566 187.196
+lchair gt6920 1 35.246 -18.600 210.053
+lchair gt6930 12 38.044 -50.782 47.883
+lchair gt6930 7 35.000 -49.044 66.729
+lchair gt6930 13 38.000 -48.609 71.925
+lchair gt6930 14 38.000 -42.554 95.668
+lchair gt6930 6 35.000 -44.349 90.772
+lchair gt6930 5 35.000 -39.162 114.158
+lchair gt6930 15 38.000 -39.007 119.370
+lchair gt6930 16 38.000 -34.141 143.380
+lchair gt6930 4 35.000 -35.709 138.407
+lchair gt6930 3 34.951 -29.034 161.588
+lchair gt6930 17 38.099 -29.161 166.800
+lchair gt6930 0 38.332 -25.531 191.023
+lchair gt6930 2 34.717 -26.859 185.981
+lchair gt6930 1 34.573 -18.600 209.026
+lchair gt6940 12 38.033 -50.267 49.022
+lchair gt6940 7 35.000 -49.101 65.480
+lchair gt6940 13 38.000 -48.457 73.165
+lchair gt6940 6 35.000 -44.741 89.585
+lchair gt6940 14 38.000 -42.088 96.828
+lchair gt6940 5 35.000 -39.152 112.908
+lchair gt6940 15 38.000 -38.923 120.617
+lchair gt6940 4 35.000 -36.045 137.203
+lchair gt6940 16 38.000 -33.727 144.559
+lchair gt6940 3 34.963 -28.956 160.340
+lchair gt6940 17 38.111 -29.143 168.050
+lchair gt6940 2 34.728 -27.135 184.762
+lchair gt6940 0 38.343 -25.172 192.220
+lchair gt6940 1 34.506 -18.919 207.857
+lift: sync stamp 6950 at client gt6949, clock moved 0 since the last tick
+lift: watcher1 sees its line faulted at gt6950 (speed 2.40), sneaking to get off
+lchair gt6950 12 38.023 -49.742 50.151
+lchair gt6950 7 35.000 -49.139 64.235
+lchair gt6950 13 38.000 -48.289 74.399
+lchair gt6950 6 35.000 -45.117 88.398
+lchair gt6950 14 38.000 -41.610 97.977
+lchair gt6950 5 35.000 -39.123 111.663
+lchair gt6950 15 38.000 -38.820 121.858
+lchair gt6950 4 35.000 -36.363 136.000
+lchair gt6950 16 38.000 -33.299 145.729
+lchair gt6950 3 34.975 -28.860 159.099
+lchair gt6950 17 38.123 -29.108 169.294
+lchair gt6950 2 34.740 -27.393 183.544
+lchair gt6950 0 38.355 -24.798 193.408
+lchair gt6950 1 34.517 -19.463 206.737
+lift: watcher1 is off the chair at gt6953
+lchair gt6960 12 38.015 -49.344 50.986
+lchair gt6960 7 35.000 -49.156 63.311
+lchair gt6960 13 38.000 -48.153 75.314
+lchair gt6960 6 35.000 -45.386 87.513
+lchair gt6960 14 38.000 -41.246 98.828
+lchair gt6960 5 35.000 -39.090 110.739
+lchair gt6960 15 38.000 -38.732 122.779
+lchair gt6960 4 35.000 -36.589 135.103
+lchair gt6960 16 38.000 -32.972 146.594
+lchair gt6960 3 34.984 -28.777 158.178
+lchair gt6960 17 38.132 -29.069 170.218
+lchair gt6960 2 34.749 -27.574 182.636
+lchair gt6960 0 38.363 -24.511 194.287
+lchair gt6960 1 34.525 -19.859 205.901
+lchair gt6970 12 38.011 -49.158 51.368
+lchair gt6970 7 35.000 -49.160 62.886
+lchair gt6970 13 38.000 -48.087 75.734
+lchair gt6970 6 35.000 -45.507 87.106
+lchair gt6970 14 38.000 -41.076 99.218
+lchair gt6970 5 35.000 -39.071 110.314
+lchair gt6970 15 38.000 -38.688 123.201
+lchair gt6970 4 35.000 -36.690 134.690
+lchair gt6970 16 38.000 -32.820 146.991
+lchair gt6970 3 34.988 -28.735 157.755
+lchair gt6970 17 38.136 -29.048 170.643
+lchair gt6970 2 34.753 -27.653 182.219
+lchair gt6970 0 38.367 -24.376 194.690
+lchair gt6970 1 34.529 -20.039 205.516
+lift: client clock moved 2 ticks in one tick, now gt6980
+lchair gt6980 12 38.011 -49.145 51.395
+lchair gt6980 7 35.000 -49.160 62.856
+lchair gt6980 13 38.000 -48.082 75.763
+lchair gt6980 6 35.000 -45.515 87.077
+lchair gt6980 14 38.000 -41.064 99.245
+lchair gt6980 5 35.000 -39.069 110.285
+lchair gt6980 15 38.000 -38.685 123.231
+lchair gt6980 4 35.000 -36.697 134.661
+lchair gt6980 16 38.000 -32.809 147.019
+lchair gt6980 3 34.988 -28.732 157.725
+lchair gt6980 17 38.136 -29.047 170.673
+lchair gt6980 2 34.753 -27.659 182.190
+lchair gt6980 0 38.367 -24.367 194.718
+lchair gt6980 1 34.529 -20.052 205.489
+lchair gt6990 12 38.011 -49.145 51.395
+lchair gt6990 7 35.000 -49.160 62.856
+lchair gt6990 13 38.000 -48.082 75.763
+lchair gt6990 6 35.000 -45.515 87.077
+lchair gt6990 14 38.000 -41.064 99.245
+lchair gt6990 5 35.000 -39.069 110.285
+lchair gt6990 15 38.000 -38.685 123.231
+lchair gt6990 4 35.000 -36.697 134.661
+lchair gt6990 16 38.000 -32.809 147.019
+lchair gt6990 3 34.988 -28.732 157.725
+lchair gt6990 17 38.136 -29.047 170.673
+lchair gt6990 2 34.753 -27.659 182.190
+lchair gt6990 0 38.367 -24.367 194.718
+lchair gt6990 1 34.529 -20.052 205.489
+lift: sync stamp 7000 at client gt6999, clock moved 1 since the last tick
+lchair gt7000 12 38.011 -49.141 51.404
+lchair gt7000 7 35.000 -49.160 62.846
+lchair gt7000 13 38.000 -48.080 75.773
+lchair gt7000 6 35.000 -45.518 87.068
+lchair gt7000 14 38.000 -41.060 99.254
+lchair gt7000 5 35.000 -39.069 110.275
+lchair gt7000 15 38.000 -38.684 123.241
+lchair gt7000 4 35.000 -36.700 134.651
+lchair gt7000 16 38.000 -32.805 147.028
+lchair gt7000 3 34.988 -28.731 157.715
+lchair gt7000 17 38.136 -29.046 170.683
+lchair gt7000 2 34.753 -27.661 182.180
+lchair gt7000 0 38.368 -24.364 194.728
+lchair gt7000 1 34.529 -20.056 205.480
+lchair gt7010 12 38.010 -49.097 51.494
+lchair gt7010 7 35.000 -49.161 62.746
+lchair gt7010 13 38.000 -48.064 75.872
+lchair gt7010 6 35.000 -45.546 86.972
+lchair gt7010 14 38.000 -41.020 99.346
+lchair gt7010 5 35.000 -39.064 110.175
+lchair gt7010 15 38.000 -38.673 123.341
+lchair gt7010 4 35.000 -36.723 134.554
+lchair gt7010 16 38.000 -32.769 147.121
+lchair gt7010 3 34.989 -28.721 157.615
+lchair gt7010 17 38.137 -29.041 170.783
+lchair gt7010 2 34.754 -27.679 182.082
+lchair gt7010 0 38.368 -24.332 194.823
+lchair gt7010 1 34.530 -20.098 205.389
+lchair gt7020 12 38.010 -49.090 51.507
+lchair gt7020 7 35.000 -49.161 62.731
+lchair gt7020 13 38.000 -48.062 75.887
+lchair gt7020 6 35.000 -45.550 86.957
+lchair gt7020 14 38.000 -41.014 99.359
+lchair gt7020 5 35.000 -39.063 110.160
+lchair gt7020 15 38.000 -38.672 123.355
+lchair gt7020 4 35.000 -36.727 134.539
+lchair gt7020 16 38.000 -32.763 147.135
+lchair gt7020 3 34.989 -28.720 157.601
+lchair gt7020 17 38.137 -29.040 170.798
+lchair gt7020 2 34.754 -27.682 182.067
+lchair gt7020 0 38.369 -24.327 194.837
+lchair gt7020 1 34.530 -20.104 205.376
+lift: client clock moved -1 ticks in one tick, now gt7020
+lchair gt7030 12 38.010 -49.090 51.507
+lchair gt7030 7 35.000 -49.161 62.731
+lchair gt7030 13 38.000 -48.062 75.887
+lchair gt7030 6 35.000 -45.550 86.957
+lchair gt7030 14 38.000 -41.014 99.359
+lchair gt7030 5 35.000 -39.063 110.160
+lchair gt7030 15 38.000 -38.672 123.355
+lchair gt7030 4 35.000 -36.727 134.539
+lchair gt7030 16 38.000 -32.763 147.135
+lchair gt7030 3 34.989 -28.720 157.601
+lchair gt7030 17 38.137 -29.040 170.798
+lchair gt7030 2 34.754 -27.682 182.067
+lchair gt7030 0 38.369 -24.327 194.837
+lchair gt7030 1 34.530 -20.104 205.376
+lchair gt7040 12 38.010 -49.090 51.507
+lchair gt7040 7 35.000 -49.161 62.731
+lchair gt7040 13 38.000 -48.062 75.887
+lchair gt7040 6 35.000 -45.550 86.957
+lchair gt7040 14 38.000 -41.014 99.359
+lchair gt7040 5 35.000 -39.063 110.160
+lchair gt7040 15 38.000 -38.672 123.355
+lchair gt7040 4 35.000 -36.727 134.539
+lchair gt7040 16 38.000 -32.763 147.135
+lchair gt7040 3 34.989 -28.720 157.601
+lchair gt7040 17 38.137 -29.040 170.798
+lchair gt7040 2 34.754 -27.682 182.067
+lchair gt7040 0 38.369 -24.327 194.837
+lchair gt7040 1 34.530 -20.104 205.376
+screenshots: 3
+RESULT PASS

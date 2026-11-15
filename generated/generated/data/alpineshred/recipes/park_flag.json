@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "W": {
+      "item": "minecraft:red_wool"
+    }
+  },
+  "pattern": [
+    "SW",
+    "S ",
+    "S "
+  ],
+  "result": {
+    "count": 2,
+    "item": "alpineshred:park_flag"
+  },
+  "show_notification": true
+}

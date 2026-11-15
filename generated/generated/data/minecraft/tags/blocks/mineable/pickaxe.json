@@ -1,0 +1,29 @@
+{
+  "replace": false,
+  "values": [
+    "alpineshred:pipe_rail",
+    "alpineshred:flat_rail",
+    "alpineshred:copper_pipe_rail",
+    "alpineshred:exposed_copper_pipe_rail",
+    "alpineshred:weathered_copper_pipe_rail",
+    "alpineshred:oxidized_copper_pipe_rail",
+    "alpineshred:waxed_copper_pipe_rail",
+    "alpineshred:waxed_exposed_copper_pipe_rail",
+    "alpineshred:waxed_weathered_copper_pipe_rail",
+    "alpineshred:waxed_oxidized_copper_pipe_rail",
+    "alpineshred:lift_tower_pole",
+    "alpineshred:lift_tower_head",
+    "alpineshred:lift_drive_station",
+    "alpineshred:lift_return_station",
+    "alpineshred:lift_loading_gate",
+    "alpineshred:lift_stop_button",
+    {
+      "id": "alpineshred:kinetic_lift_drive",
+      "required": false
+    },
+    "alpineshred:rail_post",
+    "alpineshred:metal_box",
+    "alpineshred:plastic_box",
+    "alpineshred:pipe_coping"
+  ]
+}

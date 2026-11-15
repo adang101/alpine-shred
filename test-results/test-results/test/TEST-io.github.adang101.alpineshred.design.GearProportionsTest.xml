@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="io.github.adang101.alpineshred.design.GearProportionsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-11-15T17:56:30.841Z" hostname="runnervmccnms" time="0.046">
+  <properties/>
+  <testcase name="theBoardIsLongAndWide()" classname="io.github.adang101.alpineshred.design.GearProportionsTest" time="0.005"/>
+  <testcase name="eachSkiSitsUnderOneFootAndTheyDoNotTouch()" classname="io.github.adang101.alpineshred.design.GearProportionsTest" time="0.008"/>
+  <testcase name="theBoardBindingsSitUnderTheBoots()" classname="io.github.adang101.alpineshred.design.GearProportionsTest" time="0.006"/>
+  <testcase name="bothBootsStandInsideTheBoardInEveryStance()" classname="io.github.adang101.alpineshred.design.GearProportionsTest" time="0.02"/>
+  <testcase name="theCanvasStillMapsOntoTheWholeLength()" classname="io.github.adang101.alpineshred.design.GearProportionsTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
